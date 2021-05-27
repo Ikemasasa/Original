@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{066159cb-47c0-422c-bcab-6918e024fe64}</ProjectGuid>
+    <RootNamespace>Orginal</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source\lib\FBX SDK\include;$(ProjectDir)Source\Effekseer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProjectDir)Source\lib\DirectXTK\lib\Debug;$(ProjectDir)Source\lib\FBX SDK\lib\x86\debug;$(ProjectDir)Source\Effekseer/lib/Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d11.lib;d3dCompiler.lib;dxgi.lib;DirectXTK.lib;DirectXTKAudioWin8.lib;libfbxsdk-md.lib;winmm.lib;Effekseerd.lib;EffekseerRendererDX11d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source\lib\FBX SDK\include;$(ProjectDir)Source\Effekseer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProjectDir)Source\lib\DirectXTK\lib\Release;$(ProjectDir)Source\lib\FBX SDK\lib\x86\release;$(ProjectDir)Source\Effekseer\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;DirectXTK.lib;DirectXTKAudioWin8.lib;libfbxsdk-md.lib;Effekseer.lib;EffekseerRendererDX11.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\ActorManager.h" />
+    <ClInclude Include="Source\BattleActor.h" />
+    <ClInclude Include="Source\BattleActorManager.h" />
+    <ClInclude Include="Source\BattleState.h" />
+    <ClInclude Include="Source\CameraBattle.h" />
+    <ClInclude Include="Source\CameraManager.h" />
+    <ClInclude Include="Source\Collision.h" />
+    <ClInclude Include="Source\CollisionTerrain.h" />
+    <ClInclude Include="Source\CommandBase.h" />
+    <ClInclude Include="Source\CommandEnemy.h" />
+    <ClInclude Include="Source\CommandPlayer.h" />
+    <ClInclude Include="Source\DataBase.h" />
+    <ClInclude Include="Source\EffectManager.h" />
+    <ClInclude Include="Source\Enemy.h" />
+    <ClInclude Include="Source\EnemyBattle.h" />
+    <ClInclude Include="Source\EnemyManager.h" />
+    <ClInclude Include="Source\FrontendBattle.h" />
+    <ClInclude Include="Source\FrontendSprite.h" />
+    <ClInclude Include="Source\FontValue.h" />
+    <ClInclude Include="Source\GameManager.h" />
+    <ClInclude Include="Source\GaussianBlur.h" />
+    <ClInclude Include="Source\Item.h" />
+    <ClInclude Include="Source\ItemData.h" />
+    <ClInclude Include="Source\lib\CollisionStructs.h" />
+    <ClInclude Include="Source\lib\ComputeShader.h" />
+    <ClInclude Include="Source\lib\ConvertString.h" />
+    <ClInclude Include="Source\lib\DXTKAudio.h" />
+    <ClInclude Include="Source\lib\FontTexture.h" />
+    <ClInclude Include="Source\lib\RenderTarget.h" />
+    <ClInclude Include="Source\lib\ResourceManager.h" />
+    <ClInclude Include="Source\lib\Shader.h" />
+    <ClInclude Include="Source\lib\SkinnedMesh.h" />
+    <ClInclude Include="Source\lib\Texture.h" />
+    <ClInclude Include="Source\lib\Vector.h" />
+    <ClInclude Include="Source\lib\Input.h" />
+    <ClInclude Include="Source\ManagerBase.h" />
+    <ClInclude Include="Source\MenuItem.h" />
+    <ClInclude Include="Source\MenuManager.h" />
+    <ClInclude Include="Source\MenuSelect.h" />
+    <ClInclude Include="Source\MenuStatus.h" />
+    <ClInclude Include="Source\MeshManager.h" />
+    <ClInclude Include="Source\MeshDataLoader.h" />
+    <ClInclude Include="Source\Primitive.h" />
+    <ClInclude Include="Source\ProductionBattle.h" />
+    <ClInclude Include="Source\Actor.h" />
+    <ClInclude Include="Source\CameraBase.h" />
+    <ClInclude Include="Source\CameraDebug.h" />
+    <ClInclude Include="Source\CameraTPS.h" />
+    <ClInclude Include="Source\Define.h" />
+    <ClInclude Include="Source\Fade.h" />
+    <ClInclude Include="Source\lib\Blend.h" />
+    <ClInclude Include="Source\lib\Framework.h" />
+    <ClInclude Include="Source\lib\GeometricPrimitive.h" />
+    <ClInclude Include="Source\lib\HighResolutionTimer.h" />
+    <ClInclude Include="Source\lib\Math.h" />
+    <ClInclude Include="Source\lib\Misc.h" />
+    <ClInclude Include="Source\lib\ProcessMessage.h" />
+    <ClInclude Include="Source\lib\Skybox.h" />
+    <ClInclude Include="Source\lib\Renderer2D.h" />
+    <ClInclude Include="Source\lib\Font.h" />
+    <ClInclude Include="Source\lib\Window.h" />
+    <ClInclude Include="Source\Looper.h" />
+    <ClInclude Include="Source\Player.h" />
+    <ClInclude Include="Source\PlayerBattle.h" />
+    <ClInclude Include="Source\PlayerManager.h" />
+    <ClInclude Include="Source\SceneBase.h" />
+    <ClInclude Include="Source\SceneBattle.h" />
+    <ClInclude Include="Source\SceneField.h" />
+    <ClInclude Include="Source\SceneManager.h" />
+    <ClInclude Include="Source\SceneMenu.h" />
+    <ClInclude Include="Source\SceneTitle.h" />
+    <ClInclude Include="Source\ShadowMap.h" />
+    <ClInclude Include="Source\Singleton.h" />
+    <ClInclude Include="Source\StatusData.h" />
+    <ClInclude Include="Source\Terrain.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\ActorManager.cpp" />
+    <ClCompile Include="Source\BattleActor.cpp" />
+    <ClCompile Include="Source\BattleActorManager.cpp" />
+    <ClCompile Include="Source\BattleState.cpp" />
+    <ClCompile Include="Source\CameraBase.cpp" />
+    <ClCompile Include="Source\CameraBattle.cpp" />
+    <ClCompile Include="Source\CameraDebug.cpp" />
+    <ClCompile Include="Source\CameraManager.cpp" />
+    <ClCompile Include="Source\CameraTPS.cpp" />
+    <ClCompile Include="Source\Collision.cpp" />
+    <ClCompile Include="Source\CollisionTerrain.cpp" />
+    <ClCompile Include="Source\CommandEnemy.cpp" />
+    <ClCompile Include="Source\CommandPlayer.cpp" />
+    <ClCompile Include="Source\DataBase.cpp" />
+    <ClCompile Include="Source\Define.cpp" />
+    <ClCompile Include="Source\EffectManager.cpp" />
+    <ClCompile Include="Source\Enemy.cpp" />
+    <ClCompile Include="Source\EnemyBattle.cpp" />
+    <ClCompile Include="Source\EnemyManager.cpp" />
+    <ClCompile Include="Source\Fade.cpp" />
+    <ClCompile Include="Source\FrontendBattle.cpp" />
+    <ClCompile Include="Source\FrontendSprite.cpp" />
+    <ClCompile Include="Source\FontValue.cpp" />
+    <ClCompile Include="Source\GameManager.cpp" />
+    <ClCompile Include="Source\Item.cpp" />
+    <ClCompile Include="Source\ItemData.cpp" />
+    <ClCompile Include="Source\lib\ComputeShader.cpp" />
+    <ClCompile Include="Source\lib\ConvertString.cpp" />
+    <ClCompile Include="Source\lib\DXTKAudio.cpp" />
+    <ClCompile Include="Source\lib\Blend.cpp" />
+    <ClCompile Include="Source\lib\FontTexture.cpp" />
+    <ClCompile Include="Source\lib\Framework.cpp" />
+    <ClCompile Include="Source\lib\GeometricPrimitive.cpp" />
+    <ClCompile Include="Source\lib\HighResolutionTimer.cpp" />
+    <ClCompile Include="Source\lib\Math.cpp" />
+    <ClCompile Include="Source\lib\ProcessMessage.cpp" />
+    <ClCompile Include="Source\lib\RenderTarget.cpp" />
+    <ClCompile Include="Source\lib\ResourceManager.cpp" />
+    <ClCompile Include="Source\lib\Shader.cpp" />
+    <ClCompile Include="Source\lib\SkinnedMesh.cpp" />
+    <ClCompile Include="Source\lib\Skybox.cpp" />
+    <ClCompile Include="Source\lib\Renderer2D.cpp" />
+    <ClCompile Include="Source\lib\Font.cpp" />
+    <ClCompile Include="Source\lib\Texture.cpp" />
+    <ClCompile Include="Source\lib\Vector.cpp" />
+    <ClCompile Include="Source\lib\Window.cpp" />
+    <ClCompile Include="Source\lib\Input.cpp" />
+    <ClCompile Include="Source\Looper.cpp" />
+    <ClCompile Include="Source\Main.cpp" />
+    <ClCompile Include="Source\ManagerBase.cpp" />
+    <ClCompile Include="Source\MenuItem.cpp" />
+    <ClCompile Include="Source\MenuManager.cpp" />
+    <ClCompile Include="Source\MenuSelect.cpp" />
+    <ClCompile Include="Source\MeshManager.cpp" />
+    <ClCompile Include="Source\Actor.cpp" />
+    <ClCompile Include="Source\MeshDataLoader.cpp" />
+    <ClCompile Include="Source\Primitive.cpp" />
+    <ClCompile Include="Source\ProductionBattle.cpp" />
+    <ClCompile Include="Source\Player.cpp" />
+    <ClCompile Include="Source\PlayerBattle.cpp" />
+    <ClCompile Include="Source\PlayerManager.cpp" />
+    <ClCompile Include="Source\SceneBattle.cpp" />
+    <ClCompile Include="Source\SceneField.cpp" />
+    <ClCompile Include="Source\SceneManager.cpp" />
+    <ClCompile Include="Source\SceneMenu.cpp" />
+    <ClCompile Include="Source\SceneTitle.cpp" />
+    <ClCompile Include="Source\ShadowMap.cpp" />
+    <ClCompile Include="Source\Singleton.cpp" />
+    <ClCompile Include="Source\StatusData.cpp" />
+    <ClCompile Include="Source\Terrain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\Character.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Shaders\GaussianBlur.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Shaders\General.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Shaders\GeometricPrimitive.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Shaders\PostEffect.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Shaders\Renderer2D.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Shaders\ShadowMap.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Shaders\SkinnedMesh.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Shaders\SkyBox.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="テキスト.txt" />
+    <Text Include="テキスト1.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\ComputeShaders\Skinning.fx">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

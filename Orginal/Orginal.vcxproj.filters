@@ -1,0 +1,553 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="lib">
+      <UniqueIdentifier>{24603241-7757-4a38-99c6-c667a774f39b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\ソースファイル">
+      <UniqueIdentifier>{f3dc7096-5fd0-4872-bb53-927bb040d789}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\ヘッダーファイル">
+      <UniqueIdentifier>{5c71b8c2-eeaf-4f79-becc-af486e457ad3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Scene">
+      <UniqueIdentifier>{e952b17f-4c4a-4fd0-adaf-fc1e3d966327}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene">
+      <UniqueIdentifier>{bc63fb1e-59bd-4fe3-9656-7bd0dd227b3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Common">
+      <UniqueIdentifier>{71f21db2-2708-4b7a-8288-6db79e8bfd87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Common">
+      <UniqueIdentifier>{c1efb00f-7112-4e01-95b5-f72278980c92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\Shader">
+      <UniqueIdentifier>{fed2d6a1-ee3b-4915-993d-fdcc4b6d2262}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Common\Camera">
+      <UniqueIdentifier>{977d39ff-9dbc-443f-bdc2-57845fa0019a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Common\Camera">
+      <UniqueIdentifier>{b52b7ba2-cf1e-4df6-b43a-57ffa81ae6a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Scene\Battle">
+      <UniqueIdentifier>{d706a6a8-bb3c-4dd8-b83e-d61f27a727f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Scene\Title">
+      <UniqueIdentifier>{3f7ddd05-ef49-4688-8b8a-73a0c56446cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Scene\Field">
+      <UniqueIdentifier>{1327bd7c-e35e-4e27-975e-f429d906a23c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene\Battle">
+      <UniqueIdentifier>{55dcac0e-9e31-4ef4-89ec-41c393a50977}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene\Field">
+      <UniqueIdentifier>{bb26df23-fab5-4511-9ccd-22b03eec4c99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene\Title">
+      <UniqueIdentifier>{1cc16655-9bf0-4f53-aac2-03586ac42bc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\Shader\ComputeShaders">
+      <UniqueIdentifier>{73987ba3-6e23-4303-9aa4-100cc9c157ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene\Menu">
+      <UniqueIdentifier>{97b71ef3-2282-45f4-bc83-83b22474dca3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Scene\Menu">
+      <UniqueIdentifier>{154541bb-9f33-4e4d-a1f8-7854a0eca488}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\lib\Blend.h">
+      <Filter>lib\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\lib\Framework.h">
+      <Filter>lib\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\lib\GeometricPrimitive.h">
+      <Filter>lib\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\lib\HighResolutionTimer.h">
+      <Filter>lib\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\lib\Misc.h">
+      <Filter>lib\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\lib\ProcessMessage.h">
+      <Filter>lib\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\lib\Renderer2D.h">
+      <Filter>lib\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\lib\Window.h">
+      <Filter>lib\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Looper.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneBase.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Fade.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Define.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CameraBase.h">
+      <Filter>ヘッダー ファイル\Common\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CameraTPS.h">
+      <Filter>ヘッダー ファイル\Common\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CameraDebug.h">
+      <Filter>ヘッダー ファイル\Common\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\lib\Math.h">
+      <Filter>lib\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\lib\Shader.h">
+      <Filter>lib\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\lib\Texture.h">
+      <Filter>lib\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\lib\FontTexture.h">
+      <Filter>lib\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\lib\DXTKAudio.h">
+      <Filter>lib\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\lib\Font.h">
+      <Filter>lib\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\lib\CollisionStructs.h">
+      <Filter>lib\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Collision.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MeshManager.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Singleton.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DataBase.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneManager.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\lib\Vector.h">
+      <Filter>lib\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CameraBattle.h">
+      <Filter>ヘッダー ファイル\Common\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\PlayerBattle.h">
+      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EnemyBattle.h">
+      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\FrontendBattle.h">
+      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ProductionBattle.h">
+      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneField.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneMenu.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneBattle.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CommandPlayer.h">
+      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Enemy.h">
+      <Filter>ヘッダー ファイル\Scene\Field</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Player.h">
+      <Filter>ヘッダー ファイル\Scene\Field</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\PlayerManager.h">
+      <Filter>ヘッダー ファイル\Scene\Field</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EnemyManager.h">
+      <Filter>ヘッダー ファイル\Scene\Field</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StatusData.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneTitle.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CommandBase.h">
+      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor.h">
+      <Filter>ヘッダー ファイル\Scene\Field</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ActorManager.h">
+      <Filter>ヘッダー ファイル\Scene\Field</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BattleActor.h">
+      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ManagerBase.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\lib\Skybox.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\lib\ComputeShader.h">
+      <Filter>lib\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MeshDataLoader.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BattleActorManager.h">
+      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EffectManager.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BattleState.h">
+      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\lib\Input.h">
+      <Filter>lib\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CommandEnemy.h">
+      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CameraManager.h">
+      <Filter>ヘッダー ファイル\Common\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\lib\SkinnedMesh.h">
+      <Filter>lib\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\lib\RenderTarget.h">
+      <Filter>lib\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ShadowMap.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GaussianBlur.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Primitive.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CollisionTerrain.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\FontValue.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\FrontendSprite.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\lib\ResourceManager.h">
+      <Filter>lib\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ItemData.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Terrain.h">
+      <Filter>ヘッダー ファイル\Scene\Field</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MenuSelect.h">
+      <Filter>ヘッダー ファイル\Scene\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MenuManager.h">
+      <Filter>ヘッダー ファイル\Scene\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Item.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MenuItem.h">
+      <Filter>ヘッダー ファイル\Scene\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MenuStatus.h">
+      <Filter>ヘッダー ファイル\Scene\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\lib\ConvertString.h">
+      <Filter>lib\ヘッダーファイル</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\lib\Blend.cpp">
+      <Filter>lib\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\lib\Framework.cpp">
+      <Filter>lib\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\lib\GeometricPrimitive.cpp">
+      <Filter>lib\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\lib\ProcessMessage.cpp">
+      <Filter>lib\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\lib\Renderer2D.cpp">
+      <Filter>lib\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\lib\Window.cpp">
+      <Filter>lib\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Fade.cpp">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Define.cpp">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Main.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CameraBase.cpp">
+      <Filter>ソース ファイル\Common\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CameraTPS.cpp">
+      <Filter>ソース ファイル\Common\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CameraDebug.cpp">
+      <Filter>ソース ファイル\Common\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\lib\Math.cpp">
+      <Filter>lib\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\lib\Shader.cpp">
+      <Filter>lib\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\lib\Texture.cpp">
+      <Filter>lib\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\lib\FontTexture.cpp">
+      <Filter>lib\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\lib\DXTKAudio.cpp">
+      <Filter>lib\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\lib\Font.cpp">
+      <Filter>lib\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\lib\HighResolutionTimer.cpp">
+      <Filter>lib\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Collision.cpp">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MeshManager.cpp">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Singleton.cpp">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SceneManager.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\lib\Vector.cpp">
+      <Filter>lib\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CameraBattle.cpp">
+      <Filter>ソース ファイル\Common\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Looper.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DataBase.cpp">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EnemyBattle.cpp">
+      <Filter>ソース ファイル\Scene\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Enemy.cpp">
+      <Filter>ソース ファイル\Scene\Field</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\FrontendBattle.cpp">
+      <Filter>ソース ファイル\Scene\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Player.cpp">
+      <Filter>ソース ファイル\Scene\Field</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\PlayerBattle.cpp">
+      <Filter>ソース ファイル\Scene\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SceneField.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SceneBattle.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ProductionBattle.cpp">
+      <Filter>ソース ファイル\Scene\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EnemyManager.cpp">
+      <Filter>ソース ファイル\Scene\Field</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BattleActorManager.cpp">
+      <Filter>ソース ファイル\Scene\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ActorManager.cpp">
+      <Filter>ソース ファイル\Scene\Field</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CommandPlayer.cpp">
+      <Filter>ソース ファイル\Scene\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\PlayerManager.cpp">
+      <Filter>ソース ファイル\Scene\Field</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\StatusData.cpp">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SceneTitle.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SceneMenu.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BattleActor.cpp">
+      <Filter>ソース ファイル\Scene\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor.cpp">
+      <Filter>ソース ファイル\Scene\Field</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\lib\Skybox.cpp">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\lib\ComputeShader.cpp">
+      <Filter>lib\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MeshDataLoader.cpp">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EffectManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\lib\Input.cpp">
+      <Filter>lib\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CommandEnemy.cpp">
+      <Filter>ソース ファイル\Scene\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BattleState.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Terrain.cpp">
+      <Filter>ソース ファイル\Scene\Field</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\lib\SkinnedMesh.cpp">
+      <Filter>lib\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\lib\RenderTarget.cpp">
+      <Filter>lib\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ShadowMap.cpp">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Primitive.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CollisionTerrain.cpp">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CameraManager.cpp">
+      <Filter>ソース ファイル\Common\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\FontValue.cpp">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\FrontendSprite.cpp">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ManagerBase.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\lib\ResourceManager.cpp">
+      <Filter>lib\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ItemData.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MenuSelect.cpp">
+      <Filter>ソース ファイル\Scene\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MenuManager.cpp">
+      <Filter>ソース ファイル\Scene\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Item.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MenuItem.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\lib\ConvertString.cpp">
+      <Filter>lib\ソースファイル</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="テキスト1.txt">
+      <Filter>リソース ファイル</Filter>
+    </Text>
+    <Text Include="テキスト.txt">
+      <Filter>リソース ファイル</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\General.fx">
+      <Filter>lib\Shader</Filter>
+    </None>
+    <None Include="Shaders\Character.fx">
+      <Filter>lib\Shader</Filter>
+    </None>
+    <None Include="Shaders\GaussianBlur.fx">
+      <Filter>lib\Shader</Filter>
+    </None>
+    <None Include="Shaders\GeometricPrimitive.fx">
+      <Filter>lib\Shader</Filter>
+    </None>
+    <None Include="Shaders\PostEffect.fx">
+      <Filter>lib\Shader</Filter>
+    </None>
+    <None Include="Shaders\Renderer2D.fx">
+      <Filter>lib\Shader</Filter>
+    </None>
+    <None Include="Shaders\ShadowMap.fx">
+      <Filter>lib\Shader</Filter>
+    </None>
+    <None Include="Shaders\SkinnedMesh.fx">
+      <Filter>lib\Shader</Filter>
+    </None>
+    <None Include="Shaders\SkyBox.fx">
+      <Filter>lib\Shader</Filter>
+    </None>
+    <None Include="Shaders\ComputeShaders\Skinning.fx">
+      <Filter>lib\Shader\ComputeShaders</Filter>
+    </None>
+  </ItemGroup>
+</Project>

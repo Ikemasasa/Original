@@ -1,0 +1,55 @@
+#pragma once
+#include <d3d11.h>
+#include <wrl.h>
+
+#define SAFE_DELETE(x) if(x){ delete (x); (x) = nullptr; }
+#define FRAMEWORK Framework::GetInstance()
+
+class Framework
+{
+public:
+	enum RasterizerSettings { RS_CULL_BACK, RS_CULL_FRONT, RS_CULL_NONE, RS_WIRE, RS_SWAPYZ, RS_MAX };
+	enum DepthStencilSettings { DS_FALSE, DS_TRUE, DS_MAX };
+	enum SapmlerStateSettings { SS_CLAMP, SS_WRAP, SS_SHADOW, SS_MAX };
+
+private:
+	Microsoft::WRL::ComPtr<ID3D11Device>		   mDevice;
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext>	   mDeviceContext;
+	Microsoft::WRL::ComPtr<IDXGISwapChain>		   mSwapChain;
+	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mRenderTargetView;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mDepthStencilView;
+
+	Microsoft::WRL::ComPtr<ID3D11RasterizerState> mRasterizer[RS_MAX];
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> mDepthStencilState[DS_MAX];
+	Microsoft::WRL::ComPtr<ID3D11SamplerState> mSamplerState[SS_MAX];
+
+	Framework();
+	~Framework();
+
+	// 初期化関数群
+	HRESULT CreateDeviceAndSwapChain(HWND hwnd);
+	HRESULT CreateRasterizerStates();
+	HRESULT CreateDepthStencilStates();
+	HRESULT CreateSapmler();
+	HRESULT SetBackBuffer();
+
+public:
+	static Framework& GetInstance()
+	{
+		static Framework instance;
+		return instance;
+	}
+	ID3D11Device* GetDevice() { return mDevice.Get(); }
+	ID3D11DeviceContext* GetContext() { return mDeviceContext.Get(); }
+	ID3D11RasterizerState* GetRasterizer(RasterizerSettings index) { return mRasterizer[index].Get(); }
+	ID3D11DepthStencilState* GetDepthStencil(DepthStencilSettings index) { return mDepthStencilState[index].Get(); }
+	ID3D11SamplerState** GetSampler(SapmlerStateSettings index) { return mSamplerState[index].GetAddressOf(); }
+
+	bool Initialize(HWND hwnd);
+	void Clear();
+	void ScreenFlip() { mSwapChain->Present(0, 0);} // バックバッファをフロントバッファに持ってくる
+	void GenerateScrshot(const wchar_t* filename);
+	void SetRenderTarget();
+	void ResetParam();
+};
+

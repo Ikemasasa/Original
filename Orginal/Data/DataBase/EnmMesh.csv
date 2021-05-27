@@ -1,0 +1,8 @@
+,,モーション関係,,
+敵の名前,ID,種類,ID,ファイル名
+モンスター,20000,DEFAULT,0,Monster/Monster.fbx
+モンスター,20000,IDLE,1,Monster/Idle.fbx
+モンスター,20000,RUN,3,Monster/Run.fbx
+モンスター,20000,ATTACK,4,Monster/Attack.fbx
+モンスター,20000,WALK,2,Monster/Walk.fbx
+モンスター,20000,DIE,5,Monster/Die.fbx
