@@ -1,13 +1,16 @@
 #include "Item.h"
 
-void Item::Sub(const int itemID)
+void Item::Add(ItemData::ItemParam param)
 {
-	int index = GetIndex(itemID);
-	if (mItems.find(index) == mItems.end()) return;
+	mItems.emplace_back(param);
+}
 
-	--mItems[index];
-	if (mItems[index] <= 0)
-	{
-		mItems.erase(index);
-	}
+void Item::Sub(const int index)
+{
+	int count = 0;
+	std::vector<ItemData::ItemParam>::iterator it = mItems.begin();
+	for (;it != mItems.end(); ++it, ++count)
+		if (count == index) break;
+
+	mItems.erase(it);
 }

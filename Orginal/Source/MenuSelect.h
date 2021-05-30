@@ -1,4 +1,6 @@
 #pragma once
+#include "MenuBase.h"
+
 #include <memory>
 #include <vector>
 #include <string>
@@ -8,28 +10,16 @@
 
 class Texture;
 
-class MenuSelect
+class MenuSelect : public MenuBase
 {
-public:
-	enum Select
-	{
-		SELECT_ITEM,
-		SELECT_STATUS,
-
-		SELECT_MENU = 10  // 10ÇÕìKìñÅAç≈å„ÇÃóvëfÇ…ÇµÇΩÇ©Ç¡ÇΩÇæÇØ
-	};
-
 private:
 	static const int STR_MAX = 8;
-	static const int STR_OFFSET_X = 40;
+	static const int STR_OFFSET_X = 10;
 	static const int STR_OFFSET_Y = 0;
 
-	static constexpr float BAR_OFFSET_X = 100.0f;
-	static constexpr float BAR_OFFSET_Y = 50.0f;
-	static constexpr float BAR_FIRST_OFFSET_Y = 75.0f;
-
-	static const int SELECT_NUM = 2;
-	static constexpr float SELECT_OFFSET_X = -50.0f;
+	static constexpr float PLATE_OFFSET_X = 100.0f;
+	static constexpr float PLATE_OFFSET_Y = 50.0f;
+	static constexpr float PLATE_FIRST_OFFSET_Y = 75.0f;
 
 	static constexpr float FADE = 0.15f;
 
@@ -38,7 +28,7 @@ private:
 
 	struct Data
 	{
-		Texture* bar;
+		Texture* plate;
 		wchar_t str[STR_MAX];
 		Vector2 pos;
 		float moveX;
@@ -47,20 +37,19 @@ private:
 	std::unique_ptr<Texture> mSelectBar;
 	std::unique_ptr<Texture> mBar;
 	std::vector<Data> mDatas;
-	std::vector<std::wstring> mSelectStrs;
 	Font mFont;
 	int mSelectIndex = 0;
 	
 	float mBeginMoveX = 0.0f;
 
 
-	bool Add(Texture* bar, const wchar_t* str);
+	bool Add(Texture* plate, const wchar_t* str);
 public:
 	MenuSelect();
 	~MenuSelect() = default;
 
 	void BeginAnimation();
-	Select Update();
-	void Render();
+	Select Update(PlayerManager* plm) override;
+	void Render() override;
 	void Release();
 };

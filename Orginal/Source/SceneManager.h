@@ -1,9 +1,10 @@
 #pragma once
-#include <windows.h>
+#include "SceneBase.h"
+
 #include <stack>
 #include <memory>
 
-class SceneBase;
+
 
 class SceneManager
 {

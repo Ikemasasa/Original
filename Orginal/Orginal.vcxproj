@@ -187,6 +187,8 @@
     <ClInclude Include="Source\lib\Vector.h" />
     <ClInclude Include="Source\lib\Input.h" />
     <ClInclude Include="Source\ManagerBase.h" />
+    <ClInclude Include="Source\MenuBase.h" />
+    <ClInclude Include="Source\MenuCharacterSelect.h" />
     <ClInclude Include="Source\MenuItem.h" />
     <ClInclude Include="Source\MenuManager.h" />
     <ClInclude Include="Source\MenuSelect.h" />
@@ -278,9 +280,11 @@
     <ClCompile Include="Source\Looper.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\ManagerBase.cpp" />
+    <ClCompile Include="Source\MenuCharacterSelect.cpp" />
     <ClCompile Include="Source\MenuItem.cpp" />
     <ClCompile Include="Source\MenuManager.cpp" />
     <ClCompile Include="Source\MenuSelect.cpp" />
+    <ClCompile Include="Source\MenuStatus.cpp" />
     <ClCompile Include="Source\MeshManager.cpp" />
     <ClCompile Include="Source\Actor.cpp" />
     <ClCompile Include="Source\MeshDataLoader.cpp" />

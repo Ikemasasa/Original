@@ -4,6 +4,7 @@
 #include <sstream>
 
 #include "DataBase.h"
+#include "lib/ConvertString.h"
 
 StatusData::StatusData()
 {
@@ -29,44 +30,35 @@ void StatusData::LoadPLStatus()
 	if (!fin.is_open()) return;
 
 	std::string line;  // 1行取得用
-	std::getline(fin, line); // タグ？があるので一回一行取得
-
-	const char delim = ',';
+	const char delim = ','; // 区切り文字
 	while (std::getline(fin, line)) // 一行読み込み
 	{
 		std::istringstream istr(line);
 		std::string chunk; // コンマ区切りの内容取得用
-		Status s = {};
 
-		// 名前(char)
-		std::getline(istr, chunk, delim); // 一行読み込んだのをコンマ区切りで取得
-		s.name = chunk;
+		std::vector<std::string> data;
+		while (std::getline(istr, chunk, delim)) // 区切りごとに取得
+		{
+			if (chunk.empty()) continue;   // 空白なら continue
+			if (chunk[0] == '#') continue; // 最初の文字が#ならcontinue
 
-		// id(int)
-		std::getline(istr, chunk, delim);
-		s.id = std::stoi(chunk);
+			data.emplace_back(chunk);
+		}
 
-		// HP(int)
-		std::getline(istr, chunk, delim);
-		s.hp = std::stoi(chunk);
+		if (data.size() > 0)
+		{
+			Status s = {};
+			int index = 0;
+			s.name = ConvertString::ConvertToWstirng(data[index++]);
+			s.id = std::stoi(data[index++]);
+			s.hp = std::stoi(data[index++]);
+			s.mp = std::stoi(data[index++]);
+			s.str = std::stoi(data[index++]);
+			s.vit = std::stoi(data[index++]);
+			s.agi = std::stoi(data[index++]);
 
-		// MP(int)
-		std::getline(istr, chunk, delim);
-		s.mp = std::stoi(chunk);
-
-		// STR(int)
-		std::getline(istr, chunk, delim);
-		s.str = std::stoi(chunk);
-
-		// VIT(int)
-		std::getline(istr, chunk, delim);
-		s.vit = std::stoi(chunk);
-
-		// AGI(int)
-		std::getline(istr, chunk, delim);
-		s.agi = std::stoi(chunk);
-
-		mPLStatus.emplace_back(s);
+			mPLStatus.emplace_back(s);
+		}
 	}
 
 	fin.close();
@@ -81,44 +73,35 @@ void StatusData::LoadEnmStatus()
 	if (!fin.is_open()) return;
 
 	std::string line;  // 1行取得用
-	std::getline(fin, line); // タグ？があるので一回一行取得
-
-	const char delim = ',';
+	const char delim = ','; // 区切り文字
 	while (std::getline(fin, line)) // 一行読み込み
 	{
 		std::istringstream istr(line);
 		std::string chunk; // コンマ区切りの内容取得用
-		Status s = {};
 
-		// 名前(char)
-		std::getline(istr, chunk, delim); // 一行読み込んだのをコンマ区切りで取得
-		s.name = chunk;
+		std::vector<std::string> data;
+		while (std::getline(istr, chunk, delim)) // 区切りごとに取得
+		{
+			if (chunk.empty()) continue;   // 空白なら continue
+			if (chunk[0] == '#') continue; // 最初の文字が#ならcontinue
 
-		// id(int)
-		std::getline(istr, chunk, delim);
-		s.id = std::stoi(chunk);
+			data.emplace_back(chunk);
+		}
 
-		// HP(int)
-		std::getline(istr, chunk, delim);
-		s.hp = std::stoi(chunk);
+		if (data.size() > 0)
+		{
+			Status s = {};
+			int index = 0;
+			s.name = ConvertString::ConvertToWstirng(data[index++]);
+			s.id = std::stoi(data[index++]);
+			s.hp = std::stoi(data[index++]);
+			s.mp = std::stoi(data[index++]);
+			s.str = std::stoi(data[index++]);
+			s.vit = std::stoi(data[index++]);
+			s.agi = std::stoi(data[index++]);
 
-		// MP(int)
-		std::getline(istr, chunk, delim);
-		s.mp = std::stoi(chunk);
-
-		// STR(int)
-		std::getline(istr, chunk, delim);
-		s.str = std::stoi(chunk);
-
-		// VIT(int)
-		std::getline(istr, chunk, delim);
-		s.vit = std::stoi(chunk);
-
-		// AGI(int)
-		std::getline(istr, chunk, delim);
-		s.agi = std::stoi(chunk);
-
-		mEnmStatus.emplace_back(s);
+			mEnmStatus.emplace_back(s);
+		}
 	}
 
 	fin.close();

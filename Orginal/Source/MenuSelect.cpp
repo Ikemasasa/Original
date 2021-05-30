@@ -6,8 +6,8 @@
 
 MenuSelect::MenuSelect()
 {
-    mSelectBar = std::make_unique<Texture>(L"Data/Image/Menu/BarSelect.png");
-    mBar = std::make_unique<Texture>(L"Data/Image/Menu/Bar.png");
+    mSelectBar = std::make_unique<Texture>(L"Data/Image/Menu/plate_select.png");
+    mBar = std::make_unique<Texture>(L"Data/Image/Menu/str_plate.png");
     
     const int FONT_SIZE = 64;
     const int FONT_WEIGHT = 64;
@@ -20,10 +20,8 @@ MenuSelect::MenuSelect()
             L"ステータス"
         };
 
-        mSelectStrs.resize(SELECT_NUM);
         for (int i = 0; i < SELECT_NUM; ++i)
         {
-            mSelectStrs[i] = str[i];
             mFont.Add(str[i].c_str());
             Add(mBar.get(), str[i].c_str());
         }
@@ -31,13 +29,13 @@ MenuSelect::MenuSelect()
     }
 }
 
-bool MenuSelect::Add(Texture* bar, const wchar_t* str)
+bool MenuSelect::Add(Texture* plate, const wchar_t* str)
 {
     Data data;
-    data.bar = bar;
+    data.plate = plate;
     wcscpy_s(data.str, STR_MAX, str);
-    data.pos.x = BAR_OFFSET_X;
-    data.pos.y = BAR_FIRST_OFFSET_Y + (BAR_OFFSET_Y * mDatas.size()) + (bar->GetSize().y * mDatas.size());
+    data.pos.x = PLATE_OFFSET_X;
+    data.pos.y = PLATE_FIRST_OFFSET_Y + (PLATE_OFFSET_Y * mDatas.size()) + (plate->GetSize().y * mDatas.size());
     data.moveX = MOVE_MAX;
 
 
@@ -65,7 +63,7 @@ void MenuSelect::BeginAnimation()
 
 }
 
-MenuSelect::Select MenuSelect::Update()
+MenuSelect::Select MenuSelect::Update(PlayerManager* plm)
 {
     BeginAnimation();
 
@@ -78,23 +76,26 @@ MenuSelect::Select MenuSelect::Update()
         return (Select)mSelectIndex;
     }
 
-    return SELECT_MENU;
+    return MENU_SELECT;
 }
 
 void MenuSelect::Render()
 {
     if (!mDatas.empty())
     {
-        const Vector2 pos(mDatas[mSelectIndex].pos.x + mDatas[mSelectIndex].moveX + SELECT_OFFSET_X, mDatas[mSelectIndex].pos.y);
-        mSelectBar->Render(pos, Vector2::One(), Vector2::Zero(), mSelectBar->GetSize());
+        const Vector2 pos(mDatas[mSelectIndex].pos.x + mDatas[mSelectIndex].moveX + mSelectBar->GetSize().x / 2.0f, mDatas[mSelectIndex].pos.y);
+        const Vector2 scale(1.25f, 1.0f);
+        const Vector2 center(mSelectBar->GetSize().x / 2.0f, 0.0f);
+        const Vector4 color(0.5f, 0.8f, 0.95f, 0.8f);
+        mSelectBar->Render(pos, scale, Vector2::Zero(), mSelectBar->GetSize(), center, 0.0f, color);
     }
 
     int i = 0;
     for (auto& data : mDatas)
     {
         const Vector2 strOffset(data.pos.x + data.moveX + STR_OFFSET_X, data.pos.y + STR_OFFSET_Y);
-        data.bar->Render(data.pos + Vector2(data.moveX, 0.0f), Vector2::One(), Vector2::Zero(), data.bar->GetSize());
-        mFont.RenderSet(mSelectStrs[i].c_str(), strOffset, Vector2::Zero(), Vector2::One(), Vector4::One());
+        data.plate->Render(data.pos + Vector2(data.moveX, 0.0f), Vector2::One(), Vector2::Zero(), data.plate->GetSize());
+        mFont.RenderSet(i, strOffset, Vector2::Zero(), Vector2::One(), Vector4::One());
         ++i;
     }
 

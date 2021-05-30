@@ -1,6 +1,5 @@
 #pragma once
-#include <list>
-#include <iterator>
+#include <vector>
 
 #include "Item.h"
 #include "Player.h"
@@ -17,7 +16,7 @@ public:
 	};
 
 private:
-	std::list<std::shared_ptr<Player>> mPlayers;
+	std::vector<std::shared_ptr<Player>> mPlayers;
 	std::shared_ptr<Player> mMovePlayer = nullptr;
 
 public:
@@ -34,5 +33,5 @@ public:
 
 	// ÉQÉbÉ^Å[
 	std::shared_ptr<Player> GetMovePlayer() { return mMovePlayer; }
-	const std::list<std::shared_ptr<Player>>& GetPlayers() const { return mPlayers; }
+	const std::vector<std::shared_ptr<Player>>& GetPlayers() const { return mPlayers; }
 };

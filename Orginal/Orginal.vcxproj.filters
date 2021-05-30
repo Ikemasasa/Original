@@ -297,6 +297,12 @@
     <ClInclude Include="Source\lib\ConvertString.h">
       <Filter>lib\ヘッダーファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Source\MenuCharacterSelect.h">
+      <Filter>ヘッダー ファイル\Scene\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MenuBase.h">
+      <Filter>ヘッダー ファイル\Scene\Menu</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\lib\Blend.cpp">
@@ -508,6 +514,12 @@
     </ClCompile>
     <ClCompile Include="Source\lib\ConvertString.cpp">
       <Filter>lib\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MenuCharacterSelect.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MenuStatus.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

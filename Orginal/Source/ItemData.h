@@ -42,7 +42,7 @@ public:
 
 private:
 	std::vector<ItemParam> mItems;
-	size_t GetIndex(size_t id) { return id - (size_t)DataBase::ITEM_ID_START; }
+	size_t GetIndex(const size_t id) const { return id - (size_t)DataBase::ITEM_ID_START; }
 
 public:
 	ItemData();
@@ -50,5 +50,5 @@ public:
 
 	void LoadItemData();
 
-	const ItemParam& GetItemParam(size_t index) const { return mItems[index]; }
+	const ItemParam& GetItemParam(const size_t id) const { return mItems[GetIndex(id)]; }
 };

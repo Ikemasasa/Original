@@ -4,7 +4,7 @@
 
 struct Status
 {
-	std::string name; // –¼‘O
+	std::wstring name; // –¼‘O
 	int id;			  // ID
 	int hp;			  // HP
 	int mp;			  // MP

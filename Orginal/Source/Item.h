@@ -1,16 +1,17 @@
 #pragma once
-#include <map>
+#include <vector>
 
 #include "DataBase.h"
+#include "ItemData.h"
 
 class Item
 {
-	std::map<int, int> mItems; // key:ID, value:êî
+	// std::map<int, int> mItems; // key:ID, value:êî
+	std::vector<ItemData::ItemParam> mItems;
 
-	int GetIndex(const int id) { return id - DataBase::ITEM_ID_START; }
 public:
-	void Add(const int itemID) { ++mItems[GetIndex(itemID)]; }
-	void Sub(const int itemID);
+	void Add(ItemData::ItemParam param);
+	void Sub(const int index);
 
-	const std::map<int, int>& GetAll() { return mItems; }
+	const std::vector<ItemData::ItemParam>& GetAll() { return mItems; }
 };

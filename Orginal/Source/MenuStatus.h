@@ -1,8 +1,13 @@
 #pragma once
+#include "MenuBase.h"
 
-class MenuStatus
+class MenuStatus : public MenuBase
 {
 public:
-	void Update();
-	void Render();
+	MenuStatus() = default;
+	MenuStatus(const MenuStatus& obj) = default;
+	~MenuStatus() = default;
+
+	Select Update(PlayerManager* plm) override;
+	void Render() override;
 };

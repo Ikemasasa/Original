@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <stack>
 
 #include "MenuSelect.h"
 #include "MenuItem.h"
@@ -10,9 +11,11 @@ class PlayerManager;
 class MenuManager
 {
 	std::unique_ptr<Texture> mBG;
+	std::stack<std::unique_ptr<MenuBase>> mMenuStack;
+	std::unique_ptr<MenuBase> mNextMenu;
 
 	MenuSelect mMenuSelect;
-	MenuSelect::Select mState;
+	MenuBase::Select mState;
 
 	std::unique_ptr<MenuItem> mMenuItem;
 

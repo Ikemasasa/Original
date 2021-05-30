@@ -30,9 +30,9 @@ Player::Player(int charaID) : Actor(charaID, Actor::PLAYER)
 	// ƒeƒXƒg
 	for (int i = 0; i < 3; ++i)
 	{
-		mInventory.Add(ItemData::PORTION);
-		mInventory.Add(ItemData::MAGIC_PORTION);
-		mInventory.Add(ItemData::BOMB);
+		mInventory.Add(Singleton<DataBase>().GetInstance().GetItemData()->GetItemParam(ItemData::PORTION));
+		mInventory.Add(Singleton<DataBase>().GetInstance().GetItemData()->GetItemParam(ItemData::MAGIC_PORTION));
+		mInventory.Add(Singleton<DataBase>().GetInstance().GetItemData()->GetItemParam(ItemData::BOMB));
 	}
 }
 
