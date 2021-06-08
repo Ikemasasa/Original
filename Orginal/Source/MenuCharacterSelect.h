@@ -1,5 +1,5 @@
 #pragma once
-#include<memory>
+#include <memory>
 
 #include "lib/Font.h"
 
@@ -8,22 +8,20 @@ class Texture;
 
 class MenuCharacterSelect
 {
-	static constexpr float PLATE_OFFSET_X = 100.0f;
-	static constexpr float PLATE_OFFSET_Y = 50.0f;
-
 	std::unique_ptr<Texture> mPlate;
-	std::unique_ptr<Texture> mPlateSelect;
+	int mCharacterNum = 0;
+	int mSelectIndex = 0;
+	int mOldSelectIndex = 0;
 
-	int mSelectIndex;
-	Font mFont;
+	Font mNameFont;
 
 public:
-	MenuCharacterSelect(PlayerManager* plm);
-	~MenuCharacterSelect();
-
+	void Initialize(const PlayerManager* plm);
 	void Update();
-	void Render();
+	void Render(Vector2 leftBottom);
+	void Release();
 
-	int GetSelectIndex() const { return mSelectIndex; }
-	void ResetSelectIndex() { mSelectIndex = 0; }
+	bool IsChangedIndex()const { return mSelectIndex != mOldSelectIndex; }
+
+	int GetIndex() const { return mSelectIndex; }
 };

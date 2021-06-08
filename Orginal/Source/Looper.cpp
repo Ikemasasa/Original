@@ -1,5 +1,6 @@
 #include "Looper.h"
 
+#include "lib/Audio.h"
 #include "lib/Font.h"
 #include "lib/Framework.h"
 #include "lib/Input.h"
@@ -23,10 +24,12 @@ int Looper::Run(HWND hwnd)
 
 	Input::Initialize();
 
-	auto& sm = SceneManager::GetInstance();
-	sm.Initialize(std::make_unique<SceneField>());
+	AUDIO.Initialize();
 
-	while (IsLoop())
+	auto& sm = SceneManager::GetInstance();
+	sm.Initialize(std::make_unique<SceneTitle>());
+
+	while (IsLoop() && sm.IsLoop())
 	{
 		GameManager::elpsedTime = pm.GetElapsedTime();
 

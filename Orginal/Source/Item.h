@@ -13,5 +13,5 @@ public:
 	void Add(ItemData::ItemParam param);
 	void Sub(const int index);
 
-	const std::vector<ItemData::ItemParam>& GetAll() { return mItems; }
+	const std::vector<ItemData::ItemParam>& GetAll() const { return mItems; }
 };

@@ -62,11 +62,11 @@ bool Font::RenderSet(const wchar_t* str, const Vector2& pos, const Vector2& cent
 	return false;
 }
 
-bool Font::RenderSet(const UINT index, const Vector2& pos, const Vector2& center, const Vector2& scale, const Vector4& color)
+bool Font::RenderSet(const int index, const Vector2& pos, const Vector2& center, const Vector2& scale, const Vector4& color)
 {
-	size_t sizeNum = mRenderData.size();
-	if (sizeNum < index) return false;
+	if (mFonts.size() < static_cast<size_t>(index)) return false;
 
+	size_t sizeNum = mRenderData.size();
 	mRenderData.resize(sizeNum + 1);
 
 	mRenderData[sizeNum].fontIndex = index;
@@ -77,7 +77,7 @@ bool Font::RenderSet(const UINT index, const Vector2& pos, const Vector2& center
 	return true;
 }
 
-void Font::Render()
+void Font::Render(bool isRenderClear)
 {
 	Vector2 pos = {};
 	Vector2 scale = {};
@@ -112,7 +112,7 @@ void Font::Render()
 		}
 	}
 
-	mRenderData.clear();
+	if(isRenderClear) mRenderData.clear();
 }
 
 bool Font::Add(const wchar_t* str)
@@ -160,7 +160,7 @@ bool Font::Find(const wchar_t* str)
 	return false;
 }
 
-float Font::GetWidth(const WCHAR* str)
+float Font::GetWidth(const WCHAR* str) const
 {
 	HDC hdc = GetDC(NULL);
 
@@ -175,6 +175,35 @@ float Font::GetWidth(const WCHAR* str)
 	CONST MAT2 mat = { { 0, 1 }, { 0, 0 }, { 0, 0 }, { 0, 1 } };
 	GLYPHMETRICS gm;
 	float width = 0.0f;
+	for (int i = 0; str[i] != '\0'; ++i)
+	{
+		GetGlyphOutline(hdc, (UINT)str[i], GGO_GRAY4_BITMAP, &gm, 0, NULL, &mat);
+		width += static_cast<float>(gm.gmCellIncX);
+	}
+
+	DeleteObject(hFont);
+	ReleaseDC(NULL, hdc);
+
+	return width;
+}
+
+float Font::GetWidth(const UINT index) const
+{
+	HDC hdc = GetDC(NULL);
+
+	// フォントの生成
+	LOGFONT lf = { mFontSize, 0, 0, 0, mFontWeight, 0, 0, 0, SHIFTJIS_CHARSET, OUT_TT_ONLY_PRECIS, CLIP_DEFAULT_PRECIS, PROOF_QUALITY, DEFAULT_PITCH | FF_MODERN, TEXT("\0") };
+	wcscpy_s(lf.lfFaceName, LF_FACESIZE, mFontName);
+
+	HFONT hFont = CreateFontIndirect(&lf);
+	HFONT oldFont = (HFONT)SelectObject(hdc, hFont);
+
+	// 横幅計算
+	CONST MAT2 mat = { { 0, 1 }, { 0, 0 }, { 0, 0 }, { 0, 1 } };
+	GLYPHMETRICS gm;
+	float width = 0.0f;
+	wchar_t str[STR_MAX]; 
+	wcscpy_s(str, STR_MAX, mFonts[index].str);
 	for (int i = 0; str[i] != '\0'; ++i)
 	{
 		GetGlyphOutline(hdc, (UINT)str[i], GGO_GRAY4_BITMAP, &gm, 0, NULL, &mat);

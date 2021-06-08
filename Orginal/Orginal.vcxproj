@@ -174,10 +174,11 @@
     <ClInclude Include="Source\GaussianBlur.h" />
     <ClInclude Include="Source\Item.h" />
     <ClInclude Include="Source\ItemData.h" />
+    <ClInclude Include="Source\ItemSelect.h" />
     <ClInclude Include="Source\lib\CollisionStructs.h" />
     <ClInclude Include="Source\lib\ComputeShader.h" />
     <ClInclude Include="Source\lib\ConvertString.h" />
-    <ClInclude Include="Source\lib\DXTKAudio.h" />
+    <ClInclude Include="Source\lib\Audio.h" />
     <ClInclude Include="Source\lib\FontTexture.h" />
     <ClInclude Include="Source\lib\RenderTarget.h" />
     <ClInclude Include="Source\lib\ResourceManager.h" />
@@ -188,6 +189,7 @@
     <ClInclude Include="Source\lib\Input.h" />
     <ClInclude Include="Source\ManagerBase.h" />
     <ClInclude Include="Source\MenuBase.h" />
+    <ClInclude Include="Source\MenuCharacterHealth.h" />
     <ClInclude Include="Source\MenuCharacterSelect.h" />
     <ClInclude Include="Source\MenuItem.h" />
     <ClInclude Include="Source\MenuManager.h" />
@@ -256,9 +258,10 @@
     <ClCompile Include="Source\GameManager.cpp" />
     <ClCompile Include="Source\Item.cpp" />
     <ClCompile Include="Source\ItemData.cpp" />
+    <ClCompile Include="Source\ItemSelect.cpp" />
     <ClCompile Include="Source\lib\ComputeShader.cpp" />
     <ClCompile Include="Source\lib\ConvertString.cpp" />
-    <ClCompile Include="Source\lib\DXTKAudio.cpp" />
+    <ClCompile Include="Source\lib\Audio.cpp" />
     <ClCompile Include="Source\lib\Blend.cpp" />
     <ClCompile Include="Source\lib\FontTexture.cpp" />
     <ClCompile Include="Source\lib\Framework.cpp" />
@@ -280,6 +283,7 @@
     <ClCompile Include="Source\Looper.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\ManagerBase.cpp" />
+    <ClCompile Include="Source\MenuCharacterHealth.cpp" />
     <ClCompile Include="Source\MenuCharacterSelect.cpp" />
     <ClCompile Include="Source\MenuItem.cpp" />
     <ClCompile Include="Source\MenuManager.cpp" />

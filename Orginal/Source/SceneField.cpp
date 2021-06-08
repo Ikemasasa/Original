@@ -2,7 +2,6 @@
 
 #include "lib/Skybox.h"
 #include "lib/Input.h"
-#include "lib/DXTKAudio.h"
 #include "lib/Font.h"
 
 #include "ActorManager.h"
@@ -28,7 +27,6 @@ SceneField::SceneField()
 
 	mPostEffect = std::make_unique<Shader>();
 	mPostEffect->Load(L"Shaders/PostEffect.fx", "VSMain", "PSMain");
-
 
 	mSceneTarget.Initialize();
 	mShadowMap.Initialize();

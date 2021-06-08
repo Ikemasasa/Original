@@ -1,46 +1,69 @@
 #include "MenuCharacterSelect.h"
 
+#include "lib/Audio.h"
 #include "lib/Input.h"
-#include "lib/Texture.h"
 
 #include "PlayerManager.h"
-#include "Singleton.h"
-#include "StatusData.h"
-#include "DataBase.h"
 
-MenuCharacterSelect::MenuCharacterSelect(PlayerManager* plm)
+void MenuCharacterSelect::Initialize(const PlayerManager* plm)
 {
-	mPlate = std::make_unique<Texture>(L"Data/Image/Menu/str_plate.png");
-	mPlateSelect = std::make_unique<Texture>(L"Data/Image/Menu/plate_select.png");
+	mCharacterNum = 0;
+	mSelectIndex = 0;
 
-	// 名前を全員分追加
-	for(auto& pl : plm->GetPlayers())
+	mNameFont.Initialize();
+
+	mPlate = std::make_unique<Texture>(L"Data/Image/Menu/character_plate.png");
+
+	// 名前の一文字目を作る
+	const std::vector<std::shared_ptr<Player>>& players =  plm->GetPlayers();
+	for (auto& pl : players)
 	{
-		std::wstring name = Singleton<DataBase>().GetInstance().GetStatusData()->GetPLStatus(pl->GetCharaID()).name;
-		mFont.Add(name.c_str());
-	}
-}
+		const int LEN = 2;
+		wchar_t name[LEN] = {};
+		name[0] = pl->GetStatus()->name[0];
 
-MenuCharacterSelect::~MenuCharacterSelect()
-{
-	mFont.Release();
+		mNameFont.Add(name);
+		++mCharacterNum;
+	}
 }
 
 void MenuCharacterSelect::Update()
 {
-	size_t playerNum = mFont.GetNum();
+	mOldSelectIndex = mSelectIndex;
+	if (Input::GetButtonTrigger(0, Input::BUTTON::RB)) mSelectIndex = (mSelectIndex + 1) % mCharacterNum;
+	if (Input::GetButtonTrigger(0, Input::BUTTON::LB)) mSelectIndex = (mSelectIndex + (mCharacterNum - 1)) % mCharacterNum;
 
-	if (Input::GetButtonTrigger(0, Input::BUTTON::UP))   mSelectIndex = (mSelectIndex + playerNum - 1) % playerNum;
-	if (Input::GetButtonTrigger(0, Input::BUTTON::DOWN)) mSelectIndex = (mSelectIndex + 1) % playerNum;
-
-	for (int i = 0; i < mFont.GetNum(); ++i)
-	{
-		Vector2 pos(PLATE_OFFSET_X + i * mPlate->GetSize().x, PLATE_OFFSET_Y);
-		mFont.RenderSet(i, pos);
-	}
+	if (mOldSelectIndex != mSelectIndex) AUDIO.SoundPlay((int)Sound::CURSOR_MOVE);
 }
 
-void MenuCharacterSelect::Render()
+void MenuCharacterSelect::Render(Vector2 leftBottom)
 {
-	mFont.Render();
+	const float PLATE_SCALE = 0.5f;
+	const Vector2 FONT_OFFSET(5.0f, 32.0f);
+
+	Vector2 scale(PLATE_SCALE, PLATE_SCALE);
+	Vector2 texPos(0.0f, 0.0f);
+	Vector2 size(mPlate->GetSize());
+	Vector2 center(0.0f, size.y); // leftBottomを受け取るため y = size.y;
+	float angle = 0.0f;
+	Vector4 defaultColor(0.5f, 0.5f, 0.5f, 1.0f);
+	Vector4 SelectColor(1.0f, 1.0f, 1.0f, 1.0f);
+	for (int i = 0; i < mCharacterNum; ++i)
+	{
+		Vector2 pos(leftBottom.x + (size.x * scale.x * i), leftBottom.y);
+		Vector4 color = defaultColor;
+		if (i == mSelectIndex) color = SelectColor;
+
+		mPlate->Render(pos, scale, texPos, size, center, angle, color);
+
+		Vector2 namePos(pos.x + FONT_OFFSET.x, pos.y - FONT_OFFSET.y); // プレートのposが左下中心だから y - offset
+		mNameFont.RenderSet(i, namePos, Vector2::Zero(), Vector2::One(), color);
+	}
+
+	mNameFont.Render();
+}
+
+void MenuCharacterSelect::Release()
+{
+	mNameFont.Release();
 }

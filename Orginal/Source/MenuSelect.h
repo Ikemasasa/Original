@@ -49,7 +49,8 @@ public:
 	~MenuSelect() = default;
 
 	void BeginAnimation();
-	Select Update(PlayerManager* plm) override;
+	void Initialize(const PlayerManager* plm) override;
+	Select Update(const PlayerManager* plm) override;
 	void Render() override;
-	void Release();
+	void Release() override;
 };

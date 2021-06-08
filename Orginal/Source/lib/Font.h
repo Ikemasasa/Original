@@ -54,15 +54,16 @@ public:
 	Font() = default;
 	~Font() = default;
 
-	void Initialize(int fontSize, int fontWeight);
+	void Initialize(int fontSize = 32, int fontWeight = 32);
 	void Release();
 
 	bool RenderSet(const wchar_t* str, const Vector2& pos, const Vector2& center = Vector2::Zero(), const Vector2& scale = Vector2::One(), const Vector4& color = Vector4::One());
-	bool RenderSet(const UINT index, const Vector2& pos, const Vector2& center = Vector2::Zero(), const Vector2& scale = Vector2::One(), const Vector4& color = Vector4::One());
-	void Render();
+	bool RenderSet(const int index, const Vector2& pos, const Vector2& center = Vector2::Zero(), const Vector2& scale = Vector2::One(), const Vector4& color = Vector4::One());
+	void Render(bool isRenderClear = true);
 
 	bool Add(const wchar_t* str);
 	bool Find(const wchar_t* str);
-	float GetWidth(const WCHAR* str);
+	float GetWidth(const WCHAR* str) const;
+	float GetWidth(const UINT index) const;
 	size_t GetNum() const { return mFonts.size(); }
 };

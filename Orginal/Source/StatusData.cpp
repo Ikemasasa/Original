@@ -52,7 +52,9 @@ void StatusData::LoadPLStatus()
 			s.name = ConvertString::ConvertToWstirng(data[index++]);
 			s.id = std::stoi(data[index++]);
 			s.hp = std::stoi(data[index++]);
+			s.maxHP = s.hp;
 			s.mp = std::stoi(data[index++]);
+			s.maxMP = s.mp;
 			s.str = std::stoi(data[index++]);
 			s.vit = std::stoi(data[index++]);
 			s.agi = std::stoi(data[index++]);
@@ -79,7 +81,7 @@ void StatusData::LoadEnmStatus()
 		std::istringstream istr(line);
 		std::string chunk; // コンマ区切りの内容取得用
 
-		std::vector<std::string> data;
+		std::vector<std::string> data; // 区切りの保存用
 		while (std::getline(istr, chunk, delim)) // 区切りごとに取得
 		{
 			if (chunk.empty()) continue;   // 空白なら continue

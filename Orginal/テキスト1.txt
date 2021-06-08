@@ -1,17 +1,1 @@
-template<class T>
-
-struct ResourceParam
-{
-	int mRefNum = 0;
-	wchar_t path[STR_MAX];
-}
-
-class Resource
-{
-	// リストがいいか配列がいいか... とりあえずリスト
-	std::list<T*> mResources;
-	int mRefNum;
-	wchar_t path[STR_MAX];
-
-	Resource() : mRefNum(0), { path[0] = '\0'; }
-}
+https://soundeffect-lab.info/sound/voice/people.html

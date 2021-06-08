@@ -4,29 +4,13 @@
 #include "lib/Texture.h"
 #include "lib/Input.h"
 
+#include "Fade.h"
+#include "SceneManager.h"
+
 MenuSelect::MenuSelect()
 {
     mSelectBar = std::make_unique<Texture>(L"Data/Image/Menu/plate_select.png");
     mBar = std::make_unique<Texture>(L"Data/Image/Menu/str_plate.png");
-    
-    const int FONT_SIZE = 64;
-    const int FONT_WEIGHT = 64;
-    mFont.Initialize(FONT_SIZE, FONT_WEIGHT);
-
-    {
-        std::wstring str[SELECT_NUM] =
-        {
-            L"アイテム",
-            L"ステータス"
-        };
-
-        for (int i = 0; i < SELECT_NUM; ++i)
-        {
-            mFont.Add(str[i].c_str());
-            Add(mBar.get(), str[i].c_str());
-        }
-
-    }
 }
 
 bool MenuSelect::Add(Texture* plate, const wchar_t* str)
@@ -63,7 +47,29 @@ void MenuSelect::BeginAnimation()
 
 }
 
-MenuSelect::Select MenuSelect::Update(PlayerManager* plm)
+void MenuSelect::Initialize(const PlayerManager* plm)
+{
+    const int FONT_SIZE = 64;
+    const int FONT_WEIGHT = 64;
+    mFont.Initialize(FONT_SIZE, FONT_WEIGHT);
+
+    {
+        std::wstring str[SELECT_NUM] =
+        {
+            L"アイテム",
+            L"ステータス"
+        };
+
+        for (int i = 0; i < SELECT_NUM; ++i)
+        {
+            mFont.Add(str[i].c_str());
+            Add(mBar.get(), str[i].c_str());
+        }
+
+    }
+}
+
+MenuSelect::Select MenuSelect::Update(const PlayerManager* plm)
 {
     BeginAnimation();
 
@@ -76,7 +82,16 @@ MenuSelect::Select MenuSelect::Update(PlayerManager* plm)
         return (Select)mSelectIndex;
     }
 
-    return MENU_SELECT;
+    // メニュー画面からフィールドに戻す
+    if (Input::GetButtonTrigger(0, Input::BUTTON::B))
+    {
+        if (Fade::GetInstance().SetSceneImage(Fade::SPEED_FAST))
+        {
+            SceneManager::GetInstance().PopCurrentScene();
+        }
+    }
+
+    return NONE;
 }
 
 void MenuSelect::Render()

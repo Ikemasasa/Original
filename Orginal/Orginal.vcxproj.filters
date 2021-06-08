@@ -129,7 +129,7 @@
     <ClInclude Include="Source\lib\FontTexture.h">
       <Filter>lib\ヘッダーファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\lib\DXTKAudio.h">
+    <ClInclude Include="Source\lib\Audio.h">
       <Filter>lib\ヘッダーファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\Font.h">
@@ -297,11 +297,17 @@
     <ClInclude Include="Source\lib\ConvertString.h">
       <Filter>lib\ヘッダーファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\MenuCharacterSelect.h">
+    <ClInclude Include="Source\MenuCharacterHealth.h">
       <Filter>ヘッダー ファイル\Scene\Menu</Filter>
     </ClInclude>
     <ClInclude Include="Source\MenuBase.h">
       <Filter>ヘッダー ファイル\Scene\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MenuCharacterSelect.h">
+      <Filter>ヘッダー ファイル\Scene\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ItemSelect.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -353,7 +359,7 @@
     <ClCompile Include="Source\lib\FontTexture.cpp">
       <Filter>lib\ソースファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\lib\DXTKAudio.cpp">
+    <ClCompile Include="Source\lib\Audio.cpp">
       <Filter>lib\ソースファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\Font.cpp">
@@ -509,17 +515,23 @@
     <ClCompile Include="Source\Item.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\MenuItem.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\lib\ConvertString.cpp">
       <Filter>lib\ソースファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\MenuCharacterSelect.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Source\MenuItem.cpp">
+      <Filter>ソース ファイル\Scene\Menu</Filter>
     </ClCompile>
     <ClCompile Include="Source\MenuStatus.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Scene\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MenuCharacterHealth.cpp">
+      <Filter>ソース ファイル\Scene\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MenuCharacterSelect.cpp">
+      <Filter>ソース ファイル\Scene\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ItemSelect.cpp">
+      <Filter>ソース ファイル\Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

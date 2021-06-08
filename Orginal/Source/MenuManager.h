@@ -14,16 +14,15 @@ class MenuManager
 	std::stack<std::unique_ptr<MenuBase>> mMenuStack;
 	std::unique_ptr<MenuBase> mNextMenu;
 
-	MenuSelect mMenuSelect;
-	MenuBase::Select mState;
+	MenuBase::Select mNextState;
 
 	std::unique_ptr<MenuItem> mMenuItem;
 
 public:
 	MenuManager();
 
-	void Initialize();
-	void Update(PlayerManager* plm);
+	void Initialize(const PlayerManager* plm);
+	void Update(const PlayerManager* plm);
 	void Render();
 	void Release();
 };

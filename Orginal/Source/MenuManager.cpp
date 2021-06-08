@@ -11,42 +11,35 @@
 MenuManager::MenuManager()
 {
 	mBG = std::make_unique<Texture>(L"Data/Image/Menu/Menu_BG.png");
-
-	mMenuStack.emplace(new MenuSelect);
-
-	mState = MenuBase::NONE;
 }
 
-void MenuManager::Initialize()
+void MenuManager::Initialize(const PlayerManager* plm)
 {
+	mMenuStack.emplace(new MenuSelect);
+	mMenuStack.top()->Initialize(plm);
+
+	mNextState = MenuBase::NONE;
 }
 
-void MenuManager::Update(PlayerManager* plm)
+void MenuManager::Update(const PlayerManager* plm)
 {
 	// 次のメニューがあれば更新する
-	if (mNextMenu) mMenuStack.emplace(mNextMenu.release());
-
-	mState = mMenuStack.top()->Update(plm);
-
-	switch (mState)
+	if (mNextMenu)
 	{
-	case MenuBase::ITEM:   if (!mNextMenu) mNextMenu = std::make_unique<MenuItem>(plm); break;
-	case MenuBase::STATUS: break; //if (!mNextMenu) mNextMenu = std::make_unique<MenuStatus>(plm);
+		mMenuStack.emplace(mNextMenu.release()); // スタック
+		mMenuStack.top()->Initialize(plm);
 	}
+	mNextState = mMenuStack.top()->Update(plm);
 
-
-	// メニュー画面を一つ戻す
-	if (Input::GetButtonTrigger(0, Input::BUTTON::B))
+	switch (mNextState)
 	{
-		// スタックが2個以上ならポップ、1個ならフィールドに戻る
-		if (mMenuStack.size() >= 2) mMenuStack.pop();
-		else
-		{
-			if (Fade::GetInstance().SetSceneImage(Fade::SPEED_FAST))
-			{
-				SceneManager::GetInstance().PopCurrentScene();
-			}
-		}
+	case MenuBase::ITEM:   if (!mNextMenu) mNextMenu = std::make_unique<MenuItem>(); break;
+	case MenuBase::STATUS: break; //if (!mNextMenu) mNextMenu = std::make_unique<MenuStatus>(plm);
+
+	case MenuBase::BACK:
+		mMenuStack.top()->Release();
+		mMenuStack.pop();
+		break;
 	}
 }
 
@@ -58,5 +51,10 @@ void MenuManager::Render()
 
 void MenuManager::Release()
 {
-	mMenuSelect.Release();
+	size_t size = mMenuStack.size();
+	for (size_t i = 0; i < size; ++i)
+	{
+		mMenuStack.top()->Release();
+		mMenuStack.pop();
+	}
 }

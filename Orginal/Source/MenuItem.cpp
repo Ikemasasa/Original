@@ -2,6 +2,7 @@
 
 #include <map>
 
+#include "lib/Audio.h"
 #include "lib/ConvertString.h"
 #include "lib/Input.h"
 #include "lib/Math.h"
@@ -9,137 +10,83 @@
 
 #include "Item.h"
 #include "ItemData.h"
-#include "MenuCharacterSelect.h"
+#include "MenuCharacterHealth.h"
 #include "PlayerManager.h"
 #include "Singleton.h"
 
-MenuItem::MenuItem(PlayerManager* plm)
+void MenuItem::Initialize(const PlayerManager* plm)
 {
-	mPlayerManager = plm;
-
-	mCharacterSelect = std::make_unique<MenuCharacterSelect>(mPlayerManager);
-	mSelect = std::make_unique<Texture>(L"Data/Image/select_frame.png");
-	mBoard = std::make_unique<Texture>(L"Data/Image/board.png");
-
-	mFont.Initialize(64, 64);
+	mCharacterHealth.Initialize(plm, Vector2(HEALTH_PLATE_X, HEALTH_PLATE_Y));
+	mCharacterSelect.Initialize(plm);
+	mItemSelect.Initialize();
+	mItemIndex = -1;
 }
 
-MenuItem::~MenuItem()
+MenuBase::Select MenuItem::Update(const PlayerManager* plm)
 {
-	mFont.Release();
-}
-
-MenuBase::Select MenuItem::Update(PlayerManager* plm)
-{
-	switch (mState)
+	if (mItemIndex == -1)
 	{
-	case INVENTORY_SELECT: InventorySelect(); break;
-	case ITEM_SELECT: ItemSelect(); break;
-	case TARGET_SELECT: TargetSelect(); break;
+		mCharacterSelect.Update(); // 誰のインベントリを参照するか決める
+
+		mInventory = plm->GetPlayers()[mCharacterSelect.GetIndex()]->GetInventory(); // 参照するインベントリ保存
+		mItemIndex = mItemSelect.Update(mInventory); // アイテム選択
+
+		// 前の画面に戻る
+		if (Input::GetButtonTrigger(0, Input::BUTTON::B))	
+			return Select::BACK;
 	}
+	else 
+	{
+		mCharacterHealth.Update();
 
+		if (Input::GetButtonTrigger(0, Input::BUTTON::A))
+		{
+			int charaindex = mCharacterHealth.GetSelectIndex();
+			int id = plm->GetPlayers()[charaindex]->GetCharaID();
 
+			// ステータス更新
+			ItemData::ItemParam param = mInventory->GetAll()[mItemIndex];
+			Status plStatus = Singleton<DataBase>().GetInstance().GetStatusData()->GetPLStatus(id);
 
+			bool isHeal = false;
+			if (!plStatus.IsFullHP() && param.hpValue > 0) isHeal = true; // HPがmaxじゃないかつhp回復
+			if (!plStatus.IsFullMP() && param.mpValue > 0) isHeal = true; // MPがmaxじゃないかつmp回復
+			if (isHeal) // 回復
+			{
+				plStatus.SetHP(plStatus.hp + param.hpValue);
+				plStatus.SetMP(plStatus.mp + param.mpValue);
+				Singleton<DataBase>().GetInstance().GetStatusData()->SetPLStatus(id, plStatus); //ステータス更新
+				mInventory->Sub(mItemIndex); // アイテム減らす
+
+				AUDIO.SoundPlay((int)Sound::HEAL);
+			}
+			else // 回復しない
+			{
+				AUDIO.SoundPlay((int)Sound::CANCEL);
+			}
+
+		}
+		else if(Input::GetButtonTrigger(0, Input::BUTTON::B))
+		{
+			mItemIndex = -1;
+		}
+	}
 
 	return MenuBase::NONE;
 }
 
 void MenuItem::Render()
 {
-	RenderItem();
+	mCharacterSelect.Render(Vector2(BOARD_OFFSET_X, BOARD_OFFSET_Y));
+	mItemSelect.Render(Vector2(BOARD_OFFSET_X, BOARD_OFFSET_Y));
 
-	mFont.Render();
+	if (mItemIndex != -1)
+	{
+		mCharacterHealth.Render(true);
+	}
 } 
 
 void MenuItem::Release()
 {
 
-}
-
-void MenuItem::RenderItem()
-{
-	// ボード描画
-	mBoard->Render(Vector2(BOARD_OFFSET_X, BOARD_OFFSET_Y), Vector2::One(), Vector2::Zero(), mBoard->GetSize());
-
-
-	// アイテムアイコン描画
-	const float ICON_SCALE_SIZE = ICON_SCALE * ICON_SIZE;
-	const Vector2 offset(ICON_OFFSET + BOARD_OFFSET_X, ICON_OFFSET + BOARD_OFFSET_Y);
-	const Vector2 scale(ICON_SCALE, ICON_SCALE);
-	const Vector2 size(ICON_SIZE, ICON_SIZE);
-
-	const std::vector<std::shared_ptr<Player>>& players = mPlayerManager->GetPlayers();
-	int itemNum = 0;
-	for (auto& pl : players)
-	{
-		const std::vector<ItemData::ItemParam>& inventory = pl->GetInventory()->GetAll();
-		for (auto& item : inventory)
-		{
-			float x = itemNum % HORIZONTAL_NUM * ICON_SCALE_SIZE + offset.x;
-			float y = itemNum / HORIZONTAL_NUM * ICON_SCALE_SIZE + offset.y;
-			Vector2 pos(x, y);
-			item.icon->Render(pos, scale, Vector2::Zero(), size);
-
-			++itemNum;
-		}
-	}
-
-	// 選択のフレーム画像を描画
-	{
-		Vector2 pos(mSelectIndex % HORIZONTAL_NUM * ICON_SCALE_SIZE + offset.x, mSelectIndex / HORIZONTAL_NUM * ICON_SCALE_SIZE + offset.y);
-		mSelect->Render(pos, scale, Vector2::Zero(), size);
-	}
-}
-
-void MenuItem::InventorySelect()
-{
-	// キャラクター選択のインデックス操作
-	mCharacterSelect->Update();
-
-	// キャラ選択
-	if (Input::GetButtonTrigger(0, Input::BUTTON::A))
-	{
-		int index = mCharacterSelect->GetSelectIndex();
-		mSelectInventory = mPlayerManager->GetPlayers()[index]->GetInventory();
-		mState = ITEM_SELECT;
-	}
-}
-
-void MenuItem::ItemSelect()
-{
-	// SelectIndex操作
-	{
-		if (Input::GetButtonTrigger(0, Input::BUTTON::RIGHT)) ++mSelectIndex;
-		if (Input::GetButtonTrigger(0, Input::BUTTON::LEFT))  --mSelectIndex;
-		if (Input::GetButtonTrigger(0, Input::BUTTON::UP))    mSelectIndex -= HORIZONTAL_NUM;
-		if (Input::GetButtonTrigger(0, Input::BUTTON::DOWN))  mSelectIndex += HORIZONTAL_NUM;
-		mSelectIndex = Math::Clamp(mSelectIndex, 0, mSelectInventory->GetAll().size());
-	}
-
-
-	// アイテム選択
-	if (Input::GetButtonTrigger(0, Input::BUTTON::A))
-	{
-		ItemData::Effect effect = mSelectInventory->GetAll()[mSelectIndex].effect;
-		if (effect == ItemData::Effect::HEAL) // 回復アイテムなら使用可能
-		{
-			mCharacterSelect->ResetSelectIndex(); // キャラ選択のやつを使いまわすため
-			mState = TARGET_SELECT;
-		}
-	}
-}
-
-void MenuItem::TargetSelect()
-{
-	// キャラクター選択のインデックス操作
-	mCharacterSelect->Update();
-
-	// 選択
-	if (Input::GetButtonTrigger(0, Input::BUTTON::A))
-	{
-		int charaindex = mCharacterSelect->GetSelectIndex();
-
-		mSelectInventory->GetAll()[mSelectIndex].hpValue;
-
-	}
 }
