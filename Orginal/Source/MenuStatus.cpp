@@ -35,6 +35,8 @@ void MenuStatus::Initialize(const PlayerManager* plm)
     {
         mStatusNameFont.Add(statusName[i]);
     }
+
+    mDelimFont.Add(L"/");
 }
 
 MenuBase::Select MenuStatus::Update(const PlayerManager* plm)
@@ -47,6 +49,16 @@ MenuBase::Select MenuStatus::Update(const PlayerManager* plm)
 
     const int playerIndex = mCharacterSelect.GetIndex();
     const Status* status = plm->GetPlayers()[playerIndex]->GetStatus();
+    std::vector<int> curValue; // 現在のステータス
+    std::vector<int> maxValue; // 最大のステータス
+    curValue.emplace_back(status->hp);
+    curValue.emplace_back(status->mp);
+    curValue.emplace_back(status->GetTotalAtk());
+    curValue.emplace_back(status->GetTotalDef());
+    curValue.emplace_back(status->GetTotalSpd());
+    maxValue.emplace_back(status->maxHP);
+    maxValue.emplace_back(status->maxMP);
+
     for (int i = 0; i < STATUS_NUM; ++i)
     {
         float width = 0.0f;
@@ -56,31 +68,51 @@ MenuBase::Select MenuStatus::Update(const PlayerManager* plm)
         // かなりごり押し、ほかにいい方法あれば変える
         if (i == NAME)
         {
-            //mPlNameFont.RenderSet(playerIndex, );
+            width = mPlNameFont.GetWidth(status->name.c_str());
+            pos = Vector2(PLATE_X + mStatusPlate->GetSize().x * 0.5f, PLATE_Y + FIRST_OFFSET_Y);
+            center = Vector2(width * 0.5f, 0.0f);
+            mPlNameFont.RenderSet(playerIndex, pos, center);
         }
         else if (i == HP || i == MP)
         {
-            //pos = Vector2(PLATE_X + FIRST_OFFSET_X, PLATE_Y + FIRST_OFFSET_Y + ADD_OFFSET_Y * i);
+            pos = Vector2(PLATE_X + FIRST_OFFSET_X, PLATE_Y + FIRST_OFFSET_Y + ADD_OFFSET_Y * i);
 
-            //// ステータス名
-            //width = mStatusNameFont.GetWidth(i - 1);
-            //mStatusNameFont.RenderSet(i - 1, pos); // k - 1 : 名前の分 
+            const int statusIndex = i - 1;// i - 1 : 名前の分 
 
-            //// 現在の値 (cur)
-            //width = mFontValue.GetWidth(mHealthPlates[i].curHP);
-            //pos.x += HealthPlate::CUR_OFFSET_X;
-            //center.x = width;
-            //mFontValue.RenderSet(mHealthPlates[i].curHP, pos, center);
+            // ステータス名
+            width = mStatusNameFont.GetWidth(statusIndex);
+            mStatusNameFont.RenderSet(statusIndex, pos); 
 
-            //// 区切り (/)
-            //pos.x += HealthPlate::DELIM_OFFSET_X;
-            //mDelimFont.RenderSet(0, pos);
+            // 現在の値 (cur)
+            width = mFontValue.GetWidth(curValue[statusIndex]);
+            pos.x += CUR_OFFSET_X;
+            center.x = width;
+            mFontValue.RenderSet(curValue[statusIndex], pos, center);
 
-            //// 最大の値 (max)
-            //width = mFontValue.GetWidth(mHealthPlates[i].maxHP);
-            //pos.x += HealthPlate::DELIM_OFFSET_X + HealthPlate::MAX_OFFSET_X;
-            //center.x = width;
-            //mFontValue.RenderSet(mHealthPlates[i].maxHP, pos, center);
+            // 区切り (/)
+            pos.x += DELIM_OFFSET_X;
+            mDelimFont.RenderSet(0, pos);
+
+            // 最大の値 (max)
+            width = mFontValue.GetWidth(maxValue[statusIndex]);
+            pos.x += DELIM_OFFSET_X + MAX_OFFSET_X;
+            center.x = width;
+            mFontValue.RenderSet(maxValue[statusIndex], pos, center);
+        }
+        else
+        {
+            pos = Vector2(PLATE_X + FIRST_OFFSET_X, PLATE_Y + FIRST_OFFSET_Y + ADD_OFFSET_Y * i);
+            const int statusIndex = i - 1;// i - 1 : 名前の分 
+
+            // ステータス名
+            width = mStatusNameFont.GetWidth(statusIndex);
+            mStatusNameFont.RenderSet(statusIndex, pos);
+
+            // 現在の値 (cur)
+            width = mFontValue.GetWidth(curValue[statusIndex]);
+            pos.x += CUR_OFFSET_X;
+            center.x = width;
+            mFontValue.RenderSet(curValue[statusIndex], pos, center);
         }
     }
 
@@ -89,8 +121,27 @@ MenuBase::Select MenuStatus::Update(const PlayerManager* plm)
 
 void MenuStatus::Render()
 {
+    // 画像系描画
+    {
+        Vector2 pos(PLATE_X, PLATE_Y);
+        Vector2 scale(1.0f, 1.0f);
+        Vector2 texPos(0.0f, 0.0f);
+        Vector2 size(mStatusPlate->GetSize());
+        mStatusPlate->Render(pos, scale, texPos, size);
+        mCharacterSelect.Render(pos);
+    }
+
+    // フォント描画
+    mPlNameFont.Render();
+    mStatusNameFont.Render();
+    mDelimFont.Render();
+    mFontValue.Render();
 }
 
 void MenuStatus::Release()
 {
+    mPlNameFont.Release();
+    mStatusNameFont.Release();
+    mDelimFont.Release();
+    mFontValue.Release();
 }

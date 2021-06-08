@@ -20,15 +20,10 @@ struct Status
 	int equipAtk; // UŒ‚—Í
 	int equipDef; // –hŒä—Í
 	int equipSpd; // ‘f‘‚³
-	
-	// ƒoƒtŒø‰Ê“K‰ž—p
-	int buffAtk; // UŒ‚—Í‚Ìƒoƒt—Ê
-	int buffDef; // –hŒä—Í‚Ìƒoƒt—Ê
-	int buffSpd; // ‘f‘‚³‚Ìƒoƒt—Ê
 
-	int GetTotalAtk() const { return str + equipAtk + buffAtk; }
-	int GetTotalDef() const { return vit + equipDef + buffDef; }
-	int GetTotalSpd() const { return agi + equipSpd + buffSpd; }
+	int GetTotalAtk() const { return str + equipAtk; }
+	int GetTotalDef() const { return vit + equipDef; }
+	int GetTotalSpd() const { return agi + equipSpd; }
 
 	bool IsAlive() const { return hp > 0; }
 	bool IsFullHP() const { return hp == maxHP; }

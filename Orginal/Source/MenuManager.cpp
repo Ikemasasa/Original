@@ -33,8 +33,8 @@ void MenuManager::Update(const PlayerManager* plm)
 
 	switch (mNextState)
 	{
-	case MenuBase::ITEM:   if (!mNextMenu) mNextMenu = std::make_unique<MenuItem>(); break;
-	case MenuBase::STATUS: break; //if (!mNextMenu) mNextMenu = std::make_unique<MenuStatus>(plm);
+	case MenuBase::ITEM:   if (!mNextMenu) mNextMenu = std::make_unique<MenuItem>();   break;
+	case MenuBase::STATUS: if (!mNextMenu) mNextMenu = std::make_unique<MenuStatus>(); break;
 
 	case MenuBase::BACK:
 		mMenuStack.top()->Release();

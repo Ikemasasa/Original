@@ -12,12 +12,12 @@ class MenuStatus : public MenuBase
 	static constexpr float PLATE_Y = 128.0f;
 
 	static constexpr float FIRST_OFFSET_X = 16.0f;
-	static constexpr float CUR_OFFSET_X = 100.0f;
+	static constexpr float CUR_OFFSET_X = 128.0f;
 	static constexpr float DELIM_OFFSET_X = 4.0f;
 	static constexpr float MAX_OFFSET_X = 64.0f;
 
 	static constexpr float FIRST_OFFSET_Y = 12.0f;
-	static constexpr float ADD_OFFSET_Y = 32.0f;
+	static constexpr float ADD_OFFSET_Y = 33.0f;
 
 	enum StatusKind
 	{
@@ -32,6 +32,7 @@ class MenuStatus : public MenuBase
 
 	Font mPlNameFont;
 	Font mStatusNameFont;
+	Font mDelimFont;
 	FontValue mFontValue;
 
 	MenuCharacterSelect mCharacterSelect;
