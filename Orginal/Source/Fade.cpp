@@ -9,7 +9,7 @@ bool Fade::Set(float fadeSpeed)
     if (mType != NONE) return false;
     if (fadeSpeed <= 0.0f) return false;
 
-    mFade = std::make_unique<Texture>(L"./Data/image/fade.png");
+    mFade = std::make_unique<Sprite>(L"./Data/image/fade.png");
     mSpeed = fadeSpeed;
     mType = FADE_IN_OUT;
     return true;
@@ -76,7 +76,7 @@ void Fade::Render()
         // このタイミングで作成しないと前回のフレームのスクショが作成されるからここでやってる
         const wchar_t* filename = L"Data/Image/ScrFade.png";
         FRAMEWORK.GenerateScrshot(filename);
-        mFade = std::make_unique<Texture>(filename);
+        mFade = std::make_unique<Sprite>(filename);
     }
 
     if (mFade) mFade->Render(Vector2(0.0f, 0.0f), Vector2::One(), Vector2::Zero(), Vector2(Define::SCREEN_WIDTH, Define::SCREEN_HEIGHT), Vector2::Zero(), 0.0f, Vector4(1.0f, 1.0f, 1.0f, mAlpha));

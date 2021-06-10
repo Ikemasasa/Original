@@ -2,7 +2,7 @@
 #include "SceneBase.h"
 #include "MenuManager.h"
 
-class Texture;
+class Sprite;
 class PlayerManager;
 
 class SceneMenu : public SceneBase

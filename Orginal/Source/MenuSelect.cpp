@@ -1,7 +1,7 @@
 #include "MenuSelect.h"
 
 #include "lib/Math.h"
-#include "lib/Texture.h"
+#include "lib/Sprite.h"
 #include "lib/Input.h"
 
 #include "Fade.h"
@@ -9,11 +9,11 @@
 
 MenuSelect::MenuSelect()
 {
-    mSelectBar = std::make_unique<Texture>(L"Data/Image/Menu/plate_select.png");
-    mBar = std::make_unique<Texture>(L"Data/Image/Menu/str_plate.png");
+    mSelectBar = std::make_unique<Sprite>(L"Data/Image/Menu/plate_select.png");
+    mBar = std::make_unique<Sprite>(L"Data/Image/Menu/str_plate.png");
 }
 
-bool MenuSelect::Add(Texture* plate, const wchar_t* str)
+bool MenuSelect::Add(Sprite* plate, const wchar_t* str)
 {
     Data data;
     data.plate = plate;

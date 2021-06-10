@@ -4,7 +4,7 @@
 #include "Math.h"
 #include "ResourceManager.h"
 #include "Renderer2D.h"
-#include "Texture.h"
+#include "Sprite.h"
 
 TCHAR Font::mTTFPath[Font::STR_MAX] = { '\0' };
 WCHAR Font::mFontName[LF_FACESIZE] = L"ＭＳ Ｐゴシック";  // デフォルトのフォント

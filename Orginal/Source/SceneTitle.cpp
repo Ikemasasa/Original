@@ -27,8 +27,8 @@ SceneTitle::SceneTitle()
 	mFontSelectStr.Initialize(SELECT_FONT_SIZE, SELECT_FONT_WEIGHT);
 	for (int i = 0; i < SELECT_STR_NUM; ++i) mFontSelectStr.Add(addSelectstr[i]);
 
-	mBG = std::make_unique<Texture>(L"Data/Image/title_bg.png");
-	mArrow = std::make_unique<Texture>(L"Data/Image/arrow.png");
+	mBG = std::make_unique<Sprite>(L"Data/Image/title_bg.png");
+	mArrow = std::make_unique<Sprite>(L"Data/Image/arrow.png");
 }
 
 SceneTitle::~SceneTitle()
@@ -54,11 +54,11 @@ void SceneTitle::Update()
 
 	if (!mIsPressAButton)
 	{
-		const int PRESS_ANY_KEY_INDEX = 2;
-		float strWidth = mFontSelectStr.GetWidth(logoIndex);
+		const int PRESS_A_KEY_INDEX = 2;
+		float strWidth = mFontSelectStr.GetWidth(PRESS_A_KEY_INDEX);
 		Vector2 pos(Define::SCREEN_WIDTH * 0.5f, Define::SCREEN_HEIGHT * 0.60f);
 		Vector2 center(strWidth * 0.5f, 0.5f);
-		mFontSelectStr.RenderSet(logoIndex, pos, center);
+		mFontSelectStr.RenderSet(PRESS_A_KEY_INDEX, pos, center);
 
 		if (Input::GetButtonTrigger(0, Input::A)) mIsPressAButton = true;
 	}

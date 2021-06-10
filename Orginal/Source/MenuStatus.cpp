@@ -6,7 +6,7 @@
 
 void MenuStatus::Initialize(const PlayerManager* plm)
 {
-    mStatusPlate = std::make_unique<Texture>(L"Data/Image/Menu/status_plate.png");
+    mStatusPlate = std::make_unique<Sprite>(L"Data/Image/Menu/status_plate.png");
 
     mCharacterSelect.Initialize(plm);
 

@@ -11,7 +11,7 @@
 #include "CollisionStructs.h"
 #include "ComputeShader.h"
 #include "Shader.h"
-#include "Texture.h"
+#include "Sprite.h"
 
 
 class SkinnedMesh
@@ -72,8 +72,8 @@ private:
 	struct Material
 	{
 		wchar_t filename[STR_MAX] = {};
-		Texture diffuse;
-		Texture normal;
+		Sprite diffuse;
+		Sprite normal;
 		int faceNum = 0;
 	};
 

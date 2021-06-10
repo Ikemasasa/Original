@@ -1,8 +1,9 @@
 #pragma once
 #include "SceneBase.h"
 
-#include "lib/Texture.h"
 #include "lib/Font.h"
+#include "lib/Sprite.h"
+
 class SceneTitle : public SceneBase
 {
 	static const int LOGO_FONT_SIZE   = 128;
@@ -20,8 +21,8 @@ class SceneTitle : public SceneBase
 
 	Font mFontLogo;
 	Font mFontSelectStr;
-	std::unique_ptr<Texture> mBG;
-	std::unique_ptr<Texture> mArrow;
+	std::unique_ptr<Sprite> mBG;
+	std::unique_ptr<Sprite> mArrow;
 
 	int mSelectIndex = 0;
 	bool mIsPressAButton = false;

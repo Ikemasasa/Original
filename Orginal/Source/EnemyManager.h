@@ -2,7 +2,6 @@
 #include <list>
 
 #include "Enemy.h"
-#include "ManagerBase.h"
 
 class EnemyManager
 {

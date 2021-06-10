@@ -6,7 +6,7 @@
 #include "lib/ConvertString.h"
 #include "lib/Input.h"
 #include "lib/Math.h"
-#include "lib/Texture.h"
+#include "lib/Sprite.h"
 
 #include "Item.h"
 #include "ItemData.h"
@@ -68,7 +68,7 @@ MenuBase::Select MenuItem::Update(const PlayerManager* plm)
 		}
 		else if(Input::GetButtonTrigger(0, Input::BUTTON::B))
 		{
-			mItemIndex = -1;
+			mItemIndex = -1; // アイテム未選択状態に戻す
 		}
 	}
 

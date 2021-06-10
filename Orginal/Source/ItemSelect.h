@@ -3,7 +3,7 @@
 
 #include "Item.h"
 
-class Texture;
+class Sprite;
 
 class ItemSelect
 {
@@ -17,8 +17,8 @@ class ItemSelect
 	int mSelectIndex;
 	int mOldSelectIndex;
 	const Item* mInventory;
-	std::unique_ptr<Texture> mBoard;
-	std::unique_ptr<Texture> mSelectFrame;
+	std::unique_ptr<Sprite> mBoard;
+	std::unique_ptr<Sprite> mSelectFrame;
 
 public:
 	ItemSelect() = default;

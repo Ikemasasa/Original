@@ -5,12 +5,12 @@
 #include "MenuSelect.h"
 #include "MenuItem.h"
 
-class Texture;
+class Sprite;
 class PlayerManager;
 
 class MenuManager
 {
-	std::unique_ptr<Texture> mBG;
+	std::unique_ptr<Sprite> mBG;
 	std::stack<std::unique_ptr<MenuBase>> mMenuStack;
 	std::unique_ptr<MenuBase> mNextMenu;
 

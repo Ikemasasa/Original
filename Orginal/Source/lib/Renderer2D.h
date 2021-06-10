@@ -8,7 +8,7 @@
 
 class FontTexture;
 class Shader;
-class Texture;
+class Sprite;
 
 class Renderer2D
 {

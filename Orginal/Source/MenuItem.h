@@ -11,7 +11,7 @@
 #include "ItemSelect.h"
 
 class PlayerManager;
-class Texture;
+class Sprite;
 class Item;
 
 class MenuItem : public MenuBase

@@ -1,7 +1,7 @@
 #include "MenuCharacterHealth.h"
 
 #include "lib/Input.h"
-#include "lib/Texture.h"
+#include "lib/Sprite.h"
 
 #include "PlayerManager.h"
 #include "Singleton.h"
@@ -10,8 +10,8 @@
 
 void MenuCharacterHealth::Initialize(const PlayerManager* plm, const Vector2& leftTop)
 {
-	mHealthPlate = std::make_unique<Texture>(L"Data/Image/Menu/health_plate.png");
-	mSelect = std::make_unique<Texture>(L"Data/Image/Menu/health_plate_select.png");
+	mHealthPlate = std::make_unique<Sprite>(L"Data/Image/Menu/health_plate.png");
+	mSelect = std::make_unique<Sprite>(L"Data/Image/Menu/health_plate_select.png");
 
 	mPlateLeftTop = leftTop;
 

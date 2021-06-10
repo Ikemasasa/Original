@@ -6,7 +6,7 @@
 
 #include "Vector.h"
 
-class Texture;
+class Sprite;
 class Shader;
 
 class Skybox
@@ -18,7 +18,7 @@ class Skybox
 		DirectX::XMFLOAT4X4 invProj;
 	};
 
-	std::unique_ptr<Texture> mTexture;
+	std::unique_ptr<Sprite> mTexture;
 	std::unique_ptr<Shader> mShader;
 	Microsoft::WRL::ComPtr<ID3D11Buffer> mConstBuffer;
 

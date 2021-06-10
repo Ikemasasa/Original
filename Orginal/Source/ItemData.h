@@ -5,7 +5,7 @@
 
 #include "DataBase.h"
 
-class Texture;
+class Sprite;
 
 class ItemData
 {
@@ -28,7 +28,7 @@ public:
 	{
 		size_t id;		  // アイテムID(いる？ いる)
 		std::string name; // アイテム名
-		std::shared_ptr<Texture> icon; // 画像
+		std::shared_ptr<Sprite> icon; // 画像
 		Effect effect;	  // 効果
 		Target target;	  // 対象
 		Range range;	  // 効果範囲	

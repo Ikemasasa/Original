@@ -1,6 +1,6 @@
 #pragma once
 #include <memory>
-#include "lib/Texture.h"
+#include "lib/Sprite.h"
 
 // class Sprite
 
@@ -21,7 +21,7 @@ private:
 
 	float mAlpha = 0.0f;
 	float mSpeed = 0.0f;
-	std::unique_ptr<Texture> mFade = nullptr;
+	std::unique_ptr<Sprite> mFade = nullptr;
 	FadeType mType = NONE;
 
 	Fade() = default;

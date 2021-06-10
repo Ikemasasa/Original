@@ -4,16 +4,16 @@
 
 #include "Vector.h"
 
-class Texture
+class Sprite
 {
 	// リソースマネージャーを通すからSRVは普通のポインタ
 	ID3D11ShaderResourceView* mSRV						    = nullptr;
 	D3D11_TEXTURE2D_DESC mDesc = {};
 
 public:
-	Texture() = default;
-	Texture(const wchar_t* filename);
-	~Texture();
+	Sprite() = default;
+	Sprite(const wchar_t* filename);
+	~Sprite();
 
 	bool Load(const wchar_t* filename);
 	void UnLoad();

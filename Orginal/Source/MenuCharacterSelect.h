@@ -4,11 +4,11 @@
 #include "lib/Font.h"
 
 class PlayerManager;
-class Texture;
+class Sprite;
 
 class MenuCharacterSelect
 {
-	std::unique_ptr<Texture> mPlate;
+	std::unique_ptr<Sprite> mPlate;
 	int mCharacterNum = 0;
 	int mSelectIndex = 0;
 	int mOldSelectIndex = 0;

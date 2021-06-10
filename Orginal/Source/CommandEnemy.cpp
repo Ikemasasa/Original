@@ -4,7 +4,6 @@
 
 void CommandEnemy::Update(const BattleActorManager* bam)
 {
-	// 仮のオンパレード
 	const std::vector<int>& objectIDs = bam->GetObjectIDs(Actor::PLAYER);
 
 	int index = rand() % objectIDs.size();

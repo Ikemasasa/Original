@@ -8,7 +8,7 @@
 #include "lib/Vector.h"
 #include "lib/Font.h"
 
-class Texture;
+class Sprite;
 
 class MenuSelect : public MenuBase
 {
@@ -28,14 +28,14 @@ private:
 
 	struct Data
 	{
-		Texture* plate;
+		Sprite* plate;
 		wchar_t str[STR_MAX];
 		Vector2 pos;
 		float moveX;
 	};
 
-	std::unique_ptr<Texture> mSelectBar;
-	std::unique_ptr<Texture> mBar;
+	std::unique_ptr<Sprite> mSelectBar;
+	std::unique_ptr<Sprite> mBar;
 	std::vector<Data> mDatas;
 	Font mFont;
 	int mSelectIndex = 0;
@@ -43,7 +43,7 @@ private:
 	float mBeginMoveX = 0.0f;
 
 
-	bool Add(Texture* plate, const wchar_t* str);
+	bool Add(Sprite* plate, const wchar_t* str);
 public:
 	MenuSelect();
 	~MenuSelect() = default;

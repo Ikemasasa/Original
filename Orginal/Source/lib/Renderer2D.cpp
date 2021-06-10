@@ -7,7 +7,7 @@
 #include "FontTexture.h"
 #include "ResourceManager.h"
 #include "Shader.h"
-#include "Texture.h"
+#include "Sprite.h"
 
 Renderer2D::Renderer2D()
 {

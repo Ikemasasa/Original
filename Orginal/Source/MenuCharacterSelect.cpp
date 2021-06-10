@@ -12,7 +12,7 @@ void MenuCharacterSelect::Initialize(const PlayerManager* plm)
 
 	mNameFont.Initialize();
 
-	mPlate = std::make_unique<Texture>(L"Data/Image/Menu/character_plate.png");
+	mPlate = std::make_unique<Sprite>(L"Data/Image/Menu/character_plate.png");
 
 	// –¼‘O‚Ìˆê•¶š–Ú‚ğì‚é
 	const std::vector<std::shared_ptr<Player>>& players =  plm->GetPlayers();

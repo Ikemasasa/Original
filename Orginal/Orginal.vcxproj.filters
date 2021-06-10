@@ -123,7 +123,7 @@
     <ClInclude Include="Source\lib\Shader.h">
       <Filter>lib\ヘッダーファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\lib\Texture.h">
+    <ClInclude Include="Source\lib\Sprite.h">
       <Filter>lib\ヘッダーファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\FontTexture.h">
@@ -212,9 +212,6 @@
     </ClInclude>
     <ClInclude Include="Source\BattleActor.h">
       <Filter>ヘッダー ファイル\Scene\Battle</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ManagerBase.h">
-      <Filter>ヘッダー ファイル\Common</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\Skybox.h">
       <Filter>ヘッダー ファイル\Common</Filter>
@@ -332,9 +329,6 @@
     <ClCompile Include="Source\Fade.cpp">
       <Filter>ソース ファイル\Common</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Define.cpp">
-      <Filter>ソース ファイル\Common</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -353,7 +347,7 @@
     <ClCompile Include="Source\lib\Shader.cpp">
       <Filter>lib\ソースファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\lib\Texture.cpp">
+    <ClCompile Include="Source\lib\Sprite.cpp">
       <Filter>lib\ソースファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\FontTexture.cpp">
@@ -464,9 +458,6 @@
     <ClCompile Include="Source\CommandEnemy.cpp">
       <Filter>ソース ファイル\Scene\Battle</Filter>
     </ClCompile>
-    <ClCompile Include="Source\BattleState.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Terrain.cpp">
       <Filter>ソース ファイル\Scene\Field</Filter>
     </ClCompile>
@@ -493,9 +484,6 @@
     </ClCompile>
     <ClCompile Include="Source\FrontendSprite.cpp">
       <Filter>ソース ファイル\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ManagerBase.cpp">
-      <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\ResourceManager.cpp">
       <Filter>lib\ソースファイル</Filter>
@@ -532,6 +520,9 @@
     </ClCompile>
     <ClCompile Include="Source\ItemSelect.cpp">
       <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BattleState.cpp">
+      <Filter>ソース ファイル\Scene\Battle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

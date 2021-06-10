@@ -11,7 +11,7 @@ void FrontendSprite::Render()
 	}
 }
 
-bool FrontendSprite::Set(const std::shared_ptr<Texture>& tex, const Vector2& pos, const Vector2& scale, const Vector2& texPos, const Vector2& size, const Vector2& center)
+bool FrontendSprite::Set(const std::shared_ptr<Sprite>& tex, const Vector2& pos, const Vector2& scale, const Vector2& texPos, const Vector2& size, const Vector2& center)
 {
 	for (int i = 0; i < DATA_MAX; ++i)
 	{

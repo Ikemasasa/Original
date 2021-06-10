@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 
-#include "lib/Texture.h"
+#include "lib/Sprite.h"
 #include "lib/RenderTarget.h"
 
 #include "CameraBase.h"
@@ -10,7 +10,7 @@
 class SceneBase
 {
 protected:
-	Texture mRamp;
+	Sprite mRamp;
 	RenderTarget mSceneTarget;
 	ShadowMap mShadowMap;
 	std::unique_ptr<Shader> mPostEffect;

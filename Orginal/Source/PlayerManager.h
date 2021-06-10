@@ -3,7 +3,6 @@
 
 #include "Item.h"
 #include "Player.h"
-#include "ManagerBase.h"
 
 class CameraBase;
 

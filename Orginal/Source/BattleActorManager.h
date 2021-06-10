@@ -6,7 +6,6 @@
 
 #include "Actor.h"
 #include "BattleActor.h"
-#include "ManagerBase.h"
 #include "ProductionBattle.h"
 
 class Enemy;

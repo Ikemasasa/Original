@@ -4,7 +4,7 @@
 #include "ResourceManager.h"
 #include "Renderer2D.h"
 #include "Shader.h"
-#include "Texture.h"
+#include "Sprite.h"
 #include "Window.h"
 
 Skybox::Skybox(const wchar_t* filename)
@@ -14,7 +14,7 @@ Skybox::Skybox(const wchar_t* filename)
 	mShader = std::make_unique<Shader>();
 	Initialize();
 
-	mTexture = std::make_unique<Texture>(filename);
+	mTexture = std::make_unique<Sprite>(filename);
 }
 
 Skybox::~Skybox()

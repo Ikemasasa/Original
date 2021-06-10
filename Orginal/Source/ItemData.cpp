@@ -5,7 +5,7 @@
 #include <sstream>
 
 #include "lib/ConvertString.h"
-#include "lib/Texture.h"
+#include "lib/Sprite.h"
 
 ItemData::ItemData()
 {
@@ -51,7 +51,7 @@ void ItemData::LoadItemData()
 			int index = 0;
 			item.id = std::stoi(data[index++]);
 			item.name = data[index++];
-			item.icon = std::make_shared<Texture>(ConvertString::ConvertToWstirng(iconPath + data[index++]).c_str());
+			item.icon = std::make_shared<Sprite>(ConvertString::ConvertToWstirng(iconPath + data[index++]).c_str());
 			item.effect = (Effect)std::stoi(data[index++]);
 			item.target = (Target)std::stoi(data[index++]);
 			item.range = (Range)std::stoi(data[index++]);

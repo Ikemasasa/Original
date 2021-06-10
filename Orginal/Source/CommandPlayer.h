@@ -5,7 +5,7 @@
 
 #include "lib/Vector.h"
 
-class Texture;
+class Sprite;
 
 class CommandPlayer : public CommandBase
 {
@@ -42,7 +42,7 @@ private:
 	int mSelectIndex; // アイテム、スキルの選択index
 	int mTargetObjectIndex;
 
-	std::shared_ptr<Texture> mIcons;
+	std::shared_ptr<Sprite> mIcons;
 
 public:
 	CommandPlayer();

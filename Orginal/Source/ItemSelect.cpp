@@ -3,7 +3,7 @@
 #include "lib/Audio.h"
 #include "lib/Input.h"
 #include "lib/Math.h"
-#include "lib/Texture.h"
+#include "lib/Sprite.h"
 
 #include "Item.h"
 
@@ -12,8 +12,8 @@ void ItemSelect::Initialize()
 	mSelectIndex = 0;
 	mOldSelectIndex = 0;
 
-	mBoard = std::make_unique<Texture>(L"Data/Image/board.png");
-	mSelectFrame = std::make_unique<Texture>(L"Data/Image/select_frame.png");
+	mBoard = std::make_unique<Sprite>(L"Data/Image/board.png");
+	mSelectFrame = std::make_unique<Sprite>(L"Data/Image/select_frame.png");
 }
 
 int ItemSelect::Update(const Item* inventory)

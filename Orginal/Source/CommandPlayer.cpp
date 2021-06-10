@@ -7,11 +7,11 @@
 
 #include "lib/Input.h"
 #include "lib/Math.h"
-#include "lib/Texture.h"
+#include "lib/Sprite.h"
 
 CommandPlayer::CommandPlayer() : CommandBase()
 {
-	mIcons = std::make_shared<Texture>();
+	mIcons = std::make_shared<Sprite>();
 	mIcons->Load(L"Data/Image/CommandIcons.png");
 }
 

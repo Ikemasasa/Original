@@ -4,7 +4,7 @@
 
 #include "lib/Vector.h"
 
-#include "lib/Texture.h"
+#include "lib/Sprite.h"
 
 class FrontendSprite
 {
@@ -17,7 +17,7 @@ class FrontendSprite
 
 	struct Data
 	{
-		std::shared_ptr<Texture> tex = nullptr;
+		std::shared_ptr<Sprite> tex = nullptr;
 		Vector2 pos					 = { 0.0f, 0.0f };
 		Vector2 scale				 = { 0.0f, 0.0f };
 		Vector2 texPos				 = { 0.0f, 0.0f };
@@ -29,6 +29,6 @@ class FrontendSprite
 
 public:
 	void Render();
-	bool Set(const std::shared_ptr<Texture>& tex, const Vector2& pos, const Vector2& scale, const Vector2& texPos, const Vector2& size, const Vector2& center);
+	bool Set(const std::shared_ptr<Sprite>& tex, const Vector2& pos, const Vector2& scale, const Vector2& texPos, const Vector2& size, const Vector2& center);
 
 };

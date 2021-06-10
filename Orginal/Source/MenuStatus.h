@@ -37,7 +37,7 @@ class MenuStatus : public MenuBase
 
 	MenuCharacterSelect mCharacterSelect;
 
-	std::unique_ptr<Texture> mStatusPlate;
+	std::unique_ptr<Sprite> mStatusPlate;
 
 public:
 	MenuStatus() = default;

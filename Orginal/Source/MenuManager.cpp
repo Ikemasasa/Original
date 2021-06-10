@@ -1,7 +1,7 @@
 #include "MenuManager.h"
 
 #include "lib/Input.h"
-#include "lib/Texture.h"
+#include "lib/Sprite.h"
 
 #include "Fade.h"
 #include "MenuItem.h"
@@ -10,7 +10,7 @@
 
 MenuManager::MenuManager()
 {
-	mBG = std::make_unique<Texture>(L"Data/Image/Menu/Menu_BG.png");
+	mBG = std::make_unique<Sprite>(L"Data/Image/Menu/Menu_BG.png");
 }
 
 void MenuManager::Initialize(const PlayerManager* plm)

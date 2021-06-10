@@ -7,7 +7,7 @@
 #include "FontValue.h"
 
 class PlayerManager;
-class Texture;
+class Sprite;
 
 class MenuCharacterHealth
 {
@@ -27,8 +27,8 @@ class MenuCharacterHealth
 		std::wstring name;
 	};
 
-	std::unique_ptr<Texture> mHealthPlate;
-	std::unique_ptr<Texture> mSelect;
+	std::unique_ptr<Sprite> mHealthPlate;
+	std::unique_ptr<Sprite> mSelect;
 
 	Font mPlNameFont;
 	Font mStatusNameFont;

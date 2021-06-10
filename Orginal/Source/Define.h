@@ -12,9 +12,9 @@
 
 struct Define final
 {
-	static const float SCREEN_WIDTH;
-	static const float SCREEN_HEIGHT;
+	static constexpr float SCREEN_WIDTH = 1280.0f;
+	static constexpr float SCREEN_HEIGHT = 720.0f;
 
-	static const float FRAMERATE;
-	static const float PI;
+	static constexpr float FRAMERATE = 60.0f;
+	static constexpr float PI = 3.1416f;
 };

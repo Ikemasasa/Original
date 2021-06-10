@@ -8,7 +8,7 @@
 #include "FontValue.h"
 #include "Singleton.h"
 
-class Texture;
+class Sprite;
 
 class FrontendBattle : public SingletonManual<FrontendBattle>
 {
@@ -37,5 +37,5 @@ public:
 	void Render();
 
 	bool SetValue(const int value, const Vector3& pos, const Vector2& centerPercent, const Vector4& color);
-	void SetSprite(const std::shared_ptr<Texture>& tex, const Vector2& pos, const Vector2& scale, const Vector2& texPos, const Vector2& size, const Vector2& center = Vector2::Zero());
+	void SetSprite(const std::shared_ptr<Sprite>& tex, const Vector2& pos, const Vector2& scale, const Vector2& texPos, const Vector2& size, const Vector2& center = Vector2::Zero());
 };

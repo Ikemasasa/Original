@@ -2,7 +2,7 @@
 
 #include "lib/Font.h"
 #include "lib/Math.h"
-#include "lib/Texture.h"
+#include "lib/Sprite.h"
 
 #include "CommandPlayer.h" 
 
@@ -59,7 +59,7 @@ bool FrontendBattle::SetValue(const int value, const Vector3& pos, const Vector2
 	return false;
 }
 
-void FrontendBattle::SetSprite(const std::shared_ptr<Texture>& tex, const Vector2& pos, const Vector2& scale, const Vector2& texPos, const Vector2& size, const Vector2& center)
+void FrontendBattle::SetSprite(const std::shared_ptr<Sprite>& tex, const Vector2& pos, const Vector2& scale, const Vector2& texPos, const Vector2& size, const Vector2& center)
 {
 	mSprite.Set(tex, pos, scale, texPos, size, center);
 }
