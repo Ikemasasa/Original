@@ -14,7 +14,7 @@ private:
 	enum FadeType
 	{
 		NONE,
-		FADE_IN_OUT,
+		FADE_IN,
 		FADE_OUT,
 		MAX
 	};
@@ -27,7 +27,7 @@ private:
 	Fade() = default;
 	~Fade() = default;
 
-	void UpdateFadeInOut();
+	void UpdateFadeIn();
 	void UpdateFadeOut();
 
 

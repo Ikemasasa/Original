@@ -1,33 +1,5 @@
 #include "Singleton.h"
 
-//// ------------------------
-//// –¾Ž¦“I‚É‚·‚éSingleton
-//// ------------------------
-//template<typename T> Singleton<T*> mInstance = nullptr;
-//
-//template<typename T>
-//void Singleton<T>::CreateInst()
-//{
-//	if (mInstance) return;
-//	mInstance = new T;
-//}
-//
-//template<typename T>
-//void Singleton<T>::DestroyInst()
-//{
-//	if (!mInstance) return;
-//	delete mInstance;
-//	mInstance = nullptr;
-//}
-//
-//template<typename T>
-//T& Singleton<T>::GetInstance()
-//{
-//	return mInstance;
-//}
-
-
-
 //--------------------------
 //	SingletonFinalzier
 //--------------------------

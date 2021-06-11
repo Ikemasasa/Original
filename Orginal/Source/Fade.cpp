@@ -11,7 +11,7 @@ bool Fade::Set(float fadeSpeed)
 
     mFade = std::make_unique<Sprite>(L"./Data/image/fade.png");
     mSpeed = fadeSpeed;
-    mType = FADE_IN_OUT;
+    mType = FADE_IN;
     return true;
 }
 
@@ -35,25 +35,19 @@ void Fade::Update()
 
     switch (mType)
     {
-    case FADE_IN_OUT: UpdateFadeInOut(); break;
-    case FADE_OUT: UpdateFadeOut();      break;
+    case FADE_IN: UpdateFadeIn();   break;
+    case FADE_OUT: UpdateFadeOut(); break;
     }
 }
 
-void Fade::UpdateFadeInOut()
+void Fade::UpdateFadeIn()
 {
     mAlpha += mSpeed;
     if (mAlpha > 1.0f)
     {
         mAlpha = 1.0f;
         mSpeed = -mSpeed;
-    }
-    if (mAlpha < 0.0f)
-    {
-        mAlpha = 0.0f;
-        mSpeed = 0.0f;
-        mFade.reset();
-        mType = NONE;
+        mType = FADE_OUT;
     }
 }
 

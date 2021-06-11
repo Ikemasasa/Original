@@ -510,6 +510,12 @@ void SkinnedMesh::Skinning()
 
 	// 配列用変数
 	int f = (int)mFrame;
+	int nf = f + 1; // nextFrame
+	if (f == motion->frameNum - 1) // fが最後のフレームなら
+	{
+		nf = 0;
+	}
+
 	Matrix keyMatrix[BONE_MAX];
 
 	auto MatrixInterporate = [](Matrix& out, const Matrix& A, const Matrix& B, float rate)
@@ -523,7 +529,7 @@ void SkinnedMesh::Skinning()
 	{
 		// 行列補完
 		Matrix mat;
-		MatrixInterporate(mat, motion->keyframe[b][f], motion->keyframe[b][f + 1], mFrame - f);
+		MatrixInterporate(mat, motion->keyframe[b][f], motion->keyframe[b][nf], mFrame - f);
 		mBones[b].transform = mat;
 
 		//キーフレーム
@@ -537,8 +543,8 @@ void SkinnedMesh::Skinning()
 		//定数バッファ更新
 		const float numThreadX = 256.0f;
 		cb.groupNumX = static_cast<UINT>(ceil(mVerticesNum / numThreadX));
-		cb.groupNumY = 1;
-		cb.groupNumZ = 1;
+		cb.groupNumY = static_cast<UINT>(1);
+		cb.groupNumZ = static_cast<UINT>(1);
 		cb.verticesNum = mVerticesNum;
 		mSkinningShader->UpdateConstantBuffer(&cb);
 	}

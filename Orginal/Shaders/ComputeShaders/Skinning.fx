@@ -57,7 +57,7 @@ void main(uint3 DTid : SV_DispatchThreadID)
 
 	// 保存
 	OutVertices.Store3(fetchAddress + 0, asuint(skinnedPos));
-	//OutVertices.Store3(fetchAddress + 12, asuint(skinnedNormal));
+	OutVertices.Store3(fetchAddress + 12, asuint(skinnedNormal));
 }
 
 
