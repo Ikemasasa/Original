@@ -74,7 +74,7 @@ void Fade::Render()
     if (!mFade && mType == FADE_OUT)
     {
         // このタイミングで作成しないと前回のフレームのスクショが作成されるからここでやってる
-        const wchar_t* filename = L"Data/Image/ScrFade.png";
+        const wchar_t* filename = L"Data/Image/screen_fade.png";
         FRAMEWORK.GenerateScrshot(filename);
         mFade = std::make_unique<Sprite>(filename);
     }
