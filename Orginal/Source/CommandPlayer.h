@@ -38,7 +38,8 @@ public:
 
 private:
 	CommandState mCmdState = CommandState::INIT;
-	Vector2 mCommand; // 一番最初の攻撃、防御みたいなコマンドの選択index
+	int mCommandX;
+	int mCommandY;
 	int mSelectIndex; // アイテム、スキルの選択index
 	int mTargetObjectIndex;
 

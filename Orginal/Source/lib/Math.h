@@ -36,8 +36,11 @@ private:
 
 public:
 	static float Max(const float& c1, const float& c2);
+	static int Max(const int& c1, const int& c2);
 	static float Min(const float& c1, const float& c2);
+	static int Min(const int& c1, const int& c2);
 	static float Clamp(const float& value, const float& min, const float& max);
+	static float Clamp(const int& value, const int& min, const int& max);
 	static float Clamp01(const float& value);
 	static float Lerp(const float& f1, const float& f2, const float& t);
 

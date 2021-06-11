@@ -33,7 +33,8 @@ void CommandPlayer::Update(const BattleActorManager* bam)
 	switch (mCmdState)
 	{
 	case CommandState::INIT:
-		mCommand = Vector2(1, 1);
+		mCommandX = 1;
+		mCommandY = 1;
 		mCmdState = CommandState::SELECT_BEHAVIOUR;
 		mBehaviour = Behaviour::NONE;
 		// break;
@@ -47,23 +48,23 @@ void CommandPlayer::Update(const BattleActorManager* bam)
 
 		if (Input::GetButtonTrigger(0, Input::UP))
 		{
-			if (mCommand.x == 0 || mCommand.x == 2) mCommand.x = 1;
-			mCommand.y = Math::Max(mCommand.y - 1, COMMAND_MIN_Y);
+			if (mCommandX == 0 || mCommandX == 2) mCommandX = 1;
+			mCommandY = Math::Max(mCommandY - 1, COMMAND_MIN_Y);
 		}
 		if (Input::GetButtonTrigger(0, Input::DOWN))
 		{
-			if (mCommand.x == 0 || mCommand.x == 2) mCommand.x = 1;
-			mCommand.y = Math::Min(mCommand.y + 1, COMMAND_MAX_Y);
+			if (mCommandX == 0 || mCommandX == 2) mCommandX = 1;
+			mCommandY = Math::Min(mCommandY + 1, COMMAND_MAX_Y);
 		}
 		if (Input::GetButtonTrigger(0, Input::RIGHT))
 		{
-			if (mCommand.y == 0 || mCommand.y == 2) mCommand.y = 1;
-			mCommand.x = Math::Min(mCommand.x + 1, COMMAND_MAX_X);
+			if (mCommandY == 0 || mCommandY == 2) mCommandY = 1;
+			mCommandX = Math::Min(mCommandX + 1, COMMAND_MAX_X);
 		}
 		if (Input::GetButtonTrigger(0, Input::LEFT))
 		{
-			if (mCommand.y == 0 || mCommand.y == 2) mCommand.y = 1;
-			mCommand.x = Math::Max(mCommand.x - 1, COMMAND_MIN_X);
+			if (mCommandY == 0 || mCommandY == 2) mCommandY = 1;
+			mCommandX = Math::Max(mCommandX - 1, COMMAND_MIN_X);
 		}
 
 		// コマンドスプライト
@@ -79,20 +80,20 @@ void CommandPlayer::Update(const BattleActorManager* bam)
 			FrontendBattle::GetInstance().SetSprite(mIcons, Vector2(offsetX + scaleSize.x, offsetY + scaleSize.y), scale, Vector2(ICON_ATTACK_X, 0.0f), Vector2(ICON_SIZE_X, ICON_SIZE_Y));
 			FrontendBattle::GetInstance().SetSprite(mIcons, Vector2(offsetX + scaleSize.x * 2, offsetY + scaleSize.y), scale, Vector2(ICON_SKILL_X, 0.0f), Vector2(ICON_SIZE_X, ICON_SIZE_Y));
 			FrontendBattle::GetInstance().SetSprite(mIcons, Vector2(offsetX + scaleSize.x, offsetY + scaleSize.y * 2), scale, Vector2(ICON_ESCAPE_X, 0.0f), Vector2(ICON_SIZE_X, ICON_SIZE_Y));
-			FrontendBattle::GetInstance().SetSprite(mIcons, Vector2(offsetX + mCommand.x * scaleSize.x, offsetY + mCommand.y * scaleSize.y), scale, Vector2(ICON_SELECT_X, 0.0f), Vector2(ICON_SIZE_X, ICON_SIZE_Y));
+			FrontendBattle::GetInstance().SetSprite(mIcons, Vector2(offsetX + mCommandX * scaleSize.x, offsetY + mCommandY * scaleSize.y), scale, Vector2(ICON_SELECT_X, 0.0f), Vector2(ICON_SIZE_X, ICON_SIZE_Y));
 		}
 
 
 		if (Input::GetButtonTrigger(0, Input::A))
 		{
-			if (mCommand.y == 0) mCmdState = CommandState::SELECT_ITEM;
-			if (mCommand.y == 2) mCmdState = CommandState::SELECT_ESCAPE;
+			if (mCommandY == 0) mCmdState = CommandState::SELECT_ITEM;
+			if (mCommandY == 2) mCmdState = CommandState::SELECT_ESCAPE;
 
-			if (mCommand.y == 1)
+			if (mCommandY == 1)
 			{
-				if (mCommand.x == 0) mCmdState = CommandState::SELECT_DEFENCE;
-				if (mCommand.x == 1) mCmdState = CommandState::SELECT_ATTACK;
-				if (mCommand.x == 2) mCmdState = CommandState::SELECT_SKILL;
+				if (mCommandX == 0) mCmdState = CommandState::SELECT_DEFENCE;
+				if (mCommandX == 1) mCmdState = CommandState::SELECT_ATTACK;
+				if (mCommandX == 2) mCmdState = CommandState::SELECT_SKILL;
 			}
 		}
 		break;

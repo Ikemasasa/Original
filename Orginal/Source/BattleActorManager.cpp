@@ -22,7 +22,7 @@ void BattleActorManager::SortOrder()
 		std::random_device seedGen;
 		std::default_random_engine engine(seedGen());
 
-		for (int i = dist - 1; i > 0; ++i)
+		for (int i = dist - 1; i > 0; --i)
 		{
 			int target = std::uniform_int_distribution<int>(i, dist - 1)(engine);
 			if (i != target) std::swap(temp[i], temp[target]);
@@ -173,9 +173,9 @@ void BattleActorManager::CreateAndRegister(const std::shared_ptr<Actor>& actor)
 
 int BattleActorManager::CalcDamage(const Status* deal, Status* take)
 {
-	int damage = deal->str / 2 - take->vit / 4;
-	int sign = (rand() % 2 == 0) ? -1 : 1;
-	int width = damage / 16 + 1; // ダメージの振れ幅
+	int damage = deal->str / 2 - take->vit / 4; // 基礎ダメージ
+	int sign = (rand() % 2 == 0) ? -1 : 1; // 振れ幅の符号
+	int width = damage / 16 + 1; // ダメージの振れ幅の最大値
 	damage = damage + (rand() % width * sign);
 
 	take->hp -= Math::Max(0, damage);

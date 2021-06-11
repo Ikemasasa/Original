@@ -14,8 +14,8 @@ private:
 	enum FadeType
 	{
 		NONE,
-		FADE_IN,
 		FADE_OUT,
+		FADE_IN,
 		MAX
 	};
 

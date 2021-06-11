@@ -11,7 +11,7 @@ bool Fade::Set(float fadeSpeed)
 
     mFade = std::make_unique<Sprite>(L"./Data/image/fade.png");
     mSpeed = fadeSpeed;
-    mType = FADE_IN;
+    mType = FADE_OUT;
     return true;
 }
 
@@ -22,7 +22,7 @@ bool Fade::SetSceneImage(float fadeSpeed)
     
     // フェード画像は後で作る
     mSpeed = -fadeSpeed;
-    mType = FADE_OUT;
+    mType = FADE_IN;
     mAlpha = 1.0f;
 
     return true;
@@ -35,23 +35,23 @@ void Fade::Update()
 
     switch (mType)
     {
-    case FADE_IN: UpdateFadeIn();   break;
     case FADE_OUT: UpdateFadeOut(); break;
+    case FADE_IN: UpdateFadeIn();   break;
     }
 }
 
-void Fade::UpdateFadeIn()
+void Fade::UpdateFadeOut()
 {
     mAlpha += mSpeed;
     if (mAlpha > 1.0f)
     {
         mAlpha = 1.0f;
         mSpeed = -mSpeed;
-        mType = FADE_OUT;
+        mType = FADE_IN;
     }
 }
 
-void Fade::UpdateFadeOut()
+void Fade::UpdateFadeIn()
 {
     mAlpha += mSpeed;
     if (mAlpha < 0.0f)
@@ -65,7 +65,7 @@ void Fade::UpdateFadeOut()
 
 void Fade::Render()
 {
-    if (!mFade && mType == FADE_OUT)
+    if (!mFade && mType == FADE_IN)
     {
         // このタイミングで作成しないと前回のフレームのスクショが作成されるからここでやってる
         const wchar_t* filename = L"Data/Image/screen_fade.png";

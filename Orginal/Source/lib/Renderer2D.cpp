@@ -32,8 +32,16 @@ Renderer2D::Renderer2D()
     FRAMEWORK.GetDevice()->CreateBuffer(&bufferDesc, &subresource, mVertexBuffer.GetAddressOf());
 
 
+    D3D11_INPUT_ELEMENT_DESC layout[] =
+    {
+        { "POSITION" , 0, DXGI_FORMAT_R32G32B32_FLOAT   , 0, 0   , D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "NORMAL"   , 0, DXGI_FORMAT_R32G32B32_FLOAT   , 0, 4 * 3, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD" , 0, DXGI_FORMAT_R32G32_FLOAT      , 0, 4 * 6, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "COLOR"    , 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 4 * 8, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+    };
+
     mShader = std::make_unique<Shader>();
-    mShader->Load(L"Shaders/Renderer2D.fx", "VSMain", "PSMain");
+    mShader->Load(L"Shaders/Renderer2D.fx", "VSMain", "PSMain", layout, ARRAYSIZE(layout));
 
 }
 

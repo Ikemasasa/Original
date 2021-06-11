@@ -1,5 +1,13 @@
 #include "General.fx"
 
+struct VSInput2D
+{
+    float3 pos	   : POSITION;
+    float3 normal  : NORMAL;
+    float2 tex	   : TEXCOORD;
+    float4 color   : COLOR;
+};
+
 struct PSInput
 {
     float4 pos   : SV_POSITION;
@@ -7,7 +15,7 @@ struct PSInput
     float2 tex   : TEXCOORD;
 };
 
-PSInput VSMain(VSInput input)
+PSInput VSMain(VSInput2D input)
 {
     PSInput output;
     output.pos   = float4(input.pos, 1.0);

@@ -84,7 +84,7 @@ HRESULT ResourceManager::LoadShaderResource(ID3D11Device * device, const wchar_t
         if (FAILED(hr))
         {
             hr = CreateDummyTexture(device, tex2D.GetAddressOf(), outDesc, &push.srv);
-            if (FAILED(hr)) return false;
+            if (FAILED(hr)) return hr;
         }
         wcscpy_s(push.path, STR_MAX, filename);
         mSRVs.emplace_back(push);
@@ -135,7 +135,7 @@ bool ResourceManager::LoadVertexShader(LPCWSTR filename, LPCSTR func, D3D11_INPU
         if (FAILED(hr))
         {
             blob->Release();
-            return hr;
+            return false;
         }
 
         // 入力レイアウト
