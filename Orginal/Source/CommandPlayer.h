@@ -3,7 +3,7 @@
 
 #include "CommandBase.h"
 
-#include "lib/Vector.h"
+#include "lib/TVector.h"
 
 class Sprite;
 
@@ -38,8 +38,7 @@ public:
 
 private:
 	CommandState mCmdState = CommandState::INIT;
-	int mCommandX;
-	int mCommandY;
+	TVector2<int> mCommand;
 	int mSelectIndex; // アイテム、スキルの選択index
 	int mTargetObjectIndex;
 

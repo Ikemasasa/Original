@@ -77,11 +77,16 @@ public:
 
 	inline BOOL operator == (const Vector3& r) const { return x == r.x && y == r.y && z == r.z; }
 	inline BOOL operator != (const Vector3& r) const { return x != r.x || y != r.y || z != r.z; }
+
+	inline Vector3 operator +(const float r)  const { return Vector3(x + r, y + r, z + r); }
+	inline Vector3 operator -(const float r)  const { return Vector3(x - r, y - r, z - r); }
 	inline Vector3 operator *(const float r)  const { return Vector3(x * r, y * r, z * r); }
-	inline void    operator *=(const float r) { x *= r, y *= r, z *= r; }
 	inline Vector3 operator /(const float r)  const { return Vector3(x / r, y / r, z / r); }
-	inline Vector3 operator +=(const Vector3& r) { return Vector3(x += r.x, y += r.y, z += r.z); }
-	inline Vector3 operator -=(const Vector3& r) { return Vector3(x -= r.x, y -= r.y, z -= r.z); }
+
+	inline void operator +=(const Vector3& r) { x += r.x, y += r.y, z += r.z; }
+	inline void operator -=(const Vector3& r) { x -= r.x, y -= r.y, z -= r.z; }
+
+	inline void operator *=(const float r) { x *= r, y *= r, z *= r; }
 
 	static Vector3 Zero() { return Vector3(0.0f, 0.0f, 0.0f); }
 	static Vector3 One() { return Vector3(1.0f, 1.0f, 1.0f); }
@@ -149,7 +154,7 @@ public:
 	inline BOOL operator != (const Vector4& r) const { return x != r.x || y != r.y || z != r.z; }
 	inline Vector4 operator *(const float r)  const { return Vector4(x * r, y * r, z * r, w * r); }
 	inline Vector4 operator /(const float r)  const { return Vector4(x / r, y / r, z / r, w / r); }
-	inline Vector4 operator +=(const Vector3& r) { return Vector4(x += r.x, y += r.y, z += r.z, w += r.z); }
+	inline Vector4 operator +=(const Vector4& r) { return Vector4(x += r.x, y += r.y, z += r.z, w += r.w); }
 	inline Vector4 operator -=(const Vector4& r) { return Vector4(x -= r.x, y -= r.y, z -= r.z, w -= r.w); }
 
 	static Vector4 Zero() { return Vector4(0.0f, 0.0f, 0.0f, 0.0f); }

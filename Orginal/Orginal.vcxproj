@@ -185,6 +185,7 @@
     <ClInclude Include="Source\lib\Shader.h" />
     <ClInclude Include="Source\lib\SkinnedMesh.h" />
     <ClInclude Include="Source\lib\Sprite.h" />
+    <ClInclude Include="Source\lib\TVector.h" />
     <ClInclude Include="Source\lib\Vector.h" />
     <ClInclude Include="Source\lib\Input.h" />
     <ClInclude Include="Source\MenuBase.h" />

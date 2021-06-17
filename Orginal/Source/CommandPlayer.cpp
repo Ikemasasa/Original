@@ -33,8 +33,8 @@ void CommandPlayer::Update(const BattleActorManager* bam)
 	switch (mCmdState)
 	{
 	case CommandState::INIT:
-		mCommandX = 1;
-		mCommandY = 1;
+		mCommand.x = 0;
+		mCommand.y = 0;
 		mCmdState = CommandState::SELECT_BEHAVIOUR;
 		mBehaviour = Behaviour::NONE;
 		// break;
@@ -46,26 +46,17 @@ void CommandPlayer::Update(const BattleActorManager* bam)
 		// 防 攻 技
 		//    逃
 
-		if (Input::GetButtonTrigger(0, Input::UP))
-		{
-			if (mCommandX == 0 || mCommandX == 2) mCommandX = 1;
-			mCommandY = Math::Max(mCommandY - 1, COMMAND_MIN_Y);
-		}
-		if (Input::GetButtonTrigger(0, Input::DOWN))
-		{
-			if (mCommandX == 0 || mCommandX == 2) mCommandX = 1;
-			mCommandY = Math::Min(mCommandY + 1, COMMAND_MAX_Y);
-		}
-		if (Input::GetButtonTrigger(0, Input::RIGHT))
-		{
-			if (mCommandY == 0 || mCommandY == 2) mCommandY = 1;
-			mCommandX = Math::Min(mCommandX + 1, COMMAND_MAX_X);
-		}
-		if (Input::GetButtonTrigger(0, Input::LEFT))
-		{
-			if (mCommandY == 0 || mCommandY == 2) mCommandY = 1;
-			mCommandX = Math::Max(mCommandX - 1, COMMAND_MIN_X);
-		}
+		if (Input::GetButtonTrigger(0, Input::UP))    mCommand.y = Math::Max(mCommand.y - 1, COMMAND_MIN_Y);
+		if (Input::GetButtonTrigger(0, Input::DOWN))  mCommand.y = Math::Min(mCommand.y + 1, COMMAND_MAX_Y);
+		if (Input::GetButtonTrigger(0, Input::RIGHT)) mCommand.x = Math::Min(mCommand.x + 1, COMMAND_MAX_X);
+		if (Input::GetButtonTrigger(0, Input::LEFT))  mCommand.x = Math::Max(mCommand.x - 1, COMMAND_MIN_X);
+
+		// Yが1以外ならxは1, Xが1以外なら
+		if (mCommand.y != 1) mCommand.x = 1;
+		if (mCommand.x != 1) mCommand.y = 1;
+
+
+		if(mCommand.x)
 
 		// コマンドスプライト
 		{

@@ -1,45 +1,5 @@
 #include "Math.h"
 
-float Math::Max(const float& c1, const float& c2)
-{
-	return (c1 > c2) ? c1 : c2;
-}
-
-int Math::Max(const int& c1, const int& c2)
-{
-	return (c1 > c2) ? c1 : c2;
-}
-
-float Math::Min(const float& c1, const float& c2)
-{
-	return (c1 > c2) ? c2 : c1;
-}
-
-int Math::Min(const int& c1, const int& c2)
-{
-	return (c1 > c2) ? c2 : c1;
-}
-
-float Math::Clamp(const float& value, const float& min, const float& max)
-{
-	return Min(Max(value, min), max);
-}
-
-float Math::Clamp(const int& value, const int& min, const int& max)
-{
-	return Min(Max(value, min), max);
-}
-
-float Math::Clamp01(const float& value)
-{
-	return Clamp(value, 0.0f, 1.0f);
-}
-
-float Math::Lerp(const float& f0, const float& f1, const float& t)
-{
-	return (1.0f - t) * f0 + t * f1;
-}
-
 bool Math::IsSharpAngle(const Vector3& p1, const Vector3& p2, const Vector3& p3)
 {
 	const Vector3 vec1 = p1 - p2;

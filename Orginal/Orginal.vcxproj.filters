@@ -306,6 +306,9 @@
     <ClInclude Include="Source\ItemSelect.h">
       <Filter>ヘッダー ファイル\Common</Filter>
     </ClInclude>
+    <ClInclude Include="Source\lib\TVector.h">
+      <Filter>lib\ヘッダーファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\lib\Blend.cpp">
