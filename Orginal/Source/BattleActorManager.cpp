@@ -8,6 +8,7 @@
 #include "BattleState.h"
 #include "EnemyBattle.h"
 #include "PlayerBattle.h"
+#include "PlayerManager.h"
 
 void BattleActorManager::SortOrder()
 {
@@ -31,19 +32,19 @@ void BattleActorManager::SortOrder()
 		return temp;
 	};
 
-	std::map<int, std::vector<std::shared_ptr<BattleActor>>>  agiOrder;
+	std::map<int, std::vector<BattleActor*>> agiOrder;
 
 	// マップのキーは昇順にソートされてる
 	for (auto& actor : mBActors)
 	{
-		agiOrder[actor->GetStatus()->agi].emplace_back(actor);
+		agiOrder[actor->GetStatus()->agi].push_back(actor.get());
 	}
 
 	// 降順に代入したいからリバースイテレータ
 	for (auto it = agiOrder.rbegin(); it != agiOrder.rend(); ++it)
 	{
 		// 2個以上ならその中からランダムで決める
-		if (it->second.size() > 1)
+		if (it->second.size() > 2)
 		{
 			std::vector<int> randArr = RandArrayNoDuplicate(0, it->second.size() - 1);
 			for (size_t i = 0; i < it->second.size(); ++i)
@@ -58,11 +59,14 @@ void BattleActorManager::SortOrder()
 	}
 }
 
-BattleActorManager::BattleActorManager(const std::shared_ptr<Player>& player, const std::shared_ptr<Enemy>& enemy)
+BattleActorManager::BattleActorManager(PlayerManager* player, Enemy* enemy)
 {
-	// 一緒くたにする
-	CreateAndRegister(player);
-	CreateAndRegister(enemy);
+	for (size_t i = 0; i < player->GetNum(); ++i)
+	{
+		PlayerCreateAndRegister(player->GetPlayer(i));
+	}
+
+	EnemyCreateAndRegister(enemy);
 
 	SortOrder();
 	mMoveActor = mOrder.front();
@@ -105,9 +109,10 @@ void BattleActorManager::Update()
 	bool isBehaviourEnable = false;
 	isBehaviourEnable = mMoveActor->Update(this);
 
+	// MoveActor以外もモーションの更新をする
 	for (auto& actor : mBActors)
 	{
-		if (mMoveActor == actor) continue;
+		if (mMoveActor == actor.get()) continue;
 		actor->UpdateWorld();
 	}
 
@@ -142,6 +147,8 @@ void BattleActorManager::Update()
 				DecideMoveActor();
 				BattleState::GetInstance().SetState(BattleState::State::COMMAND_SELECT);
 			}
+
+
 		}
 	}
 
@@ -151,24 +158,7 @@ void BattleActorManager::Update()
 void BattleActorManager::Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir)
 {
 	for (auto& ba : mBActors) ba->Render(view, projection, lightDir);
-}
-
-void BattleActorManager::CreateAndRegister(const std::shared_ptr<Actor>& actor)
-{
-	std::shared_ptr<BattleActor> ba = nullptr;
-	Actor::Type type = actor->GetType();
-	switch (type)
-	{
-	case Actor::PLAYER: ba = std::make_shared<PlayerBattle>(actor); break;
-	case Actor::ENEMY:  ba = std::make_shared<EnemyBattle>(actor);  break;
-	}
-
-	int objID = mBActors.size();
-
-	ba->SetObjID(objID);
-	mObjectIDs[ba->GetType()].push_back(objID);
-
-	mBActors.emplace_back(ba);
+	for (auto& ba : mBActors) ba->RenderCommand();
 }
 
 int BattleActorManager::CalcDamage(const Status* deal, Status* take)
@@ -178,10 +168,24 @@ int BattleActorManager::CalcDamage(const Status* deal, Status* take)
 	int width = damage / 16 + 1; // ダメージの振れ幅の最大値
 	damage = damage + (rand() % width * sign);
 
-	take->hp -= Math::Max(0, damage);
-	if (take->hp <= 0) take->hp = 0;
-
+	take->HurtHP(damage);
 	return damage;
+}
+
+void BattleActorManager::PlayerCreateAndRegister(Player* pl)
+{
+	int objID = mBActors.size();
+	mBActors.emplace_back(std::make_unique<PlayerBattle>(pl));
+	mBActors.back()->SetObjID(objID);
+	mObjectIDs[mBActors.back()->GetType()].push_back(objID);
+}
+
+void BattleActorManager::EnemyCreateAndRegister(Enemy* enm)
+{
+	int objID = mBActors.size();
+	mBActors.emplace_back(std::make_unique<EnemyBattle>(enm));
+	mBActors.back()->SetObjID(objID);
+	mObjectIDs[mBActors.back()->GetType()].push_back(objID);
 }
 
 bool BattleActorManager::CheckBattleFinish()
@@ -189,7 +193,7 @@ bool BattleActorManager::CheckBattleFinish()
 	for (auto& ba : mBActors)
 	{
 		// 体力が0以下なら exist = false, objIDに-1を登録
-		if (ba->GetStatus()->hp <= 0)
+		if (ba->GetStatus()->IsDead())
 		{
 			ba->SetExist(false);
 			for (auto& objID : mObjectIDs[ba->GetType()])
@@ -213,11 +217,18 @@ bool BattleActorManager::CheckBattleFinish()
 
 void BattleActorManager::DecideMoveActor()
 {
-	mMoveActor = mOrder.front();
-	mOrder.pop();
+	while (true)
+	{
+		// 順番が来たキャラが倒されているなら無視
+		if (mOrder.front()->GetObjID() == -1) mOrder.pop();
+		else break;
+	}
 
 	if (mOrder.empty())
 	{
 		SortOrder();
 	}
+
+	mMoveActor = mOrder.front();
+	mOrder.pop();
 }

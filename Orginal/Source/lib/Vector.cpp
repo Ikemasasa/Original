@@ -21,37 +21,26 @@ Vector2 Vector3::WorldToScreen(const DirectX::XMFLOAT4X4& view, const DirectX::X
 	DirectX::XMMATRIX matView = DirectX::XMLoadFloat4x4(&view);
 	DirectX::XMMATRIX matProj = DirectX::XMLoadFloat4x4(&proj);
 
+	// ビュー変換
+	pos = DirectX::XMVector3TransformCoord(pos, matView);
+
+	// プロジェクション変換
+	pos = DirectX::XMVector3TransformCoord(pos, matProj);
+
+	// w で割る(同時座標を考慮
+	pos = DirectX::XMVectorDivide(pos, DirectX::XMVectorSet(pos.m128_f32[3], pos.m128_f32[3], pos.m128_f32[3], pos.m128_f32[3])); 
+
 	ID3D11DeviceContext* context = FRAMEWORK.GetContext();
 	D3D11_VIEWPORT vp;
 	UINT numViewport = 1;
 	context->RSGetViewports(&numViewport, &vp);
 
-	DirectX::XMVECTOR ret;
-	ret = DirectX::XMVector3Project(pos, vp.TopLeftX, vp.TopLeftY, vp.Width, vp.Height, vp.MinDepth, vp.MaxDepth, 
-									matProj, matView, DirectX::XMMatrixIdentity());
+	// スクリーン変換
+	Vector2 ret;
+	ret.x = (pos.m128_f32[0] + 1.0f) / 2.0f * vp.Width;
+	ret.y = (pos.m128_f32[1] - 1.0f) / 2.0f * -1.0f * vp.Height;
 
-	return Vector2(DirectX::XMVectorGetX(ret), DirectX::XMVectorGetY(ret));
-
-	//// ビュー変換
-	//pos = DirectX::XMVector3TransformCoord(pos, matView);
-
-	//// プロジェクション変換
-	//pos = DirectX::XMVector3TransformCoord(pos, matProj);
-
-	//// w で割る(同時座標を考慮
-	//pos = DirectX::XMVectorDivide(pos, DirectX::XMVectorSet(pos.m128_f32[3], pos.m128_f32[3], pos.m128_f32[3], pos.m128_f32[3])); 
-
-	//ID3D11DeviceContext* context = FRAMEWORK.GetContext();
-	//D3D11_VIEWPORT vp;
-	//UINT numViewport = 1;
-	//context->RSGetViewports(&numViewport, &vp);
-
-	//// スクリーン変換
-	//Vector2 ret;
-	//ret.x = (pos.m128_f32[0] + 1.0f) / 2.0f * vp.Width;
-	//ret.y = (pos.m128_f32[1] - 1.0f) / 2.0f * -1.0f * vp.Height;
-
-	//return ret;
+	return ret;
 }
 
 void Matrix::Identity()

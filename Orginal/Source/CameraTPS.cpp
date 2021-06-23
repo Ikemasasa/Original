@@ -10,7 +10,7 @@ CameraTPS::CameraTPS() : CameraBase()
 {
 }
 
-void CameraTPS::Update(const std::shared_ptr<Actor>& target)
+void CameraTPS::Update(const Actor* target)
 {
 	mDistFromTargetY += Input::GetAxisRY() * 0.1f;
 	mAngle.y		 -= Input::GetAxisRX() * DirectX::XMConvertToRadians(1.0f);

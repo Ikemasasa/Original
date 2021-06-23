@@ -24,7 +24,7 @@ public:
 	CameraBase();
 	virtual ~CameraBase() = default;
 
-	virtual void Update(const std::shared_ptr<Actor>& target) {};
+	virtual void Update(const Actor* target) {};
 
 	DirectX::XMFLOAT4X4& SetOrthographicMatrix(float w, float h, float znear, float zfar);			//	•½s“Š‰es—ñİ’èŠÖ”
 	DirectX::XMFLOAT4X4& SetPerspectiveMatrix(float fov, float aspect, float znear, float zfar);	//	“§‹“Š‰es—ñİ’èŠÖ”

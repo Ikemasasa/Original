@@ -25,14 +25,14 @@ struct Status
 	int GetTotalDef() const { return vit + equipDef; }
 	int GetTotalSpd() const { return agi + equipSpd; }
 
-	bool IsAlive() const { return hp > 0; }
+	bool IsDead() const { return hp <= 0; }
 	bool IsFullHP() const { return hp == maxHP; }
 	bool IsFullMP() const { return mp == maxMP; }
 
-	void SetHP(const int hpValue) { hp = Math::Min(hpValue, maxHP); }
 	void HealHP(const int healValue) { hp = Math::Min(hp + healValue, maxHP); }
-	void SetMP(const int mpValue) { mp = Math::Min(mpValue, maxMP); }
+	void HurtHP(const int hurtValue) { hp = Math::Max(hp - hurtValue, maxHP); }
 	void HealMP(const int healValue) { mp = Math::Min(mp + healValue, maxMP); }
+	void HurtMP(const int hurtValue) { mp = Math::Max(mp - hurtValue, maxMP); }
 };
 
 class StatusData

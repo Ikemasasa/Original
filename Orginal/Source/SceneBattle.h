@@ -4,12 +4,12 @@
 
 #include "lib/Vector.h"
 
-#include "Enemy.h"
 #include "SceneBase.h"
-#include "Player.h"
 
 class BattleActorManager;
 class CameraBattle;
+class Enemy;
+class PlayerManager;
 class Skybox;
 class Terrain;
 
@@ -17,12 +17,12 @@ class SceneBattle : public SceneBase
 {
 private:
 	std::unique_ptr<BattleActorManager> mBattleActorManager = nullptr;
-	std::unique_ptr<Skybox>				mSkybox				= nullptr;
+	std::unique_ptr<Skybox>				mSkybox = nullptr;
 
 	DirectX::XMFLOAT4 mLightDir;
 
 public:
-	SceneBattle(const std::shared_ptr<Player>& player, const std::shared_ptr<Enemy>& enemy);
+	SceneBattle(PlayerManager* plm, Enemy* enemy);
 	~SceneBattle();
 
 	void Initialize();

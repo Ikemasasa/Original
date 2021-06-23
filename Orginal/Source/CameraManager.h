@@ -22,7 +22,7 @@ public:
 	void Push(const std::shared_ptr<CameraBase>& camera) { mMainCamera.push(camera); };
 	void Pop() { mMainCamera.pop(); }
 
-	void Update(const std::shared_ptr<Actor>& target);
+	void Update(const Actor* target);
 
 	DirectX::XMFLOAT4X4 GetView() const { return mMainCamera.top().get()->GetViewMatrix(); }
 	DirectX::XMFLOAT4X4 GetProj() const { return mMainCamera.top().get()->GetProjectionMatrix(); }

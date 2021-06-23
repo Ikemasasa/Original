@@ -15,10 +15,9 @@ void MenuStatus::Initialize(const PlayerManager* plm)
     mFontValue.Initialize();
 
     // プレイヤーの名前追加
-    const auto& players = plm->GetPlayers();
-    for (auto& pl : players)
+    for (size_t i = 0; plm->GetNum(); ++i)
     {
-       mPlNameFont.Add(pl->GetStatus()->name.c_str());
+        mPlNameFont.Add(plm->GetPlayer(i)->GetStatus()->name.c_str());
     }
 
     // ステータス名追加
@@ -48,7 +47,7 @@ MenuBase::Select MenuStatus::Update(const PlayerManager* plm)
     mCharacterSelect.Update();
 
     const int playerIndex = mCharacterSelect.GetIndex();
-    const Status* status = plm->GetPlayers()[playerIndex]->GetStatus();
+    const Status* status = plm->GetPlayer(playerIndex)->GetStatus();
     std::vector<int> curValue; // 現在のステータス
     std::vector<int> maxValue; // 最大のステータス
     curValue.emplace_back(status->hp);

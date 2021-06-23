@@ -9,7 +9,7 @@ CameraBattle::CameraBattle() : CameraBase()
 
 }
 
-void CameraBattle::Update(const std::shared_ptr<Actor>& target)
+void CameraBattle::Update(const Actor* target)
 {
 	BattleState::State state = BattleState::GetInstance().GetState();
 

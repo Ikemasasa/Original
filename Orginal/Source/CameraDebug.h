@@ -12,6 +12,6 @@ class CameraDebug : public CameraBase
 public:
 	CameraDebug() : CameraBase() { ShowCursor(false); }
 
-	void Update(const std::shared_ptr<Actor>& target) override;
+	void Update(const Actor* target) override;
 
 };

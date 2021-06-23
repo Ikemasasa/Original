@@ -1,11 +1,19 @@
 #include "EnemyManager.h"
 
+EnemyManager::EnemyManager()
+{
+	mEnemies.clear();
+}
+
+EnemyManager::~EnemyManager()
+{
+	mEnemies.clear();
+}
+
 void EnemyManager::Create(int charaID)
 {
-	std::shared_ptr<Enemy> e = std::make_shared<Enemy>(charaID);
-
-	e->SetObjID(mEnemies.size());
-	mEnemies.emplace_back(e);
+	mEnemies.push_back(std::make_unique<Enemy>(charaID));
+	mEnemies.back()->SetObjID(mEnemies.size() - 1);
 }
 
 void EnemyManager::Destroy(int objID)
@@ -52,16 +60,14 @@ void EnemyManager::Render(const Shader* shader, const DirectX::XMFLOAT4X4& view,
 	for (auto& enm : mEnemies) enm->Render(shader, view, proj, lightDir);
 }
 
-std::shared_ptr<Enemy> EnemyManager::GetEnemy(int objID)
+Enemy* EnemyManager::GetEnemy(int objID)
 {
-	std::shared_ptr<Enemy> ret = nullptr;
 	for (auto& enm : mEnemies)
 	{
 		if (enm->GetObjID() != objID) continue;
 
-		ret = enm;
-		break;
+		return enm.get();
 	}
 
-	return ret;
+	return nullptr; // Œ©‚Â‚©‚ç‚È‚©‚Á‚½
 }

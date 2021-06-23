@@ -28,11 +28,11 @@ MenuBase::Select MenuItem::Update(const PlayerManager* plm)
 	{
 		mCharacterSelect.Update(); // 誰のインベントリを参照するか決める
 
-		mInventory = plm->GetPlayers()[mCharacterSelect.GetIndex()]->GetInventory(); // 参照するインベントリ保存
+		mInventory = plm->GetPlayer(mCharacterSelect.GetIndex())->GetInventory(); // 参照するインベントリ保存
 		mItemIndex = mItemSelect.Update(mInventory); // アイテム選択
 
 		// 前の画面に戻る
-		if (Input::GetButtonTrigger(0, Input::BUTTON::B))	
+		if (Input::GetButtonTrigger(0, Input::BUTTON::B))
 			return Select::BACK;
 	}
 	else 
@@ -42,10 +42,10 @@ MenuBase::Select MenuItem::Update(const PlayerManager* plm)
 		if (Input::GetButtonTrigger(0, Input::BUTTON::A))
 		{
 			int charaindex = mCharacterHealth.GetSelectIndex();
-			int id = plm->GetPlayers()[charaindex]->GetCharaID();
+			int id = plm->GetPlayer(charaindex)->GetCharaID();
 
 			// ステータス更新
-			ItemData::ItemParam param = mInventory->GetAll()[mItemIndex];
+			ItemData::ItemParam param = mInventory->GetItemParam(mItemIndex);
 			Status plStatus = Singleton<DataBase>().GetInstance().GetStatusData()->GetPLStatus(id);
 
 			bool isHeal = false;
@@ -53,8 +53,8 @@ MenuBase::Select MenuItem::Update(const PlayerManager* plm)
 			if (!plStatus.IsFullMP() && param.mpValue > 0) isHeal = true; // MPがmaxじゃないかつmp回復
 			if (isHeal) // 回復
 			{
-				plStatus.SetHP(plStatus.hp + param.hpValue);
-				plStatus.SetMP(plStatus.mp + param.mpValue);
+				plStatus.HealHP(param.hpValue);
+				plStatus.HealMP(param.mpValue);
 				Singleton<DataBase>().GetInstance().GetStatusData()->SetPLStatus(id, plStatus); //ステータス更新
 				mInventory->Sub(mItemIndex); // アイテム減らす
 

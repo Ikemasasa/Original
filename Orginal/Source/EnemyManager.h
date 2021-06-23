@@ -13,12 +13,12 @@ public:
 	};
 
 private:
-	std::list<std::shared_ptr<Enemy>> mEnemies;
+	std::list<std::unique_ptr<Enemy>> mEnemies;
 	Vector3 mPlayerPos;
 
 public:
-	EnemyManager() = default;
-	~EnemyManager() = default;
+	EnemyManager();
+	~EnemyManager();
 
 	void Create(int charaID);
 	void Destroy(int objID);
@@ -29,7 +29,7 @@ public:
 	void Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj, const DirectX::XMFLOAT4& lightDir);
 
 	int GetNum() const { return mEnemies.size(); }
-	std::shared_ptr<Enemy> GetEnemy(int objID);
+	Enemy* GetEnemy(int objID);
 
 	void SetPlayerPos(const Vector3& pos) { mPlayerPos = pos; }
 };

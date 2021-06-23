@@ -7,7 +7,7 @@
 #include "Singleton.h"
 #include "StatusData.h"
 
-EnemyBattle::EnemyBattle(const std::shared_ptr<Actor>& enemy) : BattleActor(enemy, Singleton<DataBase>().GetInstance().GetStatusData()->GetEnmStatus(enemy->GetCharaID()))
+EnemyBattle::EnemyBattle(const Enemy* enemy) : BattleActor(enemy, Singleton<DataBase>().GetInstance().GetStatusData()->GetEnmStatus(enemy->GetCharaID()))
 {
 	mCommand = std::make_unique<CommandEnemy>();// 後でコマンドエネミーにする
 }

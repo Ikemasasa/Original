@@ -7,6 +7,7 @@
 class Fade
 { 
 public:
+	static constexpr float SPEED_VERYFAST = 0.2f;
 	static constexpr float SPEED_FAST = 0.1f;
 	static constexpr float SPEED_SLOW = 0.05f;
 

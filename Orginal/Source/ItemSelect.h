@@ -26,5 +26,5 @@ public:
 
 	void Initialize();
 	int Update(const Item* inventory);
-	void Render(const Vector2& boardOffset);
+	void Render(const Vector2& boardOffset) const;
 };

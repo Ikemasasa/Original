@@ -9,11 +9,8 @@
 
 void PlayerManager::Create(int charaID)
 {
-	std::shared_ptr<Player> p = std::make_shared<Player>(charaID);
-	
-	// ‹ó‚¢‚Ä‚é”Žš(ObjID)‚ð’T‚µ‚Ä‚»‚±‚É‘ã“ü
-	p->SetObjID(mPlayers.size());
-	mPlayers.emplace_back(p);
+	mPlayers.emplace_back(std::make_unique<Player>(charaID));
+	mPlayers.back()->SetObjID(mPlayers.size() - 1);
 }
 
 void PlayerManager::Destroy(int objID)
@@ -41,10 +38,8 @@ void PlayerManager::Destroy(int objID)
 
 void PlayerManager::Initialize()
 {
-	mMovePlayer = *mPlayers.begin(); // ˆê”ÔÅ‰‚Ì—v‘f
+	mMovePlayer = mPlayers.begin()->get(); // ˆê”ÔÅ‰‚Ì—v‘f
 	mMovePlayer->Initialize();
-
-
 }
 
 void PlayerManager::Update()

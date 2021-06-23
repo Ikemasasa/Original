@@ -13,6 +13,7 @@
 #include "Shader.h"
 #include "Sprite.h"
 
+// いつかモーションの部分を別クラスにしたい
 
 class SkinnedMesh
 {
@@ -30,7 +31,7 @@ public:
 		UNIQUE2,
 		UNIQUE3,
 
-		MAX
+		MAX,
 	};
 
 private:
@@ -95,6 +96,12 @@ private:
 	{
 		int frameNum = 0;
 		Matrix* keyframe[BONE_MAX] = {};
+
+		// 現在は球だけ
+		SPHERE collision;
+		int colBeginFrame = 0;
+		int colEndFrame = 0;
+		bool isCollisionEnable = false;
 	};
 
 	struct BeforeMotion
@@ -137,10 +144,12 @@ private:
 
 	// アニメーション関係
 	int mStartFrame;
-	int mMotionNum; //モーション数
 	bool mIsLoop;
-	BeforeMotion mBeforeMotion; // 変更前のモーション
+	bool mMotionFinished;
+	float mFrame = 0;
+	MotionType mMotionType = DEFAULT; // 現在のモーション;
 	std::map<MotionType, Motion> mMotion; // モーションデータ
+
 	void LoadKeyFrames(MotionType type, int bone, FbxNode* boneNode);
 	void LoadMeshAnim(FbxMesh* mesh); // ボーンがないメッシュアニメ―ション
 
@@ -178,14 +187,11 @@ public:
 	// モデルぴったりの直方体(ローカル)
 	AABB mAABB;
 
-	// モーション情報
-	float mFrame = 0;
-	MotionType mMotionType = DEFAULT; // 現在のモーション;
-
 	void SetMotion(MotionType type, bool isLoop = false);
 	MotionType GetMotion() const { return mMotionType; }
 	void AddMotion(const char* filename, MotionType type);
 	void Animate(float elapsedTime);
 	void Skinning(); // ボーンによる変形
 
+	bool IsMotionFinished() const { return mMotionFinished; }
 };

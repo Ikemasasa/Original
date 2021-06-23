@@ -24,20 +24,19 @@ void MenuCharacterHealth::Initialize(const PlayerManager* plm, const Vector2& le
 	std::vector<int> curValue;
 	std::vector<int> maxValue;
 
-	const auto& players = plm->GetPlayers();
-	mHealthPlates.resize(players.size());
-	int index = 0;
-	for (auto& pl : players)
+	size_t playerNum = plm->GetNum();
+	mHealthPlates.resize(playerNum);
+	for (size_t i = 0; i < playerNum; ++i)
 	{
-		int charaID = pl->GetCharaID();
-		Status plStatus = Singleton<DataBase>().GetInstance().GetStatusData()->GetPLStatus(charaID);
+		const auto& pl = plm->GetPlayer(i);
+		Status plStatus = *pl->GetStatus();
+
 		mPlNameFont.Add(plStatus.name.c_str());
-		mHealthPlates[index].name = plStatus.name;
+		mHealthPlates[i].name = plStatus.name;
 		curValue.emplace_back(plStatus.hp);
 		curValue.emplace_back(plStatus.mp);
 		maxValue.emplace_back(plStatus.maxHP);
 		maxValue.emplace_back(plStatus.maxMP);
-		++index;
 	}
 
 	mStatusNameFont.Add(L"HP");

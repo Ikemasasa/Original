@@ -11,14 +11,14 @@
 
 ActorManager::ActorManager()
 {
-	mPlayerManager = std::make_shared<PlayerManager>();
+	mPlayerManager = std::make_unique<PlayerManager>();
 	mPlayerManager->Create(PlayerManager::SOPHIE);
 
-	mEnemyManager = std::make_shared<EnemyManager>();
+	mEnemyManager = std::make_unique<EnemyManager>();
 	mEnemyManager->Create(EnemyManager::DANBO);
 
-	mTerrain = std::make_shared<Terrain>(DataBase::TERRAIN_ID_START);
-	CollisionTerrain::RegisterTerrain(mTerrain);
+	mTerrain = std::make_unique<Terrain>(DataBase::TERRAIN_ID_START);
+	CollisionTerrain::RegisterTerrain(mTerrain.get());
 }
 
 void ActorManager::Initialize()
@@ -41,7 +41,7 @@ void ActorManager::Update()
 		if (Collision::ColCapsules(mEnemyManager->GetEnemy(i)->GetCapsule(), mPlayerManager->GetMovePlayer()->GetCapsule()))
 		{
 			Fade::GetInstance().SetSceneImage(0.02f);
-			SceneManager::GetInstance().SetStackScene(std::make_unique<SceneBattle>(mPlayerManager->GetMovePlayer(), mEnemyManager->GetEnemy(i)));
+			SceneManager::GetInstance().SetStackScene(std::make_unique<SceneBattle>(mPlayerManager.get(), mEnemyManager->GetEnemy(i)));
 			break;
 		}
 	}

@@ -3,7 +3,7 @@
 #include "Terrain.h"
 
 // staticƒƒ“ƒo•Ï”
-std::vector<std::shared_ptr<Terrain>> CollisionTerrain::mTerrains;
+std::vector<Terrain*> CollisionTerrain::mTerrains;
 
 int CollisionTerrain::RayPick(Vector3 sp, Vector3 ep, Vector3* outPos, Vector3* outNormal, float* outLen)
 {
@@ -57,7 +57,7 @@ int CollisionTerrain::MoveCheck(const Vector3& sp, const Vector3& ep, Vector3* o
 
 }
 
-bool CollisionTerrain::RegisterTerrain(const std::shared_ptr<Terrain>& t)
+bool CollisionTerrain::RegisterTerrain(Terrain* t)
 {
     if (!t) return false;
 
@@ -67,11 +67,11 @@ bool CollisionTerrain::RegisterTerrain(const std::shared_ptr<Terrain>& t)
         if (mTerrains[i] == t) return false;
     }
 
-    mTerrains.emplace_back(t);
+    mTerrains.push_back(t);
     return true;
 }
 
-bool CollisionTerrain::UnRegisterTerrain(const std::shared_ptr<Terrain>& t)
+bool CollisionTerrain::UnRegisterTerrain(Terrain* t)
 {
     for (size_t i = 0; i < mTerrains.size(); ++i)
     {

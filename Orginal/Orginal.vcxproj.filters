@@ -70,6 +70,12 @@
     <Filter Include="ヘッダー ファイル\Scene\Menu">
       <UniqueIdentifier>{154541bb-9f33-4e4d-a1f8-7854a0eca488}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Scene\Battle\command">
+      <UniqueIdentifier>{e98ae1f9-a9b2-4c40-80fd-3718a3b5a8d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene\Battle\command">
+      <UniqueIdentifier>{85242440-ff7e-4994-9cce-9ec9b5c05204}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\lib\Blend.h">
@@ -309,6 +315,18 @@
     <ClInclude Include="Source\lib\TVector.h">
       <Filter>lib\ヘッダーファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Source\CommandBehaviour.h">
+      <Filter>ヘッダー ファイル\Scene\Battle\command</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\IDecideCommand.h">
+      <Filter>ヘッダー ファイル\Scene\Battle\command</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CommandItem.h">
+      <Filter>ヘッダー ファイル\Scene\Battle\command</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CommandCharaSelect.h">
+      <Filter>ヘッダー ファイル\Scene\Battle\command</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\lib\Blend.cpp">
@@ -526,6 +544,15 @@
     </ClCompile>
     <ClCompile Include="Source\BattleState.cpp">
       <Filter>ソース ファイル\Scene\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CommandBehaviour.cpp">
+      <Filter>ソース ファイル\Scene\Battle\command</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CommandItem.cpp">
+      <Filter>ソース ファイル\Scene\Battle\command</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CommandCharaSelect.cpp">
+      <Filter>ソース ファイル\Scene\Battle\command</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -32,7 +32,6 @@ void Enemy::Update(const Vector3& playerPos)
 
 	// ランダムでフィールドを歩き回る
 	Vector3 pos = GetPos();
-	AABB aabb = GetLocalAABB();
 	Vector3 sp = { pos.x, pos.y + 0.5f, pos.z };
 	Vector3 ep = { pos.x, pos.y - 0.5f, pos.z };
 	Vector3 outPos, outNor;

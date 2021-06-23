@@ -10,5 +10,5 @@ class CameraTPS : public CameraBase
 public:
 	CameraTPS();
 	~CameraTPS() = default;
-	void Update(const std::shared_ptr<Actor>& target) override;
+	void Update(const Actor* target) override;
 };

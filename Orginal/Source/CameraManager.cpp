@@ -2,7 +2,7 @@
 
 #include "CameraBase.h"
 
-void CameraManager::Update(const std::shared_ptr<Actor>& target)
+void CameraManager::Update(const Actor* target)
 {
 	mMainCamera.top().get()->Update(target);
 }

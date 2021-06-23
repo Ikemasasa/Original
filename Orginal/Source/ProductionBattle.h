@@ -10,6 +10,8 @@ class BattleActorManager;
 
 class ProductionBattle
 {
+	static constexpr float LERP_FACTOR_ADD = 0.03f;
+
 	struct Data
 	{
 		CommandBase::Behaviour behaviour;

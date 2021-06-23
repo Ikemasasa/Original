@@ -25,7 +25,7 @@ Actor::Actor(int charaID, Type type)
 	mType = type;
 }
 
-Actor::Actor(const std::shared_ptr<Actor>& org, Type type)
+Actor::Actor(const Actor* org, Type type)
 {
 	// ƒ‚ƒfƒ‹‚¾‚¯ˆê‚ÉŽg‚¤
 	mMesh = org->mMesh;
@@ -138,6 +138,20 @@ void Actor::AddMotion(const char* filename, SkinnedMesh::MotionType type)
 void Actor::SetMotion(SkinnedMesh::MotionType type, bool isLoop)
 {
 	mMesh->SetMotion(type, isLoop);
+}
+
+AABB Actor::GetLocalAABB() const
+{
+	Vector3 scale = GetScale();
+	AABB aabb = mMesh->mAABB;
+	aabb.min.x = aabb.min.x * scale.x;
+	aabb.min.y = aabb.min.y * scale.y;
+	aabb.min.z = aabb.min.z * scale.z;
+	aabb.max.x = aabb.max.x * scale.x;
+	aabb.max.y = aabb.max.y * scale.y;
+	aabb.max.z = aabb.max.z * scale.z;
+
+	return aabb;
 }
 
 AABB Actor::GetAABB() const

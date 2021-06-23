@@ -39,7 +39,7 @@ private: //protected:
 
 public:
 	Actor(int charaID, Type type);
-	Actor(const std::shared_ptr<Actor>& org, Type type);
+	Actor(const Actor* org, Type type);
 	virtual ~Actor() = default;
 
 
@@ -69,7 +69,7 @@ public:
 	int		GetObjID() const     { return mObjID; }
 	int		GetCharaID() const	 { return mCharaID; }
 	bool	GetExist() const	 { return mExist; }
-	AABB	GetLocalAABB() const { return mMesh->mAABB; }
+	AABB	GetLocalAABB() const;
 	AABB    GetAABB() const;
 	CAPSULE GetCapsule() const;
 	Type	GetType() const		 { return mType; }
@@ -89,4 +89,6 @@ public:
 	void SetMotion(SkinnedMesh::MotionType type, bool isLoop = true);
 
 	void ChangeShader(Shader* shader) { mMesh->ChangeShader(shader); }
+	bool IsMotionFinished() const { return mMesh->IsMotionFinished(); }
+
 };

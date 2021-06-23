@@ -15,12 +15,11 @@ void MenuCharacterSelect::Initialize(const PlayerManager* plm)
 	mPlate = std::make_unique<Sprite>(L"Data/Image/Menu/character_plate.png");
 
 	// –¼‘O‚Ìˆê•¶š–Ú‚ğì‚é
-	const std::vector<std::shared_ptr<Player>>& players =  plm->GetPlayers();
-	for (auto& pl : players)
+	for (size_t i = 0; i < plm->GetNum(); ++i)
 	{
 		const int LEN = 2;
 		wchar_t name[LEN] = {};
-		name[0] = pl->GetStatus()->name[0];
+		name[0] = plm->GetPlayer(i)->GetStatus()->name[0];
 
 		mNameFont.Add(name);
 		++mCharacterNum;

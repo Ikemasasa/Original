@@ -2,16 +2,20 @@
 #include <memory>
 
 #include "BattleActor.h"
-#include "CommandPlayer.h"
-#include "SceneBattle.h"
+
+class Player;
+class Item;
 
 class PlayerBattle : public BattleActor
 {
 	static const Vector3 PLAYER_POS;
 
 public:
-	PlayerBattle(const std::shared_ptr<Actor>& player);
+	PlayerBattle(Player* player);
 	~PlayerBattle() = default;
 
 	void Initialize() override;
+
+
+	Item* GetInventory() const { return mInventory; }
 };

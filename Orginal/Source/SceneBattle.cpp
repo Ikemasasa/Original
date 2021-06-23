@@ -15,13 +15,13 @@
 #include "Terrain.h"
 
 
-SceneBattle::SceneBattle(const std::shared_ptr<Player>& player, const std::shared_ptr<Enemy>& enemy)
+SceneBattle::SceneBattle(PlayerManager* plm, Enemy* enemy)
 {
-	FrontendBattle::CreateInst();
+	//FrontendBattle::CreateInst();
 	BattleState::CreateInst();
 	BattleState::GetInstance().SetState(BattleState::State::COMMAND_SELECT);
 
-	mBattleActorManager = std::make_unique<BattleActorManager>(player, enemy);
+	mBattleActorManager = std::make_unique<BattleActorManager>(plm, enemy);
 	mSkybox = std::make_unique<Skybox>(L"Data/Image/sky.png");
 
 
@@ -32,7 +32,7 @@ SceneBattle::~SceneBattle()
 {
 	Singleton<CameraManager>().GetInstance().Pop();
 	BattleState::DestroyInst();
-	FrontendBattle::DestroyInst();
+	//FrontendBattle::DestroyInst();
 }
 
 void SceneBattle::Initialize()
@@ -46,13 +46,7 @@ void SceneBattle::Update()
 {
 	mBattleActorManager->Update();
 
-	std::shared_ptr<BattleActor>& moveActor = mBattleActorManager->GetMoveActor();
-	Vector3 target = moveActor->GetPos();
-	target.x += 1.0f;
-	target.y += (moveActor->GetAABB().max.y - moveActor->GetAABB().min.y)/ 2;
 	Singleton<CameraManager>().GetInstance().Update(mBattleActorManager->GetMoveActor());
-
-	FrontendBattle::GetInstance().Update();
 
 	mSkybox->SetEyePos(Singleton<CameraManager>().GetInstance().GetPos());
 }
@@ -64,8 +58,6 @@ void SceneBattle::Render()
 
 	mSkybox->Render(view, projection);
 	mBattleActorManager->Render(view, projection, mLightDir);
-
-	FrontendBattle::GetInstance().Render();
 }
 
 void SceneBattle::Release()

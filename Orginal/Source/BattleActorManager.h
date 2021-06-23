@@ -10,6 +10,7 @@
 
 class Enemy;
 class Player;
+class PlayerManager;
 
 class BattleActorManager
 {
@@ -21,11 +22,11 @@ public:
 	static constexpr float PLAYER_POS_Z = -5.0f;
 
 private:
-	std::vector<std::shared_ptr<BattleActor>> mBActors;
+	std::vector<std::unique_ptr<BattleActor>> mBActors;
 	std::vector<int> mObjectIDs[BATTLEACTOR_KIND];
 
-	std::shared_ptr<BattleActor> mMoveActor = nullptr;
-	std::queue<std::shared_ptr<BattleActor>> mOrder;
+	BattleActor* mMoveActor = nullptr;
+	std::queue<BattleActor*> mOrder;
 
 	ProductionBattle mProduction;
 
@@ -33,9 +34,11 @@ private:
 	void DecideMoveActor();
 	bool CheckBattleFinish();
 	int CalcDamage(const Status* deal, Status* take);
-	void CreateAndRegister(const std::shared_ptr<Actor>& actor);
+
+	void PlayerCreateAndRegister(Player* pl);
+	void EnemyCreateAndRegister(Enemy* enm);
 public:	
-	BattleActorManager(const std::shared_ptr<Player>& player, const std::shared_ptr<Enemy>& enemy);
+	BattleActorManager(PlayerManager* player, Enemy* enemy);
 	~BattleActorManager() = default;
 
 	void Initialize();
@@ -43,9 +46,8 @@ public:
 	void Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir);
 
 
-
 	// ÉQÉbÉ^Å[
-	std::shared_ptr<BattleActor>& GetMoveActor() { return mMoveActor; }
+	BattleActor* GetMoveActor() const { return mMoveActor; }
 	const std::vector<int>& GetObjectIDs(Actor::Type kind) const { return mObjectIDs[kind]; }
-	std::shared_ptr<BattleActor> GetActor(int objectID) const { return mBActors[objectID]; }
+	BattleActor* GetActor(int objectID) const { return mBActors[objectID].get(); }
 };

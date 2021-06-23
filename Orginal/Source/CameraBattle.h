@@ -10,5 +10,5 @@ class CameraBattle : public CameraBase
 public:
 	CameraBattle();
 	~CameraBattle() = default;
-	void Update(const std::shared_ptr<Actor>& target) override;
+	void Update(const Actor* target) override;
 };

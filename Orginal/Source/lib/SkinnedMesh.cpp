@@ -278,9 +278,6 @@ void SkinnedMesh::LoadFBX(ID3D11Device* device, const char* filename)
 				mMaterials[m].normal.Load(L"");
 			}
 
-
-
-
 		}
 		else
 		{
@@ -1122,13 +1119,29 @@ void SkinnedMesh::Animate(float elapsedTime)
 {
 	// モーション時間の更新
 	mFrame += elapsedTime * 60;
+	mMotionFinished = false;
+
+	auto& nowMotion = mMotion[mMotionType];
+	int f = static_cast<int>(mFrame);
+
+
+	// コリジョンチェック
+	if (nowMotion.colBeginFrame != nowMotion.colEndFrame)
+	{
+		if (f >= nowMotion.colBeginFrame) nowMotion.isCollisionEnable = true;
+		if (f <  nowMotion.colEndFrame) nowMotion.isCollisionEnable = false;
+	}
 
 	// ループチェック
-	if (mFrame >= mMotion[mMotionType].frameNum - 1)
+	if (f >= nowMotion.frameNum - 1)
 	{
 		mFrame = 0;
 
-		if (!mIsLoop) SetMotion(IDLE, true); 
+		if (!mIsLoop)
+		{
+			SetMotion(IDLE, true);
+			mMotionFinished = true;
+		}
 	}
 }
 

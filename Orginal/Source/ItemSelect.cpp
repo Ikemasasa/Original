@@ -21,7 +21,7 @@ int ItemSelect::Update(const Item* inventory)
 	// SelectIndex操作
 	{
 		mInventory = inventory;
-		int inventorySize = mInventory->GetAll().size();
+		int inventorySize = mInventory->GetItemNum();
 
 		if (Input::GetButtonTrigger(0, Input::BUTTON::RIGHT)) ++mSelectIndex;
 		if (Input::GetButtonTrigger(0, Input::BUTTON::LEFT))  --mSelectIndex;
@@ -48,7 +48,7 @@ int ItemSelect::Update(const Item* inventory)
 	return -1;
 }
 
-void ItemSelect::Render(const Vector2& boardOffset)
+void ItemSelect::Render(const Vector2& boardOffset) const
 {
 	// ボード描画
 	mBoard->Render(boardOffset, Vector2::One(), Vector2::Zero(), mBoard->GetSize());
@@ -62,14 +62,13 @@ void ItemSelect::Render(const Vector2& boardOffset)
 		const Vector2 scale(ICON_SCALE, ICON_SCALE);
 		const Vector2 size(ICON_SIZE, ICON_SIZE);
 
-		const std::vector<ItemData::ItemParam>& inventory = mInventory->GetAll();
-		size_t itemNum = inventory.size();
-		for (size_t i = 0; i < itemNum; ++i)
+		int itemNum = mInventory->GetItemNum();
+		for (int i = 0; i < itemNum; ++i)
 		{
 			float x = i % HORIZONTAL_NUM * ICON_SCALE_SIZE + offset.x;
 			float y = i / HORIZONTAL_NUM * ICON_SCALE_SIZE + offset.y;
 			Vector2 pos(x, y);
-			inventory[i].icon->Render(pos, scale, Vector2::Zero(), size);
+			mInventory->GetItemParam(i).icon->Render(pos, scale, Vector2::Zero(), size);
 		}
 
 		// 選択のフレーム画像を描画

@@ -3,18 +3,19 @@
 #include <memory>
 #include <list>
 
-class PlayerManager;
-class EnemyManager;
-class Terrain;
+#include "EnemyManager.h"
+
 class CameraBase;
+class PlayerManager;
 class Shader;
+class Terrain;
 
 class ActorManager
 {
 private:
-	std::shared_ptr<PlayerManager> mPlayerManager;
-	std::shared_ptr<EnemyManager> mEnemyManager;
-	std::shared_ptr<Terrain> mTerrain;
+	std::unique_ptr<PlayerManager> mPlayerManager;
+	std::unique_ptr<EnemyManager> mEnemyManager;
+	std::unique_ptr<Terrain> mTerrain;
 
 public:
 	ActorManager();
@@ -25,8 +26,8 @@ public:
 	void Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir);
 	void Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir);
 
-	std::shared_ptr<PlayerManager> GetPlayerManager() const { return mPlayerManager; }
-	std::shared_ptr<EnemyManager> GetEnemyManager() const { return mEnemyManager; }
-	std::shared_ptr<Terrain> GetTerrain() const { return mTerrain; }
+	PlayerManager* GetPlayerManager() const { return mPlayerManager.get(); }
+	EnemyManager* GetEnemyManager() const { return mEnemyManager.get(); }
+	Terrain* GetTerrain() const { return mTerrain.get(); }
 
 };

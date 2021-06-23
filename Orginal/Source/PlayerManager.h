@@ -15,8 +15,8 @@ public:
 	};
 
 private:
-	std::vector<std::shared_ptr<Player>> mPlayers;
-	std::shared_ptr<Player> mMovePlayer = nullptr;
+	std::vector<std::unique_ptr<Player>> mPlayers;
+	Player* mMovePlayer = nullptr;
 
 public:
 	PlayerManager() = default;
@@ -31,6 +31,7 @@ public:
 	void Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj, const DirectX::XMFLOAT4& lightDir);
 
 	// ÉQÉbÉ^Å[
-	std::shared_ptr<Player> GetMovePlayer() { return mMovePlayer; }
-	const std::vector<std::shared_ptr<Player>>& GetPlayers() const { return mPlayers; }
+	Player* GetMovePlayer() { return mMovePlayer; }
+	Player* GetPlayer(const size_t index) const { return mPlayers[index].get(); }
+	size_t GetNum() const {return mPlayers.size(); }
 };
