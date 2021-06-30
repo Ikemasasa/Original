@@ -10,7 +10,7 @@
 
 SceneTitle::SceneTitle()
 {
-	const wchar_t* addLogoStr = L"É^ÉCÉgÉãÉçÉS";
+	const wchar_t* addLogoStr = L"R P G";
 
 	// + 1ÇÕPRESS~ÇÃÇΩÇﬂ
 	const int SELECT_STR_NUM = MAX + 1;
