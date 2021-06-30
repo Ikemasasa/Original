@@ -1,5 +1,6 @@
 #include "SceneBattle.h"
 
+#include "lib/Audio.h"
 #include "lib/Input.h"
 #include "lib/Skybox.h"
 
@@ -38,11 +39,14 @@ SceneBattle::SceneBattle(PlayerManager* plm, Enemy* enemy)
 	mLightDir = DirectX::XMFLOAT4(0.5f, -0.5f, -1.0f, 1.0f);
 
 	Singleton<CameraManager>().GetInstance().Push(std::make_shared<CameraBattle>());
+
+	AUDIO.MusicPlay((int)Music::BATTLE);
 }
 
 SceneBattle::~SceneBattle()
 {
-
+	AUDIO.MusicStop((int)Music::RESULT);
+	AUDIO.MusicPlay((int)Music::FIELD_REMAINS);
 }
 
 void SceneBattle::Initialize()

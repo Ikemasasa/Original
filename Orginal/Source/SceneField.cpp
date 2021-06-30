@@ -1,5 +1,6 @@
 #include "SceneField.h"
 
+#include "lib/Audio.h"
 #include "lib/Skybox.h"
 #include "lib/Input.h"
 #include "lib/Font.h"
@@ -39,12 +40,14 @@ SceneField::SceneField()
 	mActorManager = std::make_unique<ActorManager>();
 	mSkybox		  = std::make_unique<Skybox>(L"Data/Image/sky.png");
 
+	AUDIO.MusicPlay((int)Music::FIELD_REMAINS);
 }
 
 SceneField::~SceneField()
 {
 	CollisionTerrain::UnRegisterTerrainAll();
 	SingletonFinalizer::Finalize();
+	AUDIO.MusicStop((int)Music::FIELD_REMAINS);
 }
 
 void SceneField::Initialize()

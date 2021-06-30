@@ -30,7 +30,9 @@ void Audio::Initialize()
 {
 	// TODO : ‰¼
 	LoadMusic((int)Music::TITLE, L"Data/Audio/Music/title.wav");
-	LoadMusic((int)Music::FIELD_REMAINS, L"Data/Audio/Music/title.wav");
+	LoadMusic((int)Music::FIELD_REMAINS, L"Data/Audio/Music/field.wav");
+	LoadMusic((int)Music::BATTLE, L"Data/Audio/Music/battle.wav");
+	LoadMusic((int)Music::RESULT, L"Data/Audio/Music/result.wav");
 
 	LoadSound((int)Sound::SELECT, L"Data/Audio/Sound/select.wav");
 	LoadSound((int)Sound::SELECT_LONG, L"Data/Audio/Sound/select_long.wav");
@@ -67,6 +69,15 @@ void Audio::UnLoadSound(int slot)
 	if (slot >= SOUND_NUM) return;
 	if (mSoundInst[slot]) mSoundInst[slot].reset();
 	mSound[slot].reset();
+}
+
+void Audio::MusicStopAll()
+{
+	for (int i = 0; i < MUSIC_NUM; ++i)
+	{
+		if (!mMusicInst[i]) return;
+		mMusicInst[i]->Stop();
+	}
 }
 
 void Audio::MusicPlay(int slot)

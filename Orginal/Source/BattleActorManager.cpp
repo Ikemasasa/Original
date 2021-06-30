@@ -3,6 +3,7 @@
 #include <map>
 #include <random>
 
+#include "lib/Audio.h"
 #include "lib/Input.h"
 #include "lib/Math.h"
 
@@ -67,6 +68,7 @@ BattleActorManager::BattleActorManager(PlayerManager* player, Enemy* enemy)
 {
 	mHitEnemy = enemy;
 
+	// ƒvƒŒƒCƒ„[“o˜^
 	mPlayerNum = player->GetNum();
 	for (size_t i = 0; i < mPlayerNum; ++i)
 	{
@@ -74,6 +76,7 @@ BattleActorManager::BattleActorManager(PlayerManager* player, Enemy* enemy)
 	}
 	mIsResult = false;
 
+	// “G“o˜^
 	EnemyCreateAndRegister(enemy);
 
 	SortOrder();
@@ -192,6 +195,10 @@ void BattleActorManager::Update()
 							BattleActor* pl = mBActors[i].get();
 							Singleton<DataBase>().GetInstance().GetStatusData()->SetPLStatus(pl->GetCharaID(), *pl->GetStatus());
 						}
+
+						// BGM‚ðƒŠƒUƒ‹ƒg‚Ì‚â‚Â‚É‚·‚é
+						AUDIO.MusicStop((int)Music::BATTLE);
+						AUDIO.MusicPlay((int)Music::RESULT);
 					}
 					else
 					{

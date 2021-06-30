@@ -8,6 +8,8 @@ enum class Music
 {
     TITLE,
     FIELD_REMAINS,
+    BATTLE,
+    RESULT,
     NUM
 };
 
@@ -51,6 +53,7 @@ public:
     void LoadSound(int slot, const wchar_t* waveFilename, float volume = 0.5f);
     void UnLoadSound(int slot);
 
+    void MusicStopAll(); // 全部ストップ
     void MusicPlay(int slot);   // 再生
     void MusicStop(int slot);   // 停止
     void MusicPause(int slot);  // 一時停止

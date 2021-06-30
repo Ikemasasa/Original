@@ -25,8 +25,8 @@ class BattleActorManager
 	};
 
 public:
-	static const int HEALTH_PLATE_X = 900.0f;
-	static const int HEALTH_PLATE_Y = 0.0f;
+	static constexpr float HEALTH_PLATE_X = 900.0f;
+	static constexpr float HEALTH_PLATE_Y = 0.0f;
 
 	static const int BATTLEACTOR_MAX = 12;
 	static const int BATTLEACTOR_KIND = 2; // Player, Enemy‚Ì2‚Â 

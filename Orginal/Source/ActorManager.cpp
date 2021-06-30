@@ -1,5 +1,7 @@
 #include "ActorManager.h"
 
+#include "lib/Audio.h"
+
 #include "Collision.h"
 #include "CollisionTerrain.h"
 #include "EnemyManager.h"
@@ -40,6 +42,7 @@ void ActorManager::Update()
 	{
 		if (Collision::ColCapsules(mEnemyManager->GetEnemy(i)->GetCapsule(), mPlayerManager->GetMovePlayer()->GetCapsule()))
 		{
+			AUDIO.MusicStop((int)Music::FIELD_REMAINS);
 			Fade::GetInstance().SetSceneImage(0.02f);
 			SceneManager::GetInstance().SetStackScene(std::make_unique<SceneBattle>(mPlayerManager.get(), mEnemyManager->GetEnemy(i)));
 			break;
