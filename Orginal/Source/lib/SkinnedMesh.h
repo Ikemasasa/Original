@@ -61,7 +61,8 @@ private:
 		DirectX::XMFLOAT3 normal = {};
 		DirectX::XMFLOAT2 tex = {};
 		DirectX::XMFLOAT4 color = {};
-		DirectX::XMFLOAT3 tangent = {1,0,0};
+		DirectX::XMFLOAT3 tangent = {  };
+		DirectX::XMFLOAT3 binormal = { };
 	};
 
 	struct VertexForSkinning

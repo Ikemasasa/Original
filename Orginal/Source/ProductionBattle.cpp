@@ -18,6 +18,11 @@ void ProductionBattle::Begin(CommandBase::Behaviour behaviour, int moveID, int t
 	mData.isEnable = true;
 }
 
+void ProductionBattle::Initialize()
+{
+	mProductionValue.Initialize();
+}
+
 bool ProductionBattle::Update(const BattleActorManager* bam)
 {
 	if (!mData.isEnable) return false;
@@ -68,6 +73,7 @@ bool ProductionBattle::Update(const BattleActorManager* bam)
 		if (mLerpFactor <= 0.0f)
 		{
 			moveActor->SetMotion(SkinnedMesh::IDLE);
+			moveActor->SetAngleY(moveActor->GetAngle().y + Define::PI); // 向きを戻す
 			++mState;
 		}
 	};
@@ -87,8 +93,14 @@ bool ProductionBattle::Update(const BattleActorManager* bam)
 		if (moveActor->IsMotionFinished())
 		{
 			Vector3 damagePos(targetActor->GetPos().x, targetActor->GetAABB().max.y, targetActor->GetPos().z);
-			Vector4 damageCol(1.0f, 0.4f, 0.4f, 0.0f);
-			//FrontendBattle::GetInstance().SetValue(mData.amount, damagePos, Vector2(0.5f, 0.0f), damageCol);
+			Vector3 damageRGB(1.0f, 0.4f, 0.4f);
+			Vector2 center(0.0f, 0.0f);
+			Vector2 scale(1.0f, 1.0f);
+			mProductionValue.Add(mData.amount, damagePos, damageRGB);
+
+			Vector3 dist = mOrgPos - mDestinationPos; // 向きたい方向ベクトル
+			dist.Normalize();
+			moveActor->CorrectionAngle(dist);
 			++mState;
 		}
 		break;
@@ -110,5 +122,13 @@ bool ProductionBattle::Update(const BattleActorManager* bam)
 		}
 	}
 
+	// 文字(数字)の演出のupdate
+	mProductionValue.Update();
+
 	return false;
+}
+
+void ProductionBattle::Render()
+{
+	mProductionValue.Render();
 }

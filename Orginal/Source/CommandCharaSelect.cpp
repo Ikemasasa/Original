@@ -19,7 +19,7 @@ void CommandCharaSelect::Update(const BattleActorManager* bam, CommandBase* cmdB
 	if (mCharaType == Actor::PLAYER)     BattleState::GetInstance().SetState(BattleState::State::PLAYER_SELECT);
 	else if (mCharaType == Actor::ENEMY) BattleState::GetInstance().SetState(BattleState::State::ENEMY_SELECT);
 
-	const std::vector<int>& ids = bam->GetObjectIDs(mCharaType);
+	const std::vector<int>& ids = bam->GetAliveActorIDs(mCharaType);
 
 	size_t max = ids.size() - 1;
 	if (Input::GetButtonTrigger(0, Input::BUTTON::RIGHT)) mCharaIndex = Math::Min(mCharaIndex + 1, static_cast<int>(max));

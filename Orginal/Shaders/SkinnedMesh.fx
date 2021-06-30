@@ -23,7 +23,7 @@ PSInput VSMain(VSInput input)
 	float3 T = input.tangent; // 接線(右)
 	T = mul(M, T);
 	T = normalize(T);
-	float3 B = cross(N, T); // 従法線(上)
+	float3 B = input.binormal; // 従法線(上)
 	B = normalize(B);
 
 	output.normal = N;

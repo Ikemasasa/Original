@@ -15,8 +15,8 @@ class ShadowMap
 		DirectX::XMFLOAT4X4 shadowVP;
 	};
 
-	static constexpr float SHADOWMAP_X = 1024;
-	static constexpr float SHADOWMAP_Y = 1024;
+	static constexpr float SHADOWMAP_X = 4098;
+	static constexpr float SHADOWMAP_Y = 4098;
 	static const int SHADOWMAP_SRV_SLOT = 14;
 
 	RenderTarget mShadowMap;

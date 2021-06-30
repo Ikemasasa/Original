@@ -68,7 +68,7 @@ void Actor::UpdateWorld()
 	}
 
 	// モーションがあるならskinning
-	if (mMesh->mMotionType != SkinnedMesh::DEFAULT)
+	if (mMesh->GetMotion()!= SkinnedMesh::DEFAULT)
 	{
 		mMesh->Skinning();
 	}
@@ -128,6 +128,20 @@ int Actor::RayPickSRT(const DirectX::XMFLOAT3& sp, const DirectX::XMFLOAT3& ep, 
 	}
 
 	return ret;
+}
+
+void Actor::CorrectionAngle(const Vector3& distN)
+{
+	// いずれ線形補完にしたい
+	Vector3 nowDist = Vector3(sinf(mAngle.y), 0.0f, cosf(mAngle.y));							 // 今向いてる方向
+
+	Vector3 cross = distN.Cross(nowDist);				 // 内積の角度を360度出すのに使う
+
+	float dot = distN.Dot(nowDist);
+	float min = -1.0f, max = 1.0f;
+	float angle = acosf(Math::Clamp(dot, min, max)); // 角度を算出(-1 ~ 1の間に入れないとnanが返るからclampしてる(dot = 1.00000012みたいになってた))
+	if (cross.y < 0) angle = DirectX::XMConvertToRadians(360.0f) - angle;
+	mAngle.y += angle;
 }
 
 void Actor::AddMotion(const char* filename, SkinnedMesh::MotionType type)

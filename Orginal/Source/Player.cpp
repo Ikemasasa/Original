@@ -44,9 +44,9 @@ void Player::Initialize()
 
 void Player::Update()
 {
-	const std::shared_ptr<CameraBase>& camera = Singleton<CameraManager>().GetInstance().GetCamera();
-	Vector3 cFrontVector(camera->GetFrontVector().x, 0.0f, camera->GetFrontVector().z); // カメラの正面のベクトル(XZ)
-	Vector3 cRightVector(camera->GetRightVector().x, 0.0f, camera->GetRightVector().z); // カメラの右側のベクトル(XZ)
+	auto& cameraManager = Singleton<CameraManager>().GetInstance();
+	Vector3 cFrontVector(cameraManager.GetFrontVector().x, 0.0f, cameraManager.GetFrontVector().z); // カメラの正面のベクトル(XZ)
+	Vector3 cRightVector(cameraManager.GetRightVector().x, 0.0f, cameraManager.GetRightVector().z); // カメラの右側のベクトル(XZ)
 	cFrontVector.Normalize();
 	cRightVector.Normalize();
 
@@ -78,7 +78,7 @@ void Player::Update()
 		float min = -1.0f, max = 1.0f;
 		float a = acosf(Math::Clamp(dot, min, max)); // 角度を算出(-1 ~ 1の間に入れないとnanが返るからclampしてる(dot = 1.00000012みたいになってた))
 		if (cross.y < 0) a = DirectX::XMConvertToRadians(360.0f) - a;
-		angleY = camera->GetAngle().y - a - DirectX::XMConvertToRadians(180.0f);
+		angleY = cameraManager.GetAngle().y - a - DirectX::XMConvertToRadians(180.0f);
 	};
 	auto CorrectionPos = [&]()
 	{

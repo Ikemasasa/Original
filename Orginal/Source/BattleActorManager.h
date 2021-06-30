@@ -12,6 +12,8 @@ class Enemy;
 class Player;
 class PlayerManager;
 
+// ターン進行の部分を後々別にしたい
+
 class BattleActorManager
 {
 public:
@@ -23,7 +25,7 @@ public:
 
 private:
 	std::vector<std::unique_ptr<BattleActor>> mBActors;
-	std::vector<int> mObjectIDs[BATTLEACTOR_KIND];
+	std::vector<int> mAliveActorIDs[BATTLEACTOR_KIND];
 
 	BattleActor* mMoveActor = nullptr;
 	std::queue<BattleActor*> mOrder;
@@ -33,6 +35,7 @@ private:
 	void SortOrder();
 	void DecideMoveActor();
 	bool CheckBattleFinish();
+	void OrganizeActor();
 	int CalcDamage(const Status* deal, Status* take);
 
 	void PlayerCreateAndRegister(Player* pl);
@@ -48,6 +51,6 @@ public:
 
 	// ゲッター
 	BattleActor* GetMoveActor() const { return mMoveActor; }
-	const std::vector<int>& GetObjectIDs(Actor::Type kind) const { return mObjectIDs[kind]; }
+	const std::vector<int>& GetAliveActorIDs(Actor::Type kind) const { return mAliveActorIDs[kind]; }
 	BattleActor* GetActor(int objectID) const { return mBActors[objectID].get(); }
 };

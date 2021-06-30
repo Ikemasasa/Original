@@ -18,6 +18,4 @@ public:
 	~CommandPlayer();
 	void Update(const BattleActorManager* bam) override;
 	void Render() const override;
-
-	void ResetCommand();
 };

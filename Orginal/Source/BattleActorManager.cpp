@@ -80,27 +80,28 @@ void BattleActorManager::Initialize()
 	// 座標設定
 	{
 		// PLAYER
-		size_t size = mObjectIDs[Actor::Type::PLAYER].size();
+		size_t size = mAliveActorIDs[Actor::Type::PLAYER].size();
 		for (size_t i = 0; i < size; ++i)
 		{
 			// 今は1人なので仮
 			Vector3 pos(0, 0, PLAYER_POS_Z);
-			mBActors[mObjectIDs[Actor::Type::PLAYER][i]]->SetPos(pos);
-			mBActors[mObjectIDs[Actor::Type::PLAYER][i]]->UpdateWorld();
+			mBActors[mAliveActorIDs[Actor::Type::PLAYER][i]]->SetPos(pos);
+			mBActors[mAliveActorIDs[Actor::Type::PLAYER][i]]->UpdateWorld();
 		}
 
 		// ENEMY
-		size = mObjectIDs[Actor::Type::ENEMY].size();
+		size = mAliveActorIDs[Actor::Type::ENEMY].size();
 		for (size_t i = 0; i < size; ++i)
 		{
-			// 今は1人なので仮
-			Vector3 pos(0, 0, ENEMY_POS_Z);
-			mBActors[mObjectIDs[Actor::Type::ENEMY][i]]->SetPos(pos);
-			mBActors[mObjectIDs[Actor::Type::ENEMY][i]]->UpdateWorld();
+		// 今は1人なので仮
+		Vector3 pos(0, 0, ENEMY_POS_Z);
+		mBActors[mAliveActorIDs[Actor::Type::ENEMY][i]]->SetPos(pos);
+		mBActors[mAliveActorIDs[Actor::Type::ENEMY][i]]->UpdateWorld();
 		}
 
 	}
 
+	mProduction.Initialize();
 }
 
 void BattleActorManager::Update()
@@ -128,12 +129,16 @@ void BattleActorManager::Update()
 			// break;
 
 		case 1: //計算
-			{
-				int damage = CalcDamage(mMoveActor->GetStatus(), mBActors[mMoveActor->GetCommand()->GetTargetObjID()]->GetStatus());
-				mProduction.Begin(mMoveActor->GetCommand()->GetBehaviour(), mMoveActor->GetObjID(), mMoveActor->GetCommand()->GetTargetObjID(), damage);
-			}
-			++state;
-			//break;
+		{
+			BattleActor* targetActor = mBActors[mMoveActor->GetCommand()->GetTargetObjID()].get();
+
+			int damage = CalcDamage(mMoveActor->GetStatus(), targetActor->GetStatus());
+			targetActor->GetStatus()->HurtHP(damage);
+
+			mProduction.Begin(mMoveActor->GetCommand()->GetBehaviour(), mMoveActor->GetObjID(), mMoveActor->GetCommand()->GetTargetObjID(), damage);
+		}
+		++state;
+		//break;
 
 		case 2:
 
@@ -143,11 +148,10 @@ void BattleActorManager::Update()
 				state = 0;
 				mMoveActor->GetCommand()->BehaviourFinished();
 
+				OrganizeActor();
 				CheckBattleFinish();
 				DecideMoveActor();
-				BattleState::GetInstance().SetState(BattleState::State::COMMAND_SELECT);
 			}
-
 
 		}
 	}
@@ -158,7 +162,11 @@ void BattleActorManager::Update()
 void BattleActorManager::Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir)
 {
 	for (auto& ba : mBActors) ba->Render(view, projection, lightDir);
-	for (auto& ba : mBActors) ba->RenderCommand();
+
+	// MoveActorのコマンドUIを表示
+	mMoveActor->RenderCommand();
+
+	mProduction.Render(); // 攻撃のダメージとかを表示
 }
 
 int BattleActorManager::CalcDamage(const Status* deal, Status* take)
@@ -168,7 +176,6 @@ int BattleActorManager::CalcDamage(const Status* deal, Status* take)
 	int width = damage / 16 + 1; // ダメージの振れ幅の最大値
 	damage = damage + (rand() % width * sign);
 
-	take->HurtHP(damage);
 	return damage;
 }
 
@@ -177,7 +184,7 @@ void BattleActorManager::PlayerCreateAndRegister(Player* pl)
 	int objID = mBActors.size();
 	mBActors.emplace_back(std::make_unique<PlayerBattle>(pl));
 	mBActors.back()->SetObjID(objID);
-	mObjectIDs[mBActors.back()->GetType()].push_back(objID);
+	mAliveActorIDs[mBActors.back()->GetType()].push_back(objID);
 }
 
 void BattleActorManager::EnemyCreateAndRegister(Enemy* enm)
@@ -185,48 +192,57 @@ void BattleActorManager::EnemyCreateAndRegister(Enemy* enm)
 	int objID = mBActors.size();
 	mBActors.emplace_back(std::make_unique<EnemyBattle>(enm));
 	mBActors.back()->SetObjID(objID);
-	mObjectIDs[mBActors.back()->GetType()].push_back(objID);
+	mAliveActorIDs[mBActors.back()->GetType()].push_back(objID);
 }
 
 bool BattleActorManager::CheckBattleFinish()
 {
+	return false;
+}
+
+void BattleActorManager::OrganizeActor()
+{
+	// 体力が0以下になったアクタ―を整理する
 	for (auto& ba : mBActors)
 	{
-		// 体力が0以下なら exist = false, objIDに-1を登録
+		// 体力が0以下なら exist = false, mAliveActorIDsから削除
 		if (ba->GetStatus()->IsDead())
 		{
 			ba->SetExist(false);
-			for (auto& objID : mObjectIDs[ba->GetType()])
+
+			auto& ids = mAliveActorIDs[ba->GetType()];
+			for (auto it = ids.begin(); it != ids.end(); ++it)
 			{
-				if (ba->GetObjID() == objID)
+				if (*it == ba->GetObjID())
 				{
-					objID = -1;
+					ids.erase(it);
+					break;
 				}
 			}
 		}
 	}
-
-	bool isAllDead = true;
-	for (auto& objID : mObjectIDs[Actor::Type::ENEMY])
-	{
-		if (objID != -1) isAllDead = false;
-	}
-
-	return isAllDead;
 }
 
 void BattleActorManager::DecideMoveActor()
 {
-	while (true)
-	{
-		// 順番が来たキャラが倒されているなら無視
-		if (mOrder.front()->GetObjID() == -1) mOrder.pop();
-		else break;
-	}
-
 	if (mOrder.empty())
 	{
 		SortOrder();
+	}
+
+	while (true)
+	{
+		// 順番が来たキャラが倒されているなら無視
+		if (mOrder.front()->GetObjID() == -1)
+		{
+			mOrder.pop();
+			if (mOrder.empty())
+			{
+				SortOrder();
+				break;
+			}
+		}
+		else break;
 	}
 
 	mMoveActor = mOrder.front();

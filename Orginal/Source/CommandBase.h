@@ -29,7 +29,7 @@ public:
 	virtual void Update(const BattleActorManager* bam) = 0;
 	virtual void Render() const {};
 
-	bool IsBehaviourEnable() { return (mBehaviour != Behaviour::NONE); }
+	bool IsBehaviourEnable() const { return (mBehaviour != Behaviour::NONE); }
 	void BehaviourFinished() { mBehaviour = Behaviour::NONE; }
 
 	int GetTargetObjID() const { return mTargetObjID; }

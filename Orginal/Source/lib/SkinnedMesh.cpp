@@ -53,11 +53,6 @@ void SkinnedMesh::LoadFBX(ID3D11Device* device, const char* filename)
 	
 	importer->Destroy();
 
-	//if (scene->GetGlobalSettings().GetAxisSystem() != FbxAxisSystem::DirectX)
-	//{
-	//	FbxAxisSystem::DirectX.ConvertScene(scene);
-	//}
-
 	// モデルを3角形に分割
 	fbxsdk::FbxGeometryConverter geometryConverter(manager);
 	//geometryConverter.SplitMeshesPerMaterial(scene, true);
@@ -149,15 +144,13 @@ void SkinnedMesh::LoadFBX(ID3D11Device* device, const char* filename)
 		}
 
 		// 接線
-		FbxGeometryElementTangent* element = mesh->CreateElementTangent();
-		FbxLayerElement::EMappingMode mapmode = element->GetMappingMode();
-		FbxLayerElement::EReferenceMode refmode = element->GetReferenceMode();
-
-		//    ポリゴン頂点に対するインデックス参照形式のみ対応
-		if (mapmode == FbxGeometryElement::eByPolygonVertex)
 		{
-			if (refmode == FbxGeometryElement::eIndexToDirect)
+			if (mesh->GetElementTangentCount() > 0)
 			{
+				FbxGeometryElementTangent* element = mesh->GetElementTangent();// mesh->CreateElementTangent();
+				//FbxLayerElement::EMappingMode mapmode = element->GetMappingMode();
+				//FbxLayerElement::EReferenceMode refmode = element->GetReferenceMode();
+
 				FbxLayerElementArrayTemplate<FbxVector4>* index = &element->GetDirectArray();
 				int indexCount = index->GetCount();
 				for (int j = 0; j < indexCount; j++) {
@@ -168,22 +161,33 @@ void SkinnedMesh::LoadFBX(ID3D11Device* device, const char* filename)
 					mVertices[j + mVerticesNum].tangent.y = (float)v[1];
 					mVertices[j + mVerticesNum].tangent.z = (float)v[2];
 				}
-
-				//FbxLayerElementArrayTemplate<int>* index = &element->GetIndexArray();
-				//int indexCount = index->GetCount();
-				//for (int j = 0; j < indexCount; j++) {
-				// 
-				//	// FbxColor取得
-				//	FbxVector4 v = element->GetDirectArray().GetAt(index->GetAt(j));
-				//	// DWORD型のカラー作成        
-				//	mVertices[j + mVerticesNum].tangent.x = (float)v[0];
-				//	mVertices[j + mVerticesNum].tangent.y = (float)v[1];
-				//	mVertices[j + mVerticesNum].tangent.z = (float)v[2];
-				//}
 			}
+			
+
+
 		}
-		// 
+
 		// 従法線
+		{
+			if (mesh->GetElementBinormalCount() > 0)
+			{
+				FbxGeometryElementBinormal* element = mesh->GetElementBinormal();// mesh->CreateElementTangent();
+				//FbxLayerElement::EMappingMode mapmode = element->GetMappingMode();
+				//FbxLayerElement::EReferenceMode refmode = element->GetReferenceMode();
+
+				FbxLayerElementArrayTemplate<FbxVector4>* index = &element->GetDirectArray();
+				int indexCount = index->GetCount();
+				for (int j = 0; j < indexCount; j++) {
+					// FbxColor取得
+					FbxVector4 v = index->GetAt(j);
+					// DWORD型のカラー作成        
+					mVertices[j + mVerticesNum].binormal.x = (float)v[0];
+					mVertices[j + mVerticesNum].binormal.y = (float)v[1];
+					mVertices[j + mVerticesNum].binormal.z = (float)v[2];
+				}
+			}
+
+		}
 
 		// インデックス設定
 		for (int k = 0; k < num; k += 3)
@@ -548,70 +552,33 @@ void SkinnedMesh::Skinning()
 	
 	mSkinningShader->Run(cb.groupNumX, cb.groupNumY, cb.groupNumZ);
 
-	//// 計算結果を読み込む
-	//{
+	// 計算結果を読み込む
+	{
+		ID3D11Buffer* result = nullptr;
+		mSkinningShader->CreateResultBuffer(&result);
 
-	//	ID3D11Buffer* result = nullptr;
-	//	mSkinningShader->CreateResultBuffer(&result);
+		HRESULT hr = S_OK;
 
-	//	HRESULT hr = S_OK;
+		D3D11_MAPPED_SUBRESOURCE ms;
+		ZeroMemory(&ms, sizeof(D3D11_MAPPED_SUBRESOURCE));
 
-	//	D3D11_MAPPED_SUBRESOURCE ms;
-	//	ZeroMemory(&ms, sizeof(D3D11_MAPPED_SUBRESOURCE));
+		hr = context->Map(result, 0, D3D11_MAP_READ, 0, &ms);
+		if (FAILED(hr)) return;
 
-	//	hr = context->Map(result, 0, D3D11_MAP_READ, 0, &ms);
-	//	if (FAILED(hr)) return;
+		VertexForSkinning* v = static_cast<VertexForSkinning*>(ms.pData);
+		for (int i = 0; i < mVerticesNum; ++i)
+		{
+			mVertices[i].pos    = v[i].pos;
+			mVertices[i].normal = v[i].normal;
+		}
 
-	//	auto start = std::chrono::system_clock::now();
-	//	VertexForSkinning* v = static_cast<VertexForSkinning*>(ms.pData);
-	//	for (int i = 0; i < mVerticesNum; ++i)
-	//	{
-	//		mVertices[i].pos    = v[i].pos;
-	//		mVertices[i].normal = v[i].normal;
-	//	}
+		context->Unmap(result, 0);
 
-	//	context->Unmap(result, 0);
+		result->Release();
+	}
 
-	//	result->Release();
-	//	auto end = std::chrono::system_clock::now();
-
-	//	double elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-	//	std::wstring wstr = std::to_wstring(elapsed);
-	//	FONT.Set(wstr.c_str(), Vector2::Zero());
-	//}
-
-	//FRAMEWORK.GetContext()->UpdateSubresource(mVertexBuffer.Get(), 0, NULL, mVertices, 0, 0);
+	FRAMEWORK.GetContext()->UpdateSubresource(mVertexBuffer.Get(), 0, NULL, mVertices, 0, 0);
 	Animate(1.0f / 60.0f);
-
-	//// 頂点変形
-	//for (int v = 0; v < mVerticesNum; ++v)
-	//{
-	//	// 頂点 * ボーン行列
-	//	// b = v番目の頂点の影響ボーン
-	//	if (mWeights[v].count <= 0)continue;
-	//	mVertices[v].pos.x = 0;
-	//	mVertices[v].pos.y = 0;
-	//	mVertices[v].pos.z = 0;
-	//	// 影響個数分ループ
-	//	for (int n = 0; n < mWeights[v].count; ++n)
-	//	{
-	//		int b = mWeights[v].bone[n];
-	//		float x = mVerticesSource[v].pos.x;
-	//		float y = mVerticesSource[v].pos.y;
-	//		float z = mVerticesSource[v].pos.z;
-	//		// 座標を影響力分移動
-	//		mVertices[v].pos.x += (x * keyMatrix[b]._11 + y * keyMatrix[b]._21 + z * keyMatrix[b]._31 + 1 * keyMatrix[b]._41) * mWeights[v].weight[n];
-	//		mVertices[v].pos.y += (x * keyMatrix[b]._12 + y * keyMatrix[b]._22 + z * keyMatrix[b]._32 + 1 * keyMatrix[b]._42) * mWeights[v].weight[n];
-	//		mVertices[v].pos.z += (x * keyMatrix[b]._13 + y * keyMatrix[b]._23 + z * keyMatrix[b]._33 + 1 * keyMatrix[b]._43) * mWeights[v].weight[n];
-	//		float nx = mVerticesSource[v].normal.x;
-	//		float ny = mVerticesSource[v].normal.y;
-	//		float nz = mVerticesSource[v].normal.z;
-	//		//	法線を影響力分変換
-	//		mVertices[v].normal.x += (nx * keyMatrix[b]._11 + ny * keyMatrix[b]._21 + nz * keyMatrix[b]._31) * mWeights[v].weight[n];
-	//		mVertices[v].normal.y += (nx * keyMatrix[b]._12 + ny * keyMatrix[b]._22 + nz * keyMatrix[b]._32) * mWeights[v].weight[n];
-	//		mVertices[v].normal.z += (nx * keyMatrix[b]._13 + ny * keyMatrix[b]._23 + nz * keyMatrix[b]._33) * mWeights[v].weight[n];
-	//	}
-	//}
 }
 
 void SkinnedMesh::LoadMeshAnim(FbxMesh* mesh)
@@ -846,11 +813,11 @@ void SkinnedMesh::Initialize(const char* fbxFilename)
 		mSkinningShader->CreateStructuredBuffer(mVerticesSource, mVerticesNum, sizeof(VertexForSkinning));
 		mSkinningShader->CreateStructuredBuffer(mWeights, mVerticesNum, sizeof(Weight));
 		mSkinningShader->CreateStructuredBuffer(nullptr, mBoneNum, sizeof(Matrix));
-		//mSkinningShader->CreateRWStructuredBuffer(mVerticesNum, sizeof(VertexForSkinning));
-		mSkinningShader->CreateRWByteaddressBuffer(mVertices, mVerticesNum, sizeof(Vertex));
+		mSkinningShader->CreateRWStructuredBuffer(mVerticesNum, sizeof(VertexForSkinning));
+		//mSkinningShader->CreateRWByteaddressBuffer(mVertices, mVerticesNum, sizeof(Vertex));
 		mSkinningShader->CreateConstantBuffer(sizeof(CbufferForSkinning));
 
-		mVertexBuffer = mSkinningShader->GetRWBuffer();
+		//mVertexBuffer = mSkinningShader->GetRWBuffer();
 	}
 
 
@@ -952,6 +919,11 @@ void SkinnedMesh::Render(const Shader* shader, const DirectX::XMFLOAT4X4& wvp, c
 		context->DrawIndexed(mMaterials[m].faceNum * 3, start, 0);
 		start += mMaterials[m].faceNum * 3;
 	}
+
+	// CSでVBを使ってるのでリセット
+	stride = 0;
+	ID3D11Buffer* dummyVB = nullptr;
+	context->IASetVertexBuffers(0, 1, &dummyVB, &stride, &offset);
 }
 
 int SkinnedMesh::RayPick(const DirectX::XMFLOAT3& sp, const DirectX::XMFLOAT3& ep, DirectX::XMFLOAT3* outPos, DirectX::XMFLOAT3* outNormal, float* outLen)

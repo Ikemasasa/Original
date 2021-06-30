@@ -24,6 +24,8 @@ SceneBattle::SceneBattle(PlayerManager* plm, Enemy* enemy)
 	mBattleActorManager = std::make_unique<BattleActorManager>(plm, enemy);
 	mSkybox = std::make_unique<Skybox>(L"Data/Image/sky.png");
 
+	mTerrain = std::make_shared<Terrain>(DataBase::TERRAIN_ID_START);
+	mTerrain->Initialize();
 
 	mLightDir = { 0.0f, -1.0f, 1.0f, 0.0f };
 }
@@ -56,7 +58,9 @@ void SceneBattle::Render()
 	DirectX::XMFLOAT4X4 view = Singleton<CameraManager>().GetInstance().GetView();
 	DirectX::XMFLOAT4X4 projection = Singleton<CameraManager>().GetInstance().GetProj();
 
+	
 	mSkybox->Render(view, projection);
+	mTerrain->Render(view, projection, mLightDir);
 	mBattleActorManager->Render(view, projection, mLightDir);
 }
 

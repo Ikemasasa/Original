@@ -24,7 +24,7 @@ float4 PSMain(PSInput input) : SV_TARGET0
 	//color = 1 - color;
 	// 輝度調整
 	color.rgb += 0.0;
-	color.rgb *= 1.0;
+	color.rgb *= 1.2;
 
 	// コントラスト調整
 	// 0: 0.5   1:そのまま

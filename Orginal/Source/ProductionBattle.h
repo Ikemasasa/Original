@@ -5,6 +5,7 @@
 #include "lib/Vector.h"
 
 #include "CommandBase.h"
+#include "ProductionValue.h"
 
 class BattleActorManager;
 
@@ -28,10 +29,15 @@ class ProductionBattle
 	Vector3 mOrgPos;
 	Vector3 mDestinationPos;
 
+	ProductionValue mProductionValue;
+
 public:
 	ProductionBattle() = default;
 	~ProductionBattle() = default;
 
 	void Begin(CommandBase::Behaviour behaviour, int moveID, int targetID, int amount);
+	
+	void Initialize();
 	bool Update(const BattleActorManager* bam);
+	void Render();
 };

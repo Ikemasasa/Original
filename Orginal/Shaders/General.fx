@@ -42,9 +42,10 @@ cbuffer CBGaussianBlur : register(b3)
 // データフォーマット
 struct VSInput
 {
-	float3 pos	   : POSITION;
-	float3 normal  : NORMAL;
-	float2 tex	   : TEXCOORD;
-	float4 color   : COLOR;
-	float3 tangent : TANGENT;
+	float3 pos	    : POSITION;
+	float3 normal   : NORMAL;
+	float2 tex	    : TEXCOORD;
+	float4 color    : COLOR;
+	float3 tangent  : TANGENT;
+	float3 binormal : BINORMAL;
 };

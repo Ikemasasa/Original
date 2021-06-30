@@ -24,9 +24,12 @@ public:
 
 	void Update(const Actor* target);
 
+
+	// ƒQƒbƒ^[
 	DirectX::XMFLOAT4X4 GetView() const { return mMainCamera.top().get()->GetViewMatrix(); }
 	DirectX::XMFLOAT4X4 GetProj() const { return mMainCamera.top().get()->GetProjectionMatrix(); }
 	Vector3 GetPos() const { return mMainCamera.top().get()->GetPos(); }
-	std::shared_ptr<CameraBase> GetCamera() const { return mMainCamera.top(); }
-
+	Vector3 GetAngle() const { return mMainCamera.top().get()->GetAngle(); }
+	Vector3 GetFrontVector() const { return mMainCamera.top().get()->GetFrontVector(); }
+	Vector3 GetRightVector() const { return mMainCamera.top().get()->GetRightVector(); }
 };

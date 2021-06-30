@@ -327,6 +327,9 @@
     <ClInclude Include="Source\CommandCharaSelect.h">
       <Filter>ヘッダー ファイル\Scene\Battle\command</Filter>
     </ClInclude>
+    <ClInclude Include="Source\ProductionValue.h">
+      <Filter>ソース ファイル\Scene\Battle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\lib\Blend.cpp">
@@ -553,6 +556,9 @@
     </ClCompile>
     <ClCompile Include="Source\CommandCharaSelect.cpp">
       <Filter>ソース ファイル\Scene\Battle\command</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ProductionValue.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

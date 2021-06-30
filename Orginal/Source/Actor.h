@@ -58,6 +58,9 @@ public:
 		DirectX::XMFLOAT3* outNormal,
 		float* outLen);
 
+	// 向き補正
+	void CorrectionAngle(const Vector3& distN); // 正規化した向きたい方向ベクトル
+
 	// モーション追加
 	void AddMotion(const char* filename, SkinnedMesh::MotionType type);
 

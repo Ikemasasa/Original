@@ -37,21 +37,15 @@ EffectManager::EffectManager()
 
 EffectManager::~EffectManager()
 {
-	for (auto& ef : mEffects)
-	{
-		if (ef) ef->Release();
-		ef = nullptr;
-	}
-	mRenderer->Destroy();
-	mManager->Destroy();
+
 }
 
 
 void EffectManager::Create(const EFK_CHAR* efkPath, const int& slot)
 {
-	if (mEffects[slot]) return;
+	if (mEffects[slot].Get()) return;
 
-	Effekseer::Effect* effect = Effekseer::Effect::Create(mManager, efkPath);
+	Effekseer::EffectRef effect = Effekseer::Effect::Create(mManager, efkPath);
 	mEffects[slot] = effect;
 	mEffectNum++;
 }
@@ -73,11 +67,16 @@ void EffectManager::Update()
 	}
 }
 
-void EffectManager::Render(const DirectX::XMFLOAT4X4& viewMatrix)
+void EffectManager::Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj)
 {
-	Effekseer::Matrix44 view;
-	memcpy(&view, &viewMatrix, sizeof(Effekseer::Matrix44));
-	mRenderer->SetCameraMatrix(view);
+	// ビュー プロジェクション行列更新
+	Effekseer::Matrix44 viewEfk;
+	memcpy(&viewEfk, &view, sizeof(Effekseer::Matrix44));
+	mRenderer->SetCameraMatrix(viewEfk);
+
+	Effekseer::Matrix44 projEfk;
+	memcpy(&projEfk, &proj, sizeof(Effekseer::Matrix44));
+	mRenderer->SetProjectionMatrix(projEfk);
 
 	mRenderer->BeginRendering();
 	mManager->Draw();
@@ -94,7 +93,7 @@ void EffectManager::SetProjectionMatrix(const DirectX::XMFLOAT4X4* projMatrix)
 
 int EffectManager::Play(const int& slot, const Vector3& pos, int startFrame, float scale, float speed)
 {
-	if (!mEffects[slot]) return -1;
+	if (!mEffects[slot].Get()) return -1;
 	Effekseer::Handle h = mManager->Play(mEffects[slot], Effekseer::Vector3D(pos.x, pos.y, pos.z), startFrame);
 	mManager->SetSpeed(h, speed);
 	mManager->SetScale(h, scale, scale, scale);
