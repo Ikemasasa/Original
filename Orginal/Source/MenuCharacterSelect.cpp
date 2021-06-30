@@ -3,7 +3,10 @@
 #include "lib/Audio.h"
 #include "lib/Input.h"
 
+#include "DataBase.h"
 #include "PlayerManager.h"
+#include "Singleton.h"
+#include "StatusData.h"
 
 void MenuCharacterSelect::Initialize(const PlayerManager* plm)
 {
@@ -19,7 +22,9 @@ void MenuCharacterSelect::Initialize(const PlayerManager* plm)
 	{
 		const int LEN = 2;
 		wchar_t name[LEN] = {};
-		name[0] = plm->GetPlayer(i)->GetStatus()->name[0];
+
+		int charaID = plm->GetPlayer(i)->GetCharaID();
+		name[0] = Singleton<DataBase>().GetInstance().GetStatusData()->GetPLStatus(charaID).name[0];
 
 		mNameFont.Add(name);
 		++mCharacterNum;

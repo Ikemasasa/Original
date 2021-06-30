@@ -8,8 +8,9 @@
 
 class PlayerManager;
 class Sprite;
+struct Status;
 
-class MenuCharacterHealth
+class CharacterHealth
 {
 	static const int VERTICAL_NUM = 3;
 
@@ -38,11 +39,11 @@ class MenuCharacterHealth
 	Vector2 mPlateLeftTop;
 	int mSelectIndex;
 public:
-	MenuCharacterHealth() = default;
-	~MenuCharacterHealth() = default;
+	CharacterHealth() = default;
+	~CharacterHealth() = default;
 
-	void Initialize(const PlayerManager* plm, const Vector2& leftTop);
-	void Update();
+	void Initialize(const Vector2& leftTop);
+	void Update(const int statusNum, const Status* statusArray);
 	void Render(bool isSelectRender = false);
 	void Release();
 

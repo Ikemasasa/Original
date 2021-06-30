@@ -2,6 +2,7 @@
 #include "DirectXTK/Inc/Audio.h"
 
 // ‚»‚Ì‚¤‚¿openal‚É•Ï‚¦‚æ‚¤
+// ŒãAmusic, sound‚Í•ÊƒNƒ‰ƒX‚É‚µ‚½•û‚ª‚¢‚¢‚©‚à‚µ‚ê‚È‚¢ 
 
 enum class Music
 {

@@ -37,6 +37,7 @@ void RenderTarget::Initialize(float width, float height)
 		
 		//	レンダーターゲットビュー
 		D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
+		ZeroMemory(&rtvDesc, sizeof(D3D11_RENDER_TARGET_VIEW_DESC));
 		memset(&rtvDesc, 0, sizeof(rtvDesc));
 		rtvDesc.Format = DXGI_FORMAT_R16G16B16A16_UNORM;
 		rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
@@ -44,7 +45,7 @@ void RenderTarget::Initialize(float width, float height)
 	
 		// シェーダリソースビューの設定
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-		memset(&srvDesc, 0, sizeof(srvDesc));
+		ZeroMemory(&srvDesc, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
 		srvDesc.Format = rtvDesc.Format;
 		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		srvDesc.Texture2D.MipLevels = 1;
@@ -121,7 +122,6 @@ void RenderTarget::Render(Shader* shader)
 		UINT num = 1;
 		D3D11_VIEWPORT vp;
 		context->RSGetViewports(&num, &vp);
-
 		
 		Vector2 pos(0.0f, 0.0f);
 		Vector2 scale(1.0f, 1.0f);
@@ -148,9 +148,6 @@ void RenderTarget::CreateRTV(D3D11_TEXTURE2D_DESC* td, D3D11_RENDER_TARGET_VIEW_
 		//	レンダーターゲットビュー
 		device->CreateRenderTargetView(mRTTexture.Get(), rtvd, mRTV.GetAddressOf());
 	}
-
-
-
 }
 
 void RenderTarget::CreateDSV(D3D11_TEXTURE2D_DESC* td, D3D11_DEPTH_STENCIL_VIEW_DESC* dsvd)

@@ -1,5 +1,6 @@
 #pragma once
 #include <DirectXMath.h>
+
 #include <Effekseer.h>
 #include <EffekseerRendererDX11.h>
 
@@ -29,7 +30,7 @@ public:
 	~EffectManager();
 	void SetProjectionMatrix(const DirectX::XMFLOAT4X4* projMatrix);
 
-	void Create(const EFK_CHAR* efkPath, const int& slot); // –ß‚è’l : handle
+	int Create(const EFK_CHAR* efkPath); // –ß‚è’l : slot
 	void Update();
 	void Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj);
 

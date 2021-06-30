@@ -16,7 +16,7 @@ void EnemyManager::Create(int charaID)
 	mEnemies.back()->SetObjID(mEnemies.size() - 1);
 }
 
-void EnemyManager::Destroy(int objID)
+std::list<std::unique_ptr<Enemy>>::iterator EnemyManager::Destroy(int objID)
 {
 	// ‚í‚©‚è‚â‚·‚­‚·‚é‚½‚ß‚É2‚Â‚É•ªŠ„
 
@@ -38,6 +38,8 @@ void EnemyManager::Destroy(int objID)
 		auto e = it->get();
 		e->SetObjID(e->GetObjID() - 1);
 	}
+
+	return it;
 }
 
 void EnemyManager::Initialize()
@@ -47,7 +49,20 @@ void EnemyManager::Initialize()
 
 void EnemyManager::Update()
 {
-	for (auto& enm : mEnemies) enm->Update(mPlayerPos); 
+	for (auto it = mEnemies.begin(); it != mEnemies.end();)
+	{
+		auto& enm = *it;
+
+		enm->Update(mPlayerPos);
+		if (enm->GetExist() == false)
+		{
+			it = Destroy(enm->GetObjID());
+		}
+		else
+		{
+			++it;
+		}
+	}
 }
 
 void EnemyManager::Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj, const DirectX::XMFLOAT4& lightDir)

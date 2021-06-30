@@ -6,8 +6,14 @@
 #include "CameraManager.h"
 #include "Collision.h"
 #include "Define.h"
+#include "EffectManager.h"
 #include "FrontendBattle.h"
 #include "GameManager.h"
+
+ProductionBattle::ProductionBattle()
+{
+	mDeathEffectSlot = Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/Death/death.efk");
+}
 
 void ProductionBattle::Begin(CommandBase::Behaviour behaviour, int moveID, int targetID, int amount)
 {
@@ -92,6 +98,12 @@ bool ProductionBattle::Update(const BattleActorManager* bam)
 	case 2: // UŒ‚I—¹‘Ò‚¿
 		if (moveActor->IsMotionFinished())
 		{
+			if (targetActor->GetStatus()->IsDead()) // UŒ‚‘ÎÛ‚ªŽ€‚ñ‚Å‚½‚ç
+			{
+				targetActor->SetExist(false); // Œ©‚¦‚È‚­‚·‚é
+				Vector3 effectPos(targetActor->GetPos().x, targetActor->GetPos().y + targetActor->GetLocalAABB().max.y * 0.5f, targetActor->GetPos().z);
+				Singleton<EffectManager>().GetInstance().Play(mDeathEffectSlot, effectPos);// ‚¦‚Á‚Ó‚¥‚­‚Æ
+			}
 			Vector3 damagePos(targetActor->GetPos().x, targetActor->GetAABB().max.y, targetActor->GetPos().z);
 			Vector3 damageRGB(1.0f, 0.4f, 0.4f);
 			Vector2 center(0.0f, 0.0f);

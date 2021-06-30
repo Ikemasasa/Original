@@ -30,9 +30,9 @@ struct Status
 	bool IsFullMP() const { return mp == maxMP; }
 
 	void HealHP(const int healValue) { hp = Math::Min(hp + healValue, maxHP); }
-	void HurtHP(const int hurtValue) { hp = Math::Max(hp - hurtValue, maxHP); }
+	void HurtHP(const int hurtValue) { hp = Math::Clamp(hp - hurtValue, 0, maxHP); }
 	void HealMP(const int healValue) { mp = Math::Min(mp + healValue, maxMP); }
-	void HurtMP(const int hurtValue) { mp = Math::Max(mp - hurtValue, maxMP); }
+	void HurtMP(const int hurtValue) { mp = Math::Clamp(mp - hurtValue, 0, maxMP); }
 };
 
 class StatusData
@@ -52,4 +52,5 @@ public:
 	Status GetEnmStatus(size_t id) const;
 
 	void SetPLStatus(size_t charaID, const Status& status);
+	void SetPLStatus(const std::wstring& name, const Status& status);
 };

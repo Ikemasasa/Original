@@ -6,6 +6,7 @@
 
 #include "Actor.h"
 #include "BattleActor.h"
+#include "CharacterHealth.h"
 #include "ProductionBattle.h"
 
 class Enemy;
@@ -16,7 +17,17 @@ class PlayerManager;
 
 class BattleActorManager
 {
+	enum Result
+	{
+		NONE,
+		PLAYER_WIN,
+		PLAYER_LOSE,
+	};
+
 public:
+	static const int HEALTH_PLATE_X = 900.0f;
+	static const int HEALTH_PLATE_Y = 0.0f;
+
 	static const int BATTLEACTOR_MAX = 12;
 	static const int BATTLEACTOR_KIND = 2; // Player, EnemyÇÃ2Ç¬ 
 
@@ -26,15 +37,19 @@ public:
 private:
 	std::vector<std::unique_ptr<BattleActor>> mBActors;
 	std::vector<int> mAliveActorIDs[BATTLEACTOR_KIND];
-
 	BattleActor* mMoveActor = nullptr;
 	std::queue<BattleActor*> mOrder;
+	int mPlayerNum;
 
 	ProductionBattle mProduction;
+	CharacterHealth mCharacterHealth;
+
+	bool mIsResult;
+	Enemy* mHitEnemy = nullptr; // fieldÇ≈ìñÇΩÇ¡ÇΩìG
 
 	void SortOrder();
 	void DecideMoveActor();
-	bool CheckBattleFinish();
+	Result CheckBattleFinish();
 	void OrganizeActor();
 	int CalcDamage(const Status* deal, Status* take);
 
@@ -47,7 +62,7 @@ public:
 	void Initialize();
 	void Update();
 	void Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir);
-
+	void Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir);
 
 	// ÉQÉbÉ^Å[
 	BattleActor* GetMoveActor() const { return mMoveActor; }

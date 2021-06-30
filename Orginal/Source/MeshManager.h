@@ -13,5 +13,5 @@ class MeshManager
 
 public:
 	std::shared_ptr<SkinnedMesh>& SearchLoad(int charaID);
-	void Update();
+	void Destory(const int charaID);
 };

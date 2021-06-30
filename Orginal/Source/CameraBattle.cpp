@@ -53,35 +53,14 @@ void CameraBattle::Update(const Actor* target)
 		break;
 
 	case BattleState::State::ENEMY_SELECT:
-		mPos = Vector3(0.0f, 7.5f, BattleActorManager::PLAYER_POS_Z - 7.5f);
+	{
+		const float POS_Y_DIST = 7.5f;
+		const float POS_Z_DIST = 7.5f;
+		mPos = Vector3(0.0f, POS_Y_DIST, BattleActorManager::PLAYER_POS_Z - POS_Z_DIST);
 		mTarget = Vector3(0.0f, 0.0f, BattleActorManager::ENEMY_POS_Z);
-		break;
-
-	case BattleState::State::ATTACK:
-		Vector3 p = target->GetPos(); // 座標
-		Vector3 t = target->GetPos(); // ターゲット
-		
-		const float TARGET_DIST = 20.0f;
-		// 動くアクターの上から
-		{
-			Vector3 nowDist(sinf(target->GetAngle().y), 0.0f, cosf(target->GetAngle().y));
-
-			// target
-			t += nowDist * TARGET_DIST;
-
-			// POS
-			// Y
-			const AABB& targetAABB = target->GetLocalAABB();
-			p.y += targetAABB.max.y * 1.5f; // モデル1.5体分上に
-
-			// X Z
-			const float POS_DIST = 10.0f;
-			p += -(nowDist * POS_DIST);
-		}
-		mPos = p;
-		mTarget = t;
-		break;
 	}
 
+		break;
+	}
 	UpdateView();
 }

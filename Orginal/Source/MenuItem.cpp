@@ -10,13 +10,12 @@
 
 #include "Item.h"
 #include "ItemData.h"
-#include "MenuCharacterHealth.h"
 #include "PlayerManager.h"
 #include "Singleton.h"
 
 void MenuItem::Initialize(const PlayerManager* plm)
 {
-	mCharacterHealth.Initialize(plm, Vector2(HEALTH_PLATE_X, HEALTH_PLATE_Y));
+	mCharacterHealth.Initialize(Vector2(HEALTH_PLATE_X, HEALTH_PLATE_Y));
 	mCharacterSelect.Initialize(plm);
 	mItemSelect.Initialize();
 	mItemIndex = -1;
@@ -37,7 +36,17 @@ MenuBase::Select MenuItem::Update(const PlayerManager* plm)
 	}
 	else 
 	{
-		mCharacterHealth.Update();
+		// ステータス配列作成
+		int statusNum = plm->GetNum();
+		Status* statusArray = new Status[statusNum];
+		for (int i = 0; i < statusNum; ++i)
+		{
+			int charaID = plm->GetPlayer(i)->GetCharaID();
+			statusArray[i] = Singleton<DataBase>().GetInstance().GetStatusData()->GetPLStatus(charaID);
+		}
+		mCharacterHealth.Update(statusNum, statusArray);
+		// ステータス配列削除
+		delete[] statusArray;
 
 		if (Input::GetButtonTrigger(0, Input::BUTTON::A))
 		{

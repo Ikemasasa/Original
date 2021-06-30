@@ -7,7 +7,7 @@
 #include "lib/Font.h"
 
 #include "MenuCharacterSelect.h"
-#include "MenuCharacterHealth.h"
+#include "CharacterHealth.h"
 #include "ItemSelect.h"
 
 class PlayerManager;
@@ -28,7 +28,7 @@ private:
 
 	int mItemIndex;
 	MenuCharacterSelect mCharacterSelect;
-	MenuCharacterHealth mCharacterHealth;
+	CharacterHealth mCharacterHealth;
 	ItemSelect mItemSelect;
 
 public:

@@ -261,9 +261,6 @@
     <ClInclude Include="Source\Primitive.h">
       <Filter>ヘッダー ファイル\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Source\CollisionTerrain.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Source\FontValue.h">
       <Filter>ヘッダー ファイル\Common</Filter>
     </ClInclude>
@@ -272,12 +269,6 @@
     </ClInclude>
     <ClInclude Include="Source\lib\ResourceManager.h">
       <Filter>lib\ヘッダーファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ItemData.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameManager.h">
-      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Terrain.h">
       <Filter>ヘッダー ファイル\Scene\Field</Filter>
@@ -288,9 +279,6 @@
     <ClInclude Include="Source\MenuManager.h">
       <Filter>ヘッダー ファイル\Scene\Menu</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Item.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Source\MenuItem.h">
       <Filter>ヘッダー ファイル\Scene\Menu</Filter>
     </ClInclude>
@@ -299,9 +287,6 @@
     </ClInclude>
     <ClInclude Include="Source\lib\ConvertString.h">
       <Filter>lib\ヘッダーファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\MenuCharacterHealth.h">
-      <Filter>ヘッダー ファイル\Scene\Menu</Filter>
     </ClInclude>
     <ClInclude Include="Source\MenuBase.h">
       <Filter>ヘッダー ファイル\Scene\Menu</Filter>
@@ -328,7 +313,22 @@
       <Filter>ヘッダー ファイル\Scene\Battle\command</Filter>
     </ClInclude>
     <ClInclude Include="Source\ProductionValue.h">
-      <Filter>ソース ファイル\Scene\Battle</Filter>
+      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CollisionTerrain.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameManager.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Item.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ItemData.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CharacterHealth.h">
+      <Filter>ヘッダー ファイル\Scene\Menu</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -404,9 +404,6 @@
     <ClCompile Include="Source\CameraBattle.cpp">
       <Filter>ソース ファイル\Common\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Looper.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\DataBase.cpp">
       <Filter>ソース ファイル\Common</Filter>
     </ClCompile>
@@ -473,9 +470,6 @@
     <ClCompile Include="Source\MeshDataLoader.cpp">
       <Filter>ソース ファイル\Common</Filter>
     </ClCompile>
-    <ClCompile Include="Source\EffectManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\lib\Input.cpp">
       <Filter>lib\ソースファイル</Filter>
     </ClCompile>
@@ -494,9 +488,6 @@
     <ClCompile Include="Source\ShadowMap.cpp">
       <Filter>ソース ファイル\Common</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Primitive.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\CollisionTerrain.cpp">
       <Filter>ソース ファイル\Common</Filter>
     </ClCompile>
@@ -512,20 +503,11 @@
     <ClCompile Include="Source\lib\ResourceManager.cpp">
       <Filter>lib\ソースファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ItemData.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GameManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\MenuSelect.cpp">
       <Filter>ソース ファイル\Scene\Menu</Filter>
     </ClCompile>
     <ClCompile Include="Source\MenuManager.cpp">
       <Filter>ソース ファイル\Scene\Menu</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Item.cpp">
-      <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\ConvertString.cpp">
       <Filter>lib\ソースファイル</Filter>
@@ -536,17 +518,11 @@
     <ClCompile Include="Source\MenuStatus.cpp">
       <Filter>ソース ファイル\Scene\Menu</Filter>
     </ClCompile>
-    <ClCompile Include="Source\MenuCharacterHealth.cpp">
-      <Filter>ソース ファイル\Scene\Menu</Filter>
-    </ClCompile>
     <ClCompile Include="Source\MenuCharacterSelect.cpp">
       <Filter>ソース ファイル\Scene\Menu</Filter>
     </ClCompile>
     <ClCompile Include="Source\ItemSelect.cpp">
       <Filter>ソース ファイル\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\BattleState.cpp">
-      <Filter>ソース ファイル\Scene\Battle</Filter>
     </ClCompile>
     <ClCompile Include="Source\CommandBehaviour.cpp">
       <Filter>ソース ファイル\Scene\Battle\command</Filter>
@@ -558,7 +534,28 @@
       <Filter>ソース ファイル\Scene\Battle\command</Filter>
     </ClCompile>
     <ClCompile Include="Source\ProductionValue.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Scene\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EffectManager.cpp">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameManager.cpp">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Item.cpp">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ItemData.cpp">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Looper.cpp">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Primitive.cpp">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CharacterHealth.cpp">
+      <Filter>ソース ファイル\Scene\Menu</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

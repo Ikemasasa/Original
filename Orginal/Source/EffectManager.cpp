@@ -41,13 +41,16 @@ EffectManager::~EffectManager()
 }
 
 
-void EffectManager::Create(const EFK_CHAR* efkPath, const int& slot)
+int EffectManager::Create(const EFK_CHAR* efkPath)
 {
-	if (mEffects[slot].Get()) return;
+	if (mEffectNum >= EFFECT_MAX) return -1;
 
+	int slot = mEffectNum;
 	Effekseer::EffectRef effect = Effekseer::Effect::Create(mManager, efkPath);
 	mEffects[slot] = effect;
 	mEffectNum++;
+
+	return slot;
 }
 
 void EffectManager::Update()

@@ -197,11 +197,5 @@ void ComputeShader::Run(UINT x, UINT y, UINT z)
 	context->CSSetConstantBuffers(0, 1, mConstBuffer.GetAddressOf());
 
 	context->Dispatch(x, y, z);
-
-	{
-		// ダミーをセット(頂点バッファに使用している場合があるから) 
-		ID3D11UnorderedAccessView* dummy = nullptr;
-		context->CSSetUnorderedAccessViews(0, 1, &dummy, nullptr);
-	}
 }
 

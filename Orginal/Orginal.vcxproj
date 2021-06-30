@@ -24,6 +24,7 @@
     <ProjectGuid>{066159cb-47c0-422c-bcab-6918e024fe64}</ProjectGuid>
     <RootNamespace>Orginal</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Original</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -90,7 +91,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Source\Effekseer\include;$(ProjectDir)Source\lib\FBX SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source\lib\FBX SDK\include;$(ProjectDir)Source\Effekseer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -192,7 +193,7 @@
     <ClInclude Include="Source\lib\Vector.h" />
     <ClInclude Include="Source\lib\Input.h" />
     <ClInclude Include="Source\MenuBase.h" />
-    <ClInclude Include="Source\MenuCharacterHealth.h" />
+    <ClInclude Include="Source\CharacterHealth.h" />
     <ClInclude Include="Source\MenuCharacterSelect.h" />
     <ClInclude Include="Source\MenuItem.h" />
     <ClInclude Include="Source\MenuManager.h" />
@@ -240,7 +241,6 @@
     <ClCompile Include="Source\ActorManager.cpp" />
     <ClCompile Include="Source\BattleActor.cpp" />
     <ClCompile Include="Source\BattleActorManager.cpp" />
-    <ClCompile Include="Source\BattleState.cpp" />
     <ClCompile Include="Source\CameraBase.cpp" />
     <ClCompile Include="Source\CameraBattle.cpp" />
     <ClCompile Include="Source\CameraDebug.cpp" />
@@ -288,7 +288,7 @@
     <ClCompile Include="Source\lib\Input.cpp" />
     <ClCompile Include="Source\Looper.cpp" />
     <ClCompile Include="Source\Main.cpp" />
-    <ClCompile Include="Source\MenuCharacterHealth.cpp" />
+    <ClCompile Include="Source\CharacterHealth.cpp" />
     <ClCompile Include="Source\MenuCharacterSelect.cpp" />
     <ClCompile Include="Source\MenuItem.cpp" />
     <ClCompile Include="Source\MenuManager.cpp" />

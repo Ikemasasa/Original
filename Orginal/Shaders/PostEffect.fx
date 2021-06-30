@@ -28,7 +28,7 @@ float4 PSMain(PSInput input) : SV_TARGET0
 
 	// コントラスト調整
 	// 0: 0.5   1:そのまま
-	float contrast = 1.0;
+	float contrast = 1.05;
 	color = (color - 0.5) * contrast + 0.5;
 
 	// 彩度調整
@@ -43,6 +43,5 @@ float4 PSMain(PSInput input) : SV_TARGET0
 	// カラー補正
 	color.rgb *= float3(0.9, 1.0, 1.2);
 
-	//color = tex;
 	return color;
 }

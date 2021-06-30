@@ -20,7 +20,6 @@
 Player::Player(int charaID) : Actor(charaID, Actor::PLAYER)
 {
 	SetCharaID(charaID);
-	mStatus = Singleton<DataBase>::GetInstance().GetStatusData()->GetPLStatus(charaID);
 	mVelocity = Vector3::Zero();
 
 	Shader* shader = new Shader;

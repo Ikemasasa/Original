@@ -27,6 +27,7 @@ bool Sprite::Load(const wchar_t* filename)
 void Sprite::UnLoad()
 {
 	ResourceManager::ReleaseShaderResourceView(mSRV);
+	mSRV = nullptr;
 }
 
 void Sprite::Set(u_int slot)

@@ -57,7 +57,7 @@ void Renderer2D::UpdateVertex(ID3D11ShaderResourceView* srv, const Vector2& pos,
     // 画像のサイズ(全体)を取得
     Vector2 texSize;
     {
-        ID3D11Resource* tex;
+        ID3D11Resource* tex = nullptr;
         srv->GetResource(&tex);
         ID3D11Texture2D* tex2d = static_cast<ID3D11Texture2D*>(tex);
         D3D11_TEXTURE2D_DESC desc;

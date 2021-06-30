@@ -15,7 +15,7 @@ ActorManager::ActorManager()
 	mPlayerManager->Create(PlayerManager::SOPHIE);
 
 	mEnemyManager = std::make_unique<EnemyManager>();
-	mEnemyManager->Create(EnemyManager::DANBO);
+	mEnemyManager->Create(EnemyManager::MONSTER);
 
 	mTerrain = std::make_unique<Terrain>(DataBase::TERRAIN_ID_START);
 	CollisionTerrain::RegisterTerrain(mTerrain.get());

@@ -13,7 +13,7 @@ class CameraBase;
 
 class Player : public Actor
 {
-	Status mStatus;
+	//Status mStatus;
 	Vector3 mVelocity;
 	Item mInventory;
 
@@ -24,6 +24,6 @@ public:
 	void Initialize();
 	void Update();
 
-	Status* GetStatus() { return &mStatus; }
+	//Status* GetStatus() { return &mStatus; }
 	Item* GetInventory() { return &mInventory; }
 };

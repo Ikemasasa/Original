@@ -39,8 +39,6 @@ SceneField::SceneField()
 	mActorManager = std::make_unique<ActorManager>();
 	mSkybox		  = std::make_unique<Skybox>(L"Data/Image/sky.png");
 
-
-	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/Death/death.efk", 0);
 }
 
 SceneField::~SceneField()
@@ -56,19 +54,12 @@ void SceneField::Initialize()
 
 void SceneField::Update()
 {
-	Singleton<MeshManager>::GetInstance().Update();
-
 	mActorManager->Update();
 	Singleton<CameraManager>().GetInstance().Update(mActorManager->GetPlayerManager()->GetMovePlayer());
 
 	mSkybox->SetEyePos(Singleton<CameraManager>().GetInstance().GetPos());
 
 	Singleton<EffectManager>().GetInstance().Update();
-
-	if (Input::GetButtonTrigger(0, Input::BUTTON::A))
-	{
-		Singleton<EffectManager>().GetInstance().Play(0, Vector3::Zero());
-	}
 }
 
 void SceneField::Render()

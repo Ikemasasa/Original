@@ -12,8 +12,7 @@ public:
 		COMMAND_SELECT,
 		PLAYER_SELECT,
 		ENEMY_SELECT,
-		ATTACK,
-		
+		RESULT,
 		MAX
 	};
 

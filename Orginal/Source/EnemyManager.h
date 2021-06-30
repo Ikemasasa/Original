@@ -8,7 +8,7 @@ class EnemyManager
 public:
 	enum EnmList
 	{
-		DANBO = DataBase::ENM_ID_START,
+		MONSTER = DataBase::ENM_ID_START,
 
 	};
 
@@ -21,7 +21,7 @@ public:
 	~EnemyManager();
 
 	void Create(int charaID);
-	void Destroy(int objID);
+	std::list<std::unique_ptr<Enemy>>::iterator Destroy(int objID);
 
 	void Initialize();
 	void Update();

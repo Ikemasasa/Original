@@ -23,7 +23,6 @@ public:
 	~PlayerManager() = default;
 
 	void Create(int charaID);
-	void Destroy(int objID);
 
 	void Initialize();
 	void Update();

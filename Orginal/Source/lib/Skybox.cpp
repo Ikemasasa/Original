@@ -76,6 +76,7 @@ void Skybox::Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& 
 	DirectX::XMMATRIX matView = DirectX::XMLoadFloat4x4(&view);
 	DirectX::XMMATRIX matProj =	DirectX::XMLoadFloat4x4(&proj);
 
+	// CBçXêV
 	ConstantBuffer cb;
 	cb.cameraPos.x = mEyePos.x;
 	cb.cameraPos.y = mEyePos.y;

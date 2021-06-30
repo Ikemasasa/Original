@@ -17,16 +17,14 @@ std::shared_ptr<SkinnedMesh>& MeshManager::SearchLoad(int charaID)
 	return mMeshes.back().mesh;
 }
 
-void MeshManager::Update()
+void MeshManager::Destory(const int charaID)
 {
-	for (auto it = mMeshes.begin(); it != mMeshes.end();)
+	for (auto it = mMeshes.begin(); it != mMeshes.end(); ++it)
 	{
-		if (it->mesh.use_count() == 1) // Š—LŒ ‚ª©•ª‚¾‚¯‚È‚ç
+		if (charaID == it->charaID)
 		{
 			mMeshes.erase(it);
-			continue;
+			break;
 		}
-
-		++it;
 	}
 }

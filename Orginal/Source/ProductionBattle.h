@@ -31,8 +31,9 @@ class ProductionBattle
 
 	ProductionValue mProductionValue;
 
+	int mDeathEffectSlot;
 public:
-	ProductionBattle() = default;
+	ProductionBattle();
 	~ProductionBattle() = default;
 
 	void Begin(CommandBase::Behaviour behaviour, int moveID, int targetID, int amount);

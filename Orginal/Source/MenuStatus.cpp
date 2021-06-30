@@ -2,7 +2,10 @@
 
 #include "lib/Input.h"
 
+#include "DataBase.h"
 #include "PlayerManager.h"
+#include "Singleton.h"
+#include "StatusData.h"
 
 void MenuStatus::Initialize(const PlayerManager* plm)
 {
@@ -15,9 +18,10 @@ void MenuStatus::Initialize(const PlayerManager* plm)
     mFontValue.Initialize();
 
     // プレイヤーの名前追加
-    for (size_t i = 0; plm->GetNum(); ++i)
+    for (size_t i = 0; i < plm->GetNum(); ++i)
     {
-        mPlNameFont.Add(plm->GetPlayer(i)->GetStatus()->name.c_str());
+        std::wstring name = Singleton<DataBase>().GetInstance().GetStatusData()->GetPLStatus(plm->GetPlayer(i)->GetCharaID()).name;
+        mPlNameFont.Add(name.c_str());
     }
 
     // ステータス名追加
@@ -47,16 +51,17 @@ MenuBase::Select MenuStatus::Update(const PlayerManager* plm)
     mCharacterSelect.Update();
 
     const int playerIndex = mCharacterSelect.GetIndex();
-    const Status* status = plm->GetPlayer(playerIndex)->GetStatus();
+    int charaID = plm->GetPlayer(playerIndex)->GetCharaID();
+    const Status status = Singleton<DataBase>().GetInstance().GetStatusData()->GetPLStatus(charaID);
     std::vector<int> curValue; // 現在のステータス
     std::vector<int> maxValue; // 最大のステータス
-    curValue.emplace_back(status->hp);
-    curValue.emplace_back(status->mp);
-    curValue.emplace_back(status->GetTotalAtk());
-    curValue.emplace_back(status->GetTotalDef());
-    curValue.emplace_back(status->GetTotalSpd());
-    maxValue.emplace_back(status->maxHP);
-    maxValue.emplace_back(status->maxMP);
+    curValue.emplace_back(status.hp);
+    curValue.emplace_back(status.mp);
+    curValue.emplace_back(status.GetTotalAtk());
+    curValue.emplace_back(status.GetTotalDef());
+    curValue.emplace_back(status.GetTotalSpd());
+    maxValue.emplace_back(status.maxHP);
+    maxValue.emplace_back(status.maxMP);
 
     for (int i = 0; i < STATUS_NUM; ++i)
     {
@@ -67,7 +72,7 @@ MenuBase::Select MenuStatus::Update(const PlayerManager* plm)
         // かなりごり押し、ほかにいい方法あれば変える
         if (i == NAME)
         {
-            width = mPlNameFont.GetWidth(status->name.c_str());
+            width = mPlNameFont.GetWidth(status.name.c_str());
             pos = Vector2(PLATE_X + mStatusPlate->GetSize().x * 0.5f, PLATE_Y + FIRST_OFFSET_Y);
             center = Vector2(width * 0.5f, 0.0f);
             mPlNameFont.RenderSet(playerIndex, pos, center);

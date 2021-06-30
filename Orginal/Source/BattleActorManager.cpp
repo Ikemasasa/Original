@@ -3,12 +3,16 @@
 #include <map>
 #include <random>
 
+#include "lib/Input.h"
 #include "lib/Math.h"
 
 #include "BattleState.h"
+#include "Enemy.h"
 #include "EnemyBattle.h"
+#include "Fade.h"
 #include "PlayerBattle.h"
 #include "PlayerManager.h"
+#include "SceneManager.h"
 
 void BattleActorManager::SortOrder()
 {
@@ -61,10 +65,14 @@ void BattleActorManager::SortOrder()
 
 BattleActorManager::BattleActorManager(PlayerManager* player, Enemy* enemy)
 {
-	for (size_t i = 0; i < player->GetNum(); ++i)
+	mHitEnemy = enemy;
+
+	mPlayerNum = player->GetNum();
+	for (size_t i = 0; i < mPlayerNum; ++i)
 	{
 		PlayerCreateAndRegister(player->GetPlayer(i));
 	}
+	mIsResult = false;
 
 	EnemyCreateAndRegister(enemy);
 
@@ -75,6 +83,8 @@ BattleActorManager::BattleActorManager(PlayerManager* player, Enemy* enemy)
 
 void BattleActorManager::Initialize()
 {
+	mCharacterHealth.Initialize(Vector2(HEALTH_PLATE_X, HEALTH_PLATE_Y));
+
 	for (auto& ba : mBActors) ba->Initialize();
 
 	// 座標設定
@@ -106,54 +116,95 @@ void BattleActorManager::Initialize()
 
 void BattleActorManager::Update()
 {
-	// アクターのupdateをして、behaviourが決まれば演出、 次のアクターへ
-	bool isBehaviourEnable = false;
-	isBehaviourEnable = mMoveActor->Update(this);
-
-	// MoveActor以外もモーションの更新をする
-	for (auto& actor : mBActors)
+	if (mIsResult)
 	{
-		if (mMoveActor == actor.get()) continue;
-		actor->UpdateWorld();
-	}
+		// モーションの更新だけする
+		for (auto& actor : mBActors) actor->UpdateWorld();
 
-
-	static int state = 0;
-	if (isBehaviourEnable)
-	{
-		switch (state)
+		// fieldに戻る
+		if (Input::GetButtonTrigger(0, Input::BUTTON::A))
 		{
-		case 0: // 初期設定
-			BattleState::GetInstance().SetState(BattleState::State::ATTACK);
-			++state;
-			// break;
-
-		case 1: //計算
-		{
-			BattleActor* targetActor = mBActors[mMoveActor->GetCommand()->GetTargetObjID()].get();
-
-			int damage = CalcDamage(mMoveActor->GetStatus(), targetActor->GetStatus());
-			targetActor->GetStatus()->HurtHP(damage);
-
-			mProduction.Begin(mMoveActor->GetCommand()->GetBehaviour(), mMoveActor->GetObjID(), mMoveActor->GetCommand()->GetTargetObjID(), damage);
-		}
-		++state;
-		//break;
-
-		case 2:
-
-			if (mProduction.Update(this))
+			if (Fade::GetInstance().SetSceneImage(Fade::SPEED_SLOW))
 			{
-				// 演出が終わったら
-				state = 0;
-				mMoveActor->GetCommand()->BehaviourFinished();
-
-				OrganizeActor();
-				CheckBattleFinish();
-				DecideMoveActor();
+				SceneManager::GetInstance().PopCurrentScene();
 			}
-
 		}
+	}
+	else
+	{
+		// アクターのupdateをして、behaviourが決まれば演出、 次のアクターへ
+		bool isBehaviourEnable = false;
+		isBehaviourEnable = mMoveActor->Update(this);
+
+		// MoveActor以外もモーションの更新をする
+		for (auto& actor : mBActors)
+		{
+			if (mMoveActor == actor.get()) continue;
+			actor->UpdateWorld();
+		}
+
+		// healthplate更新
+		{
+			Status* statusArray = new Status[mPlayerNum];
+			for (int i = 0; i < mPlayerNum; ++i)
+			{
+				// BActorsは最初にプレイヤーがはいってるから 0~人数分で全員にアクセスできる
+				statusArray[i] = *mBActors[i]->GetStatus();
+			}
+			mCharacterHealth.Update(mPlayerNum, statusArray);
+			delete[] statusArray;
+		}
+
+		static int state = 0;
+		if (isBehaviourEnable)
+		{
+			switch (state)
+			{
+			case 0: // ダメージ計算、演出開始
+			{
+				BattleActor* targetActor = mBActors[mMoveActor->GetCommand()->GetTargetObjID()].get();
+				int damage = CalcDamage(mMoveActor->GetStatus(), targetActor->GetStatus());
+				targetActor->GetStatus()->HurtHP(damage);
+
+				mProduction.Begin(mMoveActor->GetCommand()->GetBehaviour(), mMoveActor->GetObjID(), mMoveActor->GetCommand()->GetTargetObjID(), damage);
+			}
+			++state;
+			//break;
+
+			case 1: // 演出
+
+				if (mProduction.Update(this))
+				{
+					// 演出が終わったら
+					mMoveActor->GetCommand()->BehaviourFinished();
+
+					OrganizeActor();
+					Result result = CheckBattleFinish();
+					if (result == PLAYER_WIN || result == PLAYER_LOSE) // TODO : 現状負けた時の特別な処理はない(勝っても負けても一緒)
+					{
+						BattleState::GetInstance().SetState(BattleState::State::RESULT);
+						mHitEnemy->SetExist(false);
+						mIsResult = true;
+
+						// 戦闘後のステータスを更新
+						for (int i = 0; i < mPlayerNum; ++i)
+						{
+							BattleActor* pl = mBActors[i].get();
+							Singleton<DataBase>().GetInstance().GetStatusData()->SetPLStatus(pl->GetCharaID(), *pl->GetStatus());
+						}
+					}
+					else
+					{
+						DecideMoveActor();
+						state = 0;
+
+					}
+
+				}
+				break;
+			}
+		}
+
 	}
 
 
@@ -163,10 +214,17 @@ void BattleActorManager::Render(const DirectX::XMFLOAT4X4& view, const DirectX::
 {
 	for (auto& ba : mBActors) ba->Render(view, projection, lightDir);
 
-	// MoveActorのコマンドUIを表示
-	mMoveActor->RenderCommand();
+	if (!mIsResult)
+	{
+		mMoveActor->RenderCommand();    // MoveActorのコマンドUIを表示
+		mCharacterHealth.Render(false); // キャラのHPを表示
+		mProduction.Render();			// 攻撃のダメージとかを表示
+	}
+}
 
-	mProduction.Render(); // 攻撃のダメージとかを表示
+void BattleActorManager::Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir)
+{
+	for (auto& ba : mBActors) ba->Render(shader, view, projection, lightDir);
 }
 
 int BattleActorManager::CalcDamage(const Status* deal, Status* take)
@@ -175,6 +233,8 @@ int BattleActorManager::CalcDamage(const Status* deal, Status* take)
 	int sign = (rand() % 2 == 0) ? -1 : 1; // 振れ幅の符号
 	int width = damage / 16 + 1; // ダメージの振れ幅の最大値
 	damage = damage + (rand() % width * sign);
+
+	if (damage < 0) damage = 0;
 
 	return damage;
 }
@@ -195,29 +255,33 @@ void BattleActorManager::EnemyCreateAndRegister(Enemy* enm)
 	mAliveActorIDs[mBActors.back()->GetType()].push_back(objID);
 }
 
-bool BattleActorManager::CheckBattleFinish()
+BattleActorManager::Result BattleActorManager::CheckBattleFinish()
 {
-	return false;
+	// mAliveActorIDsをチェックする
+
+	Result ret = NONE;
+	if (mAliveActorIDs[Actor::ENEMY].empty()) ret = PLAYER_WIN;
+	if (mAliveActorIDs[Actor::PLAYER].empty()) ret = PLAYER_LOSE;
+
+	return ret;
 }
 
 void BattleActorManager::OrganizeActor()
 {
-	// 体力が0以下になったアクタ―を整理する
+	// 体力が0になったアクタ―を整理する
 	for (auto& ba : mBActors)
 	{
-		// 体力が0以下なら exist = false, mAliveActorIDsから削除
-		if (ba->GetStatus()->IsDead())
-		{
-			ba->SetExist(false);
+		// 体力が1以上ならcontinue
+		if (!ba->GetStatus()->IsDead()) continue;
 
-			auto& ids = mAliveActorIDs[ba->GetType()];
-			for (auto it = ids.begin(); it != ids.end(); ++it)
+		// 0以下なら mAliveActorIDs から消す
+		auto& ids = mAliveActorIDs[ba->GetType()];
+		for (auto it = ids.begin(); it != ids.end(); ++it)
+		{
+			if (*it == ba->GetObjID())
 			{
-				if (*it == ba->GetObjID())
-				{
-					ids.erase(it);
-					break;
-				}
+				ids.erase(it);
+				break;
 			}
 		}
 	}

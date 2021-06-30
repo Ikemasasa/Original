@@ -97,7 +97,9 @@ void StatusData::LoadEnmStatus()
 			s.name = ConvertString::ConvertToWstirng(data[index++]);
 			s.id = std::stoi(data[index++]);
 			s.hp = std::stoi(data[index++]);
+			s.maxHP = s.hp;
 			s.mp = std::stoi(data[index++]);
+			s.maxMP = s.mp;
 			s.str = std::stoi(data[index++]);
 			s.vit = std::stoi(data[index++]);
 			s.agi = std::stoi(data[index++]);
@@ -129,4 +131,15 @@ Status StatusData::GetEnmStatus(size_t id) const
 void StatusData::SetPLStatus(size_t charaID, const Status& status)
 {
 	mPLStatus[charaID - DataBase::PL_ID_START] = status;
+}
+
+void StatusData::SetPLStatus(const std::wstring& name, const Status& status)
+{
+	size_t num = mPLStatus.size();
+	for (size_t i = 0; i < num; ++i)
+	{
+		if (wcscmp(mPLStatus[i].name.c_str(), name.c_str()) != 0) continue;
+		
+		mPLStatus[i] = status;
+	}
 }
