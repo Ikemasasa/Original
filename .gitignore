@@ -27,7 +27,7 @@
 # *.lib // libもやる
 
 # Executables
-#*.exe // exeファイルはpushした方がなんか楽な気がする
+*.exe
 *.out
 *.app
 
@@ -40,7 +40,6 @@
 *.sln.docstates
 
 # Build results
-
 /Orginal/Debug/
 /Orginal/Release/
 x64/
@@ -181,3 +180,4 @@ $RECYCLE.BIN/
 .DS_Store
 
 .vs/
+!/Exe/*.exe

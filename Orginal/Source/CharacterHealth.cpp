@@ -50,9 +50,6 @@ void CharacterHealth::Update(const std::vector<Status>& statusArray)
 		maxValue.emplace_back(statusArray[i].maxMP);
 	}
 
-
-	
-
 	for (int i = 0; i < mHealthPlates.size(); ++i)
 	{
 		for (int k = 0; k < VERTICAL_NUM; ++k)
@@ -72,11 +69,11 @@ void CharacterHealth::Update(const std::vector<Status>& statusArray)
 			{
 				pos = Vector2(mPlateLeftTop.x + HealthPlate::FIRST_OFFSET_X, mPlateLeftTop.y + HealthPlate::FIRST_OFFSET_Y + HealthPlate::ADD_OFFSET_Y * k);
 
-				int statusIndex = k - 1;
+				int statusIndex = k - 1; // k - 1 : 名前の分 
 
 				// ステータス名
 				width = mStatusNameFont.GetWidth(statusIndex);
-				mStatusNameFont.RenderSet(statusIndex, pos, Vector2::Zero(), scale, color); // k - 1 : 名前の分 
+				mStatusNameFont.RenderSet(statusIndex, pos, Vector2::Zero(), scale, color);
 
 				// 現在の値 (cur)
 				width = mFontValue.GetWidth(curValue[statusIndex]);

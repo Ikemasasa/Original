@@ -21,5 +21,5 @@ public:
 	void Render(bool isRenderClear = true);
 	void Release();
 
-	float GetWidth(const int value) const { return mFont.GetWidth(std::to_wstring(value).c_str()); }
+	float GetWidth(const int value) const;
 };
