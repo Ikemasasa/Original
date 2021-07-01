@@ -41,8 +41,8 @@
 
 # Build results
 
-[Dd]ebug/
-[Rr]elease/
+/Orginal/Debug/
+/Orginal/Release/
 x64/
 build/
 [Bb]in/
