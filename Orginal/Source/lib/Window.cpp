@@ -1,6 +1,8 @@
 #include "Window.h"
 #include "ProcessMessage.h"
 
+#include "ConvertString.h"
+
 void Window::Initialize(HINSTANCE instance, int cmd_show, float width/*ÉEÉBÉìÉhÉEâ°ÉTÉCÉY*/, float height/*ÉEÉBÉìÉhÉEècÉTÉCÉY*/)
 {
 	this->width = width;
@@ -21,14 +23,15 @@ void Window::Initialize(HINSTANCE instance, int cmd_show, float width/*ÉEÉBÉìÉhÉ
 	wcex.hIconSm = 0;
 	RegisterClassEx(&wcex);
 
+	mWindowName = "Original RPG";
 	Create(instance, cmd_show, width, height);
-
 }
 
 void Window::Create(HINSTANCE instance, int cmd_show, float width, float height)
 {
 	RECT rc = { 0, 0, static_cast<LONG>(width), static_cast<LONG>(height) };
 	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
-	hwnd = CreateWindow(className, _T("èAêEçÏïi"), WS_OVERLAPPEDWINDOW ^ WS_MAXIMIZEBOX ^ WS_THICKFRAME | WS_VISIBLE, CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, instance, NULL);
+	std::wstring windowname = ConvertString::ConvertToWstirng(mWindowName);
+	hwnd = CreateWindow(className, windowname.c_str(), WS_OVERLAPPEDWINDOW ^ WS_MAXIMIZEBOX ^ WS_THICKFRAME | WS_VISIBLE, CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, instance, NULL);
 	ShowWindow(hwnd, cmd_show);
 }

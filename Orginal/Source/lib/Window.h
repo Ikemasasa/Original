@@ -1,10 +1,12 @@
 #pragma once
 #include <windows.h>
 #include <tchar.h>
+#include <string>
 
 class Window
 {
 	const LPCWSTR className = _T("Original");
+	std::string mWindowName;
 	HWND hwnd;
 	float width;
 	float height;
@@ -20,6 +22,7 @@ public:
 	HWND& GetHWND() { return hwnd; }
 	float GetWidth() { return width; }
 	float GetHeight() { return height; }
+	std::string GetWindowName() const { return mWindowName; }
 
 	static Window& GetInstance()
 	{
