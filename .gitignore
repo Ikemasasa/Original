@@ -27,7 +27,7 @@
 *.lib
 
 # Executables
-*.exe
+#*.exe // exeファイルはpushした方がなんか楽な気がする
 *.out
 *.app
 
