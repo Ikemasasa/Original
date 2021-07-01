@@ -179,5 +179,6 @@ $RECYCLE.BIN/
 # Mac crap
 .DS_Store
 
+# My Settings
 .vs/
-!/Exe/*.exe
+!Exe/*.exe
