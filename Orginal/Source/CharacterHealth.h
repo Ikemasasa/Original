@@ -43,7 +43,7 @@ public:
 	~CharacterHealth() = default;
 
 	void Initialize(const Vector2& leftTop);
-	void Update(const int statusNum, const Status* statusArray);
+	void Update(const std::vector<Status>& statusArray);
 	void Render(bool isSelectRender = false);
 	void Release();
 

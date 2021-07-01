@@ -38,15 +38,13 @@ MenuBase::Select MenuItem::Update(const PlayerManager* plm)
 	{
 		// ステータス配列作成
 		int statusNum = plm->GetNum();
-		Status* statusArray = new Status[statusNum];
+		std::vector<Status> statusArray;
 		for (int i = 0; i < statusNum; ++i)
 		{
 			int charaID = plm->GetPlayer(i)->GetCharaID();
-			statusArray[i] = Singleton<DataBase>().GetInstance().GetStatusData()->GetPLStatus(charaID);
+			statusArray.push_back(Singleton<DataBase>().GetInstance().GetStatusData()->GetPLStatus(charaID));
 		}
-		mCharacterHealth.Update(statusNum, statusArray);
-		// ステータス配列削除
-		delete[] statusArray;
+		mCharacterHealth.Update(statusArray);
 
 		if (Input::GetButtonTrigger(0, Input::BUTTON::A))
 		{

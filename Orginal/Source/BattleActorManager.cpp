@@ -148,14 +148,13 @@ void BattleActorManager::Update()
 
 		// healthplate更新
 		{
-			Status* statusArray = new Status[mPlayerNum];
+			std::vector<Status> statusArray;
 			for (int i = 0; i < mPlayerNum; ++i)
 			{
 				// BActorsは最初にプレイヤーがはいってるから 0~人数分で全員にアクセスできる
-				statusArray[i] = *mBActors[i]->GetStatus();
+				statusArray.push_back(*mBActors[i]->GetStatus());
 			}
-			mCharacterHealth.Update(mPlayerNum, statusArray);
-			delete[] statusArray;
+			mCharacterHealth.Update(statusArray);
 		}
 
 		static int state = 0;

@@ -19,9 +19,13 @@ void CharacterHealth::Initialize(const Vector2& leftTop)
 	mStatusNameFont.Initialize();
 	mDelimFont.Initialize();
 	mFontValue.Initialize();
+
+	mStatusNameFont.Add(L"HP");
+	mStatusNameFont.Add(L"MP");
+	mDelimFont.Add(L"/");
 }
 
-void CharacterHealth::Update(const int statusNum, const Status* statusArray)
+void CharacterHealth::Update(const std::vector<Status>& statusArray)
 {
 	if (Input::GetButtonTrigger(0, Input::BUTTON::RB)) mSelectIndex = (mSelectIndex + 1) % mHealthPlates.size();
 	if (Input::GetButtonTrigger(0, Input::BUTTON::LB)) mSelectIndex = (mSelectIndex + (mHealthPlates.size() - 1)) % mHealthPlates.size();
@@ -32,10 +36,13 @@ void CharacterHealth::Update(const int statusNum, const Status* statusArray)
 	std::vector<int> maxValue;
 	const Vector2 scale(Vector2::One());
 	const Vector4 color(0.77f, 0.67f, 0.42f, 1.0f); // フォントの色
+	size_t statusNum = statusArray.size();
 	mHealthPlates.resize(statusNum);
 	for (size_t i = 0; i < statusNum; ++i)
 	{
-		mPlNameFont.Add(statusArray[i].name.c_str());
+		// TODO : 追加されてないなら追加する(正直、initializeでやるべき)
+		if(mPlNameFont.Find(statusArray[i].name.c_str()) == false) mPlNameFont.Add(statusArray[i].name.c_str());
+
 		mHealthPlates[i].name = statusArray[i].name;
 		curValue.emplace_back(statusArray[i].hp);
 		curValue.emplace_back(statusArray[i].mp);
@@ -43,9 +50,7 @@ void CharacterHealth::Update(const int statusNum, const Status* statusArray)
 		maxValue.emplace_back(statusArray[i].maxMP);
 	}
 
-	mStatusNameFont.Add(L"HP");
-	mStatusNameFont.Add(L"MP");
-	mDelimFont.Add(L"/");
+
 	
 
 	for (int i = 0; i < mHealthPlates.size(); ++i)
