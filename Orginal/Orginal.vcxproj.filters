@@ -171,9 +171,6 @@
     <ClInclude Include="Source\EnemyBattle.h">
       <Filter>ヘッダー ファイル\Scene\Battle</Filter>
     </ClInclude>
-    <ClInclude Include="Source\FrontendBattle.h">
-      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
-    </ClInclude>
     <ClInclude Include="Source\ProductionBattle.h">
       <Filter>ヘッダー ファイル\Scene\Battle</Filter>
     </ClInclude>
@@ -264,9 +261,6 @@
     <ClInclude Include="Source\FontValue.h">
       <Filter>ヘッダー ファイル\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Source\FrontendSprite.h">
-      <Filter>ヘッダー ファイル\Common</Filter>
-    </ClInclude>
     <ClInclude Include="Source\lib\ResourceManager.h">
       <Filter>lib\ヘッダーファイル</Filter>
     </ClInclude>
@@ -329,6 +323,15 @@
     </ClInclude>
     <ClInclude Include="Source\CharacterHealth.h">
       <Filter>ヘッダー ファイル\Scene\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TurnManager.h">
+      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\IBattleProduction.h">
+      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ProductionAttack.h">
+      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -413,9 +416,6 @@
     <ClCompile Include="Source\Enemy.cpp">
       <Filter>ソース ファイル\Scene\Field</Filter>
     </ClCompile>
-    <ClCompile Include="Source\FrontendBattle.cpp">
-      <Filter>ソース ファイル\Scene\Battle</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Player.cpp">
       <Filter>ソース ファイル\Scene\Field</Filter>
     </ClCompile>
@@ -497,9 +497,6 @@
     <ClCompile Include="Source\FontValue.cpp">
       <Filter>ソース ファイル\Common</Filter>
     </ClCompile>
-    <ClCompile Include="Source\FrontendSprite.cpp">
-      <Filter>ソース ファイル\Common</Filter>
-    </ClCompile>
     <ClCompile Include="Source\lib\ResourceManager.cpp">
       <Filter>lib\ソースファイル</Filter>
     </ClCompile>
@@ -556,6 +553,15 @@
     </ClCompile>
     <ClCompile Include="Source\CharacterHealth.cpp">
       <Filter>ソース ファイル\Scene\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\IBattleProduction.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\TurnManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ProductionAttack.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

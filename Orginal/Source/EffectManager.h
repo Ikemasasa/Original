@@ -28,7 +28,6 @@ private:
 public:
 	EffectManager();
 	~EffectManager();
-	void SetProjectionMatrix(const DirectX::XMFLOAT4X4* projMatrix);
 
 	int Create(const EFK_CHAR* efkPath); // –ß‚è’l : slot
 	void Update();

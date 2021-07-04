@@ -86,14 +86,6 @@ void EffectManager::Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLO
 	mRenderer->EndRendering();
 }
 
-void EffectManager::SetProjectionMatrix(const DirectX::XMFLOAT4X4* projMatrix)
-{
-	Effekseer::Matrix44 proj;
-	memcpy(&proj, projMatrix, sizeof(Effekseer::Matrix44));
-
-	mRenderer->SetProjectionMatrix(proj);
-}
-
 int EffectManager::Play(const int& slot, const Vector3& pos, int startFrame, float scale, float speed)
 {
 	if (!mEffects[slot].Get()) return -1;

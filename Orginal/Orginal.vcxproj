@@ -170,11 +170,10 @@
     <ClInclude Include="Source\Enemy.h" />
     <ClInclude Include="Source\EnemyBattle.h" />
     <ClInclude Include="Source\EnemyManager.h" />
-    <ClInclude Include="Source\FrontendBattle.h" />
-    <ClInclude Include="Source\FrontendSprite.h" />
     <ClInclude Include="Source\FontValue.h" />
     <ClInclude Include="Source\GameManager.h" />
     <ClInclude Include="Source\GaussianBlur.h" />
+    <ClInclude Include="Source\IBattleProduction.h" />
     <ClInclude Include="Source\IDecideCommand.h" />
     <ClInclude Include="Source\Item.h" />
     <ClInclude Include="Source\ItemData.h" />
@@ -202,6 +201,7 @@
     <ClInclude Include="Source\MeshManager.h" />
     <ClInclude Include="Source\MeshDataLoader.h" />
     <ClInclude Include="Source\Primitive.h" />
+    <ClInclude Include="Source\ProductionAttack.h" />
     <ClInclude Include="Source\ProductionBattle.h" />
     <ClInclude Include="Source\Actor.h" />
     <ClInclude Include="Source\CameraBase.h" />
@@ -236,6 +236,7 @@
     <ClInclude Include="Source\Singleton.h" />
     <ClInclude Include="Source\StatusData.h" />
     <ClInclude Include="Source\Terrain.h" />
+    <ClInclude Include="Source\TurnManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ActorManager.cpp" />
@@ -258,10 +259,9 @@
     <ClCompile Include="Source\EnemyBattle.cpp" />
     <ClCompile Include="Source\EnemyManager.cpp" />
     <ClCompile Include="Source\Fade.cpp" />
-    <ClCompile Include="Source\FrontendBattle.cpp" />
-    <ClCompile Include="Source\FrontendSprite.cpp" />
     <ClCompile Include="Source\FontValue.cpp" />
     <ClCompile Include="Source\GameManager.cpp" />
+    <ClCompile Include="Source\IBattleProduction.cpp" />
     <ClCompile Include="Source\Item.cpp" />
     <ClCompile Include="Source\ItemData.cpp" />
     <ClCompile Include="Source\ItemSelect.cpp" />
@@ -298,6 +298,7 @@
     <ClCompile Include="Source\Actor.cpp" />
     <ClCompile Include="Source\MeshDataLoader.cpp" />
     <ClCompile Include="Source\Primitive.cpp" />
+    <ClCompile Include="Source\ProductionAttack.cpp" />
     <ClCompile Include="Source\ProductionBattle.cpp" />
     <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="Source\PlayerBattle.cpp" />
@@ -313,6 +314,7 @@
     <ClCompile Include="Source\Singleton.cpp" />
     <ClCompile Include="Source\StatusData.cpp" />
     <ClCompile Include="Source\Terrain.cpp" />
+    <ClCompile Include="Source\TurnManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Character.fx">
