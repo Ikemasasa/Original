@@ -17,6 +17,7 @@ public:
 private:
 	std::queue<BattleActor*> mOrder;
 	std::unique_ptr<IBattleProduction> mProduction;
+	bool mIsTurnFinished = false;
 
 	void SortOrder(const std::vector<std::shared_ptr<BattleActor>>& battleActorArray);
 	void BeginProduction();
@@ -28,5 +29,5 @@ public:
 	void Render();
 
 	BattleActor* GetMoveActor() const { return mOrder.front(); }
-	bool IsTurnFinished() const { return mProduction && mProduction->GetIsFinished(); }
+	bool IsTurnFinished() const { return mIsTurnFinished; }
 };
