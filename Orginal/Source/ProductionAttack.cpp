@@ -1,45 +1,34 @@
 #include "ProductionAttack.h"
 
 #include "BattleActor.h"
+#include "BattleActorManager.h"
 #include "Define.h"
 #include "EffectManager.h"
 #include "GameManager.h"
 #include "SkinnedMesh.h"
 #include "Singleton.h"
+#include "StatusData.h"
 
 void ProductionAttack::Initialize()
 {
-	Singleton<EffectManager>().GetInstance().Create
 	mProductionValue.Initialize();
 }
 
-int ProductionAttack::Update()
+void ProductionAttack::Update(const BattleActorManager* bam)
 {
-	int ret = -1;
-
-	auto MoveToOrigin = [&]()
-	{
-		// 走りモーションセット
-		mMoveActor->SetMotion(SkinnedMesh::RUN);
-
-		// mDestinationPos から mOrgPos  までを線形補完する
-		mLerpFactor = Math::Max(mLerpFactor - LERP_FACTOR_ADD, LERP_FACTOR_MIN);
-		Vector3 lerp = Vector3::Lerp(mOrgPos, mDestinationPos, mLerpFactor);
-		mMoveActor->SetPos(lerp);
-
-		// mLerpFactorが0以下なら
-		if (mLerpFactor <= LERP_FACTOR_MIN)
-		{
-			// 待機モーションセット、Angleを敵方向に戻す
-			mMoveActor->SetMotion(SkinnedMesh::IDLE);
-			mMoveActor->SetAngleY(mMoveActor->GetAngle().y + Define::PI); // 向きを反転
-			++mState;
-		}
-	};
-
 	switch (mState)
 	{
-	case State::INIT: // 初期化
+	case State::INIT: // 初期化 ダメージ計算
+		// moveactor, targetactor代入
+		mMoveActor = bam->GetActor(mMoveActorID);
+		mTargetActor = bam->GetActor(mTargetActorID);
+
+		// ダメージ計算
+		int damage = CalcDamage(mMoveActor->GetStatus(), mTargetActor->GetStatus());
+		mTargetActor->GetStatus()->HurtHP(damage);
+		mAmount = damage;
+
+		// 演出初期設定
 		StateInit();
 		//break;
 
@@ -56,14 +45,8 @@ int ProductionAttack::Update()
 		break;
 
 	case State::WAIT: // ちょっと待機時間(1秒くらい)
-		mWaitTimer += GameManager::elpsedTime;
-
-		const float WAIT_SEC = 1.5f;
-		if (mWaitTimer >= WAIT_SEC)
-		{
-			mState = 0;
-			mWaitTimer = 0.0f;
-		}
+		StateWait();
+		break;
 	}
 
 
@@ -121,28 +104,64 @@ void ProductionAttack::StateWaitAttack()
 			// 見えなくして、エフェクト再生
 			mTargetActor->SetExist(false); // 見えなくする
 			Vector3 effectPos(mTargetActor->GetPos().x, mTargetActor->GetPos().y + mTargetActor->GetLocalAABB().max.y * 0.5f, mTargetActor->GetPos().z);
-			Singleton<EffectManager>().GetInstance().Play(mDeathEffectSlot, effectPos);// えっふぇくと
+			Singleton<EffectManager>().GetInstance().Play(TurnManager::DEATH_EFFECT_SLOT, effectPos);// えっふぇくと
 		}
 		Vector3 damagePos(mTargetActor->GetPos().x, mTargetActor->GetAABB().max.y, mTargetActor->GetPos().z);
 		Vector3 damageRGB(1.0f, 0.4f, 0.4f);
 		Vector2 center(0.0f, 0.0f);
 		Vector2 scale(1.0f, 1.0f);
-		mProductionValue.Add(mData.amount, damagePos, damageRGB);
+		mProductionValue.Add(mAmount, damagePos, damageRGB);
 
+		// 元居た方向に向く
 		Vector3 dist = mOrgPos - mDestinationPos; // 向きたい方向ベクトル
 		dist.Normalize();
-		moveActor->CorrectionAngle(dist);
+		mMoveActor->CorrectionAngle(dist);
 		++mState;
 	}
 }
 
 void ProductionAttack::StateMoveToOrigin()
 {
+	// 走りモーションセット
+	mMoveActor->SetMotion(SkinnedMesh::RUN);
 
+	// mDestinationPos から mOrgPos までを線形補完する
+	mLerpFactor = Math::Max(mLerpFactor - LERP_FACTOR_ADD, LERP_FACTOR_MIN);
+	Vector3 lerp = Vector3::Lerp(mOrgPos, mDestinationPos, mLerpFactor);
+	mMoveActor->SetPos(lerp);
+
+	// mLerpFactorが0以下なら
+	if (mLerpFactor <= LERP_FACTOR_MIN)
+	{
+		// 待機モーションセット、Angleを敵方向に戻す
+		mMoveActor->SetMotion(SkinnedMesh::IDLE);
+		mMoveActor->SetAngleY(mMoveActor->GetAngle().y + Define::PI); // 向きを反転
+		++mState;
+	}
 }
 
 
 
 void ProductionAttack::StateWait()
 {
+	mWaitTimer += GameManager::elpsedTime;
+
+	const float WAIT_SEC = 1.5f;
+	if (mWaitTimer >= WAIT_SEC)
+	{
+		mState = 0;
+		mWaitTimer = 0.0f;
+	}
+}
+
+int ProductionAttack::CalcDamage(const Status* deal, Status* take)
+{
+	int damage = deal->str / 2 - take->vit / 4; // 基礎ダメージ
+	int sign = (rand() % 2 == 0) ? -1 : 1; // 振れ幅の符号
+	int width = damage / 16 + 1; // ダメージの振れ幅の最大値
+	damage = damage + (rand() % width * sign);
+
+	if (damage < 0) damage = 0;
+
+	return damage;
 }

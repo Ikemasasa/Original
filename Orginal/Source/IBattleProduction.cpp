@@ -1,8 +1,7 @@
 #include "IBattleProduction.h"
 
-void IBattleProduction::Begin(BattleActor* moveActor, BattleActor* targetActor, const int amount)
+void IBattleProduction::Begin(const int moveActorID, const int targetActorID)
 {
-	mMoveActor = moveActor;
-	mTargetActor = targetActor;
-	mAmount = amount;
+	mMoveActorID = moveActorID;
+	mTargetActorID = targetActorID;
 }

@@ -11,7 +11,7 @@
 #include "CollisionStructs.h"
 #include "ComputeShader.h"
 #include "Shader.h"
-#include "Texture.h"
+#include "Sprite.h"
 
 
 class SkinnedMesh

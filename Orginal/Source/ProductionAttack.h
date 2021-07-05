@@ -3,6 +3,8 @@
 
 #include "lib/Vector.h"
 
+struct Status;
+
 class ProductionAttack : public IBattleProduction
 {
 	static constexpr float LERP_FACTOR_ADD = 0.03f;
@@ -25,7 +27,6 @@ class ProductionAttack : public IBattleProduction
 	Vector3 mDestinationPos;
 	float mLerpFactor;
 	float mWaitTimer;
-	int mDeathEffectSlot;
 
 private:
 	void StateInit();
@@ -33,9 +34,10 @@ private:
 	void StateWaitAttack();
 	void StateMoveToOrigin();
 	void StateWait();
+	int CalcDamage(const Status* deal, Status* take);
 
 public:
 	void Initialize() override;
-	int Update() override;
+	void Update(const BattleActorManager* bam) override;
 	void Render() override;
 };

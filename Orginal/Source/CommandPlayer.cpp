@@ -5,7 +5,6 @@
 #include "CameraManager.h"
 #include "CommandBehaviour.h"
 #include "CommandItem.h"
-#include "FrontendBattle.h"
 
 #include "lib/Input.h"
 #include "lib/Math.h"

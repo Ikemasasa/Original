@@ -8,13 +8,11 @@ BattleActor::BattleActor(const Actor* actor, Status status) : Actor(actor, actor
 	mStatus = status;
 }
 
-bool BattleActor::Update(const BattleActorManager* bam)
+void BattleActor::Update(const BattleActorManager* bam)
 {
 	mCommand->Update(bam);
 
 	UpdateWorld();
-
-	return mCommand->IsBehaviourEnable();
 }
 
 void BattleActor::RenderCommand() const

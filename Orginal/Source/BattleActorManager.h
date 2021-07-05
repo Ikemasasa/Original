@@ -8,6 +8,7 @@
 #include "BattleActor.h"
 #include "CharacterHealth.h"
 #include "ProductionBattle.h"
+#include "TurnManager.h"
 
 class Enemy;
 class Player;
@@ -35,23 +36,18 @@ public:
 	static constexpr float PLAYER_POS_Z = -5.0f;
 
 private:
-	std::vector<std::unique_ptr<BattleActor>> mBActors;
+	std::vector<std::shared_ptr<BattleActor>> mBActors;
 	std::vector<int> mAliveActorIDs[BATTLEACTOR_KIND];
-	BattleActor* mMoveActor = nullptr;
-	std::queue<BattleActor*> mOrder;
 	int mPlayerNum;
 
-	ProductionBattle mProduction;
 	CharacterHealth mCharacterHealth;
+	TurnManager mTurnManager;
 
 	bool mIsResult;
 	Enemy* mHitEnemy = nullptr; // fieldÇ≈ìñÇΩÇ¡ÇΩìG
 
-	void SortOrder();
-	void DecideMoveActor();
 	Result CheckBattleFinish();
 	void OrganizeActor();
-	int CalcDamage(const Status* deal, Status* take);
 
 	void PlayerCreateAndRegister(Player* pl);
 	void EnemyCreateAndRegister(Enemy* enm);
@@ -65,7 +61,8 @@ public:
 	void Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir);
 
 	// ÉQÉbÉ^Å[
-	BattleActor* GetMoveActor() const { return mMoveActor; }
+	BattleActor* GetMoveActor() const { return mTurnManager.GetMoveActor(); }
 	const std::vector<int>& GetAliveActorIDs(Actor::Type kind) const { return mAliveActorIDs[kind]; }
 	BattleActor* GetActor(int objectID) const { return mBActors[objectID].get(); }
+	const std::vector<std::shared_ptr<BattleActor>>& GetBActors() const { return mBActors; }
 };

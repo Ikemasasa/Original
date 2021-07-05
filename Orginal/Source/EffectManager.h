@@ -30,6 +30,7 @@ public:
 	~EffectManager();
 
 	int Create(const EFK_CHAR* efkPath); // –ß‚è’l : slot
+	void Create(const EFK_CHAR* efkPath, int slot);
 	void Update();
 	void Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj);
 

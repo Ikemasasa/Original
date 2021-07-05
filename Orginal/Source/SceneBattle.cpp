@@ -8,11 +8,8 @@
 #include "BattleState.h"
 #include "CameraBattle.h"
 #include "CameraManager.h"
-#include "EnemyBattle.h"
 #include "EffectManager.h"
 #include "Fade.h"
-#include "FrontendBattle.h"
-#include "PlayerBattle.h"
 #include "SceneManager.h"
 #include "Terrain.h"
 

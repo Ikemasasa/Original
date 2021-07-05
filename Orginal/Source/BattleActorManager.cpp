@@ -15,55 +15,6 @@
 #include "PlayerManager.h"
 #include "SceneManager.h"
 
-void BattleActorManager::SortOrder()
-{
-	auto RandArrayNoDuplicate = [](const int min, const int max)
-	{
-		const int dist = max - min + 1;
-
-		std::vector<int> temp;
-		temp.reserve(dist);
-		for (int i = min; i <= max; ++i) temp.push_back(i);
-
-		std::random_device seedGen;
-		std::default_random_engine engine(seedGen());
-
-		for (int i = dist - 1; i > 0; --i)
-		{
-			int target = std::uniform_int_distribution<int>(i, dist - 1)(engine);
-			if (i != target) std::swap(temp[i], temp[target]);
-		}
-
-		return temp;
-	};
-
-	std::map<int, std::vector<BattleActor*>> agiOrder;
-
-	// マップのキーは昇順にソートされてる
-	for (auto& actor : mBActors)
-	{
-		agiOrder[actor->GetStatus()->agi].push_back(actor.get());
-	}
-
-	// 降順に代入したいからリバースイテレータ
-	for (auto it = agiOrder.rbegin(); it != agiOrder.rend(); ++it)
-	{
-		// 2個以上ならその中からランダムで決める
-		if (it->second.size() > 2)
-		{
-			std::vector<int> randArr = RandArrayNoDuplicate(0, it->second.size() - 1);
-			for (size_t i = 0; i < it->second.size(); ++i)
-			{
-				mOrder.push(it->second.at(randArr[i]));
-			}
-		}
-		else
-		{
-			mOrder.push(it->second.back());
-		}
-	}
-}
-
 BattleActorManager::BattleActorManager(PlayerManager* player, Enemy* enemy)
 {
 	mHitEnemy = enemy;
@@ -78,18 +29,14 @@ BattleActorManager::BattleActorManager(PlayerManager* player, Enemy* enemy)
 
 	// 敵登録
 	EnemyCreateAndRegister(enemy);
-
-	SortOrder();
-	mMoveActor = mOrder.front();
-	mOrder.pop();
 }
 
 void BattleActorManager::Initialize()
 {
 	mCharacterHealth.Initialize(Vector2(HEALTH_PLATE_X, HEALTH_PLATE_Y));
+	mTurnManager.Initialize(mBActors);
 
 	for (auto& ba : mBActors) ba->Initialize();
-
 	// 座標設定
 	{
 		// PLAYER
@@ -113,8 +60,6 @@ void BattleActorManager::Initialize()
 		}
 
 	}
-
-	mProduction.Initialize();
 }
 
 void BattleActorManager::Update()
@@ -135,14 +80,13 @@ void BattleActorManager::Update()
 	}
 	else
 	{
-		// アクターのupdateをして、behaviourが決まれば演出、 次のアクターへ
-		bool isBehaviourEnable = false;
-		isBehaviourEnable = mMoveActor->Update(this);
+		BattleActor* moveActor = mTurnManager.GetMoveActor();
+		moveActor->Update(this);
 
-		// MoveActor以外もモーションの更新をする
+		// MoveActor以外もワールド, モーションの更新をする
 		for (auto& actor : mBActors)
 		{
-			if (mMoveActor == actor.get()) continue;
+			if (moveActor == actor.get()) continue;
 			actor->UpdateWorld();
 		}
 
@@ -157,60 +101,35 @@ void BattleActorManager::Update()
 			mCharacterHealth.Update(statusArray);
 		}
 
-		static int state = 0;
-		if (isBehaviourEnable)
+
+		mTurnManager.Update(this);
+
+		// 1ターンが終了したら
+		if (mTurnManager.IsTurnFinished())
 		{
-			switch (state)
+			// 死んでるアクターをチェック
+			OrganizeActor();
+
+			// バトル終了かチェック
+			Result result = CheckBattleFinish();
+			if (result == PLAYER_WIN || result == PLAYER_LOSE) // TODO : 現状負けた時の特別な処理はない(勝っても負けても一緒)
 			{
-			case 0: // ダメージ計算、演出開始
-			{
-				BattleActor* targetActor = mBActors[mMoveActor->GetCommand()->GetTargetObjID()].get();
-				int damage = CalcDamage(mMoveActor->GetStatus(), targetActor->GetStatus());
-				targetActor->GetStatus()->HurtHP(damage);
+				BattleState::GetInstance().SetState(BattleState::State::RESULT);
+				mHitEnemy->SetExist(false);
+				mIsResult = true;
 
-				mProduction.Begin(mMoveActor->GetCommand()->GetBehaviour(), mMoveActor->GetObjID(), mMoveActor->GetCommand()->GetTargetObjID(), damage);
-			}
-			++state;
-			//break;
-
-			case 1: // 演出
-
-				if (mProduction.Update(this))
+				// 戦闘後のステータスを更新
+				for (int i = 0; i < mPlayerNum; ++i)
 				{
-					// 演出が終わったら
-					mMoveActor->GetCommand()->BehaviourFinished();
-
-					OrganizeActor();
-					Result result = CheckBattleFinish();
-					if (result == PLAYER_WIN || result == PLAYER_LOSE) // TODO : 現状負けた時の特別な処理はない(勝っても負けても一緒)
-					{
-						BattleState::GetInstance().SetState(BattleState::State::RESULT);
-						mHitEnemy->SetExist(false);
-						mIsResult = true;
-
-						// 戦闘後のステータスを更新
-						for (int i = 0; i < mPlayerNum; ++i)
-						{
-							BattleActor* pl = mBActors[i].get();
-							Singleton<DataBase>().GetInstance().GetStatusData()->SetPLStatus(pl->GetCharaID(), *pl->GetStatus());
-						}
-
-						// BGMをリザルトのやつにする
-						AUDIO.MusicStop((int)Music::BATTLE);
-						AUDIO.MusicPlay((int)Music::RESULT);
-					}
-					else
-					{
-						DecideMoveActor();
-						state = 0;
-
-					}
-
+					BattleActor* pl = mBActors[i].get();
+					Singleton<DataBase>().GetInstance().GetStatusData()->SetPLStatus(pl->GetCharaID(), *pl->GetStatus());
 				}
-				break;
+
+				// BGMをリザルトのやつにする
+				AUDIO.MusicStop((int)Music::BATTLE);
+				AUDIO.MusicPlay((int)Music::RESULT);
 			}
 		}
-
 	}
 
 
@@ -222,9 +141,9 @@ void BattleActorManager::Render(const DirectX::XMFLOAT4X4& view, const DirectX::
 
 	if (!mIsResult)
 	{
-		mMoveActor->RenderCommand();    // MoveActorのコマンドUIを表示
+		mTurnManager.GetMoveActor()->RenderCommand();    // MoveActorのコマンドUIを表示
 		mCharacterHealth.Render(false); // キャラのHPを表示
-		mProduction.Render();			// 攻撃のダメージとかを表示
+		mTurnManager.Render();
 	}
 }
 
@@ -233,22 +152,10 @@ void BattleActorManager::Render(const Shader* shader, const DirectX::XMFLOAT4X4&
 	for (auto& ba : mBActors) ba->Render(shader, view, projection, lightDir);
 }
 
-int BattleActorManager::CalcDamage(const Status* deal, Status* take)
-{
-	int damage = deal->str / 2 - take->vit / 4; // 基礎ダメージ
-	int sign = (rand() % 2 == 0) ? -1 : 1; // 振れ幅の符号
-	int width = damage / 16 + 1; // ダメージの振れ幅の最大値
-	damage = damage + (rand() % width * sign);
-
-	if (damage < 0) damage = 0;
-
-	return damage;
-}
-
 void BattleActorManager::PlayerCreateAndRegister(Player* pl)
 {
 	int objID = mBActors.size();
-	mBActors.emplace_back(std::make_unique<PlayerBattle>(pl));
+	mBActors.emplace_back(std::make_shared<PlayerBattle>(pl));
 	mBActors.back()->SetObjID(objID);
 	mAliveActorIDs[mBActors.back()->GetType()].push_back(objID);
 }
@@ -256,7 +163,7 @@ void BattleActorManager::PlayerCreateAndRegister(Player* pl)
 void BattleActorManager::EnemyCreateAndRegister(Enemy* enm)
 {
 	int objID = mBActors.size();
-	mBActors.emplace_back(std::make_unique<EnemyBattle>(enm));
+	mBActors.emplace_back(std::make_shared<EnemyBattle>(enm));
 	mBActors.back()->SetObjID(objID);
 	mAliveActorIDs[mBActors.back()->GetType()].push_back(objID);
 }
@@ -293,28 +200,28 @@ void BattleActorManager::OrganizeActor()
 	}
 }
 
-void BattleActorManager::DecideMoveActor()
-{
-	if (mOrder.empty())
-	{
-		SortOrder();
-	}
-
-	while (true)
-	{
-		// 順番が来たキャラが倒されているなら無視
-		if (mOrder.front()->GetObjID() == -1)
-		{
-			mOrder.pop();
-			if (mOrder.empty())
-			{
-				SortOrder();
-				break;
-			}
-		}
-		else break;
-	}
-
-	mMoveActor = mOrder.front();
-	mOrder.pop();
-}
+//void BattleActorManager::DecideMoveActor()
+//{
+//	if (mOrder.empty())
+//	{
+//		SortOrder();
+//	}
+//
+//	while (true)
+//	{
+//		// 順番が来たキャラが倒されているなら無視
+//		if (mOrder.front()->GetObjID() == -1)
+//		{
+//			mOrder.pop();
+//			if (mOrder.empty())
+//			{
+//				SortOrder();
+//				break;
+//			}
+//		}
+//		else break;
+//	}
+//
+//	mMoveActor = mOrder.front();
+//	mOrder.pop();
+//}

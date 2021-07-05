@@ -243,9 +243,6 @@
     <ClInclude Include="Source\CameraManager.h">
       <Filter>ヘッダー ファイル\Common\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Source\lib\SkinnedMesh.h">
-      <Filter>lib\ヘッダーファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Source\lib\RenderTarget.h">
       <Filter>lib\ヘッダーファイル</Filter>
     </ClInclude>
@@ -478,9 +475,6 @@
     </ClCompile>
     <ClCompile Include="Source\Terrain.cpp">
       <Filter>ソース ファイル\Scene\Field</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\lib\SkinnedMesh.cpp">
-      <Filter>lib\ソースファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\RenderTarget.cpp">
       <Filter>lib\ソースファイル</Filter>

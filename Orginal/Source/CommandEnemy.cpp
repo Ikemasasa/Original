@@ -4,10 +4,12 @@
 
 void CommandEnemy::Update(const BattleActorManager* bam)
 {
-	const std::vector<int>& objectIDs = bam->GetAliveActorIDs(Actor::PLAYER);
+	if (IsBehaviourEnable()) return;
 
-	int index = rand() % objectIDs.size();
-	mTargetObjID = objectIDs[index];
+	const std::vector<int>& aliveIDs = bam->GetAliveActorIDs(Actor::PLAYER);
+
+	int index = rand() % aliveIDs.size();
+	mTargetObjID = aliveIDs[index];
 
 	mBehaviour = Behaviour::ATTACK;
 }

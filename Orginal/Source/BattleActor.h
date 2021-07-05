@@ -20,7 +20,7 @@ public:
 	virtual ~BattleActor() = default;
 
 	virtual void Initialize() = 0;
-	virtual bool Update(const BattleActorManager* bam);
+	virtual void Update(const BattleActorManager* bam);
 	void RenderCommand() const;
 
 	CommandBase* GetCommand() { return mCommand.get(); }

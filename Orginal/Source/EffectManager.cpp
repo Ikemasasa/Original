@@ -53,6 +53,17 @@ int EffectManager::Create(const EFK_CHAR* efkPath)
 	return slot;
 }
 
+void EffectManager::Create(const EFK_CHAR* efkPath, int slot)
+{
+	// 最大数を超えてる、スロットにすでに入ってる場合はreturn
+	if (mEffectNum >= EFFECT_MAX) return;
+	if (mEffects[slot].Get()) return;
+
+	Effekseer::EffectRef effect = Effekseer::Effect::Create(mManager, efkPath);
+	mEffects[slot] = effect;
+	mEffectNum++;
+}
+
 void EffectManager::Update()
 {
 	mManager->Update();
