@@ -1,11 +1,11 @@
 #include "SkinnedMesh.h"
 
 #include "Framework.h"
+
+#include "ConvertString.h"
+#include "Font.h"
 #include "Math.h"
 #include "ResourceManager.h"
-
-#include <chrono>
-#include "Font.h"
 
 using namespace fbxsdk;
 
@@ -223,72 +223,129 @@ void SkinnedMesh::LoadFBX(ID3D11Device* device, const char* filename)
 			}
 
 			// テクスチャ読み込み
-			const char* path = NULL;
-			int fileTextureCount = prop.GetSrcObjectCount<FbxFileTexture>();
-			if (fileTextureCount > 0)
+			auto LoadTexture = [](FbxProperty* prop, MaterialSprite* spr, char fbxDir[STR_MAX])
 			{
-				FbxFileTexture* fileTex = prop.GetSrcObject<FbxFileTexture>(0);
-				path = fileTex->GetFileName();
-			}
-			else
-			{
-				int numLayer = prop.GetSrcObjectCount<FbxLayeredTexture>();
-				if (numLayer > 0)
+				std::string path; // 絶対パス取得用
+
+				int fileTextureCount = prop->GetSrcObjectCount<FbxFileTexture>();
+				if (fileTextureCount > 0)
 				{
-					FbxLayeredTexture* layerTex = prop.GetSrcObject<FbxLayeredTexture>(0);
-					FbxFileTexture* fileTex = layerTex->GetSrcObject<FbxFileTexture>(0);
-					path = fileTex->GetFileName();
+					FbxFileTexture* fileTex = prop->GetSrcObject<FbxFileTexture>(0);
+					path = fileTex->GetFileName(); // 絶対パス
 				}
-			}
-
-			if (path != NULL)
-			{
-				// 相対パスに変換
-				size_t len = strnlen_s(path, STR_MAX);
-				const char* imgName = &path[len];
-				for (size_t i = 0; i < len; ++i)
+				else
 				{
-					imgName--;
-					if (*imgName == '/') { ++imgName; break; }
-					if (*imgName == '\\') { ++imgName; break; }
+					int numLayer = prop->GetSrcObjectCount<FbxLayeredTexture>();
+					if (numLayer > 0)
+					{
+						FbxLayeredTexture* layerTex = prop->GetSrcObject<FbxLayeredTexture>(0);
+						FbxFileTexture* fileTex = layerTex->GetSrcObject<FbxFileTexture>(0);
+						path = fileTex->GetFileName();
+					}
 				}
-				char relativeName[STR_MAX] = {};
-				strcpy_s(relativeName, STR_MAX, mFbxDir); // fbxのパスをコピー
-				// strcat_s(relativeName, STR_MAX, "texture/"); // textureフォルダ
-				strcat_s(relativeName, STR_MAX, imgName); // pngのファイル名を連結
 
-				// ワイド文字に変換
-				wchar_t filename[STR_MAX];
-				setlocale(LC_ALL, "Japanese_Japan.932");
-				size_t ret = 0;
-				mbstowcs_s(&ret, mMaterials[m].filename, STR_MAX, imgName, _TRUNCATE);
-				mbstowcs_s(&ret, filename, STR_MAX, relativeName, _TRUNCATE);
+				// 空じゃないなら
+				if (!path.empty())
+				{
+					// 絶対パスからテクスチャファイル名を抜く
+					size_t len = path.size() - 1;
+					const char* imgName = &path[len];
+					for (size_t i = 0; i < len; ++i)
+					{
+						imgName--;
+						if (*imgName == '/') { ++imgName; break; }
+						if (*imgName == '\\') { ++imgName; break; }
+					}
 
-				// テクスチャ読み込み
-				mMaterials[m].diffuse.Load(filename);
+					// 相対パス作成
+					std::string work = fbxDir; // AA/BB/
+					work += imgName;		   // AA/BB/*.fbx
+					std::wstring relative = ConvertString::ConvertToWstirng(work);
 
-				// ノーマルマップ
-				char normalMapName[STR_MAX] = {};
-				strcpy_s(normalMapName, STR_MAX, mFbxDir); // fbxのパスをコピー
-				strcat_s(normalMapName, STR_MAX, "N"); // pngのファイル名を連結
-				strcat_s(normalMapName, STR_MAX, imgName); // pngのファイル名を連結
-				mbstowcs_s(&ret, filename, STR_MAX, normalMapName, _TRUNCATE);
+					// 読み込み
+					spr->sprite.Load(relative.c_str());
+					wcscpy_s(spr->filename, STR_MAX, relative.c_str());
+				}
+				else
+				{
+					// 空だったらダミーテクスチャを読むようにする
+					const wchar_t* dummy = L"";
+					spr->sprite.Load(dummy);
+					wcscpy_s(spr->filename, STR_MAX, dummy);
+				}
+			};
 
-				mMaterials[m].normal.Load(filename);
-			}
-			else
-			{
-				mMaterials[m].diffuse.Load(L"");
-				mMaterials[m].normal.Load(L"");
-			}
+			if (prop.IsValid()) LoadTexture(&prop, &mMaterials[m].mtlSpr[0], mFbxDir); // Diffuse
 
+			prop = material->FindProperty(FbxSurfaceMaterial::sNormalMap);
+			if (prop.IsValid()) LoadTexture(&prop, &mMaterials[m].mtlSpr[1], mFbxDir); // NormalMap
+
+			//const char* path = NULL;
+			//int fileTextureCount = prop.GetSrcObjectCount<FbxFileTexture>();
+			//if (fileTextureCount > 0)
+			//{
+			//	FbxFileTexture* fileTex = prop.GetSrcObject<FbxFileTexture>(0);
+			//	path = fileTex->GetFileName();
+			//}
+			//else
+			//{
+			//	int numLayer = prop.GetSrcObjectCount<FbxLayeredTexture>();
+			//	if (numLayer > 0)
+			//	{
+			//		FbxLayeredTexture* layerTex = prop.GetSrcObject<FbxLayeredTexture>(0);
+			//		FbxFileTexture* fileTex = layerTex->GetSrcObject<FbxFileTexture>(0);
+			//		path = fileTex->GetFileName();
+			//	}
+			//}
+
+			//if (path != NULL)
+			//{
+			//	// 相対パスに変換
+			//	size_t len = strnlen_s(path, STR_MAX);
+			//	const char* imgName = &path[len];
+			//	for (size_t i = 0; i < len; ++i)
+			//	{
+			//		imgName--;
+			//		if (*imgName == '/') { ++imgName; break; }
+			//		if (*imgName == '\\') { ++imgName; break; }
+			//	}
+			//	char relativeName[STR_MAX] = {};
+			//	strcpy_s(relativeName, STR_MAX, mFbxDir); // fbxのパスをコピー
+			//	// strcat_s(relativeName, STR_MAX, "texture/"); // textureフォルダ
+			//	strcat_s(relativeName, STR_MAX, imgName); // pngのファイル名を連結
+
+			//	// ワイド文字に変換
+			//	wchar_t filename[STR_MAX];
+			//	setlocale(LC_ALL, "Japanese_Japan.932");
+			//	size_t ret = 0;
+			//	mbstowcs_s(&ret, mMaterials[m].filename, STR_MAX, imgName, _TRUNCATE);
+			//	mbstowcs_s(&ret, filename, STR_MAX, relativeName, _TRUNCATE);
+
+			//	// テクスチャ読み込み
+			//	mMaterials[m].diffuse.Load(filename);
+
+			//	// ノーマルマップ
+			//	char normalMapName[STR_MAX] = {};
+			//	strcpy_s(normalMapName, STR_MAX, mFbxDir); // fbxのパスをコピー
+			//	strcat_s(normalMapName, STR_MAX, "N"); // pngのファイル名を連結
+			//	strcat_s(normalMapName, STR_MAX, imgName); // pngのファイル名を連結
+			//	mbstowcs_s(&ret, filename, STR_MAX, normalMapName, _TRUNCATE);
+
+			//	mMaterials[m].normal.Load(filename);
+			//}
+			//else
+			//{
+			//	mMaterials[m].diffuse.Load(L"");
+			//	mMaterials[m].normal.Load(L"");
+			//}
+
+		//}
+		//else
+		//{
+		//	mMaterials[m].diffuse.Load(L"");
+		//	mMaterials[m].normal.Load(L"");
+		//}
 		}
-		else
-		{
-			mMaterials[m].diffuse.Load(L"");
-			mMaterials[m].normal.Load(L"");
-		}
-
 		mMaterials[m].faceNum = num / 3;
 
 		mVerticesNum += num;
@@ -635,24 +692,34 @@ bool SkinnedMesh::LoadBIN(const char* filename)
 
 	// マテリアル数 <ファイル名、面数>
 	mMaterials = new Material[mMeshNum];
-	for (int i = 0; i < mMeshNum ;++i)
+	for (int m = 0; m < mMeshNum; ++m)
 	{
-		fread(mMaterials[i].filename, sizeof(wchar_t) * STR_MAX, 1, fp);
-		fread(&mMaterials[i].faceNum, sizeof(int), 1, fp);
+		for (int i = 0; i < Material::KIND; ++i)
+		{
+			fread(mMaterials[m].mtlSpr[i].filename, sizeof(wchar_t) * STR_MAX, 1, fp);
+			mMaterials[m].mtlSpr[i].sprite.Load(mMaterials[m].mtlSpr[i].filename); // 画像読み込み
+		}
 
-		// ワイド文字に変換
-		wchar_t filepath[STR_MAX];
-		wchar_t nFilepath[STR_MAX];
-		setlocale(LC_ALL, "Japanese_Japan.932");
-		size_t ret = 0;
-		mbstowcs_s(&ret, filepath, STR_MAX, mFbxDir, _TRUNCATE);
-		wcscpy_s(nFilepath, STR_MAX, filepath);
-		wcscat_s(nFilepath, STR_MAX, L"N");
-		wcscat_s(filepath, STR_MAX, mMaterials[i].filename);
-		wcscat_s(nFilepath, STR_MAX, mMaterials[i].filename);
-		mMaterials[i].diffuse.Load(filepath);
-		mMaterials[i].normal.Load(nFilepath);
+		fread(&mMaterials[m].faceNum, sizeof(int), 1, fp);
 	}
+	//for (int i = 0; i < mMeshNum ;++i)
+	//{
+	//	fread(mMaterials[i].filename, sizeof(wchar_t) * STR_MAX, 1, fp);
+	//	fread(&mMaterials[i].faceNum, sizeof(int), 1, fp);
+
+	//	// ワイド文字に変換
+	//	wchar_t filepath[STR_MAX];
+	//	wchar_t nFilepath[STR_MAX];
+	//	setlocale(LC_ALL, "Japanese_Japan.932");
+	//	size_t ret = 0;
+	//	mbstowcs_s(&ret, filepath, STR_MAX, mFbxDir, _TRUNCATE);
+	//	wcscpy_s(nFilepath, STR_MAX, filepath);
+	//	wcscat_s(nFilepath, STR_MAX, L"N");
+	//	wcscat_s(filepath, STR_MAX, mMaterials[i].filename);
+	//	wcscat_s(nFilepath, STR_MAX, mMaterials[i].filename);
+	//	mMaterials[i].diffuse.Load(filepath);
+	//	mMaterials[i].normal.Load(nFilepath);
+	//}
 
 	// マテリアルカラー
 	mMaterialColors = new Vector4[mMeshNum];
@@ -717,11 +784,21 @@ void SkinnedMesh::Save(const char* filename)
 	fwrite(&mMeshNum, sizeof(int), 1, fp);
 
 	// マテリアル数 <ファイル名、面数>、
-	for (int i = 0; i < mMeshNum; ++i)
+	for (int m = 0; m < mMeshNum; ++m)
 	{
-		fwrite(mMaterials[i].filename, sizeof(wchar_t) * STR_MAX, 1, fp);
-		fwrite(&mMaterials[i].faceNum, sizeof(int), 1, fp);
+		for (int i = 0; i < Material::KIND; ++i)
+		{
+			fwrite(mMaterials[m].mtlSpr[i].filename, sizeof(wchar_t) * STR_MAX, 1, fp);
+		}
+
+		fwrite(&mMaterials[m].faceNum, sizeof(int), 1, fp);
 	}
+
+	//for (int i = 0; i < mMeshNum; ++i)
+	//{
+	//	fwrite(mMaterials[i].filename, sizeof(wchar_t) * STR_MAX, 1, fp);
+	//	fwrite(&mMaterials[i].faceNum, sizeof(int), 1, fp);
+	//}
 	// マテリアルカラー
 	fwrite(mMaterialColors, sizeof(Vector4), mMeshNum, fp);
 
@@ -767,8 +844,10 @@ SkinnedMesh::~SkinnedMesh()
 	mShader->UnLoad();
 	for (int i = 0; i < mMeshNum; ++i)
 	{
-		mMaterials[i].diffuse.UnLoad();
-		mMaterials[i].normal.UnLoad();
+		for (int k = 0; k < Material::KIND; ++k)
+		{
+			mMaterials[i].mtlSpr[k].sprite.UnLoad();
+		}
 	}
 	delete[] mVertices;
 	delete[] mVerticesSource;
@@ -871,8 +950,10 @@ void SkinnedMesh::Render(const DirectX::XMFLOAT4X4& wvp, const DirectX::XMFLOAT4
 	int start = 0;
 	for (int m = 0; m < mMeshNum; ++m)
 	{
-		mMaterials[m].diffuse.Set(0);
-		mMaterials[m].normal.Set(1);
+		for (int i = 0; i < Material::KIND; ++i)
+		{
+			mMaterials[m].mtlSpr[i].sprite.Set(i);
+		}
 
 		Cbuffer cb;
 		DirectX::XMStoreFloat4x4(&cb.wvp,  DirectX::XMLoadFloat4x4(&wvp));
@@ -903,9 +984,10 @@ void SkinnedMesh::Render(const Shader* shader, const DirectX::XMFLOAT4X4& wvp, c
 	int start = 0;
 	for (int m = 0; m < mMeshNum; ++m)
 	{
-		mMaterials[m].diffuse.Set(0);
-		mMaterials[m].normal.Set(1);
-
+		for (int i = 0; i < Material::KIND; ++i)
+		{
+			mMaterials[m].mtlSpr[i].sprite.Set(i);
+		}
 		Cbuffer cb;
 		DirectX::XMStoreFloat4x4(&cb.wvp, DirectX::XMLoadFloat4x4(&wvp));
 		DirectX::XMStoreFloat4x4(&cb.world, DirectX::XMLoadFloat4x4(&world));

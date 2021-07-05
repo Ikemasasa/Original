@@ -3,11 +3,9 @@
 #include "lib/Input.h"
 
 #include "BattleActorManager.h"
-#include "CommandItem.h"
+#include "CommandBase.h"
 #include "Define.h"
-#include "Fade.h"
 #include "Item.h"
-#include "PlayerBattle.h"
 
 
 CommandItem::CommandItem()

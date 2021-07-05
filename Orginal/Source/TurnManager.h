@@ -28,5 +28,5 @@ public:
 	void Render();
 
 	BattleActor* GetMoveActor() const { return mOrder.front(); }
-	bool IsTurnFinished() const { return mProduction->GetIsFinished(); }
+	bool IsTurnFinished() const { return mProduction && mProduction->GetIsFinished(); }
 };

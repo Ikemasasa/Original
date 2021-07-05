@@ -6,6 +6,7 @@
 #include "BattleActorManager.h"
 #include "BattleState.h"
 #include "CameraManager.h"
+#include "CommandBase.h"
 #include "Singleton.h"
 
 CommandCharaSelect::CommandCharaSelect(Actor::Type characterType)

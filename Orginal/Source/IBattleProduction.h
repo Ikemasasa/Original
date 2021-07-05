@@ -14,7 +14,7 @@ protected:
 	int mAmount = -1;
 
 	ProductionValue mProductionValue;
-	bool mIsFinished;
+	bool mIsFinished = false;
 public:
 	IBattleProduction() = default;
 	~IBattleProduction() = default;

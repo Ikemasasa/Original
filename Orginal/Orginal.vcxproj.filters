@@ -171,9 +171,6 @@
     <ClInclude Include="Source\EnemyBattle.h">
       <Filter>ヘッダー ファイル\Scene\Battle</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ProductionBattle.h">
-      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
-    </ClInclude>
     <ClInclude Include="Source\SceneField.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
@@ -330,6 +327,9 @@
     <ClInclude Include="Source\ProductionAttack.h">
       <Filter>ヘッダー ファイル\Scene\Battle</Filter>
     </ClInclude>
+    <ClInclude Include="Source\lib\SkinnedMesh.h">
+      <Filter>lib\ヘッダーファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\lib\Blend.cpp">
@@ -424,9 +424,6 @@
     </ClCompile>
     <ClCompile Include="Source\SceneBattle.cpp">
       <Filter>ソース ファイル\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ProductionBattle.cpp">
-      <Filter>ソース ファイル\Scene\Battle</Filter>
     </ClCompile>
     <ClCompile Include="Source\EnemyManager.cpp">
       <Filter>ソース ファイル\Scene\Field</Filter>
@@ -548,14 +545,17 @@
     <ClCompile Include="Source\CharacterHealth.cpp">
       <Filter>ソース ファイル\Scene\Menu</Filter>
     </ClCompile>
-    <ClCompile Include="Source\IBattleProduction.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\TurnManager.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Source\lib\SkinnedMesh.cpp">
+      <Filter>lib\ソースファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\ProductionAttack.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Scene\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\TurnManager.cpp">
+      <Filter>ソース ファイル\Scene\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\IBattleProduction.cpp">
+      <Filter>ソース ファイル\Scene\Battle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

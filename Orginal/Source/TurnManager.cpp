@@ -3,12 +3,15 @@
 #include <random>
 
 #include "BattleActorManager.h"
+#include "CommandBase.h"
 #include "EffectManager.h"
 #include "ProductionAttack.h"
 #include "Singleton.h"
 
 void TurnManager::Initialize(const std::vector<std::shared_ptr<BattleActor>>& battleActorArray)
 {
+	SortOrder(battleActorArray);
+
 	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/Death/Death.efk", DEATH_EFFECT_SLOT);
 }
 
@@ -37,6 +40,9 @@ void TurnManager::Update(const BattleActorManager* bam)
 			// mOrder‚ğ®—‚·‚é
 			mOrder.pop(); // ¡‰ñ‚Ìmoveactor‚Ííœ
 			OrganizeOrder(bam);
+
+			// ‰‰oî•ñíœ
+			mProduction.reset();
 		}
 	}
 

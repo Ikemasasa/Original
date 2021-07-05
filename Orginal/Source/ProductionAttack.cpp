@@ -1,11 +1,12 @@
 #include "ProductionAttack.h"
 
+#include "lib/SkinnedMesh.h"
+
 #include "BattleActor.h"
 #include "BattleActorManager.h"
 #include "Define.h"
 #include "EffectManager.h"
 #include "GameManager.h"
-#include "SkinnedMesh.h"
 #include "Singleton.h"
 #include "StatusData.h"
 
@@ -19,6 +20,7 @@ void ProductionAttack::Update(const BattleActorManager* bam)
 	switch (mState)
 	{
 	case State::INIT: // 初期化 ダメージ計算
+	{
 		// moveactor, targetactor代入
 		mMoveActor = bam->GetActor(mMoveActorID);
 		mTargetActor = bam->GetActor(mTargetActorID);
@@ -27,7 +29,7 @@ void ProductionAttack::Update(const BattleActorManager* bam)
 		int damage = CalcDamage(mMoveActor->GetStatus(), mTargetActor->GetStatus());
 		mTargetActor->GetStatus()->HurtHP(damage);
 		mAmount = damage;
-
+	}
 		// 演出初期設定
 		StateInit();
 		//break;
@@ -49,6 +51,8 @@ void ProductionAttack::Update(const BattleActorManager* bam)
 		break;
 	}
 
+	// ダメージ演出(ダメージ量が表示される)のupdate
+	mProductionValue.Update();
 
 }
 
@@ -151,6 +155,7 @@ void ProductionAttack::StateWait()
 	{
 		mState = 0;
 		mWaitTimer = 0.0f;
+		mIsFinished = true;
 	}
 }
 

@@ -3,8 +3,6 @@
 
 #include "ItemSelect.h"
 
-class PlayerBattle;
-
 class CommandItem : public IDecideCommand
 {
 	ItemSelect mItemSelect;

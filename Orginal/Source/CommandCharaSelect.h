@@ -3,6 +3,8 @@
 #include "Actor.h"
 
 class BattleActor;
+class BattleActorManager;
+class CommandBase;
 class Sprite;
 
 class CommandCharaSelect : public IDecideCommand
@@ -19,6 +21,6 @@ public:
 	CommandCharaSelect(Actor::Type characterType);
 	~CommandCharaSelect() = default;
 
-	void Update(const BattleActorManager * bam, CommandBase * cmdBase);
+	void Update(const BattleActorManager* bam, CommandBase* cmdBase);
 	void Render() const;
 };

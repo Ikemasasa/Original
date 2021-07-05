@@ -7,7 +7,6 @@
 #include "Actor.h"
 #include "BattleActor.h"
 #include "CharacterHealth.h"
-#include "ProductionBattle.h"
 #include "TurnManager.h"
 
 class Enemy;

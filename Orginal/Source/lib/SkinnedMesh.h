@@ -71,11 +71,16 @@ private:
 		DirectX::XMFLOAT3 normal = {};
 	};
 
-	struct Material
+	struct MaterialSprite
 	{
 		wchar_t filename[STR_MAX] = {};
-		Sprite diffuse;
-		Sprite normal;
+		Sprite sprite;
+	};
+
+	struct Material
+	{
+		static const int KIND = 2;
+		MaterialSprite mtlSpr[KIND];// Diffuse, normal
 		int faceNum = 0;
 	};
 

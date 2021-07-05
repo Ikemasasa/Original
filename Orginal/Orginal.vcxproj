@@ -186,6 +186,7 @@
     <ClInclude Include="Source\lib\RenderTarget.h" />
     <ClInclude Include="Source\lib\ResourceManager.h" />
     <ClInclude Include="Source\lib\Shader.h" />
+    <ClInclude Include="Source\lib\SkinnedMesh.h" />
     <ClInclude Include="Source\lib\Sprite.h" />
     <ClInclude Include="Source\lib\TVector.h" />
     <ClInclude Include="Source\lib\Vector.h" />
@@ -201,7 +202,6 @@
     <ClInclude Include="Source\MeshDataLoader.h" />
     <ClInclude Include="Source\Primitive.h" />
     <ClInclude Include="Source\ProductionAttack.h" />
-    <ClInclude Include="Source\ProductionBattle.h" />
     <ClInclude Include="Source\Actor.h" />
     <ClInclude Include="Source\CameraBase.h" />
     <ClInclude Include="Source\CameraDebug.h" />
@@ -277,6 +277,7 @@
     <ClCompile Include="Source\lib\RenderTarget.cpp" />
     <ClCompile Include="Source\lib\ResourceManager.cpp" />
     <ClCompile Include="Source\lib\Shader.cpp" />
+    <ClCompile Include="Source\lib\SkinnedMesh.cpp" />
     <ClCompile Include="Source\lib\Skybox.cpp" />
     <ClCompile Include="Source\lib\Renderer2D.cpp" />
     <ClCompile Include="Source\lib\Font.cpp" />
@@ -297,7 +298,6 @@
     <ClCompile Include="Source\MeshDataLoader.cpp" />
     <ClCompile Include="Source\Primitive.cpp" />
     <ClCompile Include="Source\ProductionAttack.cpp" />
-    <ClCompile Include="Source\ProductionBattle.cpp" />
     <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="Source\PlayerBattle.cpp" />
     <ClCompile Include="Source\PlayerManager.cpp" />
