@@ -20,6 +20,8 @@ void TurnManager::Update(const BattleActorManager* bam)
 	// コマンド選択中
 	if (!mProduction)
 	{
+		mIsTurnFinished = false;
+
 		// BattleActorManagerのupdateでコマンドが決まったら
 		if (GetMoveActor()->GetCommand()->IsBehaviourEnable())
 		{
@@ -43,6 +45,9 @@ void TurnManager::Update(const BattleActorManager* bam)
 
 			// 演出情報削除
 			mProduction.reset();
+
+			// ターン終了フラグを立てる
+			mIsTurnFinished = true;
 		}
 	}
 
