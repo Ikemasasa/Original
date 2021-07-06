@@ -13,6 +13,7 @@ class TurnManager
 {
 public:
 	static const int DEATH_EFFECT_SLOT = 10;
+	static const int HEAL_POTION_EFFECT_SLOT = 11;
 
 private:
 	std::queue<BattleActor*> mOrder;

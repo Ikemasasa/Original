@@ -27,6 +27,7 @@ public:
 		ATTACK,
 		DIE,
 		DAMAGE,
+		USE_ITEM,
 		UNIQUE1,
 		UNIQUE2,
 		UNIQUE3,
