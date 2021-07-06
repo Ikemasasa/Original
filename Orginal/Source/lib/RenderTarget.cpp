@@ -20,8 +20,8 @@ void RenderTarget::Initialize(float width, float height)
 		// レンダーターゲット設定
 		D3D11_TEXTURE2D_DESC td;
 		ZeroMemory(&td, sizeof(D3D11_TEXTURE2D_DESC));
-		td.Width = width;
-		td.Height = height;
+		td.Width = static_cast<UINT>(width);
+		td.Height = static_cast<UINT>(height);
 		td.MipLevels = 1;
 		td.ArraySize = 1;
 		td.Format = DXGI_FORMAT_R16G16B16A16_TYPELESS;
@@ -59,8 +59,8 @@ void RenderTarget::Initialize(float width, float height)
 		// 深度ステンシル設定
 		D3D11_TEXTURE2D_DESC td;
 		ZeroMemory(&td, sizeof(D3D11_TEXTURE2D_DESC));
-		td.Width = width;
-		td.Height = height;
+		td.Width = static_cast<UINT>(width);
+		td.Height = static_cast<UINT>(height);
 		td.MipLevels = 1;
 		td.ArraySize = 1;
 		td.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
