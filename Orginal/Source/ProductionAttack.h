@@ -22,11 +22,11 @@ class ProductionAttack : public IBattleProduction
 		END
 	};
 
-	int mState;
+	int mState = 0;
 	Vector3 mOrgPos;
 	Vector3 mDestinationPos;
-	float mLerpFactor;
-	float mWaitTimer;
+	float mLerpFactor = 0.0f;
+	float mWaitTimer = 0;
 
 private:
 	void StateInit();

@@ -18,16 +18,21 @@ private:
 	std::queue<BattleActor*> mOrder;
 	std::unique_ptr<IBattleProduction> mProduction;
 	bool mIsTurnFinished = false;
+	bool mIsResult = false;
 
 	void SortOrder(const std::vector<std::shared_ptr<BattleActor>>& battleActorArray);
 	void BeginProduction();
-	void OrganizeOrder(const BattleActorManager* bam);
+	void OrganizeOrder(const std::vector<std::shared_ptr<BattleActor>>& battleActorArray);
 
 public:
 	void Initialize(const std::vector<std::shared_ptr<BattleActor>>& battleActorArray);
 	void Update(const BattleActorManager* bam);
 	void Render();
 
+	void ToResult();
+
+	// ÉQÉbÉ^Å[
 	BattleActor* GetMoveActor() const { return mOrder.front(); }
 	bool IsTurnFinished() const { return mIsTurnFinished; }
+	bool IsResult() const { return mIsResult; }
 };

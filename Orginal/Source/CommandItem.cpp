@@ -4,6 +4,7 @@
 
 #include "BattleActorManager.h"
 #include "CommandBase.h"
+#include "CommandCharaSelect.h"
 #include "Define.h"
 #include "Item.h"
 
@@ -29,8 +30,13 @@ void CommandItem::Update(const BattleActorManager* bam, CommandBase* cmdBase)
 		ItemData::ItemParam param = moveActor->GetInventory()->GetItemParam(itemIndex);
 		cmdBase->SetItemParam(&param);
 
-		if (param.target == ItemData::Target::PARTY);
-		else if (param.target == ItemData::Target::ENEMY);
+		// アイテムの対象によってどっちのきゃらを選ぶか決める
+		Actor::Type charaType;
+		if (param.target == ItemData::Target::PARTY) charaType = Actor::PLAYER;
+		else if (param.target == ItemData::Target::ENEMY) charaType = Actor::ENEMY;
+		
+		// 次のコマンド
+		mNextCommand = std::make_unique<CommandCharaSelect>(charaType);
 	}
 
 	// CommandBehaviourに戻る

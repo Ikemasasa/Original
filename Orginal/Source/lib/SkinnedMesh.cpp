@@ -702,24 +702,6 @@ bool SkinnedMesh::LoadBIN(const char* filename)
 
 		fread(&mMaterials[m].faceNum, sizeof(int), 1, fp);
 	}
-	//for (int i = 0; i < mMeshNum ;++i)
-	//{
-	//	fread(mMaterials[i].filename, sizeof(wchar_t) * STR_MAX, 1, fp);
-	//	fread(&mMaterials[i].faceNum, sizeof(int), 1, fp);
-
-	//	// ワイド文字に変換
-	//	wchar_t filepath[STR_MAX];
-	//	wchar_t nFilepath[STR_MAX];
-	//	setlocale(LC_ALL, "Japanese_Japan.932");
-	//	size_t ret = 0;
-	//	mbstowcs_s(&ret, filepath, STR_MAX, mFbxDir, _TRUNCATE);
-	//	wcscpy_s(nFilepath, STR_MAX, filepath);
-	//	wcscat_s(nFilepath, STR_MAX, L"N");
-	//	wcscat_s(filepath, STR_MAX, mMaterials[i].filename);
-	//	wcscat_s(nFilepath, STR_MAX, mMaterials[i].filename);
-	//	mMaterials[i].diffuse.Load(filepath);
-	//	mMaterials[i].normal.Load(nFilepath);
-	//}
 
 	// マテリアルカラー
 	mMaterialColors = new Vector4[mMeshNum];
@@ -749,7 +731,6 @@ bool SkinnedMesh::LoadBIN(const char* filename)
 		MotionType type;
 		fread(&type, sizeof(int), 1, fp);
 
-
 		auto& motion = mMotion[type];
 		fread(&motion.frameNum, sizeof(int), 1, fp);
 		for (int b = 0; b < mBoneNum; ++b)
@@ -767,6 +748,7 @@ void SkinnedMesh::Save(const char* filename)
 {
 	FILE* fp = nullptr;
 	fopen_s(&fp, filename, "wb");
+	if (fp == NULL) return;
 
 	// 頂点
 	fwrite(&mVerticesNum, sizeof(int), 1, fp);
@@ -794,11 +776,6 @@ void SkinnedMesh::Save(const char* filename)
 		fwrite(&mMaterials[m].faceNum, sizeof(int), 1, fp);
 	}
 
-	//for (int i = 0; i < mMeshNum; ++i)
-	//{
-	//	fwrite(mMaterials[i].filename, sizeof(wchar_t) * STR_MAX, 1, fp);
-	//	fwrite(&mMaterials[i].faceNum, sizeof(int), 1, fp);
-	//}
 	// マテリアルカラー
 	fwrite(mMaterialColors, sizeof(Vector4), mMeshNum, fp);
 

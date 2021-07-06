@@ -41,7 +41,7 @@ void TurnManager::Update(const BattleActorManager* bam)
 
 			// mOrderを整理する
 			mOrder.pop(); // 今回のmoveactorは削除
-			OrganizeOrder(bam);
+			OrganizeOrder(bam->GetBActors());
 
 			// 演出情報削除
 			mProduction.reset();
@@ -61,9 +61,14 @@ void TurnManager::Render()
 	}
 }
 
+void TurnManager::ToResult()
+{
+	mIsResult = true;
+}
+
 void TurnManager::SortOrder(const std::vector<std::shared_ptr<BattleActor>>& battleActorArray)
 {
-	// minからmaxまでの値をランダムにした配列を作るyatu
+	// minからmaxまでの値をランダムに並べた配列を作るyatu
 	auto RandArrayNoDuplicate = [](const int min, const int max)
 	{
 		const int dist = max - min + 1;
@@ -130,20 +135,19 @@ void TurnManager::BeginProduction()
 	}
 }
 
-void TurnManager::OrganizeOrder(const BattleActorManager* bam)
+void TurnManager::OrganizeOrder(const std::vector<std::shared_ptr<BattleActor>>& battleActorArray)
 {
 	// mOrderを整理する
-
 	while (true)
 	{
 		// mOrderが空ならまた順番を作る
 		if (mOrder.empty())
 		{
-			SortOrder(bam->GetBActors());
+			SortOrder(battleActorArray);
 		}
 
 		// 順番が来たアクタが倒されていたら
-		if (!mOrder.front()->GetExist())
+		if (mOrder.front()->GetStatus()->IsDead())
 		{
 			mOrder.pop();
 		}

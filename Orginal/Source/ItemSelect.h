@@ -14,9 +14,9 @@ class ItemSelect
 	static constexpr float ICON_SIZE = 256.0f;
 	static constexpr float ICON_SCALE = 0.25f;
 
-	int mSelectIndex;
-	int mOldSelectIndex;
-	const Item* mInventory;
+	int mSelectIndex = 0;
+	int mOldSelectIndex = 0;
+	const Item* mInventory = nullptr;
 	std::unique_ptr<Sprite> mBoard;
 	std::unique_ptr<Sprite> mSelectFrame;
 
