@@ -25,7 +25,6 @@ BattleActorManager::BattleActorManager(PlayerManager* player, Enemy* enemy)
 	{
 		PlayerCreateAndRegister(player->GetPlayer(i));
 	}
-	mIsResult = false;
 
 	// 敵登録
 	EnemyCreateAndRegister(enemy);
@@ -64,7 +63,7 @@ void BattleActorManager::Initialize()
 
 void BattleActorManager::Update()
 {
-	if (mIsResult)
+	if (mTurnManager.IsResult())
 	{
 		// モーションの更新だけする
 		for (auto& actor : mBActors) actor->UpdateWorld();
@@ -116,7 +115,9 @@ void BattleActorManager::Update()
 			{
 				BattleState::GetInstance().SetState(BattleState::State::RESULT);
 				mHitEnemy->SetExist(false);
-				mIsResult = true;
+				
+				// リザルトに移行
+				mTurnManager.ToResult();
 
 				// 戦闘後のステータスを更新
 				for (int i = 0; i < mPlayerNum; ++i)
@@ -139,7 +140,8 @@ void BattleActorManager::Render(const DirectX::XMFLOAT4X4& view, const DirectX::
 {
 	for (auto& ba : mBActors) ba->Render(view, projection, lightDir);
 
-	if (!mIsResult)
+	// リザルトじゃないならUIﾄｶを表示
+	if (!mTurnManager.IsResult())
 	{
 		mTurnManager.GetMoveActor()->RenderCommand();    // MoveActorのコマンドUIを表示
 		mCharacterHealth.Render(false); // キャラのHPを表示

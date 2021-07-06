@@ -52,5 +52,5 @@ public:
 	Status GetEnmStatus(size_t id) const;
 
 	void SetPLStatus(size_t charaID, const Status& status);
-	void SetPLStatus(const std::wstring& name, const Status& status);
+	//void SetPLStatus(const std::wstring& name, const Status& status);
 };

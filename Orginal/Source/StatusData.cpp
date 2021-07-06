@@ -133,13 +133,13 @@ void StatusData::SetPLStatus(size_t charaID, const Status& status)
 	mPLStatus[charaID - DataBase::PL_ID_START] = status;
 }
 
-void StatusData::SetPLStatus(const std::wstring& name, const Status& status)
-{
-	size_t num = mPLStatus.size();
-	for (size_t i = 0; i < num; ++i)
-	{
-		if (wcscmp(mPLStatus[i].name.c_str(), name.c_str()) != 0) continue;
-		
-		mPLStatus[i] = status;
-	}
-}
+//void StatusData::SetPLStatus(const std::wstring& name, const Status& status)
+//{
+//	size_t num = mPLStatus.size();
+//	for (size_t i = 0; i < num; ++i)
+//	{
+//		if (wcscmp(mPLStatus[i].name.c_str(), name.c_str()) != 0) continue;
+//		
+//		mPLStatus[i] = status;
+//	}
+//}

@@ -42,7 +42,6 @@ private:
 	CharacterHealth mCharacterHealth;
 	TurnManager mTurnManager;
 
-	bool mIsResult;
 	Enemy* mHitEnemy = nullptr; // field‚Å“–‚½‚Á‚½“G
 
 	Result CheckBattleFinish();
@@ -64,4 +63,5 @@ public:
 	const std::vector<int>& GetAliveActorIDs(Actor::Type kind) const { return mAliveActorIDs[kind]; }
 	BattleActor* GetActor(int objectID) const { return mBActors[objectID].get(); }
 	const std::vector<std::shared_ptr<BattleActor>>& GetBActors() const { return mBActors; }
+
 };

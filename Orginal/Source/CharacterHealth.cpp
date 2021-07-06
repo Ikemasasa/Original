@@ -50,7 +50,7 @@ void CharacterHealth::Update(const std::vector<Status>& statusArray)
 		maxValue.emplace_back(statusArray[i].maxMP);
 	}
 
-	for (int i = 0; i < mHealthPlates.size(); ++i)
+	for (size_t i = 0; i < mHealthPlates.size(); ++i)
 	{
 		for (int k = 0; k < VERTICAL_NUM; ++k)
 		{
