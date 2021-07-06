@@ -4,4 +4,4 @@
 ソフィエ,10000,IDLE,1,Character/Idle.fbx
 ソフィエ,10000,RUN,3,Character/Run.fbx
 ソフィエ,10000,ATTACK,4,Character/Attack.fbx
-ソフィエ,10000,DAMAGE,6,Character/Damage.fbx
+ソフィエ,10000,USEITEM,7,Character/UseItem.fbx
