@@ -6,6 +6,11 @@ class BattleActorManager;
 
 class IBattleProduction
 {
+protected: // ï∂éöÇÃêF
+	static const Vector3 DAMAGE_RGB;
+	static const Vector3 HEAL_HP_RGB;
+	static const Vector3 HEAL_MP_RGB;
+
 protected:
 	 int mMoveActorID;
 	 int mTargetActorID;

@@ -30,4 +30,6 @@ public:
 	void Initialize();
 	void Update();
 	void Render();
+
+	int GetFontSize() const { return mFontValue.GetFontSize(); }
 };

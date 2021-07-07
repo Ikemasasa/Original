@@ -22,4 +22,5 @@ public:
 	void Release();
 
 	float GetWidth(const int value) const;
+	int GetFontSize() const { return mFont.GetFontSize(); }
 };

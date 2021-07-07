@@ -80,9 +80,7 @@ void ProductionUseItem::StateUseItemWait()
 	if (mMoveActor->IsMotionFinished())
 	{
 		// エフェクト再生
-		Vector3 tp = mTargetActor->GetPos();
-		float aabbYDist = mTargetActor->GetLocalAABB().max.y - mTargetActor->GetLocalAABB().min.y;
-		Vector3 effectPos = Vector3(tp.x, tp.y + (aabbYDist / 2.0f), tp.z);
+		Vector3 effectPos = mTargetActor->GetPos();
 		mEffectInstHandle = Singleton<EffectManager>().GetInstance().Play(mEffectSlot, effectPos);
 		++mState;
 	}
@@ -95,6 +93,31 @@ void ProductionUseItem::StateWaitEffect()
 	// エフェクトの再生がおわったら 
 	if (!isPlay)
 	{
+		// HPの文字セット
+		
+		int addNum = 0;
+		const float ADDJUST_Y = 0.1f;
+		if (mHPAmount > 0)
+		{
+			Vector3 pos(mTargetActor->GetPos().x, mTargetActor->GetAABB().max.y - ADDJUST_Y * addNum, mTargetActor->GetPos().z);
+			mProductionValue.Add(mHPAmount, pos, HEAL_HP_RGB);
+			++addNum;
+		}
+		else if (mHPAmount < 0)
+		{
+			Vector3 pos(mTargetActor->GetPos().x, mTargetActor->GetAABB().max.y - ADDJUST_Y * addNum, mTargetActor->GetPos().z);
+			mProductionValue.Add(mHPAmount, pos, DAMAGE_RGB);
+			++addNum;
+		}
+
+		// MPの文字セット
+		if (mMPAmount > 0)
+		{
+			Vector3 pos(mTargetActor->GetPos().x, mTargetActor->GetAABB().max.y - ADDJUST_Y * addNum, mTargetActor->GetPos().z);
+			mProductionValue.Add(mHPAmount, pos, DAMAGE_RGB);
+			++addNum;
+		}
+
 		++mState;
 	}
 }

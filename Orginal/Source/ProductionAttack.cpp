@@ -111,10 +111,7 @@ void ProductionAttack::StateWaitAttack()
 			Singleton<EffectManager>().GetInstance().Play(TurnManager::DEATH_EFFECT_SLOT, effectPos);// ‚¦‚Á‚Ó‚¥‚­‚Æ
 		}
 		Vector3 damagePos(mTargetActor->GetPos().x, mTargetActor->GetAABB().max.y, mTargetActor->GetPos().z);
-		Vector3 damageRGB(1.0f, 0.4f, 0.4f);
-		Vector2 center(0.0f, 0.0f);
-		Vector2 scale(1.0f, 1.0f);
-		mProductionValue.Add(mAmount, damagePos, damageRGB);
+		mProductionValue.Add(mAmount, damagePos, DAMAGE_RGB);
 
 		// Œ³‹‚½•ûŒü‚ÉŒü‚­
 		Vector3 dist = mOrgPos - mDestinationPos; // Œü‚«‚½‚¢•ûŒüƒxƒNƒgƒ‹

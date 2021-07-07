@@ -65,5 +65,6 @@ public:
 	bool Find(const wchar_t* str);
 	float GetWidth(const WCHAR* str) const;
 	float GetWidth(const UINT index) const;
+	int GetFontSize() const { return mFontSize; }
 	size_t GetNum() const { return mFonts.size(); }
 };
