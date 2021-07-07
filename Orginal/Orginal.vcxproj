@@ -249,6 +249,7 @@
     <ClCompile Include="Source\CameraTPS.cpp" />
     <ClCompile Include="Source\Collision.cpp" />
     <ClCompile Include="Source\CollisionTerrain.cpp" />
+    <ClCompile Include="Source\CommandBase.cpp" />
     <ClCompile Include="Source\CommandCharaSelect.cpp" />
     <ClCompile Include="Source\CommandEnemy.cpp" />
     <ClCompile Include="Source\CommandItem.cpp" />

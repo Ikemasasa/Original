@@ -68,7 +68,7 @@ void ItemSelect::Render(const Vector2& boardOffset) const
 			float x = i % HORIZONTAL_NUM * ICON_SCALE_SIZE + offset.x;
 			float y = i / HORIZONTAL_NUM * ICON_SCALE_SIZE + offset.y;
 			Vector2 pos(x, y);
-			mInventory->GetItemParam(i).icon->Render(pos, scale, Vector2::Zero(), size);
+			mInventory->GetItemParam(i)->icon->Render(pos, scale, Vector2::Zero(), size);
 		}
 
 		// ‘I‘ğ‚ÌƒtƒŒ[ƒ€‰æ‘œ‚ğ•`‰æ

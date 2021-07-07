@@ -21,7 +21,7 @@ class ProductionUseItem : public IBattleProduction
 	int mMPAmount;
 	int mEffectSlot;
 	int mEffectInstHandle;
-	ItemData::ItemParam mUseItemParam;
+	const ItemData::ItemParam* mUseItemParam;
 
 private:
 	void StateInit();

@@ -18,7 +18,7 @@ CommandCharaSelect::CommandCharaSelect(Actor::Type characterType)
 void CommandCharaSelect::Update(const BattleActorManager* bam, CommandBase* cmdBase)
 {
 	// キャラタイプによってStateを変える
-	if (mCharaType == Actor::PLAYER)     BattleState::GetInstance().SetState(BattleState::State::PLAYER_SELECT);
+	if (mCharaType == Actor::PLAYER)     BattleState::GetInstance().SetState(BattleState::State::PARTY_SELECT);
 	else if (mCharaType == Actor::ENEMY) BattleState::GetInstance().SetState(BattleState::State::ENEMY_SELECT);
 
 	// 生きてる同じタイプのアクターから選択する
@@ -36,6 +36,11 @@ void CommandCharaSelect::Update(const BattleActorManager* bam, CommandBase* cmdB
 		// アイテムが登録されているかどうかで分岐
 		if (cmdBase->GetItemParam()) cmdBase->SetBehaviour(CommandBase::Behaviour::USE_ITEM);
 		else						 cmdBase->SetBehaviour(CommandBase::Behaviour::ATTACK);
+	}
+
+	if (Input::GetButtonTrigger(0, Input::BUTTON::B))
+	{
+		mIsBackState = true;
 	}
 }
 

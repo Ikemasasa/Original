@@ -39,6 +39,8 @@ void ProductionUseItem::Update(const BattleActorManager* bam)
 		break;
 
 	}
+
+	mProductionValue.Update();
 }
 
 void ProductionUseItem::Render()
@@ -52,10 +54,10 @@ void ProductionUseItem::StateInit()
 	mMoveActor->SetMotion(SkinnedMesh::USE_ITEM, false);
 
 	// 使用アイテムセット
-	mUseItemParam = *mMoveActor->GetCommand()->GetItemParam();
+	mUseItemParam = mMoveActor->GetCommand()->GetItemParam();
 
 	// 効果量計算(m~Amountに代入される) 
-	switch (mUseItemParam.rate)
+	switch (mUseItemParam->rate)
 	{
 	case ItemData::VALUE:  CalcAmountValue(); break;
 	case ItemData::PERCENT: CalcAmountPercent(); break;
@@ -66,8 +68,8 @@ void ProductionUseItem::StateInit()
 	mTargetActor->GetStatus()->HealMP(mMPAmount);
 
 	// エフェクト決定
-	//if (mHPAmount < 0) mEffectSlot = TurnManager::ITEM_DAMAGE_EFFECT; // TODO 未実装
-	if (mMPAmount > 0) mEffectSlot = TurnManager::MAGIC_POTION_EFFECT_SLOT;
+	if (mHPAmount < 0) mEffectSlot = TurnManager::ITEM_DAMAGE_EFFECT_SLOT;
+	else if (mMPAmount > 0) mEffectSlot = TurnManager::MAGIC_POTION_EFFECT_SLOT;
 	else if (mHPAmount > 0) mEffectSlot = TurnManager::HEAL_POTION_EFFECT_SLOT;
 
 
@@ -93,8 +95,16 @@ void ProductionUseItem::StateWaitEffect()
 	// エフェクトの再生がおわったら 
 	if (!isPlay)
 	{
+		// 死んでたら死亡エフェクト
+		if (mTargetActor->GetStatus()->IsDead())
+		{
+			// Existをfalseにして、エフェクトを再生する
+			mTargetActor->SetExist(false); // 見えなくする
+			Vector3 effectPos(mTargetActor->GetPos().x, mTargetActor->GetPos().y + mTargetActor->GetLocalAABB().max.y * 0.5f, mTargetActor->GetPos().z);
+			Singleton<EffectManager>().GetInstance().Play(TurnManager::DEATH_EFFECT_SLOT, effectPos);// えっふぇくと
+		}
+
 		// HPの文字セット
-		
 		int addNum = 0;
 		const float ADDJUST_Y = 0.1f;
 		if (mHPAmount > 0)
@@ -138,15 +148,15 @@ void ProductionUseItem::StateWait()
 
 void ProductionUseItem::CalcAmountValue()
 {
-	mHPAmount = mUseItemParam.hpValue;
-	mMPAmount = mUseItemParam.hpValue;
+	mHPAmount = mUseItemParam->hpValue;
+	mMPAmount = mUseItemParam->mpValue;
 }
 
 void ProductionUseItem::CalcAmountPercent()
 {
 	// hpValueは%なので、100で割る
 	const float MAX_PERCENT = 100.0f;
-	mHPAmount = mMoveActor->GetStatus()->maxHP * (mUseItemParam.hpValue / MAX_PERCENT);
-	mMPAmount = mMoveActor->GetStatus()->maxMP * (mUseItemParam.mpValue / MAX_PERCENT);
+	mHPAmount = mMoveActor->GetStatus()->maxHP * (mUseItemParam->hpValue / MAX_PERCENT);
+	mMPAmount = mMoveActor->GetStatus()->maxMP * (mUseItemParam->mpValue / MAX_PERCENT);
 }
 

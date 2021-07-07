@@ -103,13 +103,14 @@ void ProductionAttack::StateWaitAttack()
 	// モーションが終わったら
 	if (mMoveActor->IsMotionFinished())
 	{
-		if (mTargetActor->GetStatus()->IsDead()) // 攻撃対象が死んでたら
+		if (mTargetActor->GetStatus()->IsDead())
 		{
-			// 見えなくして、エフェクト再生
+			// Existをfalseにして、エフェクトを再生する
 			mTargetActor->SetExist(false); // 見えなくする
 			Vector3 effectPos(mTargetActor->GetPos().x, mTargetActor->GetPos().y + mTargetActor->GetLocalAABB().max.y * 0.5f, mTargetActor->GetPos().z);
 			Singleton<EffectManager>().GetInstance().Play(TurnManager::DEATH_EFFECT_SLOT, effectPos);// えっふぇくと
 		}
+
 		Vector3 damagePos(mTargetActor->GetPos().x, mTargetActor->GetAABB().max.y, mTargetActor->GetPos().z);
 		mProductionValue.Add(mAmount, damagePos, DAMAGE_RGB);
 

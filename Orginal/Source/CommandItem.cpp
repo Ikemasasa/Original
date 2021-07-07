@@ -27,13 +27,13 @@ void CommandItem::Update(const BattleActorManager* bam, CommandBase* cmdBase)
 	if (noSelect != itemIndex)
 	{
 		// アイテム選択したら
-		ItemData::ItemParam param = moveActor->GetInventory()->GetItemParam(itemIndex);
-		cmdBase->SetItemParam(&param);
+		const ItemData::ItemParam* param = moveActor->GetInventory()->GetItemParam(itemIndex);
+		cmdBase->SetItemParam(param);
 
 		// アイテムの対象によってどっちのきゃらを選ぶか決める
 		Actor::Type charaType;
-		if (param.target == ItemData::Target::PARTY) charaType = Actor::PLAYER;
-		else if (param.target == ItemData::Target::ENEMY) charaType = Actor::ENEMY;
+		if (param->target == ItemData::Target::PARTY) charaType = Actor::PLAYER;
+		else if (param->target == ItemData::Target::ENEMY) charaType = Actor::ENEMY;
 		
 		// 次のコマンド
 		mNextCommand = std::make_unique<CommandCharaSelect>(charaType);

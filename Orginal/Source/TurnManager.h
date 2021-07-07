@@ -15,6 +15,7 @@ public:
 	static const int DEATH_EFFECT_SLOT = 10;
 	static const int HEAL_POTION_EFFECT_SLOT = 11;
 	static const int MAGIC_POTION_EFFECT_SLOT = 12;
+	static const int ITEM_DAMAGE_EFFECT_SLOT = 12;
 
 private:
 	std::queue<BattleActor*> mOrder;

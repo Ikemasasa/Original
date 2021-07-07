@@ -24,15 +24,17 @@ class BattleActorManager
 		PLAYER_LOSE,
 	};
 
-public:
+
 	static constexpr float HEALTH_PLATE_X = 900.0f;
 	static constexpr float HEALTH_PLATE_Y = 0.0f;
 
 	static const int BATTLEACTOR_MAX = 12;
 	static const int BATTLEACTOR_KIND = 2; // Player, Enemy‚Ì2‚Â 
 
+public:
 	static constexpr float ENEMY_POS_Z = 5.0f;
 	static constexpr float PLAYER_POS_Z = -5.0f;
+
 
 private:
 	std::vector<std::shared_ptr<BattleActor>> mBActors;
@@ -46,6 +48,7 @@ private:
 
 	Result CheckBattleFinish();
 	void OrganizeActor();
+	void PlayDeathEffect();
 
 	void PlayerCreateAndRegister(Player* pl);
 	void EnemyCreateAndRegister(Enemy* enm);

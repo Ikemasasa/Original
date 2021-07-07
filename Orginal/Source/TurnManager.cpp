@@ -13,9 +13,11 @@ void TurnManager::Initialize(const std::vector<std::shared_ptr<BattleActor>>& ba
 {
 	SortOrder(battleActorArray);
 
+	// エフェクト読み込み
 	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/Death/Death.efk", DEATH_EFFECT_SLOT);
 	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/HealPotion/heal_potion.efk", HEAL_POTION_EFFECT_SLOT);
 	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/HealPotion/magic_potion.efk", MAGIC_POTION_EFFECT_SLOT);
+	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/Explosion/explosion.efk", ITEM_DAMAGE_EFFECT_SLOT);
 }
 
 void TurnManager::Update(const BattleActorManager* bam)

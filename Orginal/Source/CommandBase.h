@@ -21,7 +21,7 @@ public:
 protected:
 	Behaviour mBehaviour;
 	int mTargetObjID;
-	ItemData::ItemParam* mUseItemParam;
+	const ItemData::ItemParam* mUseItemParam;
 
 public:
 	CommandBase() = default;
@@ -30,13 +30,13 @@ public:
 	virtual void Render() const {};
 
 	bool IsBehaviourEnable() const { return (mBehaviour != Behaviour::NONE); }
-	void BehaviourFinished() { mBehaviour = Behaviour::NONE; }
+	void BehaviourFinished();
 
 	int GetTargetObjID() const { return mTargetObjID; }
 	Behaviour GetBehaviour() const { return mBehaviour; }
-	ItemData::ItemParam* GetItemParam() { return mUseItemParam; }
+	const ItemData::ItemParam* GetItemParam() { return mUseItemParam; }
 	
 	void SetBehaviour(const Behaviour behaviour) { mBehaviour = behaviour; }
 	void SetTargetObjID(const int targetObjID) { mTargetObjID = targetObjID; }
-	void SetItemParam(ItemData::ItemParam* param) { mUseItemParam = param; }
+	void SetItemParam(const ItemData::ItemParam* param) { mUseItemParam = param; }
 };

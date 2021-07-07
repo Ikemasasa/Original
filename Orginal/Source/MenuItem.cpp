@@ -52,16 +52,16 @@ MenuBase::Select MenuItem::Update(const PlayerManager* plm)
 			int id = plm->GetPlayer(charaindex)->GetCharaID();
 
 			// ステータス更新
-			ItemData::ItemParam param = mInventory->GetItemParam(mItemIndex);
+			const ItemData::ItemParam* param = mInventory->GetItemParam(mItemIndex);
 			Status plStatus = Singleton<DataBase>().GetInstance().GetStatusData()->GetPLStatus(id);
 
 			bool isHeal = false;
-			if (!plStatus.IsFullHP() && param.hpValue > 0) isHeal = true; // HPがmaxじゃないかつhp回復
-			if (!plStatus.IsFullMP() && param.mpValue > 0) isHeal = true; // MPがmaxじゃないかつmp回復
+			if (!plStatus.IsFullHP() && param->hpValue > 0) isHeal = true; // HPがmaxじゃないかつhp回復
+			if (!plStatus.IsFullMP() && param->mpValue > 0) isHeal = true; // MPがmaxじゃないかつmp回復
 			if (isHeal) // 回復
 			{
-				plStatus.HealHP(param.hpValue);
-				plStatus.HealMP(param.mpValue);
+				plStatus.HealHP(param->hpValue);
+				plStatus.HealMP(param->mpValue);
 				Singleton<DataBase>().GetInstance().GetStatusData()->SetPLStatus(id, plStatus); //ステータス更新
 				mInventory->Sub(mItemIndex); // アイテム減らす
 

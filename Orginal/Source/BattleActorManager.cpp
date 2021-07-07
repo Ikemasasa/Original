@@ -8,12 +8,14 @@
 #include "lib/Math.h"
 
 #include "BattleState.h"
+#include "EffectManager.h"
 #include "Enemy.h"
 #include "EnemyBattle.h"
 #include "Fade.h"
 #include "PlayerBattle.h"
 #include "PlayerManager.h"
 #include "SceneManager.h"
+#include "Singleton.h"
 
 BattleActorManager::BattleActorManager(PlayerManager* player, Enemy* enemy)
 {
@@ -59,6 +61,7 @@ void BattleActorManager::Initialize()
 		}
 
 	}
+
 }
 
 void BattleActorManager::Update()
@@ -102,6 +105,8 @@ void BattleActorManager::Update()
 
 
 		mTurnManager.Update(this);
+
+
 
 		// 1ターンが終了したら
 		if (mTurnManager.IsTurnFinished())
@@ -185,7 +190,7 @@ void BattleActorManager::OrganizeActor()
 	// 体力が0になったアクタ―を整理する
 	for (auto& ba : mBActors)
 	{
-		// 体力が1以上ならcontinue
+		// 体力が1以上ならcontinue, すでにexistがfalseなら
 		if (!ba->GetStatus()->IsDead()) continue;
 
 		// 0以下なら mAliveActorIDs から消す
@@ -200,29 +205,3 @@ void BattleActorManager::OrganizeActor()
 		}
 	}
 }
-
-//void BattleActorManager::DecideMoveActor()
-//{
-//	if (mOrder.empty())
-//	{
-//		SortOrder();
-//	}
-//
-//	while (true)
-//	{
-//		// 順番が来たキャラが倒されているなら無視
-//		if (mOrder.front()->GetObjID() == -1)
-//		{
-//			mOrder.pop();
-//			if (mOrder.empty())
-//			{
-//				SortOrder();
-//				break;
-//			}
-//		}
-//		else break;
-//	}
-//
-//	mMoveActor = mOrder.front();
-//	mOrder.pop();
-//}

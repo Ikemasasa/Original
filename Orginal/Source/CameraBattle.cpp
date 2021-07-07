@@ -58,8 +58,17 @@ void CameraBattle::Update(const Actor* target)
 		const float POS_Z_DIST = 7.5f;
 		mPos = Vector3(0.0f, POS_Y_DIST, BattleActorManager::PLAYER_POS_Z - POS_Z_DIST);
 		mTarget = Vector3(0.0f, 0.0f, BattleActorManager::ENEMY_POS_Z);
-	}
 
+	}
+		break;
+	case BattleState::State::PARTY_SELECT:
+	{
+		const float POS_Y_DIST = 6.5f;
+		mPos = Vector3(0.0f, POS_Y_DIST, BattleActorManager::ENEMY_POS_Z);
+
+		
+		mTarget = Vector3(0.0f, (target->GetAABB().max.y - target->GetAABB().min.y) / 2.0f , BattleActorManager::PLAYER_POS_Z);
+	}
 		break;
 	}
 	UpdateView();

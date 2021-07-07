@@ -563,6 +563,9 @@
     <ClCompile Include="Source\ProductionUseItem.cpp">
       <Filter>ソース ファイル\Scene\Battle</Filter>
     </ClCompile>
+    <ClCompile Include="Source\CommandBase.cpp">
+      <Filter>ソース ファイル\Scene\Battle\command</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="テキスト1.txt">
