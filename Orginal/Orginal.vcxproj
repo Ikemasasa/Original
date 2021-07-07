@@ -223,6 +223,7 @@
     <ClInclude Include="Source\Player.h" />
     <ClInclude Include="Source\PlayerBattle.h" />
     <ClInclude Include="Source\PlayerManager.h" />
+    <ClInclude Include="Source\ProductionUseItem.h" />
     <ClInclude Include="Source\ProductionValue.h" />
     <ClInclude Include="Source\SceneBase.h" />
     <ClInclude Include="Source\SceneBattle.h" />

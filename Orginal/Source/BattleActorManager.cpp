@@ -173,7 +173,6 @@ void BattleActorManager::EnemyCreateAndRegister(Enemy* enm)
 BattleActorManager::Result BattleActorManager::CheckBattleFinish()
 {
 	// mAliveActorIDsをチェックする
-
 	Result ret = NONE;
 	if (mAliveActorIDs[Actor::ENEMY].empty()) ret = PLAYER_WIN;
 	if (mAliveActorIDs[Actor::PLAYER].empty()) ret = PLAYER_LOSE;

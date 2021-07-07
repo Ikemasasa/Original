@@ -122,7 +122,8 @@ void TurnManager::BeginProduction()
 	CommandBase::Behaviour behaviour = GetMoveActor()->GetCommand()->GetBehaviour();
 	switch (behaviour)
 	{
-	case CommandBase::Behaviour::ATTACK: mProduction = std::make_unique<ProductionAttack>(); break;
+	case CommandBase::Behaviour::ATTACK:   mProduction = std::make_unique<ProductionAttack>(); break;
+	case CommandBase::Behaviour::USE_ITEM: //mProduction = std::make_unique<ProductionUseItem>(); break;
 	}
 
 	// ‚µ‚Á‚©‚èì‚ç‚ê‚Ä‚¢‚½‚ç(ƒGƒ‰[‘Îô)

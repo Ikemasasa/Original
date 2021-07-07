@@ -22,7 +22,7 @@ public:
 	void Begin(const int moveActorID, const int targetActorID);
 
 	virtual void Initialize() = 0;
-	virtual void Update(const BattleActorManager* bam) = 0;		// ñﬂÇËílÅFmProductionDataÇÃamount
+	virtual void Update(const BattleActorManager* bam) = 0;
 	virtual void Render() = 0;
 
 	bool GetIsFinished() const { return mIsFinished; }
