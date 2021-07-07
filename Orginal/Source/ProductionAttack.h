@@ -27,6 +27,7 @@ class ProductionAttack : public IBattleProduction
 	Vector3 mDestinationPos;
 	float mLerpFactor = 0.0f;
 	float mWaitTimer = 0;
+	int mAmount = -1;
 
 private:
 	void StateInit();

@@ -302,6 +302,7 @@
     <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="Source\PlayerBattle.cpp" />
     <ClCompile Include="Source\PlayerManager.cpp" />
+    <ClCompile Include="Source\ProductionUseItem.cpp" />
     <ClCompile Include="Source\ProductionValue.cpp" />
     <ClCompile Include="Source\SceneBattle.cpp" />
     <ClCompile Include="Source\SceneField.cpp" />

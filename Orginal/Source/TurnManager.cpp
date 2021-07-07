@@ -6,6 +6,7 @@
 #include "CommandBase.h"
 #include "EffectManager.h"
 #include "ProductionAttack.h"
+#include "ProductionUseItem.h"
 #include "Singleton.h"
 
 void TurnManager::Initialize(const std::vector<std::shared_ptr<BattleActor>>& battleActorArray)
@@ -13,7 +14,8 @@ void TurnManager::Initialize(const std::vector<std::shared_ptr<BattleActor>>& ba
 	SortOrder(battleActorArray);
 
 	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/Death/Death.efk", DEATH_EFFECT_SLOT);
-	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/HealPotion/heal_potion.efk", DEATH_EFFECT_SLOT);
+	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/HealPotion/heal_potion.efk", HEAL_POTION_EFFECT_SLOT);
+	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/HealPotion/magic_potion.efk", MAGIC_POTION_EFFECT_SLOT);
 }
 
 void TurnManager::Update(const BattleActorManager* bam)
@@ -123,7 +125,7 @@ void TurnManager::BeginProduction()
 	switch (behaviour)
 	{
 	case CommandBase::Behaviour::ATTACK:   mProduction = std::make_unique<ProductionAttack>(); break;
-	case CommandBase::Behaviour::USE_ITEM: //mProduction = std::make_unique<ProductionUseItem>(); break;
+	case CommandBase::Behaviour::USE_ITEM: mProduction = std::make_unique<ProductionUseItem>(); break;
 	}
 
 	// ÇµÇ¡Ç©ÇËçÏÇÁÇÍÇƒÇ¢ÇΩÇÁ(ÉGÉâÅ[ëŒçÙ)

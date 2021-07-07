@@ -11,7 +11,7 @@ protected:
 	 int mTargetActorID;
 	BattleActor* mMoveActor = nullptr;	 // ID‚©‚çæ“¾‚µ‚½‚Ì‚ğ•Û‘¶‚·‚é‚æ‚¤
 	BattleActor* mTargetActor = nullptr; // “¯ã
-	int mAmount = -1;
+	//int mAmount = -1;
 
 	ProductionValue mProductionValue;
 	bool mIsFinished = false;
