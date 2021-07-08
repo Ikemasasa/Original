@@ -25,7 +25,7 @@ public:
 
 	CommandBase* GetCommand() { return mCommand.get(); }
 	Status* GetStatus() { return &mStatus; }
-	Item* GetInventory() const { return mInventory; }
+	Item* GetInventory() { return mInventory; }
 
 	bool IsDead() const { return mStatus.hp <= 0; }
 };

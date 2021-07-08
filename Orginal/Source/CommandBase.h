@@ -19,9 +19,9 @@ public:
 	};
 
 protected:
-	Behaviour mBehaviour;
-	int mTargetObjID;
-	const ItemData::ItemParam* mUseItemParam;
+	Behaviour mBehaviour = Behaviour::NONE;
+	int mTargetObjID = -1;
+	int mUseItemIndex = -1;
 
 public:
 	CommandBase() = default;
@@ -34,9 +34,9 @@ public:
 
 	int GetTargetObjID() const { return mTargetObjID; }
 	Behaviour GetBehaviour() const { return mBehaviour; }
-	const ItemData::ItemParam* GetItemParam() { return mUseItemParam; }
+	int GetItemIndex() const { return mUseItemIndex; }
 	
 	void SetBehaviour(const Behaviour behaviour) { mBehaviour = behaviour; }
 	void SetTargetObjID(const int targetObjID) { mTargetObjID = targetObjID; }
-	void SetItemParam(const ItemData::ItemParam* param) { mUseItemParam = param; }
+	void SetItemIndex(const int index)  { mUseItemIndex = index; }
 };

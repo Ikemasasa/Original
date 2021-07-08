@@ -21,7 +21,6 @@ class ProductionUseItem : public IBattleProduction
 	int mMPAmount;
 	int mEffectSlot;
 	int mEffectInstHandle;
-	const ItemData::ItemParam* mUseItemParam;
 
 private:
 	void StateInit();
@@ -30,8 +29,8 @@ private:
 	void StateWait();
 
 	// TODO: 現在バフアイテムは未実装
-	void CalcAmountValue();  // 固定値計算 
-	void CalcAmountPercent();// 割合値計算
+	void CalcAmountValue(const ItemData::ItemParam* param);  // 固定値計算 
+	void CalcAmountPercent(const ItemData::ItemParam* param);// 割合値計算
 
 public:
 	void Initialize();

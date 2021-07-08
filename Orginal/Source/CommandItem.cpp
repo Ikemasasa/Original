@@ -20,15 +20,15 @@ CommandItem::~CommandItem()
 
 void CommandItem::Update(const BattleActorManager* bam, CommandBase* cmdBase)
 {
-	const BattleActor* moveActor = bam->GetMoveActor();
+	BattleActor* moveActor = bam->GetMoveActor();
 
 	int itemIndex = mItemSelect.Update(moveActor->GetInventory());
 	const int noSelect = -1;
 	if (noSelect != itemIndex)
 	{
 		// アイテム選択したら
+		cmdBase->SetItemIndex(itemIndex);
 		const ItemData::ItemParam* param = moveActor->GetInventory()->GetItemParam(itemIndex);
-		cmdBase->SetItemParam(param);
 
 		// アイテムの対象によってどっちのきゃらを選ぶか決める
 		Actor::Type charaType;

@@ -34,8 +34,8 @@ void CommandCharaSelect::Update(const BattleActorManager* bam, CommandBase* cmdB
 		cmdBase->SetTargetObjID(ids[mCharaIndex]);
 
 		// ƒAƒCƒeƒ€‚ª“o˜^‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©‚Å•ªŠò
-		if (cmdBase->GetItemParam()) cmdBase->SetBehaviour(CommandBase::Behaviour::USE_ITEM);
-		else						 cmdBase->SetBehaviour(CommandBase::Behaviour::ATTACK);
+		if (cmdBase->GetItemIndex() != -1) cmdBase->SetBehaviour(CommandBase::Behaviour::USE_ITEM);
+		else						       cmdBase->SetBehaviour(CommandBase::Behaviour::ATTACK);
 	}
 
 	if (Input::GetButtonTrigger(0, Input::BUTTON::B))

@@ -2,9 +2,10 @@
 
 #include "BattleActorManager.h"
 #include "CommandBase.h"
-#include "GameManager.h"
-#include "Singleton.h"
 #include "EffectManager.h"
+#include "GameManager.h"
+#include "Item.h"
+#include "Singleton.h"
 
 
 void ProductionUseItem::Initialize()
@@ -53,19 +54,20 @@ void ProductionUseItem::StateInit()
 	// アイテム使用モーションセット
 	mMoveActor->SetMotion(SkinnedMesh::USE_ITEM, false);
 
-	// 使用アイテムセット
-	mUseItemParam = mMoveActor->GetCommand()->GetItemParam();
+	// 使用アイテム取得
+	const ItemData::ItemParam* param = mMoveActor->GetInventory()->GetItemParam(mMoveActor->GetCommand()->GetItemIndex());
 
 	// 効果量計算(m~Amountに代入される) 
-	switch (mUseItemParam->rate)
+	switch (param->rate)
 	{
-	case ItemData::VALUE:  CalcAmountValue(); break;
-	case ItemData::PERCENT: CalcAmountPercent(); break;
+	case ItemData::VALUE:  CalcAmountValue(param); break;
+	case ItemData::PERCENT: CalcAmountPercent(param); break;
 	}
 
 	// ダメージアイテムのhpvalueはマイナスになってるからヒールで回復、ダメージ両方できる
 	mTargetActor->GetStatus()->HealHP(mHPAmount);
 	mTargetActor->GetStatus()->HealMP(mMPAmount);
+	mMoveActor->GetInventory()->Sub(mMoveActor->GetCommand()->GetItemIndex());
 
 	// エフェクト決定
 	if (mHPAmount < 0) mEffectSlot = TurnManager::ITEM_DAMAGE_EFFECT_SLOT;
@@ -146,17 +148,17 @@ void ProductionUseItem::StateWait()
 	}
 }
 
-void ProductionUseItem::CalcAmountValue()
+void ProductionUseItem::CalcAmountValue(const ItemData::ItemParam* param)
 {
-	mHPAmount = mUseItemParam->hpValue;
-	mMPAmount = mUseItemParam->mpValue;
+	mHPAmount = param->hpValue;
+	mMPAmount = param->mpValue;
 }
 
-void ProductionUseItem::CalcAmountPercent()
+void ProductionUseItem::CalcAmountPercent(const ItemData::ItemParam* param)
 {
 	// hpValueは%なので、100で割る
 	const float MAX_PERCENT = 100.0f;
-	mHPAmount = mMoveActor->GetStatus()->maxHP * (mUseItemParam->hpValue / MAX_PERCENT);
-	mMPAmount = mMoveActor->GetStatus()->maxMP * (mUseItemParam->mpValue / MAX_PERCENT);
+	mHPAmount = mMoveActor->GetStatus()->maxHP * (param->hpValue / MAX_PERCENT);
+	mMPAmount = mMoveActor->GetStatus()->maxMP * (param->mpValue / MAX_PERCENT);
 }
 
