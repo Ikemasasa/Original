@@ -27,6 +27,8 @@ void CommandItem::Update(const BattleActorManager* bam, CommandBase* cmdBase)
 	if (noSelect != itemIndex)
 	{
 		// アイテム選択したら
+		
+		// そのアイテムが使えるかチェック(回復系)
 		cmdBase->SetItemIndex(itemIndex);
 		const ItemData::ItemParam* param = moveActor->GetInventory()->GetItemParam(itemIndex);
 

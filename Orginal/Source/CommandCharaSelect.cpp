@@ -1,5 +1,6 @@
 #include "CommandCharaSelect.h"
 
+#include "lib/Audio.h"
 #include "lib/Input.h"
 #include "lib/Math.h"
 
@@ -7,6 +8,7 @@
 #include "BattleState.h"
 #include "CameraManager.h"
 #include "CommandBase.h"
+#include "Item.h"
 #include "Singleton.h"
 
 CommandCharaSelect::CommandCharaSelect(Actor::Type characterType)
@@ -26,16 +28,37 @@ void CommandCharaSelect::Update(const BattleActorManager* bam, CommandBase* cmdB
 	int max = static_cast<int>(ids.size() - 1);
 	if (Input::GetButtonTrigger(0, Input::BUTTON::RIGHT)) mCharaIndex = Math::Min(mCharaIndex + 1, max);
 	if (Input::GetButtonTrigger(0, Input::BUTTON::LEFT))  mCharaIndex = Math::Max(mCharaIndex - 1, 0);
-	mTargetActor = bam->GetActor(ids[mCharaIndex]);
+	mTargetActor = bam->GetActor(ids[mCharaIndex]); // Renderでつかうから ここで代入
 
 	// キャラ選択したら
 	if (Input::GetButtonTrigger(0, Input::BUTTON::A))
 	{
 		cmdBase->SetTargetObjID(ids[mCharaIndex]);
-
+		
 		// アイテムが登録されているかどうかで分岐
-		if (cmdBase->GetItemIndex() != -1) cmdBase->SetBehaviour(CommandBase::Behaviour::USE_ITEM);
-		else						       cmdBase->SetBehaviour(CommandBase::Behaviour::ATTACK);
+		if (cmdBase->GetItemIndex() != -1)
+		{
+			// アイテム使用者のインベントリ取得
+			BattleActor* moveActor = bam->GetMoveActor();
+			Item* moveActorInventory = moveActor->GetInventory();
+			
+			// 使用アイテムが回復アイテムなら HP、MPが最大かチェック
+			bool isUseable = true;
+			const ItemData::ItemParam* itemParam = moveActorInventory->GetItemParam(cmdBase->GetItemIndex());
+			if (itemParam->effect == ItemData::HEAL)
+			{
+				//HP回復でHPがマックス, MP回復でMPがマックス なら使用不可
+				if      (itemParam->hpValue > 0 && moveActor->GetStatus()->IsFullHP()) isUseable = false;
+				else if (itemParam->mpValue > 0 && moveActor->GetStatus()->IsFullMP()) isUseable = false;
+			}
+
+			if (isUseable) cmdBase->SetBehaviour(CommandBase::Behaviour::USE_ITEM);
+			else AUDIO.SoundPlay((int)Sound::CANCEL);// 使えないならキャンセル音
+		}
+		else // アイテムが登録されていない
+		{
+			cmdBase->SetBehaviour(CommandBase::Behaviour::ATTACK);
+		}
 	}
 
 	if (Input::GetButtonTrigger(0, Input::BUTTON::B))
