@@ -21,6 +21,6 @@ public:
 	CommandCharaSelect(Actor::Type characterType);
 	~CommandCharaSelect() = default;
 
-	void Update(const BattleActorManager* bam, CommandBase* cmdBase);
-	void Render() const;
+	void Update(const BattleActorManager* bam, CommandBase* cmdBase) override;
+	void Render() override;
 };

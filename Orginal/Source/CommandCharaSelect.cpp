@@ -67,7 +67,7 @@ void CommandCharaSelect::Update(const BattleActorManager* bam, CommandBase* cmdB
 	}
 }
 
-void CommandCharaSelect::Render() const
+void CommandCharaSelect::Render()
 {
 	const CameraManager& camera = Singleton<CameraManager>().GetInstance();
 
