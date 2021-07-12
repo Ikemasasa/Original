@@ -29,7 +29,7 @@ public:
 	virtual ~IDecideCommand() = default;
 
 	virtual void Update(const BattleActorManager* bam, CommandBase* cmdBase) = 0;
-	virtual void Render() const {}
+	virtual void Render() {}
 
 	bool IsBackState() const { return mIsBackState; }
 

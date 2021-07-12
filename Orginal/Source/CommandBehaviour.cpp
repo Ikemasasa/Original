@@ -52,7 +52,7 @@ void CommandBehaviour::Update(const BattleActorManager* bam, CommandBase* cmdBas
 	}
 }
 
-void CommandBehaviour::Render() const
+void CommandBehaviour::Render()
 {
 	const float offsetX = 300.0f;
 	const float offsetY = 300.0f;

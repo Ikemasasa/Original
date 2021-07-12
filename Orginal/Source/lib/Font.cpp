@@ -77,6 +77,11 @@ bool Font::RenderSet(const int index, const Vector2& pos, const Vector2& center,
 	return true;
 }
 
+void Font::ClearRenderSet()
+{
+	mRenderData.clear();
+}
+
 void Font::Render(bool isRenderClear)
 {
 	Vector2 pos = {};

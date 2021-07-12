@@ -33,5 +33,5 @@ public:
 	~CommandBehaviour() = default;
 
 	virtual void Update(const BattleActorManager* bam, CommandBase* cmdBase) override;
-	virtual void Render() const override;
+	virtual void Render() override;
 };

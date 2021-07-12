@@ -48,7 +48,7 @@ void CommandItem::Update(const BattleActorManager* bam, CommandBase* cmdBase)
 	}
 }
 
-void CommandItem::Render() const
+void CommandItem::Render()
 {
 	const Vector2 boardOffset(Define::SCREEN_WIDTH / 10.0f, Define::SCREEN_HEIGHT / 5.0f);
 	mItemSelect.Render(boardOffset);

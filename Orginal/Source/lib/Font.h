@@ -59,6 +59,7 @@ public:
 
 	bool RenderSet(const wchar_t* str, const Vector2& pos, const Vector2& center = Vector2::Zero(), const Vector2& scale = Vector2::One(), const Vector4& color = Vector4::One());
 	bool RenderSet(const int index, const Vector2& pos, const Vector2& center = Vector2::Zero(), const Vector2& scale = Vector2::One(), const Vector4& color = Vector4::One());
+	void ClearRenderSet();
 	void Render(bool isRenderClear = true);
 
 	bool Add(const wchar_t* str);
