@@ -1,4 +1,3 @@
-
 // テクスチャ / サンプラー
 Texture2D GBufferColor : register(t0);
 Texture2D GBufferNormal: register(t1);
@@ -15,7 +14,7 @@ cbuffer CBForLight : register(b1)
 {
 	float4	LightDir;		//ライトの方向
 	float4	LightColor;		//ライトの色
-};
+}
 
 // データフォーマット
 struct VSInput
@@ -29,7 +28,7 @@ struct VSInput
 struct PSInput
 {
 	float4 pos   : SV_POSITION;
-	float2 tex   : TEXCOORD;
+	float2 tex   : TEXCOORD0;
 	float4 color : COLOR;
 };
 

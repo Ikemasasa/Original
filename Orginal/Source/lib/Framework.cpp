@@ -115,12 +115,6 @@ HRESULT Framework::CreateRasterizerStates()
             rd.CullMode = D3D11_CULL_NONE;
             rd.FillMode = D3D11_FILL_SOLID;
             break;
-
-        case RS_SWAPYZ:
-            ZeroMemory(&rd, sizeof(rd));
-            rd.CullMode = D3D11_CULL_BACK;
-            rd.FillMode = D3D11_FILL_SOLID;
-            rd.FrontCounterClockwise = true;
         }
 
         hr = mDevice->CreateRasterizerState(&rd, mRasterizer[i].GetAddressOf());
@@ -314,12 +308,8 @@ void Framework::Clear()
     // アルファブレンドをセット
     Blend::Set(mDeviceContext.Get(), Blend::BLEND_MODE::ALPHA);
 
-
     // 各種デフォルトを設定
-    mDeviceContext->OMSetDepthStencilState(mDepthStencilState[DS_TRUE].Get(), 0);
-    mDeviceContext->RSSetState(mRasterizer[RS_SWAPYZ].Get());
-    mDeviceContext->PSSetSamplers(0, 1, mSamplerState[SS_CLAMP].GetAddressOf());
-    mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    ResetParam();
 }
 
 void Framework::GenerateScrshot(const wchar_t* filename)

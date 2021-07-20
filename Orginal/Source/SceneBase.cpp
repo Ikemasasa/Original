@@ -2,6 +2,8 @@
 
 #include "lib/Framework.h"
 
+#include "Define.h"
+
 // staticmenba
 Light SceneBase::mLight;
 
@@ -18,10 +20,12 @@ void SceneBase::InitializeGBuffer()
 	mGBufferShader->Load(L"Shaders/GBuffer.fx", "VSMain", "PSMain");
 	
 	// レンダーターゲット作成
-	mGBufferColor.Initialize();
-	mGBufferPosition.Initialize();
-	mGBufferNormal.Initialize();
+	float width = Define::SCREEN_WIDTH;
+	float height = Define::SCREEN_HEIGHT;
 
+	mGBufferColor.Initialize(width, height);
+	mGBufferPosition.Initialize(width, height);
+	mGBufferNormal.Initialize(width, height);
 
 	// 使うであろう DirLightシェーダ作成
 	mDeferredDirLightShader = std::make_unique<Shader>();
@@ -53,7 +57,7 @@ void SceneBase::ActivateGBuffer(UINT startSlot)
 
 
 	// レンダーターゲット設定
-	context->OMSetRenderTargets(GBuffer::NUM, rtv, nullptr);
+	context->OMSetRenderTargets(GBuffer::NUM, rtv, FRAMEWORK.GetDepthStencilView());
 }
 
 void SceneBase::DeactivateGBuffer(UINT startSlot)

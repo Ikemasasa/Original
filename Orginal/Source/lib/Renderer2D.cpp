@@ -125,7 +125,7 @@ void Renderer2D::Render(ID3D11ShaderResourceView* srv, const Vector2& pos, const
     context->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), &stride, &offset);
 
     context->RSSetState(FRAMEWORK.GetRasterizer(Framework::RS_CULL_NONE));
-    context->OMSetDepthStencilState(FRAMEWORK.GetDepthStencil(Framework::DS_FALSE), 0);
+    context->OMSetDepthStencilState(FRAMEWORK.GetDepthStencilState(Framework::DS_FALSE), 0);
     context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
     context->PSSetShaderResources(0, 1, &srv);
@@ -152,7 +152,7 @@ void Renderer2D::Render(ID3D11ShaderResourceView* srv, Shader* shader, const Vec
     context->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), &stride, &offset);
 
     context->RSSetState(FRAMEWORK.GetRasterizer(Framework::RS_CULL_NONE));
-    context->OMSetDepthStencilState(FRAMEWORK.GetDepthStencil(Framework::DS_FALSE), 0);
+    context->OMSetDepthStencilState(FRAMEWORK.GetDepthStencilState(Framework::DS_FALSE), 0);
     context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
     context->PSSetShaderResources(0, 1, &srv);
@@ -179,7 +179,7 @@ void Renderer2D::Render(Shader* shader, const Vector2& pos, const Vector2& scale
     context->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), &stride, &offset);
 
     context->RSSetState(FRAMEWORK.GetRasterizer(Framework::RS_CULL_NONE));
-    context->OMSetDepthStencilState(FRAMEWORK.GetDepthStencil(Framework::DS_FALSE), 0);
+    context->OMSetDepthStencilState(FRAMEWORK.GetDepthStencilState(Framework::DS_FALSE), 0);
     context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
     shader->Activate();

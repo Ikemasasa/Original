@@ -45,32 +45,32 @@ Actor::Actor(const Actor* org, Type type)
 void Actor::UpdateWorld()
 {
 	// 各種更新の後に呼び出す
+
+
+	// モーションがあるならskinning
+	if (mMesh->GetMotion() != SkinnedMesh::DEFAULT)
+	{
+		mMesh->Skinning();
+	}
+
 	{
 		// 現フレームのワールド行列を計算
-		DirectX::XMMATRIX world;
+
 		DirectX::XMMATRIX S, R, Rx, Ry, Rz, T;
 
-		world = DirectX::XMMatrixIdentity();
-
+		// スケール
 		S = DirectX::XMMatrixScaling(mScale.x, mScale.y, mScale.z);
 
-		Rx = DirectX::XMMatrixRotationX(mAngle.x);	//	X軸を基準とした回転行列
-		Ry = DirectX::XMMatrixRotationY(mAngle.y);	//	Y軸を基準とした回転行列
-		Rz = DirectX::XMMatrixRotationZ(mAngle.z);	//	Z軸を基準とした回転行列
-		R = Rz * Ry * Rx;
+		// 回転
+		R = DirectX::XMMatrixRotationRollPitchYaw(mAngle.x, mAngle.y, mAngle.z);
 
+		// 移動
 		T = DirectX::XMMatrixTranslation(mPos.x, mPos.y, mPos.z);
 
-		world = S * R * T;
+		DirectX::XMMATRIX world = S * R * T;
 
 		// 現フレームのワールド行列を代入
 		DirectX::XMStoreFloat4x4(&mWorld, world);
-	}
-
-	// モーションがあるならskinning
-	if (mMesh->GetMotion()!= SkinnedMesh::DEFAULT)
-	{
-		mMesh->Skinning();
 	}
 }
 

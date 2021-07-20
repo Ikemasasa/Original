@@ -92,7 +92,7 @@ void SceneField::Render()
 	// シーンターゲットに書き込み
 	mSceneTarget.Activate();
 	mSkybox->Render(view, proj);
-	mGBufferNormal.Render(nullptr);
+	mGBufferColor.Render(nullptr);
 	RenderLight();
 	mSceneTarget.Deactivate();
 

@@ -8,7 +8,7 @@
 class Framework
 {
 public:
-	enum RasterizerSettings { RS_CULL_BACK, RS_CULL_FRONT, RS_CULL_NONE, RS_WIRE, RS_SWAPYZ, RS_MAX };
+	enum RasterizerSettings { RS_CULL_BACK, RS_CULL_FRONT, RS_CULL_NONE, RS_WIRE, RS_MAX };
 	enum DepthStencilSettings { DS_FALSE, DS_TRUE, DS_MAX };
 	enum SapmlerStateSettings { SS_CLAMP, SS_WRAP, SS_SHADOW, SS_MAX };
 
@@ -42,8 +42,10 @@ public:
 	ID3D11Device* GetDevice() { return mDevice.Get(); }
 	ID3D11DeviceContext* GetContext() { return mDeviceContext.Get(); }
 	ID3D11RasterizerState* GetRasterizer(RasterizerSettings index) { return mRasterizer[index].Get(); }
-	ID3D11DepthStencilState* GetDepthStencil(DepthStencilSettings index) { return mDepthStencilState[index].Get(); }
+	ID3D11DepthStencilState* GetDepthStencilState(DepthStencilSettings index) { return mDepthStencilState[index].Get(); }
 	ID3D11SamplerState** GetSampler(SapmlerStateSettings index) { return mSamplerState[index].GetAddressOf(); }
+
+	ID3D11DepthStencilView* GetDepthStencilView() { return mDepthStencilView.Get(); }
 
 	bool Initialize(HWND hwnd);
 	void Clear();
