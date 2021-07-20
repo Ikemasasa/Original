@@ -5,43 +5,12 @@
 #include "Renderer2D.h"
 #include "Shader.h"
 #include "Sprite.h"
-#include "Window.h"
-
-Skybox::Skybox(const wchar_t* filename)
-{
-	mConstBuffer = nullptr;
-	mEyePos = Vector3::Zero();
-	mShader = std::make_unique<Shader>();
-	Initialize();
-
-	mTexture = std::make_unique<Sprite>(filename);
-}
-
-Skybox::~Skybox()
-{
-	mShader->UnLoad();
-	mTexture->UnLoad();
-}
-
-bool Skybox::Initialize()
-{
-	ID3D11Device* device = FRAMEWORK.GetDevice();
-
-	bool check = false;
-	check = CreateShaders();
-	if (!check) return false;
-
-	check = CreateConstantBuffer();
-	if (!check) return false;
-
-	return true;
-}
 
 bool Skybox::CreateShaders()
 {
 	// 頂点シェーダ / ピクセルシェーダ　の作成
 	bool check = false;
-	check = mShader->Load(L"Shaders/SkyBox.fx", "VSMain", "PSMain");
+	check = mShader->Load2D(L"Shaders/SkyBox.fx", "VSMain", "PSMain");
 	if (!check) return false;
 
 	return true;
@@ -62,6 +31,28 @@ bool Skybox::CreateConstantBuffer()
 	if (FAILED(hr)) return false;
 
 	return true;
+}
+
+void Skybox::Initialize(const wchar_t* filename)
+{
+	mEyePos = Vector3::Zero();
+
+	// 定数バッファ作成
+	mConstBuffer = nullptr;
+	CreateConstantBuffer();
+
+	// シェーダ作成
+	mShader = std::make_unique<Shader>();
+	CreateShaders();
+
+	// テクスチャ読み込み
+	mTexture = std::make_unique<Sprite>(filename);
+}
+
+void Skybox::Release()
+{
+	mShader->UnLoad();
+	mTexture->UnLoad();
 }
 
 void Skybox::SetEyePos(Vector3 eye)
@@ -85,8 +76,8 @@ void Skybox::Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& 
 	DirectX::XMStoreFloat4x4(&cb.invView, DirectX::XMMatrixInverse(nullptr, matView));
 	DirectX::XMStoreFloat4x4(&cb.invProj, DirectX::XMMatrixInverse(nullptr, matProj));
 	context->UpdateSubresource(mConstBuffer.Get(), 0, NULL, &cb, 0, 0);
-	context->VSSetConstantBuffers(2, 1, mConstBuffer.GetAddressOf());
-	context->PSSetConstantBuffers(2, 1, mConstBuffer.GetAddressOf());
+	context->VSSetConstantBuffers(0, 1, mConstBuffer.GetAddressOf());
+	context->PSSetConstantBuffers(0, 1, mConstBuffer.GetAddressOf());
 
 	{
 		// 描画

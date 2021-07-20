@@ -7,7 +7,7 @@ struct PSInput
 	float4 color : COLOR;
 };
 
-PSInput VSMain(VSInput input)
+PSInput VSMain(VSInput2D input)
 {
 	PSInput output = (PSInput)0;
 	output.pos = float4(input.pos, 1);

@@ -20,9 +20,6 @@ private:
 	std::unique_ptr<Skybox>				mSkybox = nullptr;
 	std::shared_ptr<Terrain> mTerrain = nullptr;
 
-
-	DirectX::XMFLOAT4 mLightDir;
-
 public:
 	SceneBattle(PlayerManager* plm, Enemy* enemy);
 	~SceneBattle();

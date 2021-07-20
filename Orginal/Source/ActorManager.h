@@ -4,10 +4,11 @@
 #include <list>
 
 #include "EnemyManager.h"
+#include "PlayerManager.h"
 
 class CameraBase;
-class PlayerManager;
 class Shader;
+#include "Terrain.h"
 class Terrain;
 
 class ActorManager
@@ -26,8 +27,5 @@ public:
 	void Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir);
 	void Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir);
 
-	PlayerManager* GetPlayerManager() const { return mPlayerManager.get(); }
-	EnemyManager* GetEnemyManager() const { return mEnemyManager.get(); }
-	Terrain* GetTerrain() const { return mTerrain.get(); }
-
+	Player* GetMovePlayer() { return mPlayerManager->GetMovePlayer(); }
 };

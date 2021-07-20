@@ -17,7 +17,6 @@ class ShadowMap
 
 	static constexpr float SHADOWMAP_X = 4098;
 	static constexpr float SHADOWMAP_Y = 4098;
-	static const int SHADOWMAP_SRV_SLOT = 14;
 
 	RenderTarget mShadowMap;
 	RenderTarget mVarianceShadowMap;
@@ -31,8 +30,8 @@ public:
 	~ShadowMap();
 
 	void Initialize();
-	void Activate(const DirectX::XMFLOAT4& lightDir);
-	void Deactivate();
+	void Activate(const DirectX::XMFLOAT4& lightDir, int textureSlot);
+	void Deactivate(int textureSlot);
 	Shader* GetShader()const { return mShader.get(); }
 
 };

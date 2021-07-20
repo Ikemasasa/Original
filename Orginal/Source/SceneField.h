@@ -13,11 +13,10 @@ class Terrain;
 
 class SceneField : public SceneBase
 {
-	DirectX::XMFLOAT4X4 mProjection = {};
-	DirectX::XMFLOAT4 mLightDirection = {};
-
 	std::unique_ptr<ActorManager> mActorManager = nullptr;
 	std::unique_ptr<Skybox>		  mSkybox		= nullptr;
+
+	void RenderLight();
 public:
 	SceneField();
 	~SceneField();

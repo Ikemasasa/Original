@@ -31,17 +31,8 @@ Renderer2D::Renderer2D()
     subresource.pSysMem = vertices;
     FRAMEWORK.GetDevice()->CreateBuffer(&bufferDesc, &subresource, mVertexBuffer.GetAddressOf());
 
-
-    D3D11_INPUT_ELEMENT_DESC layout[] =
-    {
-        { "POSITION" , 0, DXGI_FORMAT_R32G32B32_FLOAT   , 0, 0   , D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "NORMAL"   , 0, DXGI_FORMAT_R32G32B32_FLOAT   , 0, 4 * 3, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "TEXCOORD" , 0, DXGI_FORMAT_R32G32_FLOAT      , 0, 4 * 6, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "COLOR"    , 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 4 * 8, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-    };
-
     mShader = std::make_unique<Shader>();
-    mShader->Load(L"Shaders/Renderer2D.fx", "VSMain", "PSMain", layout, ARRAYSIZE(layout));
+    mShader->Load2D(L"Shaders/Renderer2D.fx", "VSMain", "PSMain");
 
 }
 
@@ -56,6 +47,7 @@ void Renderer2D::UpdateVertex(ID3D11ShaderResourceView* srv, const Vector2& pos,
 
     // 画像のサイズ(全体)を取得
     Vector2 texSize;
+    if(srv)
     {
         ID3D11Resource* tex = nullptr;
         srv->GetResource(&tex);
@@ -67,7 +59,10 @@ void Renderer2D::UpdateVertex(ID3D11ShaderResourceView* srv, const Vector2& pos,
         texSize.x = static_cast<float>(desc.Width);
         texSize.y = static_cast<float>(desc.Height);
     }
-
+    else
+    {
+        texSize = size;
+    }
 
     // 頂点バッファ更新
     D3D11_VIEWPORT viewport;
@@ -161,6 +156,32 @@ void Renderer2D::Render(ID3D11ShaderResourceView* srv, Shader* shader, const Vec
     context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
     context->PSSetShaderResources(0, 1, &srv);
+    shader->Activate();
+
+    context->Draw(4, 0);
+
+    // 戻す
+    FRAMEWORK.ResetParam();
+}
+
+void Renderer2D::Render(Shader* shader, const Vector2& pos, const Vector2& scale, const Vector2& texPos, const Vector2& size, const Vector2& center, const float angle, const Vector4 color)
+{
+    if (scale.x * scale.y == 0.0f) return;
+    if (size.x * size.y == 0.0f) return;
+
+    ID3D11DeviceContext* context = FRAMEWORK.GetContext();
+
+    // 頂点更新
+    UpdateVertex(nullptr, pos, scale, texPos, size, center, angle, color);
+
+    UINT stride = sizeof(Vertex);
+    UINT offset = 0;
+    context->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), &stride, &offset);
+
+    context->RSSetState(FRAMEWORK.GetRasterizer(Framework::RS_CULL_NONE));
+    context->OMSetDepthStencilState(FRAMEWORK.GetDepthStencil(Framework::DS_FALSE), 0);
+    context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
     shader->Activate();
 
     context->Draw(4, 0);

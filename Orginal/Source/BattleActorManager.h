@@ -48,7 +48,6 @@ private:
 
 	Result CheckBattleFinish();
 	void OrganizeActor();
-	void PlayDeathEffect();
 
 	void PlayerCreateAndRegister(Player* pl);
 	void EnemyCreateAndRegister(Enemy* enm);

@@ -28,7 +28,7 @@ void CommandItem::Update(const BattleActorManager* bam, CommandBase* cmdBase)
 	{
 		// アイテム選択したら
 		
-		// そのアイテムが使えるかチェック(回復系)
+		// アイテム情報取得
 		cmdBase->SetItemIndex(itemIndex);
 		const ItemData::ItemParam* param = moveActor->GetInventory()->GetItemParam(itemIndex);
 

@@ -63,10 +63,10 @@ void ShadowMap::Initialize()
 	mTarget = Vector3::Zero();
 }
 
-void ShadowMap::Activate(const DirectX::XMFLOAT4& lightDir)
+void ShadowMap::Activate(const DirectX::XMFLOAT4& lightDir, int textureSlot)
 {
 	// レンダーターゲット有効化
-	mShadowMap.Activate(SHADOWMAP_SRV_SLOT);
+	mShadowMap.Activate(textureSlot);
 
 
 	ID3D11DeviceContext* context = FRAMEWORK.GetContext();
@@ -106,7 +106,7 @@ void ShadowMap::Activate(const DirectX::XMFLOAT4& lightDir)
 	}
 }
 
-void ShadowMap::Deactivate()
+void ShadowMap::Deactivate(int textureSlot)
 {
-	mShadowMap.Deactivate(SHADOWMAP_SRV_SLOT);
+	mShadowMap.Deactivate(textureSlot);
 }

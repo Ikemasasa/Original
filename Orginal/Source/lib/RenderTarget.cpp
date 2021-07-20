@@ -92,19 +92,20 @@ void RenderTarget::Activate(UINT textureSlot)
 {
 	ID3D11DeviceContext* context = FRAMEWORK.GetContext();
 
-	// レンダーターゲットビュー設定
-	ID3D11RenderTargetView* targets[]={
-		mRTV.Get(),
-	};
-
 	// ダミーSRVをセット(エラー対策)
 	ID3D11ShaderResourceView* dummy = nullptr;
 	context->PSSetShaderResources(textureSlot, 1, &dummy);
 
+
+	// レンダーターゲットビュー設定
+	ID3D11RenderTargetView* targets[] = {
+		mRTV.Get(),
+	};
+
 	context->OMSetRenderTargets( 1, targets, mDSV.Get());
 	float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
-	if(mRTV.Get())context->ClearRenderTargetView(mRTV.Get(), clearColor);
-	if(mDSV.Get())context->ClearDepthStencilView(mDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	if(mRTV.Get()) context->ClearRenderTargetView(mRTV.Get(), clearColor);
+	if(mDSV.Get()) context->ClearDepthStencilView(mDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 
 void RenderTarget::Deactivate(UINT textureSlot)
@@ -113,7 +114,7 @@ void RenderTarget::Deactivate(UINT textureSlot)
 	FRAMEWORK.GetContext()->PSSetShaderResources(textureSlot, 1, mSRV.GetAddressOf());
 }
 
-void RenderTarget::Render(Shader* shader)
+void RenderTarget::Render(Shader* shader) const
 {
 	ID3D11DeviceContext* context = FRAMEWORK.GetContext();
 
@@ -127,7 +128,9 @@ void RenderTarget::Render(Shader* shader)
 		Vector2 scale(1.0f, 1.0f);
 		Vector2 texPos(0.0f, 0.0f);
 		Vector2 size(vp.Width, vp.Height);
-		Renderer2D::GetInstance().Render(mSRV.Get(), shader, pos, scale, texPos, size);
+
+		if(shader) Renderer2D::GetInstance().Render(mSRV.Get(), shader, pos, scale, texPos, size);
+		else	   Renderer2D::GetInstance().Render(mSRV.Get(), pos, scale, texPos, size);
 	}
 }
 

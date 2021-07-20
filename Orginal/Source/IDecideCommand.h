@@ -33,5 +33,5 @@ public:
 
 	bool IsBackState() const { return mIsBackState; }
 
-	IDecideCommand* ReleaseNextCommandState() { return mNextCommand.release(); }
+	IDecideCommand* GetNextCommandState() { return mNextCommand.release(); }
 };

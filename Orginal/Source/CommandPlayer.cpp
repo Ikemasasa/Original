@@ -32,7 +32,7 @@ void CommandPlayer::Update(const BattleActorManager* bam)
 	}
 
 	// 次のコマンドがあるなら更新する
-	IDecideCommand* nextCommand = mCommand.top()->ReleaseNextCommandState();
+	IDecideCommand* nextCommand = mCommand.top()->GetNextCommandState();
 	if (nextCommand)
 	{
 		mCommand.emplace(nextCommand);

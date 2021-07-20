@@ -8,6 +8,7 @@
 #include "GameManager.h"
 #include "SceneManager.h"
 #include "SceneTitle.h"
+#include "SceneField.h"
 #include "Fade.h"
 
 int Looper::Run(HWND hwnd)
@@ -22,7 +23,7 @@ int Looper::Run(HWND hwnd)
 	AUDIO.Initialize();
 
 	auto& sm = SceneManager::GetInstance();
-	sm.Initialize(std::make_unique<SceneTitle>());
+	sm.Initialize(std::make_unique<SceneField>());
 
 	while (IsLoop() && sm.IsLoop())
 	{

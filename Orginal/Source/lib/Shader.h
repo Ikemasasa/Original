@@ -12,6 +12,7 @@ public:
 	~Shader() = default;
 
 	bool Load(LPCWSTR filename, LPCSTR VSFunc, LPCSTR PSFunc, D3D11_INPUT_ELEMENT_DESC* layout = nullptr, UINT numElements = 0);
+	bool Load2D(LPCWSTR filename, LPCSTR VSFunc, LPCSTR PSFunc);
 	//bool Load(LPCWSTR filename, LPCSTR VSFunc, LPCSTR PSFunc, LPCSTR vsShaderModel = "vs_5_0", LPCSTR psShaderModel = "ps_5_0");
 	void UnLoad();
 	void Activate() const;

@@ -65,5 +65,15 @@ public:
         const Vector2& center = Vector2::Zero(),
         const float angle = 0,
         const Vector4 color = Vector4::One());
+
+    void Render(
+        Shader* shader,
+        const Vector2& pos,
+        const Vector2& scale,
+        const Vector2& texPos,
+        const Vector2& size,
+        const Vector2& center = Vector2::Zero(),
+        const float angle = 0,
+        const Vector4 color = Vector4::One());
 };
 

@@ -34,6 +34,30 @@ bool Shader::Load(LPCWSTR filename, LPCSTR VSFunc, LPCSTR PSFunc, D3D11_INPUT_EL
 	return true;
 }
 
+bool Shader::Load2D(LPCWSTR filename, LPCSTR VSFunc, LPCSTR PSFunc)
+{
+	// 2D用のシェーダ読み込み(結構数がおおくて、layoutを毎回用意するのがめんどくさかったから関数化)
+	D3D11_INPUT_ELEMENT_DESC layout[] = {
+		{ "POSITION" , 0, DXGI_FORMAT_R32G32B32_FLOAT   , 0, 0   , D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL"   , 0, DXGI_FORMAT_R32G32B32_FLOAT   , 0, 4 * 3, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD" , 0, DXGI_FORMAT_R32G32_FLOAT      , 0, 4 * 6, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR"    , 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 4 * 8, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+	UINT numElements = ARRAYSIZE(layout);
+
+	LPCSTR vsShaderModel = "vs_4_0_level_9_3";
+	LPCSTR psShaderModel = "ps_4_0_level_9_3";
+
+	bool check = false;
+	check = ResourceManager::LoadVertexShader(filename, VSFunc, layout, numElements, &mVertexShader, &mVertexLayout, vsShaderModel);
+	if (!check) return false;
+
+	check = ResourceManager::LoadPixelShader(filename, PSFunc, &mPixelShader, psShaderModel);
+	if (!check)return false;
+
+	return true;
+}
+
 void Shader::UnLoad()
 {
 	ResourceManager::ReleaseVertexShader(mVertexShader, mVertexLayout);

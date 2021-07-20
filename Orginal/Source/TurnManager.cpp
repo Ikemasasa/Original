@@ -130,15 +130,11 @@ void TurnManager::BeginProduction()
 	case CommandBase::Behaviour::USE_ITEM: mProduction = std::make_unique<ProductionUseItem>(); break;
 	}
 
-	// ‚µ‚Á‚©‚èì‚ç‚ê‚Ä‚¢‚½‚ç(ƒGƒ‰[‘Îô)
-	if (mProduction)
-	{
-		mProduction->Initialize();
-		
-		int moveActorID = GetMoveActor()->GetObjID();
-		int targetActorID = GetMoveActor()->GetCommand()->GetTargetObjID();
-		mProduction->Begin(moveActorID, targetActorID);
-	}
+	mProduction->Initialize();
+
+	int moveActorID = GetMoveActor()->GetObjID();
+	int targetActorID = GetMoveActor()->GetCommand()->GetTargetObjID();
+	mProduction->Begin(moveActorID, targetActorID);
 }
 
 void TurnManager::OrganizeOrder(const std::vector<std::shared_ptr<BattleActor>>& battleActorArray)

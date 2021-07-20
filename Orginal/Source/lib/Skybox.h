@@ -24,15 +24,16 @@ class Skybox
 
 	Vector3 mEyePos;
 
-	// ‰Šú‰»ŠÖ”ŒQ
+	// ‰Šú‰»ŠÖ”
 	bool CreateShaders();
 	bool CreateConstantBuffer();
-	bool Initialize();
 
 public:
-	Skybox(const wchar_t* filename);
-	~Skybox();
+	Skybox() = default;
+	~Skybox() = default;
 	
+	void Initialize(const wchar_t* filename);
+	void Release();
 	void SetEyePos(Vector3 eye);
 	void Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj);
 };

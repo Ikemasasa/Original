@@ -166,6 +166,7 @@
     <ClInclude Include="Source\CommandItem.h" />
     <ClInclude Include="Source\CommandPlayer.h" />
     <ClInclude Include="Source\DataBase.h" />
+    <ClInclude Include="Source\DeferredDirLight.h" />
     <ClInclude Include="Source\EffectManager.h" />
     <ClInclude Include="Source\Enemy.h" />
     <ClInclude Include="Source\EnemyBattle.h" />
@@ -191,6 +192,7 @@
     <ClInclude Include="Source\lib\TVector.h" />
     <ClInclude Include="Source\lib\Vector.h" />
     <ClInclude Include="Source\lib\Input.h" />
+    <ClInclude Include="Source\Light.h" />
     <ClInclude Include="Source\MenuBase.h" />
     <ClInclude Include="Source\CharacterHealth.h" />
     <ClInclude Include="Source\MenuCharacterSelect.h" />
@@ -262,6 +264,7 @@
     <ClCompile Include="Source\Fade.cpp" />
     <ClCompile Include="Source\FontValue.cpp" />
     <ClCompile Include="Source\GameManager.cpp" />
+    <ClCompile Include="Source\GaussianBlur.cpp" />
     <ClCompile Include="Source\IBattleProduction.cpp" />
     <ClCompile Include="Source\Item.cpp" />
     <ClCompile Include="Source\ItemData.cpp" />
@@ -287,6 +290,7 @@
     <ClCompile Include="Source\lib\Vector.cpp" />
     <ClCompile Include="Source\lib\Window.cpp" />
     <ClCompile Include="Source\lib\Input.cpp" />
+    <ClCompile Include="Source\Light.cpp" />
     <ClCompile Include="Source\Looper.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\CharacterHealth.cpp" />
@@ -305,6 +309,7 @@
     <ClCompile Include="Source\PlayerManager.cpp" />
     <ClCompile Include="Source\ProductionUseItem.cpp" />
     <ClCompile Include="Source\ProductionValue.cpp" />
+    <ClCompile Include="Source\SceneBase.cpp" />
     <ClCompile Include="Source\SceneBattle.cpp" />
     <ClCompile Include="Source\SceneField.cpp" />
     <ClCompile Include="Source\SceneManager.cpp" />
@@ -319,11 +324,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Character.fx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
-      <FileType>Document</FileType>
-    </None>
-    <None Include="Shaders\GaussianBlur.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
       <FileType>Document</FileType>
@@ -363,6 +363,22 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\ComputeShaders\Skinning.fx">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\DeferredDirLight.fx">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Shaders\GBuffer.fx">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Shaders\GeneralDeferred.fx">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\GaussianBlur.fx">
       <FileType>Document</FileType>
     </None>
   </ItemGroup>
