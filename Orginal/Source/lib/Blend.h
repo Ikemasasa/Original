@@ -1,6 +1,8 @@
 #pragma once
 #include <d3d11.h>
 
+#include "Framework.h"
+
 class Blend
 {
 public:
@@ -40,13 +42,13 @@ public:
         bLoad = false;
     }
 
-    static void Set(ID3D11DeviceContext* context, BLEND_MODE mode = NONE)
+    static void Set(BLEND_MODE mode = NONE)
     {
         if (!bLoad) return;
         if (mode < NONE || mode >= MODE_MAX) return;
         if (mode == enumMode) return;
 
-        context->OMSetBlendState(blendState[mode], nullptr, 0xffffffff);
+        FRAMEWORK.GetContext()->OMSetBlendState(blendState[mode], nullptr, 0xffffffff);
         enumMode = mode;
     }
 

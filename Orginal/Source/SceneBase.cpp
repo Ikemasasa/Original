@@ -27,6 +27,9 @@ void SceneBase::InitializeGBuffer()
 	mGBufferPosition.Initialize(width, height);
 	mGBufferNormal.Initialize(width, height);
 
+	// 定数バッファ作成
+	mCBForDeferred.Create(sizeof(CBForDeferredPerFrame));
+
 	// 使うであろう DirLightシェーダ作成
 	mDeferredDirLightShader = std::make_unique<Shader>();
 	mDeferredDirLightShader->Load2D(L"Shaders/DeferredDirLight.fx", "VSMain", "PSMain");
@@ -60,11 +63,14 @@ void SceneBase::ActivateGBuffer(UINT startSlot)
 	context->OMSetRenderTargets(GBuffer::NUM, rtv, FRAMEWORK.GetDepthStencilView());
 }
 
-void SceneBase::DeactivateGBuffer(UINT startSlot)
+void SceneBase::DeactivateGBuffer()
 {
 	// ターゲットを戻す
 	FRAMEWORK.SetRenderTarget();
+}
 
+void SceneBase::SetGBufferTexture(UINT startSlot)
+{
 	// GBufferをシェーダに渡す
 	ID3D11ShaderResourceView* srv[GBuffer::NUM]
 	{

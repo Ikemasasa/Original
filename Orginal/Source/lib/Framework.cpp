@@ -306,7 +306,7 @@ void Framework::Clear()
     mDeviceContext->OMSetRenderTargets(1, mRenderTargetView.GetAddressOf(), mDepthStencilView.Get());
 
     // アルファブレンドをセット
-    Blend::Set(mDeviceContext.Get(), Blend::BLEND_MODE::ALPHA);
+    Blend::Set(Blend::BLEND_MODE::ALPHA);
 
     // 各種デフォルトを設定
     ResetParam();

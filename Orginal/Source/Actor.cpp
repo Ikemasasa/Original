@@ -56,7 +56,7 @@ void Actor::UpdateWorld()
 	{
 		// 現フレームのワールド行列を計算
 
-		DirectX::XMMATRIX S, R, Rx, Ry, Rz, T;
+		DirectX::XMMATRIX S, R, T;
 
 		// スケール
 		S = DirectX::XMMatrixScaling(mScale.x, mScale.y, mScale.z);

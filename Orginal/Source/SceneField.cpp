@@ -1,6 +1,7 @@
 #include "SceneField.h"
 
 #include "lib/Audio.h"
+#include "lib/Blend.h"
 #include "lib/Renderer2D.h"
 #include "lib/Skybox.h"
 
@@ -79,21 +80,14 @@ void SceneField::Render()
 	DirectX::XMFLOAT4X4 proj = Singleton<CameraManager>().GetInstance().GetProj();
 	DirectX::XMFLOAT4 lightDir = mLight.GetLightDir();
 
-	//mShadowMap.Activate(lightDir, SHADOWMAP_TEXTURE_SLOT);
-	//mActorManager->Render(mShadowMap.GetShader(), view, projection, lightDir);
-	//mShadowMap.Deactivate(SHADOWMAP_TEXTURE_SLOT);
-	
-	// Gばっふぁ に書き込み
-	ActivateGBuffer();
-	mActorManager->Render(mGBufferShader.get(), view, proj, lightDir);
-	Singleton<EffectManager>().GetInstance().Render(view, proj);
-	DeactivateGBuffer();
+	mShadowMap.Activate(lightDir, SHADOWMAP_TEXTURE_SLOT);
+	mActorManager->Render(mShadowMap.GetShader(), view, proj, lightDir);
+	mShadowMap.Deactivate(SHADOWMAP_TEXTURE_SLOT);
 
 	// シーンターゲットに書き込み
 	mSceneTarget.Activate();
 	mSkybox->Render(view, proj);
-	mGBufferColor.Render(nullptr);
-	RenderLight();
+	mActorManager->Render(view, proj, lightDir);
 	mSceneTarget.Deactivate();
 
 	mSceneTarget.Render(mPostEffect.get());
@@ -105,14 +99,4 @@ void SceneField::Release()
 
 	mSkybox->Release();
 	mPostEffect->UnLoad();
-}
-
-void SceneField::RenderLight()
-{
-	Vector2 pos(0.0f, 0.0f);
-	Vector2 scale(1.0f, 1.0f);
-	Vector2 texPos(0.0f, 0.0f);
-	Vector2 size(Define::SCREEN_WIDTH, Define::SCREEN_HEIGHT);
-
-	Renderer2D::GetInstance().Render(mDeferredDirLightShader.get(), pos, scale, texPos, size);
 }
