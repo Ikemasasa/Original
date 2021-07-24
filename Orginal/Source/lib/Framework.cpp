@@ -180,21 +180,6 @@ HRESULT Framework::CreateSapmler()
             sd.MinLOD = 0;
             sd.MaxLOD = D3D11_FLOAT32_MAX;
             break;
-
-        case SS_SHADOW:
-            ZeroMemory(&sd, sizeof(D3D11_SAMPLER_DESC));
-            sd.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_MIP_POINT;
-            sd.AddressU = sd.AddressV = sd.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
-            sd.BorderColor[0] = 1.0f;
-            sd.BorderColor[1] = 1.0f;
-            sd.BorderColor[2] = 1.0f;
-            sd.BorderColor[3] = 1.0f;
-            sd.ComparisonFunc = D3D11_COMPARISON_LESS_EQUAL;
-            sd.MaxAnisotropy = 0;
-            sd.MipLODBias = 0;
-            sd.MinLOD = 0;
-            sd.MaxLOD = D3D11_FLOAT32_MAX;
-            break;
         }
 
         hr = mDevice->CreateSamplerState(&sd, mSamplerState[i].GetAddressOf());
@@ -348,8 +333,7 @@ void Framework::ResetParam()
     mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     ID3D11SamplerState* ss[] = {
-        mSamplerState[SS_CLAMP].Get(),
-        mSamplerState[SS_SHADOW].Get(),
+        mSamplerState[SS_CLAMP].Get()
     };
-    mDeviceContext->PSSetSamplers(0, 2, ss);
+    mDeviceContext->PSSetSamplers(0, 1, ss);
 }

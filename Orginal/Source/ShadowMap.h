@@ -1,9 +1,10 @@
 #pragma once
-#include <d3d11.h>
 #include <DirectXMath.h>
 #include <memory>
-#include <wrl.h>
 
+#include "GaussianBlur.h"
+
+#include "lib/ConstantBuffer.h"
 #include "lib/RenderTarget.h"
 #include "lib/Shader.h"
 #include "lib/Vector.h"
@@ -18,10 +19,13 @@ class ShadowMap
 	static constexpr float SHADOWMAP_X = 4098;
 	static constexpr float SHADOWMAP_Y = 4098;
 
+	static constexpr float BLUR_STRENGTH = 20;
+
 	RenderTarget mShadowMap;
 	RenderTarget mVarianceShadowMap;
+	GaussianBlur mGaussianBlur;
 	std::unique_ptr<Shader> mShader;
-	Microsoft::WRL::ComPtr<ID3D11Buffer> mConstBuffer;
+	ConstantBuffer mConstBuffer;
 
 	Vector3 mTarget;
 

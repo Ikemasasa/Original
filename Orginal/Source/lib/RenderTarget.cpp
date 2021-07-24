@@ -6,7 +6,7 @@
 #include "Shader.h"
 #include "Window.h"
 
-void RenderTarget::Initialize(float width, float height)
+void RenderTarget::Initialize(float width, float height, DXGI_FORMAT format)
 {
 	ID3D11Device* device = FRAMEWORK.GetDevice();
 
@@ -16,15 +16,18 @@ void RenderTarget::Initialize(float width, float height)
 		height = Window::GetInstance().GetHeight();
 	}
 
+	// サイズ保存
+	mSize = Vector2(width, height);
+
 	{
 		// レンダーターゲット設定
 		D3D11_TEXTURE2D_DESC td;
 		ZeroMemory(&td, sizeof(D3D11_TEXTURE2D_DESC));
-		td.Width = static_cast<UINT>(width);
-		td.Height = static_cast<UINT>(height);
+		td.Width = static_cast<UINT>(mSize.x);
+		td.Height = static_cast<UINT>(mSize.y);
 		td.MipLevels = 1;
 		td.ArraySize = 1;
-		td.Format = DXGI_FORMAT_R16G16B16A16_TYPELESS;
+		td.Format = format;
 		td.SampleDesc.Count = 1;
 		td.SampleDesc.Quality = 0;
 		td.Usage = D3D11_USAGE_DEFAULT;
@@ -38,7 +41,7 @@ void RenderTarget::Initialize(float width, float height)
 		//	レンダーターゲットビュー
 		D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
 		ZeroMemory(&rtvDesc, sizeof(D3D11_RENDER_TARGET_VIEW_DESC));
-		rtvDesc.Format = DXGI_FORMAT_R16G16B16A16_UNORM;
+		rtvDesc.Format = format;
 		rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 		hr = device->CreateRenderTargetView(mRTTexture.Get(), &rtvDesc, mRTV.GetAddressOf());
 	
@@ -57,8 +60,8 @@ void RenderTarget::Initialize(float width, float height)
 		// 深度ステンシル設定
 		D3D11_TEXTURE2D_DESC td;
 		ZeroMemory(&td, sizeof(D3D11_TEXTURE2D_DESC));
-		td.Width = static_cast<UINT>(width);
-		td.Height = static_cast<UINT>(height);
+		td.Width = static_cast<UINT>(mSize.x);
+		td.Height = static_cast<UINT>(mSize.y);
 		td.MipLevels = 1;
 		td.ArraySize = 1;
 		td.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -113,6 +116,16 @@ void RenderTarget::Activate(UINT textureSlot)
 		context->OMSetRenderTargets(0, nullptr, mDSV.Get());
 	}
 
+
+	// ビューポート設定
+	D3D11_VIEWPORT viewport;
+	viewport.Width = mSize.x;
+	viewport.Height = mSize.y;
+	viewport.MinDepth = 0.0f;
+	viewport.MaxDepth = 1.0f;
+	viewport.TopLeftX = 0;
+	viewport.TopLeftY = 0;
+	context->RSSetViewports(1, &viewport);
 }
 
 void RenderTarget::Deactivate(UINT textureSlot)
@@ -156,6 +169,7 @@ void RenderTarget::CreateDSV(float width, float height, DXGI_FORMAT format)
 
 	// 深度ステンシル設定
 	{
+
 		// 深度ステンシルテクスチャ生成
 		D3D11_TEXTURE2D_DESC td;
 		ZeroMemory(&td, sizeof(D3D11_TEXTURE2D_DESC));
