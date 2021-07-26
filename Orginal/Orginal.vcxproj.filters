@@ -342,6 +342,9 @@
     <ClInclude Include="Source\Light.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Source\lib\ConstantBuffer.h">
+      <Filter>lib\ヘッダーファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\lib\Blend.cpp">
@@ -583,6 +586,9 @@
     </ClCompile>
     <ClCompile Include="Source\GaussianBlur.cpp">
       <Filter>ソース ファイル\Scene\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\lib\ConstantBuffer.cpp">
+      <Filter>lib\ソースファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

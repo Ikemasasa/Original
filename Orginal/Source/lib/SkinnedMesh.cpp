@@ -153,16 +153,25 @@ void SkinnedMesh::LoadFBX(ID3D11Device* device, const char* filename)
 
 				FbxLayerElementArrayTemplate<FbxVector4>* index = &element->GetDirectArray();
 				int indexCount = index->GetCount();
-				for (int j = 0; j < indexCount; j++) {
+				for (int i = 0; i < indexCount; i++) {
 					// FbxColor取得
-					FbxVector4 v = index->GetAt(j);
+					FbxVector4 v = index->GetAt(i);
 					// DWORD型のカラー作成        
-					mVertices[j + mVerticesNum].tangent.x = (float)v[0];
-					mVertices[j + mVerticesNum].tangent.y = (float)v[1];
-					mVertices[j + mVerticesNum].tangent.z = (float)v[2];
+					mVertices[i + mVerticesNum].tangent.x = (float)v[0];
+					mVertices[i + mVerticesNum].tangent.y = (float)v[1];
+					mVertices[i + mVerticesNum].tangent.z = (float)v[2];
 				}
 			}
-			
+			else
+			{
+				// tangent上方がなかったら仮のtangentを入れとく
+				for (int i = 0; i < num; ++i)
+				{
+					mVertices[i + mVerticesNum].tangent.x = 0.0f;
+					mVertices[i + mVerticesNum].tangent.y = 1.0f;
+					mVertices[i + mVerticesNum].tangent.z = 0.0f;
+				}
+			}
 
 
 		}
@@ -184,6 +193,18 @@ void SkinnedMesh::LoadFBX(ID3D11Device* device, const char* filename)
 					mVertices[j + mVerticesNum].binormal.x = (float)v[0];
 					mVertices[j + mVerticesNum].binormal.y = (float)v[1];
 					mVertices[j + mVerticesNum].binormal.z = (float)v[2];
+				}
+			}
+			else
+			{
+				// binormal情報がなかったら仮のbinormalを入れとく
+				for (int i = 0; i < num; ++i)
+				{
+					auto& vertex = mVertices[i + mVerticesNum];
+					DirectX::XMVECTOR binormal = DirectX::XMVector3Cross(DirectX::XMLoadFloat3(&vertex.normal), DirectX::XMLoadFloat3(&vertex.tangent));
+					binormal = DirectX::XMVector3Normalize(binormal);
+
+					DirectX::XMStoreFloat3(&vertex.binormal, binormal);
 				}
 			}
 
@@ -221,7 +242,6 @@ void SkinnedMesh::LoadFBX(ID3D11Device* device, const char* filename)
 				mMaterialColors[m].z = static_cast<float>(color[2] * f);
 				mMaterialColors[m].w = 1.0f;
 			}
-
 			// テクスチャ読み込み
 			auto LoadTexture = [](FbxProperty* prop, MaterialSprite* spr, char fbxDir[STR_MAX])
 			{
@@ -259,7 +279,7 @@ void SkinnedMesh::LoadFBX(ID3D11Device* device, const char* filename)
 
 					// 相対パス作成
 					std::string work = fbxDir; // AA/BB/
-					work += imgName;		   // AA/BB/*.fbx
+					work += imgName;		   // AA/BB/*.png
 					std::wstring relative = ConvertString::ConvertToWstirng(work);
 
 					// 読み込み
@@ -279,72 +299,6 @@ void SkinnedMesh::LoadFBX(ID3D11Device* device, const char* filename)
 
 			prop = material->FindProperty(FbxSurfaceMaterial::sNormalMap);
 			if (prop.IsValid()) LoadTexture(&prop, &mMaterials[m].mtlSpr[1], mFbxDir); // NormalMap
-
-			//const char* path = NULL;
-			//int fileTextureCount = prop.GetSrcObjectCount<FbxFileTexture>();
-			//if (fileTextureCount > 0)
-			//{
-			//	FbxFileTexture* fileTex = prop.GetSrcObject<FbxFileTexture>(0);
-			//	path = fileTex->GetFileName();
-			//}
-			//else
-			//{
-			//	int numLayer = prop.GetSrcObjectCount<FbxLayeredTexture>();
-			//	if (numLayer > 0)
-			//	{
-			//		FbxLayeredTexture* layerTex = prop.GetSrcObject<FbxLayeredTexture>(0);
-			//		FbxFileTexture* fileTex = layerTex->GetSrcObject<FbxFileTexture>(0);
-			//		path = fileTex->GetFileName();
-			//	}
-			//}
-
-			//if (path != NULL)
-			//{
-			//	// 相対パスに変換
-			//	size_t len = strnlen_s(path, STR_MAX);
-			//	const char* imgName = &path[len];
-			//	for (size_t i = 0; i < len; ++i)
-			//	{
-			//		imgName--;
-			//		if (*imgName == '/') { ++imgName; break; }
-			//		if (*imgName == '\\') { ++imgName; break; }
-			//	}
-			//	char relativeName[STR_MAX] = {};
-			//	strcpy_s(relativeName, STR_MAX, mFbxDir); // fbxのパスをコピー
-			//	// strcat_s(relativeName, STR_MAX, "texture/"); // textureフォルダ
-			//	strcat_s(relativeName, STR_MAX, imgName); // pngのファイル名を連結
-
-			//	// ワイド文字に変換
-			//	wchar_t filename[STR_MAX];
-			//	setlocale(LC_ALL, "Japanese_Japan.932");
-			//	size_t ret = 0;
-			//	mbstowcs_s(&ret, mMaterials[m].filename, STR_MAX, imgName, _TRUNCATE);
-			//	mbstowcs_s(&ret, filename, STR_MAX, relativeName, _TRUNCATE);
-
-			//	// テクスチャ読み込み
-			//	mMaterials[m].diffuse.Load(filename);
-
-			//	// ノーマルマップ
-			//	char normalMapName[STR_MAX] = {};
-			//	strcpy_s(normalMapName, STR_MAX, mFbxDir); // fbxのパスをコピー
-			//	strcat_s(normalMapName, STR_MAX, "N"); // pngのファイル名を連結
-			//	strcat_s(normalMapName, STR_MAX, imgName); // pngのファイル名を連結
-			//	mbstowcs_s(&ret, filename, STR_MAX, normalMapName, _TRUNCATE);
-
-			//	mMaterials[m].normal.Load(filename);
-			//}
-			//else
-			//{
-			//	mMaterials[m].diffuse.Load(L"");
-			//	mMaterials[m].normal.Load(L"");
-			//}
-
-		//}
-		//else
-		//{
-		//	mMaterials[m].diffuse.Load(L"");
-		//	mMaterials[m].normal.Load(L"");
-		//}
 		}
 		mMaterials[m].faceNum = num / 3;
 

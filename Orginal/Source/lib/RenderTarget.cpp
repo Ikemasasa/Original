@@ -38,7 +38,6 @@ void RenderTarget::Initialize(float width, float height)
 		//	レンダーターゲットビュー
 		D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
 		ZeroMemory(&rtvDesc, sizeof(D3D11_RENDER_TARGET_VIEW_DESC));
-		memset(&rtvDesc, 0, sizeof(rtvDesc));
 		rtvDesc.Format = DXGI_FORMAT_R16G16B16A16_UNORM;
 		rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 		hr = device->CreateRenderTargetView(mRTTexture.Get(), &rtvDesc, mRTV.GetAddressOf());
@@ -54,7 +53,6 @@ void RenderTarget::Initialize(float width, float height)
 		if (FAILED(hr)) return;
 	}
 
-	// 深度ステンシル設定
 	{
 		// 深度ステンシル設定
 		D3D11_TEXTURE2D_DESC td;
@@ -98,14 +96,23 @@ void RenderTarget::Activate(UINT textureSlot)
 
 
 	// レンダーターゲットビュー設定
-	ID3D11RenderTargetView* targets[] = {
-		mRTV.Get(),
-	};
+	float clearColor[4] = { 0,0,0,0 };
+	if (mRTV.Get()) context->ClearRenderTargetView(mRTV.Get(), clearColor);
+	if (mDSV.Get()) context->ClearDepthStencilView(mDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-	context->OMSetRenderTargets( 1, targets, mDSV.Get());
-	float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
-	if(mRTV.Get()) context->ClearRenderTargetView(mRTV.Get(), clearColor);
-	if(mDSV.Get()) context->ClearDepthStencilView(mDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	if (mRTV.Get())
+	{
+		ID3D11RenderTargetView* targets[] = {
+			mRTV.Get(),
+		};
+
+		context->OMSetRenderTargets( 1, targets, mDSV.Get());
+	}
+	else
+	{
+		context->OMSetRenderTargets(0, nullptr, mDSV.Get());
+	}
+
 }
 
 void RenderTarget::Deactivate(UINT textureSlot)
@@ -139,45 +146,49 @@ void RenderTarget::SetTexture(UINT slot)
 	FRAMEWORK.GetContext()->PSSetShaderResources(slot, 1, mSRV.GetAddressOf());
 }
 
-void RenderTarget::CreateRTV(D3D11_TEXTURE2D_DESC* td, D3D11_RENDER_TARGET_VIEW_DESC* rtvd)
-{
-	ID3D11Device* device = FRAMEWORK.GetDevice();
-
-	// レンダーターゲット設定
-	{
-		// テクスチャ生成
-		device->CreateTexture2D(td, NULL, mRTTexture.GetAddressOf());
-
-		//	レンダーターゲットビュー
-		device->CreateRenderTargetView(mRTTexture.Get(), rtvd, mRTV.GetAddressOf());
-	}
-}
-
-void RenderTarget::CreateDSV(D3D11_TEXTURE2D_DESC* td, D3D11_DEPTH_STENCIL_VIEW_DESC* dsvd)
+void RenderTarget::CreateDSV(float width, float height, DXGI_FORMAT format)
 {
 	HRESULT hr = S_OK;
 
 	ID3D11Device* device = FRAMEWORK.GetDevice();
 
+	// シャドウマップ用、必要になったら色々変えようかな
+
 	// 深度ステンシル設定
 	{
 		// 深度ステンシルテクスチャ生成
-		device->CreateTexture2D(td, NULL, mDepth.GetAddressOf());
+		D3D11_TEXTURE2D_DESC td;
+		ZeroMemory(&td, sizeof(D3D11_TEXTURE2D_DESC));
+		td.Width = static_cast<UINT>(width);
+		td.Height = static_cast<UINT>(height);
+		td.MipLevels = 1;
+		td.ArraySize = 1;
+		td.Format = format;
+		td.SampleDesc.Count = 1;
+		td.SampleDesc.Quality = 0;
+		td.Usage = D3D11_USAGE_DEFAULT;
+		td.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+		td.CPUAccessFlags = 0;
+		td.MiscFlags = 0;
+		device->CreateTexture2D(&td, NULL, mDepth.GetAddressOf());
 
 		// 深度ステンシルビュー生成
-		device->CreateDepthStencilView(mDepth.Get(), dsvd, mDSV.GetAddressOf());
+		D3D11_DEPTH_STENCIL_VIEW_DESC dsvd;
+		ZeroMemory(&dsvd, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
+		dsvd.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		dsvd.Texture2D.MipSlice = 0;\
+		device->CreateDepthStencilView(mDepth.Get(), &dsvd, mDSV.GetAddressOf());
+
+		// SRV作成
+		D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
+		ZeroMemory(&srvd, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
+		srvd.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		srvd.Texture2D.MipLevels = 1;
+		device->CreateShaderResourceView(mDepth.Get(), &srvd, mSRV.GetAddressOf());
 	}
-}
 
-void RenderTarget::CreateSRV(D3D11_SHADER_RESOURCE_VIEW_DESC* srvd, bool isDepth)
-{
-	ID3D11Device* device = FRAMEWORK.GetDevice();
-
-	ID3D11Resource* tex = nullptr;
-	if (!isDepth) tex = mRTTexture.Get();		// レンダーターゲットテクスチャ
-	else		  tex = mDepth.Get();			// 深度ステンシルテクスチャ
-
-	// SRV作成
-	device->CreateShaderResourceView(tex, srvd, mSRV.GetAddressOf());
 
 }
+

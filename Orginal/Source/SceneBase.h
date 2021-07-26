@@ -28,6 +28,8 @@ protected:
 
 	// ディファード
 	std::unique_ptr<Shader> mDeferredDirLightShader;
+
+	ConstantBuffer mCBForDeferred;
 	struct CBForDeferredPerFrame
 	{
 		Vector4 eyePos;		//カメラ座標
@@ -39,7 +41,9 @@ protected: // 関数
 	// Gbuffer関連
 	void InitializeGBuffer();
 	void ActivateGBuffer(UINT startSlot = 0);
-	void DeactivateGBuffer(UINT startSlot = 0);
+	void DeactivateGBuffer();
+	void SetGBufferTexture(UINT startSlot = 0);
+
 
 public:
 	SceneBase() = default;

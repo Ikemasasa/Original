@@ -26,39 +26,8 @@ void ShadowMap::Initialize()
 	bd.CPUAccessFlags = 0;
 	device->CreateBuffer(&bd, NULL, mConstBuffer.GetAddressOf());
 	
-	// 深度ステンシル設定
-	{
-		// 深度ステンシル設定
-		D3D11_TEXTURE2D_DESC td;
-		ZeroMemory(&td, sizeof(D3D11_TEXTURE2D_DESC));
-		td.Width = SHADOWMAP_X;
-		td.Height = SHADOWMAP_Y;
-		td.MipLevels = 1;
-		td.ArraySize = 1;
-		td.Format = DXGI_FORMAT_R24G8_TYPELESS;
-		td.SampleDesc.Count = 1;
-		td.SampleDesc.Quality = 0;
-		td.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
-
-		// 深度ステンシルビュー設定
-		D3D11_DEPTH_STENCIL_VIEW_DESC dsvd;
-		ZeroMemory(&dsvd, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
-		dsvd.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-		dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-		dsvd.Texture2D.MipSlice = 0;
-
-		mShadowMap.CreateDSV(&td, &dsvd);
-
-		// SRV
-		D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
-		ZeroMemory(&srvd, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
-		srvd.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
-		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-		srvd.Texture2D.MipLevels = 1;
-
-		mShadowMap.CreateSRV(&srvd, true);
-	}
-
+	// 深度ステンシルビュー作成
+	mShadowMap.CreateDSV(SHADOWMAP_X, SHADOWMAP_Y, DXGI_FORMAT_R24G8_TYPELESS);
 
 	mTarget = Vector3::Zero();
 }

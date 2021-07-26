@@ -16,7 +16,6 @@ class SceneField : public SceneBase
 	std::unique_ptr<ActorManager> mActorManager = nullptr;
 	std::unique_ptr<Skybox>		  mSkybox		= nullptr;
 
-	void RenderLight();
 public:
 	SceneField();
 	~SceneField();

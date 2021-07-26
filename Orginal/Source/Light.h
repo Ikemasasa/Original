@@ -2,12 +2,12 @@
 #include <d3d11.h>
 #include <wrl.h>
 
+#include "lib/ConstantBuffer.h"
 #include "lib/Vector.h"
-
 
 class Light
 {
-	Microsoft::WRL::ComPtr<ID3D11Buffer> mConstantBuffer;
+	ConstantBuffer mCB;
 
 	Vector4 mLightDir;
 	Vector4 mLightColor;

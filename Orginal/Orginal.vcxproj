@@ -181,6 +181,7 @@
     <ClInclude Include="Source\ItemSelect.h" />
     <ClInclude Include="Source\lib\CollisionStructs.h" />
     <ClInclude Include="Source\lib\ComputeShader.h" />
+    <ClInclude Include="Source\lib\ConstantBuffer.h" />
     <ClInclude Include="Source\lib\ConvertString.h" />
     <ClInclude Include="Source\lib\Audio.h" />
     <ClInclude Include="Source\lib\FontTexture.h" />
@@ -270,6 +271,7 @@
     <ClCompile Include="Source\ItemData.cpp" />
     <ClCompile Include="Source\ItemSelect.cpp" />
     <ClCompile Include="Source\lib\ComputeShader.cpp" />
+    <ClCompile Include="Source\lib\ConstantBuffer.cpp" />
     <ClCompile Include="Source\lib\ConvertString.cpp" />
     <ClCompile Include="Source\lib\Audio.cpp" />
     <ClCompile Include="Source\lib\Blend.cpp" />

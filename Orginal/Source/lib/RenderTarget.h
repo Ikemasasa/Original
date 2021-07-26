@@ -14,7 +14,6 @@ class RenderTarget
 
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mSRV = nullptr;
 
-
 public:
 	RenderTarget() = default;
 	~RenderTarget() = default;
@@ -24,12 +23,11 @@ public:
 	void Deactivate(UINT textureSlot = 0);
 	void SetTexture(UINT slot);
 
-	void CreateRTV(D3D11_TEXTURE2D_DESC* td, D3D11_RENDER_TARGET_VIEW_DESC* rtvd);
-	void CreateDSV(D3D11_TEXTURE2D_DESC* td, D3D11_DEPTH_STENCIL_VIEW_DESC* dsvd);
-	void CreateSRV(D3D11_SHADER_RESOURCE_VIEW_DESC* srvd, bool isDepth = false);
+	void CreateDSV(float width, float height, DXGI_FORMAT format);
 
 	void Render(Shader* shader) const;
 
+	ID3D11DepthStencilView* GetDSV() const { return mDSV.Get(); }
 	ID3D11RenderTargetView* GetRTV() const { return mRTV.Get(); }
 	ID3D11ShaderResourceView* GetSRV() const { return mSRV.Get();  }
 };
