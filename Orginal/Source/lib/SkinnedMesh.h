@@ -189,6 +189,12 @@ public:
 		DirectX::XMFLOAT3* outNormal,
 		float* outLen);
 
+	int RayPick(
+		const RAY& ray, 
+		DirectX::XMFLOAT3* outPos,
+		DirectX::XMFLOAT3* outNormal,
+		float* outLen);
+
 	void ChangeShader(Shader* shader);
 
 	// ƒ‚ƒfƒ‹‚Ò‚Á‚½‚è‚Ì’¼•û‘Ì(ƒ[ƒJƒ‹)

@@ -30,6 +30,8 @@ struct RAY
 	Vector3 point;		// Žn“_
 	Vector3 direction;	// •ûŒü
 	float length;		// ’·‚³
+
+	Vector3 GetRay() const { return direction * length; }
 };
 
 struct CAPSULE

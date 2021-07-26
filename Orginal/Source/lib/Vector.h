@@ -128,7 +128,7 @@ public:
 		*this = DirectX::XMVector3Normalize(DirectX::XMVECTOR(*this));
 	}
 
-	void Normalize(Vector3* out)
+	void Normalize(Vector3* out) const
 	{
 		*out = DirectX::XMVector3Normalize(DirectX::XMVECTOR(*this));
 	}

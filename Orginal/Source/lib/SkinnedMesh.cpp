@@ -1014,6 +1014,11 @@ int SkinnedMesh::RayPick(const DirectX::XMFLOAT3& sp, const DirectX::XMFLOAT3& e
 		tempN = DirectX::XMVector3Cross(tempV, ca);
 		if (DirectX::XMVectorGetX(DirectX::XMVector3Dot(tempN, nor)) < 0) continue; // 内積の結果マイナスなら外側
 
+		// nan チェック
+		if (isnan(DirectX::XMVectorGetX(cp))) continue;
+		if (isnan(DirectX::XMVectorGetY(cp))) continue;
+		if (isnan(DirectX::XMVectorGetZ(cp))) continue;
+
 		// 情報保存
 		position = cp;
 		normal = nor;
@@ -1030,8 +1035,6 @@ int SkinnedMesh::RayPick(const DirectX::XMFLOAT3& sp, const DirectX::XMFLOAT3& e
 	// 最も近いヒット位置までの距離
 	*outLen = neart;
 	return ret;
-
-
 }
 
 void SkinnedMesh::ChangeShader(Shader* shader)
