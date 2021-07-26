@@ -563,7 +563,7 @@ void SkinnedMesh::Skinning()
 	
 	mSkinningShader->Run(cb.groupNumX, cb.groupNumY, cb.groupNumZ);
 
-	// 計算結果を読み込む
+	// 計算結果を読み込む(ここめちゃ重い)
 	{
 		ID3D11Buffer* result = nullptr;
 		mSkinningShader->CreateResultBuffer(&result);
@@ -820,10 +820,10 @@ void SkinnedMesh::Initialize(const char* fbxFilename)
 	if (mBoneNum > 0)
 	{
 		mSkinningShader = std::make_unique<ComputeShader>(L"Shaders/ComputeShaders/Skinning.fx", "main");
-		mSkinningShader->CreateStructuredBuffer(mVerticesSource, mVerticesNum, sizeof(VertexForSkinning));
-		mSkinningShader->CreateStructuredBuffer(mWeights, mVerticesNum, sizeof(Weight));
-		mSkinningShader->CreateStructuredBuffer(nullptr, mBoneNum, sizeof(Matrix));
-		mSkinningShader->CreateRWStructuredBuffer(mVerticesNum, sizeof(VertexForSkinning));
+		mSkinningShader->CreateStructuredBuffer(mVerticesSource, mVerticesNum, sizeof(VertexForSkinning)); // 頂点ソース
+		mSkinningShader->CreateStructuredBuffer(mWeights, mVerticesNum, sizeof(Weight));				   // ウェイト
+		mSkinningShader->CreateStructuredBuffer(nullptr, mBoneNum, sizeof(Matrix));						   // ボーン行列
+		mSkinningShader->CreateRWStructuredBuffer(mVerticesNum, sizeof(VertexForSkinning));				   // 変換後頂点
 		//mSkinningShader->CreateRWByteaddressBuffer(mVertices, mVerticesNum, sizeof(Vertex));
 		mSkinningShader->CreateConstantBuffer(sizeof(CbufferForSkinning));
 
