@@ -7,7 +7,7 @@ struct PSInput
 	float4 color : COLOR;
 };
 
-PSInput VSMain(VSInput input)
+PSInput VSMain(VSInput2D input)
 {
 	PSInput output = (PSInput)0;
 	output.pos = float4(input.pos, 1);
@@ -24,7 +24,7 @@ float4 PSMain(PSInput input) : SV_TARGET0
 	//color = 1 - color;
 	// 輝度調整
 	color.rgb += 0.0;
-	color.rgb *= 1.2;
+	color.rgb *= 1.0;
 
 	// コントラスト調整
 	// 0: 0.5   1:そのまま

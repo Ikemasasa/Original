@@ -1,5 +1,13 @@
 #include "General.fx"
 
+cbuffer CBSky : register(b0)
+{
+	float4 EyePos;
+	matrix InverseView;
+	matrix InverseProj;
+};
+
+
 struct PSInput
 {
 	float4 pos	    : SV_POSITION;
@@ -16,7 +24,7 @@ float2 EquirectangularProjection(float3 v)
 	return tex;
 }
 
-PSInput VSMain( VSInput input )
+PSInput VSMain( VSInput2D input )
 {
 	PSInput output = (PSInput)0;
 

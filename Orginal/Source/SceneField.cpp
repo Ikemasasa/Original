@@ -18,9 +18,6 @@
 
 SceneField::SceneField()
 {
-	// Gバッファ作成
-	InitializeGBuffer();
-
 	mRamp.Load(L"Data/Image/Ramp.png");
 	mRamp.Set(15);
 

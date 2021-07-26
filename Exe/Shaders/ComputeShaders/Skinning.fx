@@ -58,9 +58,9 @@ StructuredBuffer<matrix>   KeyMatrices	  : register(t2);
 //}
 
 
+// 下のやり方だと、cpu側でMapしたときめちゃめちゃ重くなるから
+// 上でのやり方のバグがなくなれば上でのやり方に変えるよろし
 RWStructuredBuffer<Vertex> OutVertices : register(u0);
-
-
 [numthreads(256, 1, 1)]
 void main( uint3 DTid : SV_DispatchThreadID )
 {

@@ -21,23 +21,7 @@ cbuffer CONSTANT_BUFFER : register(b0)
 cbuffer CBShadow : register(b1)
 {
 	matrix ShadowVP; // シャドウマップ用のView Projection
-}
-
-cbuffer CBSky : register(b2)
-{
-	float4 EyePos;
-	matrix InverseView;
-	matrix InverseProj;
 };
-
-#define BUFFER_SIZE 256
-cbuffer CBGaussianBlur : register(b3)
-{
-	float4 Weight[BUFFER_SIZE];
-	float  KarnelSize;
-	float2 Texcel;
-	float  Dummy;
-}
 
 // データフォーマット
 struct VSInput
@@ -48,4 +32,12 @@ struct VSInput
 	float4 color    : COLOR;
 	float3 tangent  : TANGENT;
 	float3 binormal : BINORMAL;
+};
+
+struct VSInput2D
+{
+	float3 pos	  : POSITION;
+	float3 normal : NORMAL;
+	float2 tex    : TEXCOORD;
+	float4 color  : COLOR;
 };
