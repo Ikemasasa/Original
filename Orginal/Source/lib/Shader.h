@@ -3,9 +3,10 @@
 
 class Shader
 {
-	ID3D11VertexShader* mVertexShader = nullptr;
-	ID3D11PixelShader*  mPixelShader  = nullptr;
-	ID3D11InputLayout*  mVertexLayout = nullptr;
+	ID3D11VertexShader*   mVertexShader   = nullptr;
+	ID3D11PixelShader*    mPixelShader    = nullptr;
+	ID3D11GeometryShader* mGeometryShader = nullptr;
+	ID3D11InputLayout*    mVertexLayout   = nullptr;
 
 public:
 	Shader() = default;
@@ -13,7 +14,8 @@ public:
 
 	bool Load(LPCWSTR filename, LPCSTR VSFunc, LPCSTR PSFunc, D3D11_INPUT_ELEMENT_DESC* layout = nullptr, UINT numElements = 0);
 	bool Load2D(LPCWSTR filename, LPCSTR VSFunc, LPCSTR PSFunc);
-	//bool Load(LPCWSTR filename, LPCSTR VSFunc, LPCSTR PSFunc, LPCSTR vsShaderModel = "vs_5_0", LPCSTR psShaderModel = "ps_5_0");
+
+
 	void UnLoad();
 	void Activate() const;
 	void Deactivate() const;

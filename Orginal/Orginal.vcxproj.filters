@@ -345,6 +345,12 @@
     <ClInclude Include="Source\lib\ConstantBuffer.h">
       <Filter>lib\ヘッダーファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Particle.h">
+      <Filter>lib\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\lib\ShaderManager.h">
+      <Filter>lib\ヘッダーファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\lib\Blend.cpp">
@@ -590,6 +596,9 @@
     <ClCompile Include="Source\lib\ConstantBuffer.cpp">
       <Filter>lib\ソースファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Source\lib\ShaderManager.cpp">
+      <Filter>lib\ソースファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="テキスト1.txt">
@@ -637,6 +646,9 @@
       <Filter>lib\Shader\Deferred</Filter>
     </None>
     <None Include="Shaders\GaussianBlur.fx">
+      <Filter>lib\Shader</Filter>
+    </None>
+    <None Include="Shaders\PointSprite.fx">
       <Filter>lib\Shader</Filter>
     </None>
   </ItemGroup>

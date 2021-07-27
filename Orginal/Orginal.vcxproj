@@ -188,6 +188,7 @@
     <ClInclude Include="Source\lib\RenderTarget.h" />
     <ClInclude Include="Source\lib\ResourceManager.h" />
     <ClInclude Include="Source\lib\Shader.h" />
+    <ClInclude Include="Source\lib\ShaderManager.h" />
     <ClInclude Include="Source\lib\SkinnedMesh.h" />
     <ClInclude Include="Source\lib\Sprite.h" />
     <ClInclude Include="Source\lib\TVector.h" />
@@ -203,6 +204,7 @@
     <ClInclude Include="Source\MenuStatus.h" />
     <ClInclude Include="Source\MeshManager.h" />
     <ClInclude Include="Source\MeshDataLoader.h" />
+    <ClInclude Include="Source\Particle.h" />
     <ClInclude Include="Source\Primitive.h" />
     <ClInclude Include="Source\ProductionAttack.h" />
     <ClInclude Include="Source\Actor.h" />
@@ -284,6 +286,7 @@
     <ClCompile Include="Source\lib\RenderTarget.cpp" />
     <ClCompile Include="Source\lib\ResourceManager.cpp" />
     <ClCompile Include="Source\lib\Shader.cpp" />
+    <ClCompile Include="Source\lib\ShaderManager.cpp" />
     <ClCompile Include="Source\lib\SkinnedMesh.cpp" />
     <ClCompile Include="Source\lib\Skybox.cpp" />
     <ClCompile Include="Source\lib\Renderer2D.cpp" />
@@ -381,6 +384,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\GaussianBlur.fx">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\PointSprite.fx">
       <FileType>Document</FileType>
     </None>
   </ItemGroup>

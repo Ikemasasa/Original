@@ -3,6 +3,7 @@
 #include <D3D11.h>
 #include <list>
 
+#include "ShaderManager.h"
 
 class ResourceManager
 {
@@ -29,70 +30,9 @@ private:
         }
     };
 
-    struct ResourceVertexShaders
-    {
-        int iRefNum;
-        WCHAR path[STR_MAX];
-        CHAR func[FUNCSTR_MAX];
-        ID3D11VertexShader* vs;
-        ID3D11InputLayout* layout;
-        ResourceVertexShaders() : iRefNum(0), vs(NULL), layout(NULL) { path[0] = '\0'; func[0] = '\0'; }
-        void Release(bool bForce = false)
-        {
-            if (--iRefNum <= 0) bForce = true;
-
-            if (bForce)
-            {
-                vs->Release();
-                layout->Release();
-                vs = NULL;
-                layout = NULL;
-            }
-        }
-    };
-
-    struct ResourcePixelShaders
-    {
-        int iRefNum;
-        WCHAR path[STR_MAX];
-        CHAR func[FUNCSTR_MAX];
-        ID3D11PixelShader* ps;
-        ResourcePixelShaders() : iRefNum(0), ps(NULL) { path[0] = '\0'; func[0] = '\0';}
-        void Release(bool bForce = false)
-        {
-            if (--iRefNum <= 0) bForce = true;
-
-            if (bForce)
-            {
-                ps->Release();
-                ps = NULL;
-            }
-        }
-    };
-
-    struct ResourceComputeShaders
-    {
-        int iRefNum;
-        WCHAR path[STR_MAX];
-        CHAR func[FUNCSTR_MAX];
-        ID3D11ComputeShader* cs;
-        ResourceComputeShaders() : iRefNum(0), cs(NULL) { path[0] = '\0'; func[0] = '\0'; }
-        void Release(bool bForce = false)
-        {
-            if (--iRefNum <= 0) bForce = true;
-
-            if (bForce)
-            {
-                cs->Release();
-                cs = NULL;
-            }
-        }
-    };
-
     static std::list<ResourceShaderResourceViews> mSRVs;
-    static std::list<ResourceVertexShaders> mVSs;
-    static std::list<ResourcePixelShaders> mPSs;
-    static std::list<ResourceComputeShaders> mCSs;
+    static ShaderManager mShaderManager;
+
 
     static HRESULT CompileShader(LPCWSTR filename, LPCSTR method, LPCSTR shaderModel, ID3DBlob** blobOut);
 public:
