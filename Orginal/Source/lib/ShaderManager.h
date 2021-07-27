@@ -7,10 +7,13 @@
 
 class ShaderManager
 {
+    friend class ResourceManager;
+
+private:
     // レイアウトがあるからVSだけ別にする
     struct ResourceVertexShader
     {
-        int refNum;
+        int refNum = 0;
         ID3D11VertexShader* vs = nullptr;
         ID3D11InputLayout* layout = nullptr;
         std::wstring path;
@@ -35,7 +38,7 @@ class ShaderManager
     struct ResourceShader
     {
         int refNum = 0;
-        T   shader = nullptr;
+        T*   shader = nullptr;
         std::wstring path;
         std::string func;
 
@@ -53,9 +56,13 @@ class ShaderManager
     };
 
     std::list<ResourceVertexShader>                  mVertexShaders;
-    std::list<ResourceShader<ID3D11PixelShader*>>    mPixelShaders;
-    std::list<ResourceShader<ID3D11GeometryShader*>> mGeometryShaders;
-    std::list<ResourceShader<ID3D11ComputeShader*>>  mComputeShaders;
+    std::list<ResourceShader<ID3D11PixelShader>>    mPixelShaders;
+    std::list<ResourceShader<ID3D11GeometryShader>> mGeometryShaders;
+    std::list<ResourceShader<ID3D11ComputeShader>>  mComputeShaders;
+
+    // 実態作成禁止(フレンドクラスだけ)
+    ShaderManager() = default;
+    ~ShaderManager() = default;
 
     bool Compile(LPCWSTR filename, LPCSTR method, LPCSTR shadermodel, ID3DBlob** blobOut);
 public:
@@ -64,6 +71,7 @@ public:
     bool LoadGeometryShader(LPCWSTR filename, LPCSTR func, ID3D11GeometryShader** outGS, LPCSTR shadermodel);
     bool LoadComputeShader(LPCWSTR filename, LPCSTR func, ID3D11ComputeShader** outCS, LPCSTR shadermodel);
 
+    void ReleaseAll();
     void ReleaseVertexShader(ID3D11VertexShader* vertexShader, ID3D11InputLayout* inputLayout);
     void ReleasePixelShader(ID3D11PixelShader* pShader);
     void ReleaseGeometryShader(ID3D11GeometryShader* pShader);

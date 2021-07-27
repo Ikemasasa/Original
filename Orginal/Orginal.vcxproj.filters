@@ -345,11 +345,11 @@
     <ClInclude Include="Source\lib\ConstantBuffer.h">
       <Filter>lib\ヘッダーファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Particle.h">
-      <Filter>lib\ヘッダーファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Source\lib\ShaderManager.h">
       <Filter>lib\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Particle.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -598,6 +598,9 @@
     </ClCompile>
     <ClCompile Include="Source\lib\ShaderManager.cpp">
       <Filter>lib\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Particle.cpp">
+      <Filter>ソース ファイル\Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

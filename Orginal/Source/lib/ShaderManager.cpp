@@ -2,13 +2,15 @@
 
 #include <d3dcompiler.h>
 
+#include <d3d11shader.h>
+
 #include "Framework.h"
 
 bool ShaderManager::Compile(LPCWSTR filename, LPCSTR method, LPCSTR shadermodel, ID3DBlob** blobOut)
 {
     DWORD shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
     ID3DBlob* error = NULL;
-
+    
     HRESULT hr = S_OK;
     hr = D3DCompileFromFile(
         filename,
@@ -110,7 +112,7 @@ bool ShaderManager::LoadPixelShader(LPCWSTR filename, LPCSTR func, ID3D11PixelSh
 
 
     // 探査 
-    ResourceShader<ID3D11PixelShader*>* find;
+    ResourceShader<ID3D11PixelShader>* find = nullptr;
     for (auto& ps : mPixelShaders)
     {
         if (wcscmp(ps.path.c_str(), filename) != 0) continue;
@@ -123,17 +125,17 @@ bool ShaderManager::LoadPixelShader(LPCWSTR filename, LPCSTR func, ID3D11PixelSh
     // 見つからなかったら
     if (!find)
     {
-        HRESULT hr = S_OK;
         ID3D11Device* device = FRAMEWORK.GetDevice();
 
-        ResourceShader<ID3D11PixelShader*> push;
+        ResourceShader<ID3D11PixelShader> push;
+        ID3DBlob* blob = nullptr;
 
         // ピクセルシェーダ
-        ID3DBlob* blob = nullptr;
-        hr = Compile(filename, func, shadermodel, &blob);
-        if (FAILED(hr)) return false;
+        bool check = false;
+        check = Compile(filename, func, shadermodel, &blob);
+        if (!check) return false;
 
-        hr = device->CreatePixelShader(blob->GetBufferPointer(), blob->GetBufferSize(), NULL, &push.shader);
+        HRESULT hr = device->CreatePixelShader(blob->GetBufferPointer(), blob->GetBufferSize(), NULL, &push.shader);
         blob->Release();
         if (FAILED(hr)) return false;
 
@@ -159,7 +161,7 @@ bool ShaderManager::LoadGeometryShader(LPCWSTR filename, LPCSTR func, ID3D11Geom
 
 
     // 探査 
-    ResourceShader<ID3D11GeometryShader*>* find;
+    ResourceShader<ID3D11GeometryShader>* find = nullptr;
     for (auto& gs : mGeometryShaders)
     {
         if (wcscmp(gs.path.c_str(), filename) != 0) continue;
@@ -175,7 +177,7 @@ bool ShaderManager::LoadGeometryShader(LPCWSTR filename, LPCSTR func, ID3D11Geom
         HRESULT hr = S_OK;
         ID3D11Device* device = FRAMEWORK.GetDevice();
 
-        ResourceShader<ID3D11GeometryShader*> push;
+        ResourceShader<ID3D11GeometryShader> push;
 
         // ピクセルシェーダ
         ID3DBlob* blob = nullptr;
@@ -207,7 +209,7 @@ bool ShaderManager::LoadComputeShader(LPCWSTR filename, LPCSTR func, ID3D11Compu
 
 
     // 探査 
-    ResourceShader<ID3D11ComputeShader*>* find;
+    ResourceShader<ID3D11ComputeShader>* find = nullptr;
     for (auto& cs : mComputeShaders)
     {
         if (wcscmp(cs.path.c_str(), filename) != 0) continue;
@@ -223,7 +225,7 @@ bool ShaderManager::LoadComputeShader(LPCWSTR filename, LPCSTR func, ID3D11Compu
         HRESULT hr = S_OK;
         ID3D11Device* device = FRAMEWORK.GetDevice();
 
-        ResourceShader<ID3D11ComputeShader*> push;
+        ResourceShader<ID3D11ComputeShader> push;
 
         // ピクセルシェーダ
         ID3DBlob* blob = nullptr;
@@ -247,6 +249,14 @@ bool ShaderManager::LoadComputeShader(LPCWSTR filename, LPCSTR func, ID3D11Compu
     ++find->refNum;
 
     return true;
+}
+
+void ShaderManager::ReleaseAll()
+{
+    for (auto& vs : mVertexShaders)   vs.Release(true);
+    for (auto& ps : mPixelShaders)    ps.Release(true);
+    for (auto& gs : mGeometryShaders) gs.Release(true);
+    for (auto& cs : mComputeShaders)  cs.Release(true);
 }
 
 void ShaderManager::ReleaseVertexShader(ID3D11VertexShader* vertexShader, ID3D11InputLayout* inputLayout)

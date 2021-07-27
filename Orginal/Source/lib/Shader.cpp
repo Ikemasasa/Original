@@ -21,14 +21,14 @@ bool Shader::Load(LPCWSTR filename, LPCSTR VSFunc, LPCSTR PSFunc, D3D11_INPUT_EL
 		numElements = elementDescNum;
 	}
 
-	LPCSTR vsShaderModel = "vs_4_0_level_9_3";
-	LPCSTR psShaderModel = "ps_4_0_level_9_3";
+	LPCSTR vsShaderModel = "vs_4_0";
+	LPCSTR psShaderModel = "ps_4_0";
 
 	bool check = false;
-	check = ResourceManager::LoadVertexShader(filename, VSFunc, layout, numElements, &mVertexShader, &mVertexLayout, vsShaderModel);
+	check = ResourceManager::mShaderManager.LoadVertexShader(filename, VSFunc, layout, numElements, &mVertexShader, &mVertexLayout, vsShaderModel);
 	if (!check) return false;
 
-	check = ResourceManager::LoadPixelShader(filename, PSFunc, &mPixelShader, psShaderModel);
+	check = ResourceManager::mShaderManager.LoadPixelShader(filename, PSFunc, &mPixelShader, psShaderModel);
 	if (!check)return false;
 
 	return true;
@@ -45,23 +45,30 @@ bool Shader::Load2D(LPCWSTR filename, LPCSTR VSFunc, LPCSTR PSFunc)
 	};
 	UINT numElements = ARRAYSIZE(layout);
 
-	LPCSTR vsShaderModel = "vs_4_0_level_9_3";
-	LPCSTR psShaderModel = "ps_4_0_level_9_3";
+	LPCSTR vsShaderModel = "vs_4_0";
+	LPCSTR psShaderModel = "ps_4_0";
 
 	bool check = false;
-	check = ResourceManager::LoadVertexShader(filename, VSFunc, layout, numElements, &mVertexShader, &mVertexLayout, vsShaderModel);
+	check = ResourceManager::mShaderManager.LoadVertexShader(filename, VSFunc, layout, numElements, &mVertexShader, &mVertexLayout, vsShaderModel);
 	if (!check) return false;
 
-	check = ResourceManager::LoadPixelShader(filename, PSFunc, &mPixelShader, psShaderModel);
+	check = ResourceManager::mShaderManager.LoadPixelShader(filename, PSFunc, &mPixelShader, psShaderModel);
 	if (!check)return false;
 
 	return true;
 }
 
+bool Shader::LoadGS(LPCWSTR filename, LPCSTR GSFunc)
+{
+	LPCSTR shadermodel = "gs_4_0";
+	return ResourceManager::mShaderManager.LoadGeometryShader(filename, GSFunc, &mGeometryShader, shadermodel);
+}
+
 void Shader::UnLoad()
 {
-	ResourceManager::ReleaseVertexShader(mVertexShader, mVertexLayout);
-	ResourceManager::ReleasePixelShader(mPixelShader);
+	ResourceManager::mShaderManager.ReleaseVertexShader(mVertexShader, mVertexLayout);
+	ResourceManager::mShaderManager.ReleasePixelShader(mPixelShader);
+	ResourceManager::mShaderManager.ReleaseGeometryShader(mGeometryShader);
 }
 
 void Shader::Activate() const
@@ -71,6 +78,7 @@ void Shader::Activate() const
 	context->IASetInputLayout(mVertexLayout);
 	context->VSSetShader(mVertexShader, NULL, 0);
 	context->PSSetShader(mPixelShader, NULL, 0);
+	context->GSSetShader(mGeometryShader, NULL, 0);
 }
 
 void Shader::Deactivate() const
@@ -79,4 +87,5 @@ void Shader::Deactivate() const
 
 	context->VSSetShader(NULL, NULL, 0);
 	context->PSSetShader(NULL, NULL, 0);
+	context->GSSetShader(NULL, NULL, 0);
 }

@@ -307,6 +307,7 @@
     <ClCompile Include="Source\MeshManager.cpp" />
     <ClCompile Include="Source\Actor.cpp" />
     <ClCompile Include="Source\MeshDataLoader.cpp" />
+    <ClCompile Include="Source\Particle.cpp" />
     <ClCompile Include="Source\Primitive.cpp" />
     <ClCompile Include="Source\ProductionAttack.cpp" />
     <ClCompile Include="Source\Player.cpp" />
