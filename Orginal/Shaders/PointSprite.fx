@@ -70,9 +70,9 @@ void GSMain(point GSInput In[1], inout TriangleStream<PSInput> ParticleStream)
 	float4 pos_right_bottom = pos + right - up;
 
 	// ベースとなるUV
-	int koma = In[0].param.y;
-	int koma_u = In[0].param.z;
-	int koma_v = In[0].param.w;
+	uint koma = In[0].param.y;
+	uint koma_u = In[0].param.z;
+	uint koma_v = In[0].param.w;
 	float koma_w = 1.0 / koma_u;
 	float koma_h = 1.0 / koma_v;
 	float2 baseUV =	float2((koma % koma_u) * koma_w, (koma / koma_v) * koma_h);

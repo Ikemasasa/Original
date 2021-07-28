@@ -39,7 +39,7 @@ void TurnManager::Update(const BattleActorManager* bam)
 		mProduction->Update(bam);
 
 		// ‰‰o‚ªI—¹‚µ‚½‚ç
-		if (mProduction->GetIsFinished())
+		if (mProduction->IsFinished())
 		{
 			// behaviour ‚ð none‚É‚·‚é
 			GetMoveActor()->GetCommand()->BehaviourFinished();

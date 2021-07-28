@@ -30,5 +30,5 @@ public:
 	virtual void Update(const BattleActorManager* bam) = 0;
 	virtual void Render() = 0;
 
-	bool GetIsFinished() const { return mIsFinished; }
+	bool IsFinished() const { return mIsFinished; }
 };

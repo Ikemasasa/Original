@@ -40,24 +40,26 @@ void BattleActorManager::Initialize()
 	for (auto& ba : mBActors) ba->Initialize();
 	// 座標設定
 	{
+		// TODO: モデルの大きさを考慮していないから、モデルによったらバグる可能性あり
+		
 		// PLAYER
 		size_t size = mAliveActorIDs[Actor::Type::PLAYER].size();
+		float x = (POS_MAX_X - POS_MIN_X) / size;
 		for (size_t i = 0; i < size; ++i)
 		{
-			// 今は1人なので仮
-			Vector3 pos(0, 0, PLAYER_POS_Z);
+			Vector3 pos(x * (i + 1), 0, PLAYER_POS_Z);
 			mBActors[mAliveActorIDs[Actor::Type::PLAYER][i]]->SetPos(pos);
 			mBActors[mAliveActorIDs[Actor::Type::PLAYER][i]]->UpdateWorld();
 		}
 
 		// ENEMY
 		size = mAliveActorIDs[Actor::Type::ENEMY].size();
+		x = (POS_MAX_X - POS_MIN_X) / size;
 		for (size_t i = 0; i < size; ++i)
 		{
-		// 今は1人なので仮
-		Vector3 pos(0, 0, ENEMY_POS_Z);
-		mBActors[mAliveActorIDs[Actor::Type::ENEMY][i]]->SetPos(pos);
-		mBActors[mAliveActorIDs[Actor::Type::ENEMY][i]]->UpdateWorld();
+			Vector3 pos(x * (i + 1), 0, ENEMY_POS_Z);
+			mBActors[mAliveActorIDs[Actor::Type::ENEMY][i]]->SetPos(pos);
+			mBActors[mAliveActorIDs[Actor::Type::ENEMY][i]]->UpdateWorld();
 		}
 
 	}
@@ -116,7 +118,7 @@ void BattleActorManager::Update()
 
 			// バトル終了かチェック
 			Result result = CheckBattleFinish();
-			if (result == PLAYER_WIN || result == PLAYER_LOSE) // TODO : 現状負けた時の特別な処理はない(勝っても負けても一緒)
+			if (result == PLAYER_WIN) // TODO : 現状負けた時の特別な処理はない(勝っても負けても一緒)
 			{
 				BattleState::GetInstance().SetState(BattleState::State::RESULT);
 				mHitEnemy->SetExist(false);
@@ -134,6 +136,10 @@ void BattleActorManager::Update()
 				// BGMをリザルトのやつにする
 				AUDIO.MusicStop((int)Music::BATTLE);
 				AUDIO.MusicPlay((int)Music::RESULT);
+			}
+			else
+			{
+				// とりあえずタイトルに戻す
 			}
 		}
 	}
@@ -179,7 +185,7 @@ BattleActorManager::Result BattleActorManager::CheckBattleFinish()
 {
 	// mAliveActorIDsをチェックする
 	Result ret = NONE;
-	if (mAliveActorIDs[Actor::ENEMY].empty()) ret = PLAYER_WIN;
+	if (mAliveActorIDs[Actor::ENEMY].empty())  ret = PLAYER_WIN;
 	if (mAliveActorIDs[Actor::PLAYER].empty()) ret = PLAYER_LOSE;
 
 	return ret;

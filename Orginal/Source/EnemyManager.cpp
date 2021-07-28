@@ -44,6 +44,11 @@ std::list<std::unique_ptr<Enemy>>::iterator EnemyManager::Destroy(int objID)
 
 void EnemyManager::Initialize()
 {
+	for (int i = DataBase::ENM_ID_START; i < ENM_NUM; ++i)
+	{
+		Create(i);
+	}
+
 	for (auto& enm : mEnemies) enm->Initialize();
 }
 

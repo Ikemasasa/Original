@@ -35,6 +35,9 @@ public:
 	static constexpr float ENEMY_POS_Z = 5.0f;
 	static constexpr float PLAYER_POS_Z = -5.0f;
 
+	static constexpr float POS_MIN_X = -5.0f;
+	static constexpr float POS_MAX_X =  5.0f;
+
 
 private:
 	std::vector<std::shared_ptr<BattleActor>> mBActors;

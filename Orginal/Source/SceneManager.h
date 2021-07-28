@@ -23,7 +23,7 @@ public:
 	void SetStackScene(std::unique_ptr<SceneBase> nextScene);
 	void PopCurrentScene();
 
-	bool IsLoop() const { return (mRunScene.size() > 1) || !mIsPopCurScene; }
+	bool IsLoop() const { return (mRunScene.size() > 0) && !mIsPopCurScene; }
 
 	static SceneManager& GetInstance()
 	{

@@ -8,8 +8,10 @@ class EnemyManager
 public:
 	enum EnmList
 	{
-		MONSTER = DataBase::ENM_ID_START,
+		MONSTER_A = DataBase::ENM_ID_START,
+		MONSTER_B,
 
+		ENM_NUM
 	};
 
 private:

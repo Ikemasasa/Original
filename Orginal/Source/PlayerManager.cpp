@@ -15,12 +15,18 @@ void PlayerManager::Create(int charaID)
 
 void PlayerManager::Initialize()
 {
+	for (int i = DataBase::PL_ID_START; i < PL_NUM; ++i)
+	{
+		Create(i);
+	}
+
 	mMovePlayer = mPlayers.begin()->get(); // ˆê”ÔÅ‰‚Ì—v‘f
 	mMovePlayer->Initialize();
 }
 
 void PlayerManager::Update()
 {
+	// ƒƒjƒ…[‰æ–Ê‚Ö‚Ì‘JˆÚ
 	if (Input::GetButtonTrigger(0, Input::BUTTON::Y))
 	{
 		if (Fade::GetInstance().SetSceneImage(Fade::SPEED_FAST))

@@ -11,7 +11,10 @@ class PlayerManager
 public:
 	enum PlList
 	{
-		SOPHIE = DataBase::PL_ID_START,
+		PLAYER_A = DataBase::PL_ID_START,
+		PLAYER_B,
+
+		PL_NUM
 	};
 
 private:

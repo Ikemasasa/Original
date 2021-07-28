@@ -18,11 +18,10 @@ void ProductionUseItem::Update(const BattleActorManager* bam)
 	switch (mState)
 	{
 	case State::INIT: // ‰ŠúÝ’è
-	{
+
 		// ID‚©‚çƒ|ƒCƒ“ƒ^Žæ“¾
 		mMoveActor = bam->GetActor(mMoveActorID);
 		mTargetActor = bam->GetActor(mTargetActorID);
-	}
 
 		StateInit();
 		// break;
