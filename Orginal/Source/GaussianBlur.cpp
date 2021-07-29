@@ -57,12 +57,23 @@ void GaussianBlur::Blur(const RenderTarget* orgSprite)
 	mVerticalBlur.Deactivate();
 
 	// ブラーをかけた画像を描画
+	// レンダーターゲット
 	context->OMSetRenderTargets(1, &rtv, dsv);
+	// ビューポート設定
+	D3D11_VIEWPORT viewport;
+	viewport.Width = mSize.x;
+	viewport.Height = mSize.y;
+	viewport.MinDepth = 0.0f;
+	viewport.MaxDepth = 1.0f;
+	viewport.TopLeftX = 0;
+	viewport.TopLeftY = 0;
+	context->RSSetViewports(1, &viewport);
+
 	mVerticalBlur.Render(nullptr);
 	
 	// 解放
-	rtv->Release();
-	dsv->Release();
+	if (rtv)rtv->Release();
+	if (dsv)dsv->Release();
 }
 
 void GaussianBlur::SetBlurStlength(float stlength)

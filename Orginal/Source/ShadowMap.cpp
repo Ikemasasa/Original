@@ -18,16 +18,14 @@ void ShadowMap::Initialize()
 	ID3D11Device* device = FRAMEWORK.GetDevice();
 
 	// 定数バッファ
-	D3D11_BUFFER_DESC bd;
-	ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
-	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(CBShadow);
-	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	bd.CPUAccessFlags = 0;
-	device->CreateBuffer(&bd, NULL, mConstBuffer.GetAddressOf());
+	mConstBuffer.Create(sizeof(CBShadow));
 	
-	// 深度ステンシルビュー作成
-	mShadowMap.CreateDSV(SHADOWMAP_X, SHADOWMAP_Y, DXGI_FORMAT_R24G8_TYPELESS);
+	// バッファ作成
+	mShadowMap.Initialize(SHADOWMAP_X, SHADOWMAP_Y, DXGI_FORMAT_R16G16_FLOAT);
+	mVarianceShadowMap.Initialize(SHADOWMAP_X, SHADOWMAP_Y, DXGI_FORMAT_R16G16_FLOAT);
+	//mShadowMap.CreateDSV(SHADOWMAP_X, SHADOWMAP_Y, DXGI_FORMAT_R24G8_TYPELESS);
+
+	mGaussianBlur.Initialize(Vector2(SHADOWMAP_X, SHADOWMAP_Y), BLUR_STRENGTH);
 
 	mTarget = Vector3::Zero();
 }
@@ -52,7 +50,7 @@ void ShadowMap::Activate(const DirectX::XMFLOAT4& lightDir, int textureSlot)
 	{
 		DirectX::XMMATRIX proj = DirectX::XMMatrixOrthographicLH(150, 150, 0.1f, 600.0f);
 
-		Vector3 lightPos(30.0f, 30.0f, 30.0f);
+		Vector3 lightPos(30.0f, 30.0f, 30.0f); // 適当
 		lightPos.x *= -lightDir.x;
 		//lightPos.y *= -lightDir.y;
 		lightPos.z *= -lightDir.z;
@@ -64,18 +62,21 @@ void ShadowMap::Activate(const DirectX::XMFLOAT4& lightDir, int textureSlot)
 		// 光から見た平行投影の距離が描画される
 		CBShadow cb;
 		DirectX::XMStoreFloat4x4(&cb.shadowVP, view * proj);
-		context->UpdateSubresource(mConstBuffer.Get(), 0, NULL, &cb, 0, 0);
+		mConstBuffer.Update(&cb);
 
 		// セット
-		context->VSSetConstantBuffers(1, 1, mConstBuffer.GetAddressOf());
-		context->PSSetConstantBuffers(1, 1, mConstBuffer.GetAddressOf());
-
-		// サンプラー
-		context->PSSetSamplers(1, 1, FRAMEWORK.GetSampler(Framework::SS_SHADOW));
+		mConstBuffer.Set(1);
 	}
 }
 
 void ShadowMap::Deactivate(int textureSlot)
 {
-	mShadowMap.Deactivate(textureSlot);
+	// シャドウマップをもとにVSMを作る
+	
+	// VSMにシャドウマップにブラーをかけたものをレンダーする
+	mShadowMap.Deactivate();
+
+	mVarianceShadowMap.Activate();
+	mGaussianBlur.Blur(&mShadowMap);
+	mVarianceShadowMap.Deactivate(textureSlot);
 }

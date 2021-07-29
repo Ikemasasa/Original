@@ -10,7 +10,7 @@ class Framework
 public:
 	enum RasterizerSettings { RS_CULL_BACK, RS_CULL_FRONT, RS_CULL_NONE, RS_WIRE, RS_MAX };
 	enum DepthStencilSettings { DS_FALSE, DS_TRUE, DS_MAX };
-	enum SapmlerStateSettings { SS_CLAMP, SS_WRAP, SS_SHADOW, SS_MAX };
+	enum SapmlerStateSettings { SS_CLAMP, SS_WRAP, SS_MAX };
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11Device>		   mDevice;
