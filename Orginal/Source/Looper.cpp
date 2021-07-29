@@ -23,7 +23,7 @@ int Looper::Run(HWND hwnd)
 	AUDIO.Initialize();
 
 	auto& sm = SceneManager::GetInstance();
-	sm.Initialize(std::make_unique<SceneField>());
+	sm.Initialize(std::make_unique<SceneTitle>());
 
 	while (IsLoop() && sm.IsLoop())
 	{

@@ -132,16 +132,14 @@ float4 PSMain(PSInput input) : SV_TARGET
 		// 最大深度傾斜を求める
 		float maxDepthSlope = max(abs(ddx(input.shadowParam.z)), abs(ddy(input.shadowParam.z)));
 
-		float bias			  = 0.0001; // 固定バイアス
+		float bias			  = 0.00065; // 固定バイアス
 		float slopeScaledBias = 0.001; // 深度傾斜
 		float depthBiasClamp  = 0.1;  // バイアスクランプ値
-
 		float shadowBias = bias + slopeScaledBias * maxDepthSlope;
 		shadowBias = min(shadowBias, depthBiasClamp);
 
-		float3 minShadowColor = 0.50;
-		float shadowThreshold = ShadowMap.SampleCmpLevelZero(ShadowSampler, shadowUV, input.shadowParam.z - shadowBias); // 影にするかの閾値
-		color.rgb *= lerp(minShadowColor, float3(1.0, 1.0, 1.0), shadowThreshold);
+		float minShadowColor = 0.5;
+		color.rgb *= GetVSMFactor(shadowUV, input.shadowParam.z - shadowBias, minShadowColor);
 	}
 
 

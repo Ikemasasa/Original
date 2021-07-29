@@ -1,7 +1,12 @@
 ,,モーション関連,,
 名前,ID,種類,ID,ファイル名
-ソフィエ,10000,DEFAULT,0,Character/Character.fbx
-ソフィエ,10000,IDLE,1,Character/Idle.fbx
-ソフィエ,10000,RUN,3,Character/Run.fbx
-ソフィエ,10000,ATTACK,4,Character/Attack.fbx
-ソフィエ,10000,USEITEM,7,Character/UseItem.fbx
+プレイヤーA,10000,DEFAULT,0,PlayerA/PlayerA.fbx
+プレイヤーA,10000,IDLE,1,PlayerA/Idle.fbx
+プレイヤーA,10000,RUN,3,PlayerA/Run.fbx
+プレイヤーA,10000,ATTACK,4,PlayerA/Attack.fbx
+プレイヤーA,10000,USEITEM,7,PlayerA/UseItem.fbx
+プレイヤーB,10001,DEFAULT,0,PlayerB/PlayerB.fbx
+プレイヤーB,10001,IDLE,1,PlayerB/Idle.fbx
+プレイヤーB,10001,RUN,3,PlayerB/Run.fbx
+プレイヤーB,10001,ATTACK,4,PlayerB/Attack.fbx
+プレイヤーB,10001,USEITEM,7,PlayerB/UseItem.fbx

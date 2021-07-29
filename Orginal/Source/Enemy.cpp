@@ -22,6 +22,10 @@ void Enemy::Initialize()
 {
 	mVelocity = Vector3::Zero();
 
+	// TODO : Ç‡Ç¡Ç∆ÇµÇ¡Ç©ÇËÇµÇΩÇ‚Ç¬ÇçÏÇÎÇ§
+	float x = rand() % 800 * 0.1f;
+	float z = rand() % 800 * 0.1f;
+	SetPos(Vector3(x, 0.0f, z));
 	SetScale(Vector3(0.02f, 0.02f, 0.02f));
 	SetMotion(SkinnedMesh::IDLE);
 }

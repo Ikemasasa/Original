@@ -5,8 +5,7 @@ Texture2D Normal : register(t1);
 Texture2D ShadowMap : register(t14);
 Texture2D Ramp : register(t15);
 
-SamplerState Sampler				 : register(s0);
-SamplerComparisonState ShadowSampler : register(s1);
+SamplerState Sampler : register(s0);
 
 
 // 定数バッファ
@@ -41,3 +40,35 @@ struct VSInput2D
 	float2 tex    : TEXCOORD;
 	float4 color  : COLOR;
 };
+
+float GetVSMFactor(float2 uv, float fragDepth, float minShadowColor)
+{
+	// x：深度、y:xの2乗
+	float2 depth = ShadowMap.Sample(Sampler, uv).rg;
+
+	float variance = max(0.0, depth.y - depth.x * depth.x);
+	float md = fragDepth - depth.x;
+
+	// ライトブリーディング対策
+	static const float LIGHTBLEEDING_FACTOR = 0.3; // 適当
+	float p = variance / (variance + (md * md));
+	p = saturate((p - LIGHTBLEEDING_FACTOR) / (1.0 / LIGHTBLEEDING_FACTOR));
+	float factor = saturate(max(p, depth.x >= fragDepth));
+	
+	// 最低値をminShadowColorに合わせる
+	factor *= minShadowColor;
+	factor += minShadowColor;
+
+	//// 対策なしバージョン
+	//float depthSq = depth.x * depth.x;  // E(x)^2
+	//float variance = depth.y - depthSq; // σ^2 = E(x^2) - E(x)^2
+	//float md = fragDepth - depth.x;
+	//float p = variance / (variance + (md * md));
+	//float factor = saturate(max(p, depth.x >= fragDepth));
+
+	//// 最低値をminShadowColorに合わせる
+	//factor *= minShadowColor;
+	//factor += minShadowColor;
+
+	return factor;
+}

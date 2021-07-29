@@ -23,7 +23,9 @@ PSInput VSMain(VSInput input)
 float4 PSMain(PSInput input) : SV_TARGET0
 {
 	float4 color;
-	color.rgb = input.depth;
+	color.r = input.depth;
+	color.g = input.depth * input.depth;
+	color.b = 1.0;
 	color.a = 1.0;
 	return color;
 }
