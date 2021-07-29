@@ -351,6 +351,9 @@
     <ClInclude Include="Source\Particle.h">
       <Filter>ヘッダー ファイル\Common</Filter>
     </ClInclude>
+    <ClInclude Include="Source\lib\Random.h">
+      <Filter>lib\ヘッダーファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\lib\Blend.cpp">
@@ -601,6 +604,9 @@
     </ClCompile>
     <ClCompile Include="Source\Particle.cpp">
       <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\lib\Random.cpp">
+      <Filter>lib\ソースファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

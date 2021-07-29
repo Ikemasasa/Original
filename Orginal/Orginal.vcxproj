@@ -185,6 +185,7 @@
     <ClInclude Include="Source\lib\ConvertString.h" />
     <ClInclude Include="Source\lib\Audio.h" />
     <ClInclude Include="Source\lib\FontTexture.h" />
+    <ClInclude Include="Source\lib\Random.h" />
     <ClInclude Include="Source\lib\RenderTarget.h" />
     <ClInclude Include="Source\lib\ResourceManager.h" />
     <ClInclude Include="Source\lib\Shader.h" />
@@ -283,6 +284,7 @@
     <ClCompile Include="Source\lib\HighResolutionTimer.cpp" />
     <ClCompile Include="Source\lib\Math.cpp" />
     <ClCompile Include="Source\lib\ProcessMessage.cpp" />
+    <ClCompile Include="Source\lib\Random.cpp" />
     <ClCompile Include="Source\lib\RenderTarget.cpp" />
     <ClCompile Include="Source\lib\ResourceManager.cpp" />
     <ClCompile Include="Source\lib\Shader.cpp" />
