@@ -3,6 +3,7 @@
 #include "lib/Input.h"
 
 #include "Fade.h"
+#include "GameManager.h"
 #include "SceneManager.h"
 #include "SceneMenu.h"
 #include "ItemData.h"
@@ -18,6 +19,7 @@ void PlayerManager::Initialize()
 	for (int i = DataBase::PL_ID_START; i < PL_NUM; ++i)
 	{
 		Create(i);
+		mPlayers.back()->Initialize();
 	}
 
 	mMovePlayer = mPlayers.begin()->get(); // ˆê”ÔÅ‰‚Ì—v‘f
@@ -36,6 +38,19 @@ void PlayerManager::Update()
 	}
 
 	mMovePlayer->Update();
+
+	// –³“GŽžŠÔ‚Ì’²®
+	if (mIsInvincible)
+	{
+		mInvincibleTimer += GameManager::elpsedTime;
+
+		// INVINCIBLE_SECOND•bŒo‰ßŒãA–³“G‚ðoff‚É‚·‚é
+		if (mInvincibleTimer >= INVINCIBLE_SECOND)
+		{
+			mIsInvincible = false;
+			mInvincibleTimer = 0.0f;
+		}
+	}
 }
 
 void PlayerManager::Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj, const DirectX::XMFLOAT4& lightDir)

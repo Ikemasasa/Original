@@ -44,7 +44,7 @@ void BattleActorManager::Initialize()
 		
 		// PLAYER
 		size_t size = mAliveActorIDs[Actor::Type::PLAYER].size();
-		float x = (POS_MAX_X - POS_MIN_X) / size;
+		float x = (POS_MAX_X - POS_MIN_X) / (size + 1);
 		for (size_t i = 0; i < size; ++i)
 		{
 			Vector3 pos(x * (i + 1), 0, PLAYER_POS_Z);
@@ -54,7 +54,7 @@ void BattleActorManager::Initialize()
 
 		// ENEMY
 		size = mAliveActorIDs[Actor::Type::ENEMY].size();
-		x = (POS_MAX_X - POS_MIN_X) / size;
+		x = (POS_MAX_X - POS_MIN_X) / (size + 1);
 		for (size_t i = 0; i < size; ++i)
 		{
 			Vector3 pos(x * (i + 1), 0, ENEMY_POS_Z);

@@ -34,11 +34,17 @@ void ActorManager::Update()
 	mEnemyManager->SetPlayerPos(mPlayerManager->GetMovePlayer()->GetPos());
 	mEnemyManager->Update();
 
+
 	// ’ÇX8•ª–Ø‚Æ‚©‚µ‚Ä‚Ý‚½‚¢
+	// –³“GŽžŠÔ’†‚È‚ç“–‚½‚ç‚È‚¢
+	if (mPlayerManager->IsInvincible()) return;
 	for (int i = 0; i < mEnemyManager->GetNum(); ++i)
 	{
 		if (Collision::ColCapsules(mEnemyManager->GetEnemy(i)->GetCapsule(), mPlayerManager->GetMovePlayer()->GetCapsule()))
 		{
+			// –ß‚Á‚Ä‚«‚½Žž—p‚É–³“G‚ðon‚É‚·‚é
+			mPlayerManager->EnableInvincible();
+
 			AUDIO.MusicStop((int)Music::FIELD_REMAINS);
 			Fade::GetInstance().SetSceneImage(0.02f);
 			SceneManager::GetInstance().SetStackScene(std::make_unique<SceneBattle>(mPlayerManager.get(), mEnemyManager->GetEnemy(i)));

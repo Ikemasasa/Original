@@ -68,13 +68,14 @@ void ProductionAttack::StateInit()
 	mOrgPos = mMoveActor->GetPos();
 
 	// TargetActor から MoveActor のベクトルを作って、行き先を決める(mDestinationPos)
-	const float ADJUST_DIST_MUL = 2;
 	Vector3 targetToOrg = mOrgPos - mTargetActor->GetPos();
 	targetToOrg.Normalize();
-	//if (targetToOrg == Vector3::Zero()) targetToOrg = Vector3(sinf(targetActor->GetAngle().y), targetActor->GetPos().y, cosf(targetActor->GetAngle().y));
-	//else							    
 
+	const float ADJUST_DIST_MUL = 4;
 	mDestinationPos = mTargetActor->GetPos() + targetToOrg * mTargetActor->GetCapsule().radius * ADJUST_DIST_MUL;
+
+	// 行く方向に向く
+	mMoveActor->CorrectionAngle(-targetToOrg);
 
 	++mState; // ステートを次に進める
 }
@@ -115,9 +116,7 @@ void ProductionAttack::StateWaitAttack()
 		mProductionValue.Add(mAmount, damagePos, DAMAGE_RGB);
 
 		// 元居た方向に向く
-		Vector3 dist = mOrgPos - mDestinationPos; // 向きたい方向ベクトル
-		dist.Normalize();
-		mMoveActor->CorrectionAngle(dist);
+		mMoveActor->SetAngleY(mMoveActor->GetAngle().y + Define::PI); // 向きを反転
 		++mState;
 	}
 }
@@ -159,9 +158,13 @@ void ProductionAttack::StateWait()
 
 int ProductionAttack::CalcDamage(const Status* deal, Status* take)
 {
-	int damage = deal->str / 2 - take->vit / 4; // 基礎ダメージ
+	const float STR_DIV = 2;
+	const float VIT_DIV = 4;
+	const float WIDTH_DIV = 4;
+
+	int damage = deal->str / STR_DIV - take->vit / VIT_DIV; // 基礎ダメージ
 	int sign = (rand() % 2 == 0) ? -1 : 1; // 振れ幅の符号
-	int width = damage / 16 + 1; // ダメージの振れ幅の最大値
+	int width = damage / WIDTH_DIV + 1; // ダメージの振れ幅の最大値
 	damage = damage + (rand() % width * sign);
 
 	if (damage < 0) damage = 0;

@@ -8,6 +8,8 @@ class CameraBase;
 
 class PlayerManager
 {
+	static const int INVINCIBLE_SECOND = 2;
+
 public:
 	enum PlList
 	{
@@ -20,6 +22,8 @@ public:
 private:
 	std::vector<std::unique_ptr<Player>> mPlayers;
 	Player* mMovePlayer = nullptr;
+	bool mIsInvincible = false;
+	float mInvincibleTimer = 0;
 
 public:
 	PlayerManager() = default;
@@ -36,4 +40,9 @@ public:
 	Player* GetMovePlayer() { return mMovePlayer; }
 	Player* GetPlayer(const size_t index) const { return mPlayers[index].get(); }
 	size_t GetNum() const {return mPlayers.size(); }
+	bool IsInvincible() const { return mIsInvincible; }
+
+	// セッター
+	void EnableInvincible() { mIsInvincible = true; }
+
 };

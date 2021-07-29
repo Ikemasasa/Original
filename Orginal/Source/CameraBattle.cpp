@@ -56,8 +56,11 @@ void CameraBattle::Update(const Actor* target)
 	{
 		const float POS_Y_DIST = 7.5f;
 		const float POS_Z_DIST = 7.5f;
-		mPos = Vector3(0.0f, POS_Y_DIST, BattleActorManager::PLAYER_POS_Z - POS_Z_DIST);
-		mTarget = Vector3(0.0f, 0.0f, BattleActorManager::ENEMY_POS_Z);
+		
+		float targetX = (BattleActorManager::POS_MAX_X - BattleActorManager::POS_MIN_X) / 2.0f;
+
+		mPos = Vector3(target->GetPos().x, POS_Y_DIST, BattleActorManager::PLAYER_POS_Z - POS_Z_DIST);
+		mTarget = Vector3(targetX, 0.0f, BattleActorManager::ENEMY_POS_Z);
 
 	}
 		break;

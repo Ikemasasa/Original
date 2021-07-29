@@ -1,6 +1,7 @@
 #include "TurnManager.h"
 
 #include <random>
+#include <numeric>
 
 #include "BattleActorManager.h"
 #include "CommandBase.h"
@@ -76,22 +77,18 @@ void TurnManager::SortOrder(const std::vector<std::shared_ptr<BattleActor>>& bat
 	// minからmaxまでの値をランダムに並べた配列を作るyatu
 	auto RandArrayNoDuplicate = [](const int min, const int max)
 	{
-		const int dist = max - min + 1;
+		const int DIST = max - min + 1;
 
-		std::vector<int> temp;
-		temp.reserve(dist);
-		for (int i = min; i <= max; ++i) temp.push_back(i);
+		// メルセンヌツイスタで乱数を作成する
+		std::random_device rnd;
+		std::mt19937 mt(rnd());
 
-		std::random_device seedGen;
-		std::default_random_engine engine(seedGen());
+		// 0~DISTの値を生成して、シャッフルする
+		std::vector<int> ret(DIST);
+		std::iota(ret.begin(), ret.end(), min);
+		std::shuffle(ret.begin(), ret.end(), mt);
 
-		for (int i = dist - 1; i > 0; --i)
-		{
-			int target = std::uniform_int_distribution<int>(i, dist - 1)(engine);
-			if (i != target) std::swap(temp[i], temp[target]);
-		}
-
-		return temp;
+		return ret;
 	};
 
 	std::map<int, std::vector<BattleActor*>> agiOrder;
@@ -106,7 +103,7 @@ void TurnManager::SortOrder(const std::vector<std::shared_ptr<BattleActor>>& bat
 	for (auto it = agiOrder.rbegin(); it != agiOrder.rend(); ++it)
 	{
 		// 2個以上ならその中からランダムで決める
-		if (it->second.size() > 2)
+		if (it->second.size() >= 2)
 		{
 			std::vector<int> randArr = RandArrayNoDuplicate(0, it->second.size() - 1);
 			for (size_t i = 0; i < it->second.size(); ++i)

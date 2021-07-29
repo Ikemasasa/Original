@@ -20,26 +20,30 @@ std::list<std::unique_ptr<Enemy>>::iterator EnemyManager::Destroy(int objID)
 {
 	// わかりやすくするために2つに分割
 
-	auto it = mEnemies.begin();
-	while (it != mEnemies.end())
+	auto ret = mEnemies.begin();
+	while (ret != mEnemies.end())
 	{
-		if (it->get()->GetObjID() == objID)
+		if (ret->get()->GetObjID() == objID)
 		{
-			it = mEnemies.erase(it);
+			ret = mEnemies.erase(ret);
 			break;
 		}
 
-		++it;
+		++ret;
 	}
+
+	auto it = ret;
 	while (it != mEnemies.end())
 	{
 		// 消したエネミー以降のエネミーのobjidを-1 
 		// objID = mEnemies.size() を成り立たせるため
 		auto e = it->get();
 		e->SetObjID(e->GetObjID() - 1);
+
+		++it;
 	}
 
-	return it;
+	return ret;
 }
 
 void EnemyManager::Initialize()

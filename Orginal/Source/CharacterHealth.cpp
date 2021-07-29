@@ -52,6 +52,8 @@ void CharacterHealth::Update(const std::vector<Status>& statusArray)
 
 	for (size_t i = 0; i < mHealthPlates.size(); ++i)
 	{
+		float offsetY = i * mHealthPlate->GetSize().y;
+
 		for (int k = 0; k < VERTICAL_NUM; ++k)
 		{
 			float width = 0.0f;
@@ -61,19 +63,20 @@ void CharacterHealth::Update(const std::vector<Status>& statusArray)
 			if (k == 0) // 名前
 			{
 				width = mPlNameFont.GetWidth(mHealthPlates[i].name.c_str());
-				pos = Vector2(mPlateLeftTop.x + mHealthPlate->GetSize().x * 0.5f, mPlateLeftTop.y + HealthPlate::FIRST_OFFSET_Y);
+				pos = Vector2(mPlateLeftTop.x + mHealthPlate->GetSize().x * 0.5f, mPlateLeftTop.y + HealthPlate::FIRST_OFFSET_Y + offsetY);
 				center = Vector2(width * 0.5f, 0.0f);
 				mPlNameFont.RenderSet(i, pos, center, scale, color);
 			}
 			else // HP, MP
 			{
-				pos = Vector2(mPlateLeftTop.x + HealthPlate::FIRST_OFFSET_X, mPlateLeftTop.y + HealthPlate::FIRST_OFFSET_Y + HealthPlate::ADD_OFFSET_Y * k);
+				pos = Vector2(mPlateLeftTop.x + HealthPlate::FIRST_OFFSET_X, mPlateLeftTop.y + HealthPlate::FIRST_OFFSET_Y + HealthPlate::ADD_OFFSET_Y * k + offsetY);
 
-				int statusIndex = k - 1; // k - 1 : 名前の分 
+				int statusNameIndex = k - 1;
+				int statusIndex = (k - 1) + (i * (VERTICAL_NUM - 1)); // - 1 : 名前の分 
 
 				// ステータス名
-				width = mStatusNameFont.GetWidth(statusIndex);
-				mStatusNameFont.RenderSet(statusIndex, pos, Vector2::Zero(), scale, color);
+				width = mStatusNameFont.GetWidth(statusNameIndex);
+				mStatusNameFont.RenderSet(statusNameIndex, pos, Vector2::Zero(), scale, color);
 
 				// 現在の値 (cur)
 				width = mFontValue.GetWidth(curValue[statusIndex]);
@@ -103,7 +106,7 @@ void CharacterHealth::Render(bool isSelectRender)
 	float angle = 0.0f;
 	for (size_t i = 0; i < mHealthPlates.size(); ++i)
 	{
-		Vector2 platePos(mPlateLeftTop.x, mPlateLeftTop.y + mPlateLeftTop.y * i);
+		Vector2 platePos(mPlateLeftTop.x, mPlateLeftTop.y + mHealthPlate->GetSize().y * i);
 
 		mHealthPlate->Render(platePos, scale, texPos, mHealthPlate->GetSize());
 		if (isSelectRender && mSelectIndex == i)
