@@ -16,10 +16,6 @@
 #include "SceneBattle.h"
 #include "Singleton.h"
 
-#include "Particle.h"
-Particle p;
-
-
 SceneField::SceneField()
 {
 	mRamp.Load(L"Data/Image/Ramp.png");
@@ -63,8 +59,6 @@ void SceneField::Initialize()
 
 	mSkybox->Initialize(L"Data/Image/sky.png");
 	mActorManager->Initialize();
-
-	p.Initialize(500);
 }
 
 void SceneField::Update()
