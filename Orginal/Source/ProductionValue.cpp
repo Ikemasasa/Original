@@ -21,7 +21,7 @@ void ProductionValue::Add(const int& value, const Vector3& pos, const Vector3& r
 	ValueData data;
 	data.value = value;
 	data.pos = pos;
-	data.scale = Vector2::One(); // スケールは1固定
+	data.scale = Vector2::ONE; // スケールは1固定
 	data.center = Vector2(mFontValue.GetWidth(data.value) / 2.0f, 0.0f); // x中央 y一番上
 	data.color = Vector4(rgb.x, rgb.y, rgb.z, 0.0f); // 最初見えないスタート
 	data.alphaSign = 1; // ALPHAは最初 0 だからプラス

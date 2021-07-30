@@ -5,6 +5,10 @@
 class Vector2 : public DirectX::XMFLOAT2
 {
 public:
+	static const Vector2 ZERO;
+	static const Vector2 ONE;
+
+public:
 	Vector2() = default;
 	Vector2(float x, float y)
 	{
@@ -23,10 +27,6 @@ public:
 	inline bool operator != (const Vector2& r) const { return x != r.x || y != r.y; }
 	inline Vector2 operator *(const float r) const { return Vector2(x * r, y * r); }
 	inline Vector2 operator /(const float r) const { return Vector2(x / r, y / r); }
-
-	static Vector2 Zero() { return Vector2(0.0f, 0.0f); }
-	static Vector2 One() { return Vector2(1.0f, 1.0f); }
-
 
 	// ベクトルの内積
 	float Dot(const Vector2& In) const { return x * In.x + y * In.y; }
@@ -64,6 +64,10 @@ public:
 class Vector3 : public DirectX::XMFLOAT3
 {
 public:
+	static const Vector3 ZERO;
+	static const Vector3 ONE;
+
+public:
 	Vector3() = default;
 	Vector3(float x, float y, float z)
 	{
@@ -88,8 +92,6 @@ public:
 
 	inline void operator *=(const float r) { x *= r, y *= r, z *= r; }
 
-	static Vector3 Zero() { return Vector3(0.0f, 0.0f, 0.0f); }
-	static Vector3 One() { return Vector3(1.0f, 1.0f, 1.0f); }
 	static Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
 
 	// ベクトルの内積
@@ -139,6 +141,10 @@ public:
 class Vector4 : public DirectX::XMFLOAT4
 {
 public:
+	static const Vector4 ZERO;
+	static const Vector4 ONE;
+
+public:
 	Vector4() = default;
 	Vector4(float x, float y, float z, float w)
 	{
@@ -156,9 +162,6 @@ public:
 	inline Vector4 operator /(const float r)  const { return Vector4(x / r, y / r, z / r, w / r); }
 	inline Vector4 operator +=(const Vector4& r) { return Vector4(x += r.x, y += r.y, z += r.z, w += r.w); }
 	inline Vector4 operator -=(const Vector4& r) { return Vector4(x -= r.x, y -= r.y, z -= r.z, w -= r.w); }
-
-	static Vector4 Zero() { return Vector4(0.0f, 0.0f, 0.0f, 0.0f); }
-	static Vector4 One() { return Vector4(1.0f, 1.0f, 1.0f, 1.0f); }
 
 	//代入
 	Vector4& operator=(const DirectX::XMVECTOR& other)

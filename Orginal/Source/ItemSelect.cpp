@@ -58,7 +58,7 @@ int ItemSelect::Update(const Item* inventory)
 void ItemSelect::Render(const Vector2& boardOffset)
 {
 	// ボード描画
-	mBoard->Render(boardOffset, Vector2::One(), Vector2::Zero(), mBoard->GetSize());
+	mBoard->Render(boardOffset, Vector2::ONE, Vector2::ZERO, mBoard->GetSize());
 
 
 	// アイテムアイコン描画
@@ -75,12 +75,12 @@ void ItemSelect::Render(const Vector2& boardOffset)
 			float x = i % HORIZONTAL_NUM * ICON_SCALE_SIZE + offset.x;
 			float y = i / HORIZONTAL_NUM * ICON_SCALE_SIZE + offset.y;
 			Vector2 pos(x, y);
-			mInventory->GetItemParam(i)->icon->Render(pos, scale, Vector2::Zero(), size);
+			mInventory->GetItemParam(i)->icon->Render(pos, scale, Vector2::ZERO, size);
 		}
 
 		// 選択のフレーム画像を描画
 		Vector2 pos(mSelectIndex % HORIZONTAL_NUM * ICON_SCALE_SIZE + offset.x, mSelectIndex / HORIZONTAL_NUM * ICON_SCALE_SIZE + offset.y);
-		mSelectFrame->Render(pos, scale, Vector2::Zero(), size);
+		mSelectFrame->Render(pos, scale, Vector2::ZERO, size);
 	}
 
 	// アイテム情報描画
@@ -134,7 +134,7 @@ void ItemSelect::UpdateInfo()
 			if (param->defValue > 0) mInfo.push_back(L"守備力を高める");
 
 			// フォント作成
-			for (int i = 0; i < mInfo.size(); ++i)
+			for (size_t i = 0; i < mInfo.size(); ++i)
 			{
 				if (mFont.Find(mInfo[i].c_str())) continue;
 

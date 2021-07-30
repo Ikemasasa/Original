@@ -27,7 +27,7 @@ void ShadowMap::Initialize()
 
 	mGaussianBlur.Initialize(Vector2(SHADOWMAP_X, SHADOWMAP_Y), BLUR_STRENGTH);
 
-	mTarget = Vector3::Zero();
+	mTarget = Vector3::ZERO;
 }
 
 void ShadowMap::Activate(const DirectX::XMFLOAT4& lightDir, int textureSlot)

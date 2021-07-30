@@ -23,7 +23,7 @@ BattleActorManager::BattleActorManager(PlayerManager* player, Enemy* enemy)
 
 	// ƒvƒŒƒCƒ„[“o˜^
 	mPlayerNum = player->GetNum();
-	for (size_t i = 0; i < mPlayerNum; ++i)
+	for (int i = 0; i < mPlayerNum; ++i)
 	{
 		PlayerCreateAndRegister(player->GetPlayer(i));
 	}

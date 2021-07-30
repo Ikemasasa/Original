@@ -93,7 +93,7 @@ void SceneTitle::Update()
 
 void SceneTitle::Render()
 {
-	mBG->Render(Vector2::Zero(), Vector2::One(), Vector2::Zero(), mBG->GetSize());
+	mBG->Render(Vector2::ZERO, Vector2::ONE, Vector2::ZERO, mBG->GetSize());
 
 	mFontLogo.Render();
 	mFontSelectStr.Render();
@@ -101,7 +101,7 @@ void SceneTitle::Render()
 	if (mIsPressAButton)
 	{
 		Vector2 pos(Define::SCREEN_WIDTH * 0.3f, Define::SCREEN_HEIGHT * 0.5f + SELECT_FONT_SIZE * mSelectIndex);
-		mArrow->Render(pos, Vector2::One(), Vector2::Zero(), mArrow->GetSize());
+		mArrow->Render(pos, Vector2::ONE, Vector2::ZERO, mArrow->GetSize());
 	}
 }
 

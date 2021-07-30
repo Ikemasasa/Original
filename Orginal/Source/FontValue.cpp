@@ -58,7 +58,7 @@ void FontValue::RenderSet(const int value, const Vector2& pos, const Vector2& ce
 	const float width = GetWidth(value);
 	const float widthPerWord = width / digitNum;
 
-	for (int i = 0; i < digitNum; ++i)
+	for (size_t i = 0; i < digitNum; ++i)
 	{
 		std::wstring val;
 		val = valueStr[i];

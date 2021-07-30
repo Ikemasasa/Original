@@ -45,7 +45,7 @@ void MenuManager::Update(const PlayerManager* plm)
 
 void MenuManager::Render()
 {
-	mBG->Render(Vector2::Zero(), Vector2::One(), Vector2::Zero(), mBG->GetSize());
+	mBG->Render(Vector2::ZERO, Vector2::ONE, Vector2::ZERO, mBG->GetSize());
 	mMenuStack.top()->Render();
 }
 

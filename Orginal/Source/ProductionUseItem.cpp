@@ -157,7 +157,7 @@ void ProductionUseItem::CalcAmountPercent(const ItemData::ItemParam* param)
 {
 	// hpValue‚Í%‚È‚Ì‚ÅA100‚ÅŠ„‚é
 	const float MAX_PERCENT = 100.0f;
-	mHPAmount = mMoveActor->GetStatus()->maxHP * (param->hpValue / MAX_PERCENT);
-	mMPAmount = mMoveActor->GetStatus()->maxMP * (param->mpValue / MAX_PERCENT);
+	mHPAmount = (int)(mMoveActor->GetStatus()->maxHP * (param->hpValue / MAX_PERCENT));
+	mMPAmount = (int)(mMoveActor->GetStatus()->maxMP * (param->mpValue / MAX_PERCENT));
 }
 

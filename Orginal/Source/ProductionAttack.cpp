@@ -158,9 +158,9 @@ void ProductionAttack::StateWait()
 
 int ProductionAttack::CalcDamage(const Status* deal, Status* take)
 {
-	const float STR_DIV = 2;
-	const float VIT_DIV = 4;
-	const float WIDTH_DIV = 4;
+	const int STR_DIV = 2;
+	const int VIT_DIV = 4;
+	const int WIDTH_DIV = 4;
 
 	int damage = deal->str / STR_DIV - take->vit / VIT_DIV; // Šî‘bƒ_ƒ[ƒW
 	int sign = (rand() % 2 == 0) ? -1 : 1; // U‚ê•‚Ì•„†

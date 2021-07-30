@@ -19,7 +19,7 @@ public:
 	void UnLoad();
 	void Set(u_int slot);
 
-	void Render(const Vector2& pos, const Vector2& scale, const Vector2& texPos, const Vector2& size, const Vector2& center = Vector2::Zero(), const float angle = 0.0f, const Vector4 color = Vector4::One());
+	void Render(const Vector2& pos, const Vector2& scale, const Vector2& texPos, const Vector2& size, const Vector2& center = Vector2::ZERO, const float angle = 0.0f, const Vector4 color = Vector4::ONE);
 
 	ID3D11ShaderResourceView* GetSRV() { return mSRV; }
 

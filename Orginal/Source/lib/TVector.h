@@ -3,7 +3,7 @@
 // 単に複数の変数を持つよう
 // オペレーターがちょいとあるくらい
 
-template <class T>
+template <typename T>
 class TVector2
 {
 public:
@@ -41,7 +41,7 @@ public:
 	inline void operator /=(const T& v) { x /= v, y /= v; }
 };
 
-template <class T>
+template <typename T>
 class TVector3
 {
 public:

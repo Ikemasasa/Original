@@ -34,7 +34,7 @@ void CharacterHealth::Update(const std::vector<Status>& statusArray)
 		// health_plate作成
 	std::vector<int> curValue;
 	std::vector<int> maxValue;
-	const Vector2 scale(Vector2::One());
+	const Vector2 scale(Vector2::ONE);
 	const Vector4 color(0.77f, 0.67f, 0.42f, 1.0f); // フォントの色
 	size_t statusNum = statusArray.size();
 	mHealthPlates.resize(statusNum);
@@ -76,7 +76,7 @@ void CharacterHealth::Update(const std::vector<Status>& statusArray)
 
 				// ステータス名
 				width = mStatusNameFont.GetWidth(statusNameIndex);
-				mStatusNameFont.RenderSet(statusNameIndex, pos, Vector2::Zero(), scale, color);
+				mStatusNameFont.RenderSet(statusNameIndex, pos, Vector2::ZERO, scale, color);
 
 				// 現在の値 (cur)
 				width = mFontValue.GetWidth(curValue[statusIndex]);
@@ -86,7 +86,7 @@ void CharacterHealth::Update(const std::vector<Status>& statusArray)
 
 				// 区切り (/)
 				pos.x += HealthPlate::DELIM_OFFSET_X;
-				mDelimFont.RenderSet(0, pos, Vector2::Zero(), scale, color);
+				mDelimFont.RenderSet(0, pos, Vector2::ZERO, scale, color);
 
 				// 最大の値 (max)
 				width = mFontValue.GetWidth(maxValue[statusIndex]);
@@ -100,9 +100,9 @@ void CharacterHealth::Update(const std::vector<Status>& statusArray)
 
 void CharacterHealth::Render(bool isSelectRender)
 {
-	Vector2 scale = Vector2::One();
-	Vector2 texPos = Vector2::Zero();
-	Vector2 center = Vector2::Zero();
+	Vector2 scale = Vector2::ONE;
+	Vector2 texPos = Vector2::ZERO;
+	Vector2 center = Vector2::ZERO;
 	float angle = 0.0f;
 	for (size_t i = 0; i < mHealthPlates.size(); ++i)
 	{

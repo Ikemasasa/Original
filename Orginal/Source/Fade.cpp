@@ -73,5 +73,5 @@ void Fade::Render()
         mFade = std::make_unique<Sprite>(filename);
     }
 
-    if (mFade) mFade->Render(Vector2(0.0f, 0.0f), Vector2::One(), Vector2::Zero(), Vector2(Define::SCREEN_WIDTH, Define::SCREEN_HEIGHT), Vector2::Zero(), 0.0f, Vector4(1.0f, 1.0f, 1.0f, mAlpha));
+    if (mFade) mFade->Render(Vector2(0.0f, 0.0f), Vector2::ONE, Vector2::ZERO, Vector2(Define::SCREEN_WIDTH, Define::SCREEN_HEIGHT), Vector2::ZERO, 0.0f, Vector4(1.0f, 1.0f, 1.0f, mAlpha));
 }

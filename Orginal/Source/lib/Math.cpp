@@ -30,7 +30,7 @@ float Math::CalcPointLineDist(const Vector3& p, const Line& line, Vector3& h, fl
 
 inline float Math::CalcPointLineDist(const Vector3& p, const Line& line)
 {
-	Vector3 h = Vector3::Zero();
+	Vector3 h = Vector3::ZERO;
 	float t = 0.0f;
 	return CalcPointLineDist(p, line, h, t);
 }
@@ -60,7 +60,7 @@ float Math::CalcPointSegmentDist(const Vector3& p, const Segment& seg, Vector3& 
 
 float Math::CalcPointSegmentDist(const Vector3& p, const Segment& seg)
 {
-	Vector3 h = Vector3::Zero();
+	Vector3 h = Vector3::ZERO;
 	float t = 0.0f;
 	return CalcPointLineDist(p, seg, h, t);
 }

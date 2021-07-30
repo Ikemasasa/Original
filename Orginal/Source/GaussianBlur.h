@@ -35,7 +35,7 @@ public:
 	GaussianBlur() = default;
 	~GaussianBlur() = default;
 
-	void Initialize(const Vector2& targetSize = Vector2::Zero(), float blurStlength = 100.0f);
+	void Initialize(const Vector2& targetSize = Vector2::ZERO, float blurStlength = 100.0f);
 	void Blur(const RenderTarget* orgSprite);
 	void Blur(const Sprite* sprite, const Vector2& pos, const Vector2& scale);
 

@@ -61,7 +61,7 @@ void MenuCharacterSelect::Render(Vector2 leftBottom)
 		mPlate->Render(pos, scale, texPos, size, center, angle, color);
 
 		Vector2 namePos(pos.x + FONT_OFFSET.x, pos.y - FONT_OFFSET.y); // プレートのposが左下中心だから y - offset
-		mNameFont.RenderSet(i, namePos, Vector2::Zero(), Vector2::One(), color);
+		mNameFont.RenderSet(i, namePos, Vector2::ZERO, Vector2::ONE, color);
 	}
 
 	mNameFont.Render();

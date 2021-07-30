@@ -20,7 +20,7 @@
 Player::Player(int charaID) : Actor(charaID, Actor::PLAYER)
 {
 	SetCharaID(charaID);
-	mVelocity = Vector3::Zero();
+	mVelocity = Vector3::ZERO;
 
 	Shader* shader = new Shader;
 	shader->Load(L"Shaders/Character.fx", "VSMain", "PSMain");

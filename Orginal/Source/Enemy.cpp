@@ -1,5 +1,7 @@
 #include "Enemy.h"
 
+#include "lib/Random.h"
+
 #include "CollisionTerrain.h"
 #include "Define.h"
 #include "Player.h"
@@ -7,7 +9,7 @@
 
 Enemy::Enemy(int charaID) : Actor(charaID, Actor::ENEMY)
 {
-	mVelocity = Vector3::Zero();
+	mVelocity = Vector3::ZERO;
 
 	Shader* shader = new Shader;
 	shader->Load(L"Shaders/Character.fx", "VSMain", "PSMain");
@@ -20,7 +22,7 @@ Enemy::~Enemy()
 
 void Enemy::Initialize()
 {
-	mVelocity = Vector3::Zero();
+	mVelocity = Vector3::ZERO;
 
 	// TODO : ‚à‚Á‚Æ‚µ‚Á‚©‚è‚µ‚½‚â‚Â‚ðì‚ë‚¤
 	float x = rand() % 800 * 0.1f;
@@ -45,7 +47,7 @@ void Enemy::Update(const Vector3& playerPos)
 		pos.y = outPos.y;
 	}
 
-	mVelocity = Vector3::Zero();
+	mVelocity = Vector3::ZERO;
 	DecideMoveState(playerPos);
 
 	SetPos(GetPos() + mVelocity);
@@ -100,7 +102,7 @@ void Enemy::DecideMoveState(const Vector3& playerPos)
 		if (mTimer >= WAIT_TO_WALK_SEC * Define::FRAMERATE)
 		{
 			mState = WALK;
-			float angle = rand() % 360;
+			float angle = Random::RandomRangef(0.0f, 360.0f);
 			SetAngleY(DirectX::XMConvertToRadians(angle));
 			mTimer = 0;
 		}

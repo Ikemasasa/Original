@@ -102,15 +102,15 @@ void MenuSelect::Render()
         const Vector2 scale(1.25f, 1.0f);
         const Vector2 center(mSelectBar->GetSize().x / 2.0f, 0.0f);
         const Vector4 color(0.5f, 0.8f, 0.95f, 0.8f);
-        mSelectBar->Render(pos, scale, Vector2::Zero(), mSelectBar->GetSize(), center, 0.0f, color);
+        mSelectBar->Render(pos, scale, Vector2::ZERO, mSelectBar->GetSize(), center, 0.0f, color);
     }
 
     int i = 0;
     for (auto& data : mDatas)
     {
         const Vector2 strOffset(data.pos.x + data.moveX + STR_OFFSET_X, data.pos.y + STR_OFFSET_Y);
-        data.plate->Render(data.pos + Vector2(data.moveX, 0.0f), Vector2::One(), Vector2::Zero(), data.plate->GetSize());
-        mFont.RenderSet(i, strOffset, Vector2::Zero(), Vector2::One(), Vector4::One());
+        data.plate->Render(data.pos + Vector2(data.moveX, 0.0f), Vector2::ONE, Vector2::ZERO, data.plate->GetSize());
+        mFont.RenderSet(i, strOffset, Vector2::ZERO, Vector2::ONE, Vector4::ONE);
         ++i;
     }
 

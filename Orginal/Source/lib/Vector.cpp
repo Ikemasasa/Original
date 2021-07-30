@@ -3,6 +3,14 @@
 
 #include "Math.h"
 
+// staticÉÅÉìÉoïœêî
+const Vector2 Vector2::ZERO = Vector2(0, 0);
+const Vector2 Vector2::ONE  = Vector2(1, 1);
+const Vector3 Vector3::ZERO = Vector3(0, 0, 0);
+const Vector3 Vector3::ONE  = Vector3(1, 1, 1);
+const Vector4 Vector4::ZERO = Vector4(0, 0, 0, 0);
+const Vector4 Vector4::ONE  = Vector4(1, 1, 1, 1);
+
 Vector3 Vector3::Lerp(const Vector3& v1, const Vector3& v2, float t)
 {
 	t = Math::Clamp01(t);

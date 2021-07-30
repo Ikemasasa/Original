@@ -23,10 +23,10 @@ void Particle::Set(float timer, const Vector3& pos, const Vector3& velocity, con
 
 		data.pos = pos;
 		data.velocity = velocity;
-		data.accel = Vector3::Zero();
+		data.accel = Vector3::ZERO;
 		data.scale = scale;
 		
-		data.color = Vector3::One();
+		data.color = Vector3::ONE;
 		data.alpha = 1.0f;
 
 		data.rotate = 0;
@@ -159,8 +159,8 @@ void Particle::Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4
 		mVertices[num].color = data.color;
 		mVertices[num].param.x = data.rotate;	  // 回転
 		mVertices[num].param.y = data.animeTimer; // アニメタイマー
-		mVertices[num].param.z = mSpriteNum.x;	  // 連番画像の横の数
-		mVertices[num].param.w = mSpriteNum.y;    // 連番画像の縦の数
+		mVertices[num].param.z = (float)mSpriteNum.x;	  // 連番画像の横の数
+		mVertices[num].param.w = (float)mSpriteNum.y;    // 連番画像の縦の数
 		++num;
 	}
 	context->UpdateSubresource(mVertexBuffer.Get(), 0, nullptr, mVertices.data(), 0, 0);

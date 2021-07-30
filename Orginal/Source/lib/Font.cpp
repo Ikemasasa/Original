@@ -46,7 +46,7 @@ bool Font::RenderSet(const wchar_t* str, const Vector2& pos, const Vector2& cent
 {
 	RenderData data;
 
-	for (int i = 0; i < mFonts.size(); ++i)
+	for (size_t i = 0; i < mFonts.size(); ++i)
 	{
 		if (wcscmp(mFonts[i].str, str) != 0) continue;
 
@@ -108,7 +108,7 @@ void Font::Render(bool isRenderClear)
 		color = data.color;
 
 		size_t num = font.textures.size();
-		for (int i = 0; i < num; ++i)
+		for (size_t i = 0; i < num; ++i)
 		{
 			pos = data.scrPos + font.pos[i];
 			size = font.size[i];
@@ -141,8 +141,8 @@ bool Font::Add(const wchar_t* str)
 		data.textures[i].Create(str[i], mFontName, mFontSize, mFontWeight, &gm, &tm);
 
 		// 座標計算
-		data.pos[i].x = offsetX + gm.gmptGlyphOrigin.x;
-		data.pos[i].y = tm.tmAscent - gm.gmptGlyphOrigin.y;
+		data.pos[i].x = static_cast<float>(offsetX + gm.gmptGlyphOrigin.x);
+		data.pos[i].y = static_cast<float>(tm.tmAscent - gm.gmptGlyphOrigin.y);
 		offsetX += gm.gmCellIncX;
 
 		// サイズ

@@ -35,7 +35,7 @@ bool Skybox::CreateConstantBuffer()
 
 void Skybox::Initialize(const wchar_t* filename)
 {
-	mEyePos = Vector3::Zero();
+	mEyePos = Vector3::ZERO;
 
 	// 定数バッファ作成
 	mConstBuffer = nullptr;

@@ -10,8 +10,8 @@ CameraBase::CameraBase()
     mTarget = Vector3(0.0f, 0.0f, 0.0f);
     mPos = mTarget + Vector3(.0f, 4.0f, -15.0f);
     mAngle = Vector3(0.0f, 0.0f, 0.0f);
-    mFrontVector = Vector3::Zero();
-    mRightVector = Vector3::Zero();
+    mFrontVector = Vector3::ZERO;
+    mRightVector = Vector3::ZERO;
     mDistFromTargetY = 0.0f;
 
     constexpr float	fov = DirectX::XMConvertToRadians(45.0f);

@@ -14,10 +14,10 @@ Renderer2D::Renderer2D()
     // 頂点バッファ
     Vertex vertices[] =
     {
-        {{-0.5f,  0.5f, 0}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}, Vector4::One(),},
-        {{ 0.5f,  0.5f, 0}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}, Vector4::One(),},
-        {{-0.5f, -0.5f, 0}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}, Vector4::One(),},
-        {{ 0.5f, -0.5f, 0}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}, Vector4::One(),},
+        {{-0.5f,  0.5f, 0}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}, Vector4::ONE,},
+        {{ 0.5f,  0.5f, 0}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}, Vector4::ONE,},
+        {{-0.5f, -0.5f, 0}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}, Vector4::ONE,},
+        {{ 0.5f, -0.5f, 0}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}, Vector4::ONE,},
     };
 
     D3D11_BUFFER_DESC bufferDesc;
