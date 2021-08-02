@@ -5,22 +5,20 @@
 
 #include "EnemyManager.h"
 #include "PlayerManager.h"
+#include "Terrain.h"
 
 class CameraBase;
 class Shader;
-#include "Terrain.h"
-class Terrain;
 
-class ActorManager
+class CharacterManager
 {
 private:
 	std::unique_ptr<PlayerManager> mPlayerManager;
 	std::unique_ptr<EnemyManager> mEnemyManager;
-	std::unique_ptr<Terrain> mTerrain;
 
 public:
-	ActorManager();
-	~ActorManager() = default;
+	CharacterManager();
+	~CharacterManager() = default;
 
 	void Initialize();
 	void Update();

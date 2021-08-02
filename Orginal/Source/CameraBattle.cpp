@@ -2,14 +2,16 @@
 
 #include "BattleActorManager.h"
 #include "BattleState.h"
+#include "Character.h"
 #include "Define.h"
+
 
 CameraBattle::CameraBattle() : CameraBase()
 {
 
 }
 
-void CameraBattle::Update(const Actor* target)
+void CameraBattle::Update(const Character* target)
 {
 	BattleState::State state = BattleState::GetInstance().GetState();
 

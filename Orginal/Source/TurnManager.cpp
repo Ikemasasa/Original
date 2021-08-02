@@ -10,7 +10,7 @@
 #include "ProductionUseItem.h"
 #include "Singleton.h"
 
-void TurnManager::Initialize(const std::vector<std::shared_ptr<BattleActor>>& battleActorArray)
+void TurnManager::Initialize(const std::vector<std::shared_ptr<BattleCharacter>>& battleActorArray)
 {
 	SortOrder(battleActorArray);
 
@@ -72,7 +72,7 @@ void TurnManager::ToResult()
 	mIsResult = true;
 }
 
-void TurnManager::SortOrder(const std::vector<std::shared_ptr<BattleActor>>& battleActorArray)
+void TurnManager::SortOrder(const std::vector<std::shared_ptr<BattleCharacter>>& battleActorArray)
 {
 	// minからmaxまでの値をランダムに並べた配列を作るyatu
 	auto RandArrayNoDuplicate = [](const int min, const int max)
@@ -91,7 +91,7 @@ void TurnManager::SortOrder(const std::vector<std::shared_ptr<BattleActor>>& bat
 		return ret;
 	};
 
-	std::map<int, std::vector<BattleActor*>> agiOrder;
+	std::map<int, std::vector<BattleCharacter*>> agiOrder;
 
 	// マップのキーは昇順にソートされてる
 	for (auto& actor : battleActorArray)
@@ -134,7 +134,7 @@ void TurnManager::BeginProduction()
 	mProduction->Begin(moveActorID, targetActorID);
 }
 
-void TurnManager::OrganizeOrder(const std::vector<std::shared_ptr<BattleActor>>& battleActorArray)
+void TurnManager::OrganizeOrder(const std::vector<std::shared_ptr<BattleCharacter>>& battleActorArray)
 {
 	// mOrderを整理する
 	while (true)

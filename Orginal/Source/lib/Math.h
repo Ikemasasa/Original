@@ -13,7 +13,7 @@ struct Line
 
 	// “_ã‚ÌÀ•W‚ğæ“¾
 	//  ƒxƒNƒgƒ‹‚ÉŠ|‚¯Z‚·‚éŒW”
-	Vector3 GetPoint(float t) const { return p + t * v; }
+	Vector3 GetPoint(float t) const { return p + (v * t); }
 };
 
 struct Segment : public Line

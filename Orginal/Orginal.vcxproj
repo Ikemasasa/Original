@@ -152,12 +152,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Source\ActorManager.h" />
+    <ClInclude Include="Source\CharacterManager.h" />
     <ClInclude Include="Source\BattleActor.h" />
     <ClInclude Include="Source\BattleActorManager.h" />
     <ClInclude Include="Source\BattleState.h" />
     <ClInclude Include="Source\CameraBattle.h" />
     <ClInclude Include="Source\CameraManager.h" />
+    <ClInclude Include="Source\Character.h" />
     <ClInclude Include="Source\Collision.h" />
     <ClInclude Include="Source\CollisionTerrain.h" />
     <ClInclude Include="Source\CommandBase.h" />
@@ -205,10 +206,10 @@
     <ClInclude Include="Source\MenuStatus.h" />
     <ClInclude Include="Source\MeshManager.h" />
     <ClInclude Include="Source\MeshDataLoader.h" />
+    <ClInclude Include="Source\Object.h" />
     <ClInclude Include="Source\Particle.h" />
     <ClInclude Include="Source\Primitive.h" />
     <ClInclude Include="Source\ProductionAttack.h" />
-    <ClInclude Include="Source\Actor.h" />
     <ClInclude Include="Source\CameraBase.h" />
     <ClInclude Include="Source\CameraDebug.h" />
     <ClInclude Include="Source\CameraTPS.h" />
@@ -245,7 +246,7 @@
     <ClInclude Include="Source\TurnManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\ActorManager.cpp" />
+    <ClCompile Include="Source\CharacterManager.cpp" />
     <ClCompile Include="Source\BattleActor.cpp" />
     <ClCompile Include="Source\BattleActorManager.cpp" />
     <ClCompile Include="Source\CameraBase.cpp" />
@@ -253,6 +254,7 @@
     <ClCompile Include="Source\CameraDebug.cpp" />
     <ClCompile Include="Source\CameraManager.cpp" />
     <ClCompile Include="Source\CameraTPS.cpp" />
+    <ClCompile Include="Source\Character.cpp" />
     <ClCompile Include="Source\Collision.cpp" />
     <ClCompile Include="Source\CollisionTerrain.cpp" />
     <ClCompile Include="Source\CommandBase.cpp" />
@@ -307,8 +309,8 @@
     <ClCompile Include="Source\MenuSelect.cpp" />
     <ClCompile Include="Source\MenuStatus.cpp" />
     <ClCompile Include="Source\MeshManager.cpp" />
-    <ClCompile Include="Source\Actor.cpp" />
     <ClCompile Include="Source\MeshDataLoader.cpp" />
+    <ClCompile Include="Source\Object.cpp" />
     <ClCompile Include="Source\Particle.cpp" />
     <ClCompile Include="Source\Primitive.cpp" />
     <ClCompile Include="Source\ProductionAttack.cpp" />

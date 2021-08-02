@@ -1,14 +1,14 @@
 #pragma once
 #include <memory>
 
-#include "Actor.h"
+#include "Character.h"
 #include "StatusData.h"
 
 class CommandBase;
 class BattleActorManager;
 class Item;
 
-class BattleActor : public Actor
+class BattleCharacter : public Character
 {
 protected:
 	std::unique_ptr<CommandBase> mCommand = nullptr;
@@ -16,8 +16,8 @@ protected:
 	Item* mInventory;
 
 public:
-	BattleActor(const Actor* actor, Status status);
-	virtual ~BattleActor() = default;
+	BattleCharacter(const Character* chara, Status status);
+	virtual ~BattleCharacter() = default;
 
 	virtual void Initialize() = 0;
 	virtual void Update(const BattleActorManager* bam);

@@ -2,7 +2,7 @@
 #include "IDecideCommand.h"
 #include "Actor.h"
 
-class BattleActor;
+class BattleCharacter;
 class BattleActorManager;
 class CommandBase;
 class Sprite;
@@ -14,7 +14,7 @@ class CommandCharaSelect : public IDecideCommand
 	std::unique_ptr<Sprite> mArrow;
 
 	int mCharaIndex = 0;
-	BattleActor* mTargetActor;
+	BattleCharacter* mTargetActor;
 	Actor::Type mCharaType;
 
 public:

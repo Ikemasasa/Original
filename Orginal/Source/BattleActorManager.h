@@ -40,7 +40,7 @@ public:
 
 
 private:
-	std::vector<std::shared_ptr<BattleActor>> mBActors;
+	std::vector<std::shared_ptr<BattleCharacter>> mBActors;
 	std::vector<int> mAliveActorIDs[BATTLEACTOR_KIND];
 	int mPlayerNum;
 
@@ -64,9 +64,9 @@ public:
 	void Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir);
 
 	// ÉQÉbÉ^Å[
-	BattleActor* GetMoveActor() const { return mTurnManager.GetMoveActor(); }
+	BattleCharacter* GetMoveActor() const { return mTurnManager.GetMoveActor(); }
 	const std::vector<int>& GetAliveActorIDs(Actor::Type kind) const { return mAliveActorIDs[kind]; }
-	BattleActor* GetActor(int objectID) const { return mBActors[objectID].get(); }
-	const std::vector<std::shared_ptr<BattleActor>>& GetBActors() const { return mBActors; }
+	BattleCharacter* GetActor(int objectID) const { return mBActors[objectID].get(); }
+	const std::vector<std::shared_ptr<BattleCharacter>>& GetBActors() const { return mBActors; }
 
 };

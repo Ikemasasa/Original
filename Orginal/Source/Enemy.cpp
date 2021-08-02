@@ -4,13 +4,13 @@
 
 #include "CollisionTerrain.h"
 #include "Define.h"
+#include "GameManager.h"
 #include "Player.h"
 
 
-Enemy::Enemy(int charaID) : Actor(charaID, Actor::ENEMY)
+Enemy::Enemy(int charaID) : Character(charaID, Character::ENEMY)
 {
-	mVelocity = Vector3::ZERO;
-
+	// シェーダ書き換え
 	Shader* shader = new Shader;
 	shader->Load(L"Shaders/Character.fx", "VSMain", "PSMain");
 	ChangeShader(shader);
@@ -25,19 +25,22 @@ void Enemy::Initialize()
 	mVelocity = Vector3::ZERO;
 
 	// TODO : もっとしっかりしたやつを作ろう
-	float x = rand() % 800 * 0.1f;
-	float z = rand() % 800 * 0.1f;
-	SetPos(Vector3(x, 0.0f, z));
-	SetScale(Vector3(0.02f, 0.02f, 0.02f));
+	
+	float x = Random::RandomRangef(-40.0f, 40.0f);
+	float z = Random::RandomRangef(-40.0f, 40.0f);
+	mPos = Vector3(x, 0.0f, z);
+	mScale = Vector3(0.02f, 0.02f, 0.02f);
+
 	SetMotion(SkinnedMesh::IDLE);
 }
 
 void Enemy::Update(const Vector3& playerPos)
 {
-	if (!GetExist()) return;
+	// 存在しないなら return 
+	if (!mExist) return;
 
 	// ランダムでフィールドを歩き回る
-	Vector3 pos = GetPos();
+	Vector3 pos = mPos;
 	Vector3 sp = { pos.x, pos.y + 0.5f, pos.z };
 	Vector3 ep = { pos.x, pos.y - 0.5f, pos.z };
 	Vector3 outPos, outNor;
@@ -50,7 +53,6 @@ void Enemy::Update(const Vector3& playerPos)
 	mVelocity = Vector3::ZERO;
 	DecideMoveState(playerPos);
 
-	SetPos(GetPos() + mVelocity);
 
 	UpdateWorld();
 }
@@ -99,7 +101,7 @@ void Enemy::DecideMoveState(const Vector3& playerPos)
 	{
 	case WAIT: // ぼったち
 		SetMotion(SkinnedMesh::IDLE);
-		if (mTimer >= WAIT_TO_WALK_SEC * Define::FRAMERATE)
+		if (mTimer >= WAIT_TO_WALK_SEC)
 		{
 			mState = WALK;
 			float angle = Random::RandomRangef(0.0f, 360.0f);
@@ -108,14 +110,14 @@ void Enemy::DecideMoveState(const Vector3& playerPos)
 		}
 		else
 		{
-			++mTimer;
+			mTimer += GameManager::elpsedTime;
 		}
 
 		break;
 
 	case WALK: // 前進
 		SetMotion(SkinnedMesh::WALK);
-		if (mTimer >= WALK_TO_WAIT_SEC * Define::FRAMERATE)
+		if (mTimer >= WALK_TO_WAIT_SEC)
 		{
 			mState = WAIT;
 			mTimer = 0;
@@ -124,7 +126,7 @@ void Enemy::DecideMoveState(const Vector3& playerPos)
 		{
 			mVelocity = front * WALK_SPEED;
 
-			++mTimer;
+			mTimer += GameManager::elpsedTime;
 		}
 
 		break;

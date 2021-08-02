@@ -39,7 +39,7 @@ void CommandCharaSelect::Update(const BattleActorManager* bam, CommandBase* cmdB
 		if (cmdBase->GetItemIndex() != -1)
 		{
 			// アイテム使用者のインベントリ取得
-			BattleActor* moveActor = bam->GetMoveActor();
+			BattleCharacter* moveActor = bam->GetMoveActor();
 			Item* moveActorInventory = moveActor->GetInventory();
 			
 			// 使用アイテムが回復アイテムなら HP、MPが最大かチェック

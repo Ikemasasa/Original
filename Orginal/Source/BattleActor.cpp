@@ -3,19 +3,19 @@
 #include "BattleActorManager.h"
 #include "CommandPlayer.h"
 
-BattleActor::BattleActor(const Actor* actor, Status status) : Actor(actor, actor->GetType())
+BattleCharacter::BattleCharacter(const Character* chara, Status status) : Character(chara, chara->GetType())
 {
 	mStatus = status;
 }
 
-void BattleActor::Update(const BattleActorManager* bam)
+void BattleCharacter::Update(const BattleActorManager* bam)
 {
 	mCommand->Update(bam);
 
 	UpdateWorld();
 }
 
-void BattleActor::RenderCommand() const
+void BattleCharacter::RenderCommand() const
 {
 	mCommand->Render();
 }

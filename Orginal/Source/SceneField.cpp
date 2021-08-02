@@ -5,7 +5,7 @@
 #include "lib/Renderer2D.h"
 #include "lib/Skybox.h"
 
-#include "ActorManager.h"
+#include "CharacterManager.h"
 #include "CollisionTerrain.h"
 #include "CameraTPS.h"
 #include "CameraManager.h"
@@ -29,7 +29,7 @@ SceneField::SceneField()
 	Singleton<DataBase>().GetInstance();
 	Singleton<CameraManager>().GetInstance().Push(std::make_shared<CameraTPS>());
 
-	mActorManager = std::make_unique<ActorManager>();
+	mCharaManager = std::make_unique<CharacterManager>();
 	mSkybox		  = std::make_unique<Skybox>();
 }
 
@@ -58,13 +58,13 @@ void SceneField::Initialize()
 	}
 
 	mSkybox->Initialize(L"Data/Image/sky.png");
-	mActorManager->Initialize();
+	mCharaManager->Initialize();
 }
 
 void SceneField::Update()
 {
-	mActorManager->Update();
-	Singleton<CameraManager>().GetInstance().Update(mActorManager->GetMovePlayer());
+	mCharaManager->Update();
+	Singleton<CameraManager>().GetInstance().Update(mCharaManager->GetMovePlayer());
 
 	mSkybox->SetEyePos(Singleton<CameraManager>().GetInstance().GetPos());
 
@@ -78,13 +78,13 @@ void SceneField::Render()
 	DirectX::XMFLOAT4 lightDir = mLight.GetLightDir();
 
 	mShadowMap.Activate(lightDir, SHADOWMAP_TEXTURE_SLOT);
-	mActorManager->Render(mShadowMap.GetShader(), view, proj, lightDir);
+	mCharaManager->Render(mShadowMap.GetShader(), view, proj, lightDir);
 	mShadowMap.Deactivate(SHADOWMAP_TEXTURE_SLOT);
 
 	// シーンターゲットに書き込み
 	mSceneTarget.Activate();
 	mSkybox->Render(view, proj);
-	mActorManager->Render(view, proj, lightDir);
+	mCharaManager->Render(view, proj, lightDir);
 	mSceneTarget.Deactivate();
 
 	mSceneTarget.Render(mPostEffect.get());

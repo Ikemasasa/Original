@@ -84,7 +84,7 @@ void BattleActorManager::Update()
 	}
 	else
 	{
-		BattleActor* moveActor = mTurnManager.GetMoveActor();
+		BattleCharacter* moveActor = mTurnManager.GetMoveActor();
 		moveActor->Update(this);
 
 		// MoveActor以外もワールド, モーションの更新をする
@@ -129,7 +129,7 @@ void BattleActorManager::Update()
 				// 戦闘後のステータスを更新
 				for (int i = 0; i < mPlayerNum; ++i)
 				{
-					BattleActor* pl = mBActors[i].get();
+					BattleCharacter* pl = mBActors[i].get();
 					Singleton<DataBase>().GetInstance().GetStatusData()->SetPLStatus(pl->GetCharaID(), *pl->GetStatus());
 				}
 

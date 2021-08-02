@@ -17,11 +17,9 @@
 
 #include "lib/Font.h"
 
-Player::Player(int charaID) : Actor(charaID, Actor::PLAYER)
+Player::Player(int charaID) : Character(charaID, Character::PLAYER)
 {
-	SetCharaID(charaID);
-	mVelocity = Vector3::ZERO;
-
+	// シェーダ書き換え
 	Shader* shader = new Shader;
 	shader->Load(L"Shaders/Character.fx", "VSMain", "PSMain");
 	ChangeShader(shader);
@@ -37,77 +35,53 @@ Player::Player(int charaID) : Actor(charaID, Actor::PLAYER)
 
 void Player::Initialize()
 {
-	SetPos(Vector3(10.0f, 0.0f, 10.0f));
-	SetScale(Vector3(0.02f, 0.02f, 0.02f));
+	mPos   = Vector3(10.0f, 0.0f, 10.0f);
+	mScale = Vector3(0.02f, 0.02f, 0.02f);
+	SetMotion(SkinnedMesh::IDLE);
 }
 
 void Player::Update()
 {
+	// カメラのベクトル取得
 	auto& cameraManager = Singleton<CameraManager>().GetInstance();
 	Vector3 cFrontVector(cameraManager.GetFrontVector().x, 0.0f, cameraManager.GetFrontVector().z); // カメラの正面のベクトル(XZ)
 	Vector3 cRightVector(cameraManager.GetRightVector().x, 0.0f, cameraManager.GetRightVector().z); // カメラの右側のベクトル(XZ)
 	cFrontVector.Normalize();
 	cRightVector.Normalize();
 
-	const float MOVE_SPEED = 0.3f;
-	float angleY = GetAngle().y;
-	Vector3 oldPos = GetPos();
-	Vector3 movedPos = {};
-
-	// ラムダ
-	auto CalcVelocity = [&]()
+	float axisX = Input::GetAxisX();
+	float axisY = Input::GetAxisY();
+	if (axisX > 0 || axisY > 0)
 	{
-		Vector3 velocity = {};
-		velocity += cFrontVector * Input::GetAxisY() * MOVE_SPEED;
-		velocity += cRightVector * Input::GetAxisX() * MOVE_SPEED;
-		mVelocity = velocity;
+		mVelocity.x = cFrontVector.x * axisX * MOVE_SPEED;
+		mVelocity.z = cFrontVector.z * axisY * MOVE_SPEED;
+		mPos += mVelocity;
 
-		movedPos = oldPos + mVelocity;
-	};
-	auto CorrectionAngle = [&]()
-	{
-		// いずれ線形補完にしたい
-		Vector3 vec0 = cFrontVector;							 // 0度となるベクトル
-		Vector3 dist = Vector3(mVelocity.x, 0.0f, mVelocity.z);	 // 行きたい方向のベクトル
-		dist.Normalize();
-
-		Vector3 cross = dist.Cross(cFrontVector);				 // 内積の角度を360度出すのに使う
-
-		float dot = dist.Dot(vec0);
-		float min = -1.0f, max = 1.0f;
-		float a = acosf(Math::Clamp(dot, min, max)); // 角度を算出(-1 ~ 1の間に入れないとnanが返るからclampしてる(dot = 1.00000012みたいになってた))
-		if (cross.y < 0) a = DirectX::XMConvertToRadians(360.0f) - a;
-		angleY = cameraManager.GetAngle().y - a - DirectX::XMConvertToRadians(180.0f);
-	};
-	auto CorrectionPos = [&]()
-	{
-		const float RAYPICK_OFFSET = 0.25f;
-		Vector3 sp = Vector3(movedPos.x, movedPos.y + RAYPICK_OFFSET, movedPos.z);
-		Vector3 ep = Vector3(movedPos.x, movedPos.y - RAYPICK_OFFSET, movedPos.z);
-		Vector3 outPos, outNormal;
-		float len;
-
-		// 下方向
-		if (-1 != CollisionTerrain::RayPick(sp, ep, &outPos, &outNormal, &len))
-		{
-			movedPos.y = outPos.y;
-		}
-
-		// 移動方向
-		sp = Vector3(oldPos.x, oldPos.y + RAYPICK_OFFSET, oldPos.z); // 移動前の座標
-		ep = Vector3(movedPos.x, movedPos.y + RAYPICK_OFFSET, movedPos.z);
-		if (-1 != CollisionTerrain::MoveCheck(sp, ep, &outPos))
-		{
-			movedPos.x = outPos.x;
-			movedPos.z = outPos.z;
-		}
-	};
-
-	CalcVelocity();
-	if (mVelocity.x || mVelocity.z) // 移動するなら
-	{
+		// 向き補正
 		CorrectionAngle();
-		CorrectionPos();
+
+		// 座標補正
+		{
+			// 下方向
+			const float RAYPICK_DIST = 0.25f;
+			Vector3 sp = Vector3(mPos.x, mPos.y + RAYPICK_DIST, mPos.z);
+			Vector3 ep = Vector3(mPos.x, mPos.y - RAYPICK_DIST, mPos.z);
+			Vector3 outPos, outNormal;
+			float len;
+			if (-1 != CollisionTerrain::RayPick(sp, ep, &outPos, &outNormal, &len))
+			{
+				mPos.y = outPos.y;
+			}
+
+			// 移動方向
+			sp = mPos - mVelocity; // 移動前の座標
+			ep = mPos;			   // 移動後の座標
+			if (-1 != CollisionTerrain::MoveCheck(sp, ep, &outPos))
+			{
+				mPos.x = outPos.x;
+				mPos.z = outPos.z;
+			}
+		}
 
 		SetMotion(SkinnedMesh::RUN);
 	}
@@ -116,8 +90,5 @@ void Player::Update()
 		SetMotion(SkinnedMesh::IDLE);
 	}
 
-	SetPos(movedPos);
-	SetAngleY(angleY);
-
-	Actor::UpdateWorld();
+	Character::UpdateWorld();
 }

@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 
-class BattleActor;
+class BattleCharacter;
 class BattleActorManager;
 class CommandBase;
 

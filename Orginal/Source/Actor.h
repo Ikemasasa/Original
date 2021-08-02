@@ -34,6 +34,7 @@ private: //protected:
 	int mObjID									= -1; // インスタンスに割り当てられるID(各Managerで0スタートで増えていく)
 	int mCharaID								= -1; // キャラクターそのものに割り当てられているID(スタートは種類によって変わる、DataBase参照)
 	bool mExist									= true;
+	int mMass									= 0;
 	Type mType									= NONE;
 	CAPSULE mCapsuleParam;
 

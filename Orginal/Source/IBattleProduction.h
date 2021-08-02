@@ -1,7 +1,7 @@
 #pragma once
 #include "ProductionValue.h"
 
-class BattleActor;
+class BattleCharacter;
 class BattleActorManager;
 
 class IBattleProduction
@@ -14,8 +14,8 @@ protected: // •¶š‚ÌF
 protected:
 	 int mMoveActorID;
 	 int mTargetActorID;
-	BattleActor* mMoveActor = nullptr;	 // ID‚©‚çæ“¾‚µ‚½‚Ì‚ğ•Û‘¶‚·‚é‚æ‚¤
-	BattleActor* mTargetActor = nullptr; // “¯ã
+	BattleCharacter* mMoveActor = nullptr;	 // ID‚©‚çæ“¾‚µ‚½‚Ì‚ğ•Û‘¶‚·‚é‚æ‚¤
+	BattleCharacter* mTargetActor = nullptr; // “¯ã
 	//int mAmount = -1;
 
 	ProductionValue mProductionValue;

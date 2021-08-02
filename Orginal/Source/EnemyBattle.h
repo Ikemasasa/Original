@@ -5,7 +5,7 @@
 
 class Enemy;
 
-class EnemyBattle : public BattleActor
+class EnemyBattle : public BattleCharacter
 {
 	static const Vector3 ENEMY_POS;
 

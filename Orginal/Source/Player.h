@@ -1,8 +1,7 @@
 #pragma once
 #include <memory>
 
-#include "Actor.h"
-
+#include "Character.h"
 #include "Item.h"
 #include "StatusData.h"
 
@@ -11,10 +10,10 @@
 
 class CameraBase;
 
-class Player : public Actor
+class Player : public Character
 {
-	//Status mStatus;
-	Vector3 mVelocity;
+	static constexpr float MOVE_SPEED = 0.3f;
+
 	Item mInventory;
 
 public:
@@ -24,6 +23,5 @@ public:
 	void Initialize();
 	void Update();
 
-	//Status* GetStatus() { return &mStatus; }
 	Item* GetInventory() { return &mInventory; }
 };

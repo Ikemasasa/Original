@@ -6,7 +6,7 @@
 class Player;
 class Item;
 
-class PlayerBattle : public BattleActor
+class PlayerBattle : public BattleCharacter
 {
 	static const Vector3 PLAYER_POS;
 

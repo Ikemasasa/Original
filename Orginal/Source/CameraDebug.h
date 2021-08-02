@@ -3,7 +3,7 @@
 
 #include "CameraBase.h"
 
-class Actor;
+class Character;
 
 class CameraDebug : public CameraBase
 {
@@ -12,6 +12,6 @@ class CameraDebug : public CameraBase
 public:
 	CameraDebug() : CameraBase() { ShowCursor(false); }
 
-	void Update(const Actor* target) override;
+	void Update(const Character* target) override;
 
 };

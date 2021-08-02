@@ -2,17 +2,12 @@
 #include <memory>
 #include <DirectXMath.h>
 
-#include "Actor.h"
-#include "StatusData.h"
+#include "Character.h"
 
-struct AABB;
-class Player;
 
-class Enemy : public Actor
+class Enemy : public Character
 {
 	float mTimer = 0;
-	Vector3 mVelocity;
-
 	enum MoveState
 	{
 		WAIT,
@@ -21,6 +16,7 @@ class Enemy : public Actor
 
 		MAX
 	};
+
 	MoveState mState = WAIT;
 
 	void DecideMoveState(const Vector3& playerPos);

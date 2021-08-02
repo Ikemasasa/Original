@@ -4,7 +4,7 @@
 #include <vector>
 #include <memory>
 
-class ActorManager;
+class CharacterManager;
 class CameraBase;
 class Enemy;
 class Player;
@@ -13,8 +13,9 @@ class Terrain;
 
 class SceneField : public SceneBase
 {
-	std::unique_ptr<ActorManager> mActorManager = nullptr;
-	std::unique_ptr<Skybox>		  mSkybox		= nullptr;
+	std::unique_ptr<CharacterManager> mCharaManager = nullptr;
+	std::unique_ptr<Terrain>	      mTerrain		= nullptr;
+	std::unique_ptr<Skybox>			  mSkybox		= nullptr;
 
 public:
 	SceneField();

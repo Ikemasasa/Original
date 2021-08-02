@@ -20,7 +20,7 @@ CommandItem::~CommandItem()
 
 void CommandItem::Update(const BattleActorManager* bam, CommandBase* cmdBase)
 {
-	BattleActor* moveActor = bam->GetMoveActor();
+	BattleCharacter* moveActor = bam->GetMoveActor();
 
 	int itemIndex = mItemSelect.Update(moveActor->GetInventory());
 	const int noSelect = -1;
