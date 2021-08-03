@@ -43,7 +43,7 @@ void CharacterManager::Update()
 				mPlayerManager->EnableInvincible();
 
 				AUDIO.MusicStop((int)Music::FIELD_REMAINS);
-				Fade::GetInstance().SetSceneImage(Fade::SPEED_FAST);
+				Fade::GetInstance().SetSceneImage(Fade::SPEED_SLOW);
 				SceneManager::GetInstance().SetStackScene(std::make_unique<SceneBattle>(mPlayerManager.get(), mEnemyManager->GetEnemy(i)));
 				break;
 			}

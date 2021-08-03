@@ -82,8 +82,6 @@ void Player::Update()
 			{
 				mPos.y = outPos.y;
 			}
-
-
 		}
 
 		SetMotion(SkinnedMesh::RUN);
