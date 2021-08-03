@@ -4,8 +4,7 @@
 #include <queue>
 #include <vector>
 
-#include "Actor.h"
-#include "BattleActor.h"
+#include "BattleCharacter.h"
 #include "CharacterHealth.h"
 #include "TurnManager.h"
 
@@ -15,7 +14,7 @@ class PlayerManager;
 
 // ターン進行の部分を後々別にしたい
 
-class BattleActorManager
+class BattleCharacterManager
 {
 	enum Result
 	{
@@ -28,8 +27,8 @@ class BattleActorManager
 	static constexpr float HEALTH_PLATE_X = 900.0f;
 	static constexpr float HEALTH_PLATE_Y = 0.0f;
 
-	static const int BATTLEACTOR_MAX = 12;
-	static const int BATTLEACTOR_KIND = 2; // Player, Enemyの2つ 
+	static const int BATTLECHARA_MAX = 12;
+	static const int BATTLECHARA_KIND = 2; // Player, Enemyの2つ 
 
 public:
 	static constexpr float ENEMY_POS_Z = 5.0f;
@@ -40,8 +39,8 @@ public:
 
 
 private:
-	std::vector<std::shared_ptr<BattleCharacter>> mBActors;
-	std::vector<int> mAliveActorIDs[BATTLEACTOR_KIND];
+	std::vector<std::shared_ptr<BattleCharacter>> mBCharacters;
+	std::vector<int> mAliveCharaIDs[BATTLECHARA_KIND];
 	int mPlayerNum;
 
 	CharacterHealth mCharacterHealth;
@@ -50,13 +49,13 @@ private:
 	Enemy* mHitEnemy = nullptr; // fieldで当たった敵
 
 	Result CheckBattleFinish();
-	void OrganizeActor();
+	void OrganizeCharacter();
 
 	void PlayerCreateAndRegister(Player* pl);
 	void EnemyCreateAndRegister(Enemy* enm);
 public:	
-	BattleActorManager(PlayerManager* player, Enemy* enemy);
-	~BattleActorManager() = default;
+	BattleCharacterManager(PlayerManager* player, Enemy* enemy);
+	~BattleCharacterManager() = default;
 
 	void Initialize();
 	void Update();
@@ -64,9 +63,9 @@ public:
 	void Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir);
 
 	// ゲッター
-	BattleCharacter* GetMoveActor() const { return mTurnManager.GetMoveActor(); }
-	const std::vector<int>& GetAliveActorIDs(Actor::Type kind) const { return mAliveActorIDs[kind]; }
-	BattleCharacter* GetActor(int objectID) const { return mBActors[objectID].get(); }
-	const std::vector<std::shared_ptr<BattleCharacter>>& GetBActors() const { return mBActors; }
+	BattleCharacter* GetMoveChara() const { return mTurnManager.GetMoveChara(); }
+	const std::vector<int>& GetAliveCharaIDs(Character::Type kind) const { return mAliveCharaIDs[kind]; }
+	BattleCharacter* GetChara(int objectID) const { return mBCharacters[objectID].get(); }
+	const std::vector<std::shared_ptr<BattleCharacter>>& GetBCharacters() const { return mBCharacters; }
 
 };

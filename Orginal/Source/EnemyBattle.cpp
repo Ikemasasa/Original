@@ -1,6 +1,5 @@
 #include "EnemyBattle.h"
 
-#include "Actor.h"
 #include "CommandEnemy.h"
 #include "Enemy.h"
 #include "DataBase.h"

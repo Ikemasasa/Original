@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 
-#include "BattleActor.h"
+#include "BattleCharacter.h"
 
 class Player;
 class Item;

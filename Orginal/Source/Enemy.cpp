@@ -52,7 +52,7 @@ void Enemy::Update(const Vector3& playerPos)
 
 	mVelocity = Vector3::ZERO;
 	DecideMoveState(playerPos);
-
+	mPos += mVelocity;
 
 	UpdateWorld();
 }
@@ -110,7 +110,7 @@ void Enemy::DecideMoveState(const Vector3& playerPos)
 		}
 		else
 		{
-			mTimer += GameManager::elpsedTime;
+			mTimer += GameManager::elapsedTime;
 		}
 
 		break;
@@ -126,7 +126,7 @@ void Enemy::DecideMoveState(const Vector3& playerPos)
 		{
 			mVelocity = front * WALK_SPEED;
 
-			mTimer += GameManager::elpsedTime;
+			mTimer += GameManager::elapsedTime;
 		}
 
 		break;

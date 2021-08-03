@@ -2,7 +2,7 @@
 
 #include "lib/Input.h"
 
-#include "BattleActorManager.h"
+#include "BattleCharacterManager.h"
 #include "CommandBase.h"
 #include "CommandCharaSelect.h"
 #include "Define.h"
@@ -18,11 +18,11 @@ CommandItem::~CommandItem()
 {
 }
 
-void CommandItem::Update(const BattleActorManager* bam, CommandBase* cmdBase)
+void CommandItem::Update(const BattleCharacterManager* bcm, CommandBase* cmdBase)
 {
-	BattleCharacter* moveActor = bam->GetMoveActor();
+	BattleCharacter* moveChara = bcm->GetMoveChara();
 
-	int itemIndex = mItemSelect.Update(moveActor->GetInventory());
+	int itemIndex = mItemSelect.Update(moveChara->GetInventory());
 	const int noSelect = -1;
 	if (noSelect != itemIndex)
 	{
@@ -30,12 +30,12 @@ void CommandItem::Update(const BattleActorManager* bam, CommandBase* cmdBase)
 		
 		// アイテム情報取得
 		cmdBase->SetItemIndex(itemIndex);
-		const ItemData::ItemParam* param = moveActor->GetInventory()->GetItemParam(itemIndex);
+		const ItemData::ItemParam* param = moveChara->GetInventory()->GetItemParam(itemIndex);
 
 		// アイテムの対象によってどっちのきゃらを選ぶか決める
-		Actor::Type charaType;
-		if (param->target == ItemData::Target::PARTY) charaType = Actor::PLAYER;
-		else if (param->target == ItemData::Target::ENEMY) charaType = Actor::ENEMY;
+		Character::Type charaType;
+		if (param->target == ItemData::Target::PARTY) charaType = Character::PLAYER;
+		else if (param->target == ItemData::Target::ENEMY) charaType = Character::ENEMY;
 		
 		// 次のコマンド
 		mNextCommand = std::make_unique<CommandCharaSelect>(charaType);

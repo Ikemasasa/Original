@@ -2,8 +2,8 @@
 
 #include "lib/SkinnedMesh.h"
 
-#include "BattleActor.h"
-#include "BattleActorManager.h"
+#include "BattleCharacter.h"
+#include "BattleCharacterManager.h"
 #include "Define.h"
 #include "EffectManager.h"
 #include "GameManager.h"
@@ -15,19 +15,19 @@ void ProductionAttack::Initialize()
 	mProductionValue.Initialize();
 }
 
-void ProductionAttack::Update(const BattleActorManager* bam)
+void ProductionAttack::Update(const BattleCharacterManager* bcm)
 {
 	switch (mState)
 	{
 	case State::INIT: // 初期化 ダメージ計算
 	{
-		// moveactor, targetactor代入
-		mMoveActor = bam->GetActor(mMoveActorID);
-		mTargetActor = bam->GetActor(mTargetActorID);
+		// moveChara, targetChara代入
+		mMoveChara = bcm->GetChara(mMoveCharaID);
+		mTargetChara = bcm->GetChara(mTargetCharaID);
 
 		// ダメージ計算
-		int damage = CalcDamage(mMoveActor->GetStatus(), mTargetActor->GetStatus());
-		mTargetActor->GetStatus()->HurtHP(damage);
+		int damage = CalcDamage(mMoveChara->GetStatus(), mTargetChara->GetStatus());
+		mTargetChara->GetStatus()->HurtHP(damage);
 		mAmount = damage;
 	}
 		// 演出初期設定
@@ -64,18 +64,18 @@ void ProductionAttack::Render()
 
 void ProductionAttack::StateInit()
 {
-	// MoveActorの座標を原点にする
-	mOrgPos = mMoveActor->GetPos();
+	// MoveCharaの座標を原点にする
+	mOrgPos = mMoveChara->GetPos();
 
-	// TargetActor から MoveActor のベクトルを作って、行き先を決める(mDestinationPos)
-	Vector3 targetToOrg = mOrgPos - mTargetActor->GetPos();
+	// TargetChara から MoveChara のベクトルを作って、行き先を決める(mDestinationPos)
+	Vector3 targetToOrg = mOrgPos - mTargetChara->GetPos();
 	targetToOrg.Normalize();
 
 	const float ADJUST_DIST_MUL = 4;
-	mDestinationPos = mTargetActor->GetPos() + targetToOrg * mTargetActor->GetCapsule().radius * ADJUST_DIST_MUL;
+	mDestinationPos = mTargetChara->GetPos() + targetToOrg * mTargetChara->GetCapsule().radius * ADJUST_DIST_MUL;
 
 	// 行く方向に向く
-	mMoveActor->CorrectionAngle(-targetToOrg);
+	mMoveChara->CorrectionAngle(-targetToOrg);
 
 	++mState; // ステートを次に進める
 }
@@ -83,18 +83,18 @@ void ProductionAttack::StateInit()
 void ProductionAttack::StateMoveToTarget()
 {
 	// 走りモーションセット
-	mMoveActor->SetMotion(SkinnedMesh::RUN);
+	mMoveChara->SetMotion(SkinnedMesh::RUN);
 
 	// mOrgPos から mDestinationPos までを線形補完する
 	mLerpFactor = Math::Min(mLerpFactor + LERP_FACTOR_ADD, LERP_FACTOR_MAX);
 	Vector3 lerp = Vector3::Lerp(mOrgPos, mDestinationPos, mLerpFactor);
-	mMoveActor->SetPos(lerp);
+	mMoveChara->SetPos(lerp);
 
 	// mLerpFactorが1以上なら
 	if (mLerpFactor >= LERP_FACTOR_MAX)
 	{
 		// 攻撃モーションセット
-		mMoveActor->SetMotion(SkinnedMesh::ATTACK, false);
+		mMoveChara->SetMotion(SkinnedMesh::ATTACK, false);
 		++mState;
 	}
 }
@@ -102,21 +102,21 @@ void ProductionAttack::StateMoveToTarget()
 void ProductionAttack::StateWaitAttack()
 {
 	// モーションが終わったら
-	if (mMoveActor->IsMotionFinished())
+	if (mMoveChara->IsMotionFinished())
 	{
-		if (mTargetActor->GetStatus()->IsDead())
+		if (mTargetChara->GetStatus()->IsDead())
 		{
 			// Existをfalseにして、エフェクトを再生する
-			mTargetActor->SetExist(false); // 見えなくする
-			Vector3 effectPos(mTargetActor->GetPos().x, mTargetActor->GetPos().y + mTargetActor->GetLocalAABB().max.y * 0.5f, mTargetActor->GetPos().z);
+			mTargetChara->SetExist(false); // 見えなくする
+			Vector3 effectPos(mTargetChara->GetPos().x, mTargetChara->GetPos().y + mTargetChara->GetLocalAABB().max.y * 0.5f, mTargetChara->GetPos().z);
 			Singleton<EffectManager>().GetInstance().Play(TurnManager::DEATH_EFFECT_SLOT, effectPos);// えっふぇくと
 		}
 
-		Vector3 damagePos(mTargetActor->GetPos().x, mTargetActor->GetAABB().max.y, mTargetActor->GetPos().z);
+		Vector3 damagePos(mTargetChara->GetPos().x, mTargetChara->GetAABB().max.y, mTargetChara->GetPos().z);
 		mProductionValue.Add(mAmount, damagePos, DAMAGE_RGB);
 
 		// 元居た方向に向く
-		mMoveActor->SetAngleY(mMoveActor->GetAngle().y + Define::PI); // 向きを反転
+		mMoveChara->SetAngleY(mMoveChara->GetAngle().y + Define::PI); // 向きを反転
 		++mState;
 	}
 }
@@ -124,19 +124,19 @@ void ProductionAttack::StateWaitAttack()
 void ProductionAttack::StateMoveToOrigin()
 {
 	// 走りモーションセット
-	mMoveActor->SetMotion(SkinnedMesh::RUN);
+	mMoveChara->SetMotion(SkinnedMesh::RUN);
 
 	// mDestinationPos から mOrgPos までを線形補完する
 	mLerpFactor = Math::Max(mLerpFactor - LERP_FACTOR_ADD, LERP_FACTOR_MIN);
 	Vector3 lerp = Vector3::Lerp(mOrgPos, mDestinationPos, mLerpFactor);
-	mMoveActor->SetPos(lerp);
+	mMoveChara->SetPos(lerp);
 
 	// mLerpFactorが0以下なら
 	if (mLerpFactor <= LERP_FACTOR_MIN)
 	{
 		// 待機モーションセット、Angleを敵方向に戻す
-		mMoveActor->SetMotion(SkinnedMesh::IDLE);
-		mMoveActor->SetAngleY(mMoveActor->GetAngle().y + Define::PI); // 向きを反転
+		mMoveChara->SetMotion(SkinnedMesh::IDLE);
+		mMoveChara->SetAngleY(mMoveChara->GetAngle().y + Define::PI); // 向きを反転
 		++mState;
 	}
 }
@@ -145,7 +145,7 @@ void ProductionAttack::StateMoveToOrigin()
 
 void ProductionAttack::StateWait()
 {
-	mWaitTimer += GameManager::elpsedTime;
+	mWaitTimer += GameManager::elapsedTime;
 
 	const float WAIT_SEC = 1.5f;
 	if (mWaitTimer >= WAIT_SEC)

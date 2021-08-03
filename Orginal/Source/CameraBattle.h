@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "Actor.h"
+class Character;
 
 class CameraBattle : public CameraBase
 {

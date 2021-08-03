@@ -152,13 +152,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Character.h" />
     <ClInclude Include="Source\CharacterManager.h" />
-    <ClInclude Include="Source\BattleActor.h" />
-    <ClInclude Include="Source\BattleActorManager.h" />
+    <ClInclude Include="Source\BattleCharacter.h" />
+    <ClInclude Include="Source\BattleCharacterManager.h" />
     <ClInclude Include="Source\BattleState.h" />
     <ClInclude Include="Source\CameraBattle.h" />
     <ClInclude Include="Source\CameraManager.h" />
-    <ClInclude Include="Source\Character.h" />
     <ClInclude Include="Source\Collision.h" />
     <ClInclude Include="Source\CollisionTerrain.h" />
     <ClInclude Include="Source\CommandBase.h" />
@@ -247,8 +247,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\CharacterManager.cpp" />
-    <ClCompile Include="Source\BattleActor.cpp" />
-    <ClCompile Include="Source\BattleActorManager.cpp" />
+    <ClCompile Include="Source\BattleCharacter.cpp" />
+    <ClCompile Include="Source\BattleCharacterManager.cpp" />
     <ClCompile Include="Source\CameraBase.cpp" />
     <ClCompile Include="Source\CameraBattle.cpp" />
     <ClCompile Include="Source\CameraDebug.cpp" />

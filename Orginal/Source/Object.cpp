@@ -37,14 +37,14 @@ void Object::Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& 
 {
 	DirectX::XMFLOAT4X4 wvp;
 	DirectX::XMStoreFloat4x4(&wvp, DirectX::XMLoadFloat4x4(&mWorld) * DirectX::XMLoadFloat4x4(&view) * DirectX::XMLoadFloat4x4(&projection));
-	mMesh->Render(wvp, mWorld, lightDir, GameManager::elpsedTime);
+	mMesh->Render(wvp, mWorld, lightDir, GameManager::elapsedTime);
 }
 
 void Object::Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir)
 {
 	DirectX::XMFLOAT4X4 wvp;
 	DirectX::XMStoreFloat4x4(&wvp, DirectX::XMLoadFloat4x4(&mWorld) * DirectX::XMLoadFloat4x4(&view) * DirectX::XMLoadFloat4x4(&projection));
-	mMesh->Render(shader, wvp, mWorld, lightDir, GameManager::elpsedTime);
+	mMesh->Render(shader, wvp, mWorld, lightDir, GameManager::elapsedTime);
 }
 
 int Object::RayPickSRT(const DirectX::XMFLOAT3& sp, const DirectX::XMFLOAT3& ep, DirectX::XMFLOAT3* outPos, DirectX::XMFLOAT3* outNormal, float* outLen)

@@ -5,7 +5,7 @@
 // staticメンバ変数
 std::vector<Terrain*> CollisionTerrain::mTerrains;
 
-int CollisionTerrain::RayPick(Vector3 sp, Vector3 ep, Vector3* outPos, Vector3* outNormal, float* outLen)
+int CollisionTerrain::RayPick(const Vector3& sp, const Vector3& ep, Vector3* outPos, Vector3* outNormal, float* outLen)
 {
     int materialIndex = -1;
     for (auto& t : mTerrains)
@@ -46,8 +46,8 @@ int CollisionTerrain::MoveCheck(const Vector3& sp, const Vector3& ep, Vector3* o
 	DirectX::XMVECTOR fixPos = DirectX::XMVectorMultiplyAdd(normal, dot, end);
 	DirectX::XMStoreFloat3(outPos, fixPos);
 
-    // 補正後の位置が壁にめり込んでいた場合は移動しないようにする
-	// 終点から補正位置のベクトルがメッシュに当たらなかったら
+    //// 補正後の位置が壁にめり込んでいた場合は移動しないようにする
+	//// 終点から補正位置のベクトルがメッシュに当たらなかったら
 	//if (RayPick(*outPos, ep, &hitPos, &hitNormal, &len) == -1)
 	//{
 	//	*outPos = sp;
@@ -65,6 +65,7 @@ bool CollisionTerrain::RegisterTerrain(Terrain* t)
     for (size_t i = 0; i < mTerrains.size(); ++i)
     {
         if (mTerrains[i] == t) return false;
+        if (mTerrains[i]->GetID() == t->GetID()) return false;
     }
 
     mTerrains.push_back(t);

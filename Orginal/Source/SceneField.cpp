@@ -31,6 +31,8 @@ SceneField::SceneField()
 
 	mCharaManager = std::make_unique<CharacterManager>();
 	mSkybox		  = std::make_unique<Skybox>();
+
+	mTerrain = std::make_unique<Terrain>(DataBase::TERRAIN_ID_START);
 }
 
 SceneField::~SceneField()
@@ -58,6 +60,7 @@ void SceneField::Initialize()
 	}
 
 	mSkybox->Initialize(L"Data/Image/sky.png");
+	mTerrain->Initialize();
 	mCharaManager->Initialize();
 }
 
@@ -77,13 +80,16 @@ void SceneField::Render()
 	DirectX::XMFLOAT4X4 proj = Singleton<CameraManager>().GetInstance().GetProj();
 	DirectX::XMFLOAT4 lightDir = mLight.GetLightDir();
 
+	// シャドウマップ
 	mShadowMap.Activate(lightDir, SHADOWMAP_TEXTURE_SLOT);
+	mTerrain->Render(mShadowMap.GetShader(), view, proj, lightDir);
 	mCharaManager->Render(mShadowMap.GetShader(), view, proj, lightDir);
 	mShadowMap.Deactivate(SHADOWMAP_TEXTURE_SLOT);
 
 	// シーンターゲットに書き込み
 	mSceneTarget.Activate();
 	mSkybox->Render(view, proj);
+	mTerrain->Render(view, proj, lightDir);
 	mCharaManager->Render(view, proj, lightDir);
 	mSceneTarget.Deactivate();
 

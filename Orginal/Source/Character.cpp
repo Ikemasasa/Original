@@ -71,7 +71,7 @@ void Character::Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X
 	{
 		DirectX::XMFLOAT4X4 wvp;
 		DirectX::XMStoreFloat4x4(&wvp, DirectX::XMLoadFloat4x4(&mWorld) * DirectX::XMLoadFloat4x4(&view) * DirectX::XMLoadFloat4x4(&projection));
-		mMesh->Render(wvp, mWorld, lightDir, GameManager::elpsedTime);
+		mMesh->Render(wvp, mWorld, lightDir, GameManager::elapsedTime);
 		//mHit->Render(wvp, mWorld, lightDir, DirectX::XMFLOAT4(0.8f, 0.2f, 0.2f, 0.2f));
 	}
 }
@@ -82,7 +82,7 @@ void Character::Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, co
 	{
 		DirectX::XMFLOAT4X4 wvp;
 		DirectX::XMStoreFloat4x4(&wvp, DirectX::XMLoadFloat4x4(&mWorld) * DirectX::XMLoadFloat4x4(&view) * DirectX::XMLoadFloat4x4(&projection));
-		mMesh->Render(shader, wvp, mWorld, lightDir, GameManager::elpsedTime);
+		mMesh->Render(shader, wvp, mWorld, lightDir, GameManager::elapsedTime);
 	}
 }
 
@@ -92,11 +92,38 @@ void Character::CorrectionAngle()
 	
 	// •ûŒü“]Š·
 	float dX = direction.x;
-	float dY = direction.y;
+	float dY = direction.z;
 	float aX = sinf(mAngle.y);
 	float aY = cosf(mAngle.y);
 
 	float dot   = dX * aX + dY * aY;
+	float cross = dX * aY - dY * aX;
+
+	const float FORCE_ROTATE_VALUE = 0.96f;
+	if (dot >= FORCE_ROTATE_VALUE)
+	{
+		float angle = atan2f(dX, dY);
+		mAngle.y = angle;
+	}
+	else
+	{
+		const float ANGLE_ADJUST = 0.2f;
+		if (cross < 0) mAngle.y -= ANGLE_ADJUST;
+		else mAngle.y += ANGLE_ADJUST;
+	}
+}
+
+void Character::CorrectionAngle(const Vector3& dirN)
+{
+	Vector3 direction = dirN;
+
+	// •ûŒü“]Š·
+	float dX = direction.x;
+	float dY = direction.z;
+	float aX = sinf(mAngle.y);
+	float aY = cosf(mAngle.y);
+
+	float dot = dX * aX + dY * aY;
 	float cross = dX * aY - dY * aX;
 
 	const float FORCE_ROTATE_VALUE = 0.96f;

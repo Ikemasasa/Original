@@ -3,8 +3,6 @@
 
 #include "CameraBase.h"
 
-class Actor;
-
 class CameraTPS : public CameraBase
 {
 public:

@@ -1,11 +1,9 @@
 #pragma once
 #include <memory>
 
-#include "Actor.h"
+#include "Object.h"
 
-#include "lib/Vector.h"
-
-class Terrain : public Actor
+class Terrain : public Object
 {
 public:
 	Terrain(int charaID);

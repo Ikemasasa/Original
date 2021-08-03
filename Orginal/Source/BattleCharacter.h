@@ -5,7 +5,7 @@
 #include "StatusData.h"
 
 class CommandBase;
-class BattleActorManager;
+class BattleCharacterManager;
 class Item;
 
 class BattleCharacter : public Character
@@ -20,7 +20,7 @@ public:
 	virtual ~BattleCharacter() = default;
 
 	virtual void Initialize() = 0;
-	virtual void Update(const BattleActorManager* bam);
+	virtual void Update(const BattleCharacterManager* bcm);
 	void RenderCommand() const;
 
 	CommandBase* GetCommand() { return mCommand.get(); }

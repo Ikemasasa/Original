@@ -6,7 +6,7 @@
 #include "IBattleProduction.h"
 
 class BattleCharacter;
-class BattleActorManager;
+class BattleCharacterManager;
 
 // ターン進行のマネージャ
 class TurnManager
@@ -23,19 +23,19 @@ private:
 	bool mIsTurnFinished = false;
 	bool mIsResult = false;
 
-	void SortOrder(const std::vector<std::shared_ptr<BattleCharacter>>& battleActorArray);
+	void SortOrder(const std::vector<std::shared_ptr<BattleCharacter>>& battleCharaArray);
 	void BeginProduction();
-	void OrganizeOrder(const std::vector<std::shared_ptr<BattleCharacter>>& battleActorArray);
+	void OrganizeOrder(const std::vector<std::shared_ptr<BattleCharacter>>& battleCharaArray);
 
 public:
-	void Initialize(const std::vector<std::shared_ptr<BattleCharacter>>& battleActorArray);
-	void Update(const BattleActorManager* bam);
+	void Initialize(const std::vector<std::shared_ptr<BattleCharacter>>& battleCharaArray);
+	void Update(const BattleCharacterManager* bcm);
 	void Render();
 
 	void ToResult();
 
 	// ゲッター
-	BattleCharacter* GetMoveActor() const { return mOrder.front(); }
+	BattleCharacter* GetMoveChara() const { return mOrder.front(); }
 	bool IsTurnFinished() const { return mIsTurnFinished; }
 	bool IsResult() const { return mIsResult; }
 };

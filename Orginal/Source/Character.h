@@ -33,7 +33,7 @@ protected:
 	Vector3 mVelocity = { 0,0,0 };
 	Vector3 mScale = { 1, 1, 1 };
 	Vector3 mAngle = { 0,0,0 };
-	int mMass = 0;
+	int mMass = 0;		//Ž¿—Ê
 	bool mExist = true;
 	Type mType = NONE;
 
@@ -47,8 +47,9 @@ public:
 	void Render(const DirectX::XMFLOAT4X4 & view, const DirectX::XMFLOAT4X4 & projection, const DirectX::XMFLOAT4 & lightDir);
 	void Render(const Shader * shader, const DirectX::XMFLOAT4X4 & view, const DirectX::XMFLOAT4X4 & projection, const DirectX::XMFLOAT4 & lightDir);
 
-	// Œü‚«•â³
-	void CorrectionAngle();
+
+	void CorrectionAngle();	// mVelocity•ûŒü‚ÉŒü‚­
+	void CorrectionAngle(const Vector3& dirN); // distN•ûŒü‚ÉŒü‚­
 
 	// ƒ‚[ƒVƒ‡ƒ“’Ç‰Á
 	void AddMotion(const char* filename, SkinnedMesh::MotionType type) { mMesh->AddMotion(filename, type); }

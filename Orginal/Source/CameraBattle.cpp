@@ -1,6 +1,6 @@
 #include "CameraBattle.h"
 
-#include "BattleActorManager.h"
+#include "BattleCharacterManager.h"
 #include "BattleState.h"
 #include "Character.h"
 #include "Define.h"
@@ -59,20 +59,20 @@ void CameraBattle::Update(const Character* target)
 		const float POS_Y_DIST = 7.5f;
 		const float POS_Z_DIST = 7.5f;
 		
-		float targetX = (BattleActorManager::POS_MAX_X - BattleActorManager::POS_MIN_X) / 2.0f;
+		float targetX = (BattleCharacterManager::POS_MAX_X - BattleCharacterManager::POS_MIN_X) / 2.0f;
 
-		mPos = Vector3(target->GetPos().x, POS_Y_DIST, BattleActorManager::PLAYER_POS_Z - POS_Z_DIST);
-		mTarget = Vector3(targetX, 0.0f, BattleActorManager::ENEMY_POS_Z);
+		mPos = Vector3(target->GetPos().x, POS_Y_DIST, BattleCharacterManager::PLAYER_POS_Z - POS_Z_DIST);
+		mTarget = Vector3(targetX, 0.0f, BattleCharacterManager::ENEMY_POS_Z);
 
 	}
 		break;
 	case BattleState::State::PARTY_SELECT:
 	{
 		const float POS_Y_DIST = 6.5f;
-		mPos = Vector3(0.0f, POS_Y_DIST, BattleActorManager::ENEMY_POS_Z);
+		mPos = Vector3(0.0f, POS_Y_DIST, BattleCharacterManager::ENEMY_POS_Z);
 
 		
-		mTarget = Vector3(0.0f, (target->GetAABB().max.y - target->GetAABB().min.y) / 2.0f , BattleActorManager::PLAYER_POS_Z);
+		mTarget = Vector3(0.0f, (target->GetAABB().max.y - target->GetAABB().min.y) / 2.0f , BattleCharacterManager::PLAYER_POS_Z);
 	}
 		break;
 	}

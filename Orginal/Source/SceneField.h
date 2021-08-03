@@ -5,9 +5,6 @@
 #include <memory>
 
 class CharacterManager;
-class CameraBase;
-class Enemy;
-class Player;
 class Skybox;
 class Terrain;
 

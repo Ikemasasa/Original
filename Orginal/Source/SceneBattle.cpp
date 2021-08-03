@@ -3,10 +3,11 @@
 #include "lib/Audio.h"
 #include "lib/Skybox.h"
 
-#include "BattleActorManager.h"
+#include "BattleCharacterManager.h"
 #include "BattleState.h"
 #include "CameraBattle.h"
 #include "CameraManager.h"
+#include "DataBase.h"
 #include "EffectManager.h"
 #include "Light.h"
 #include "SceneManager.h"
@@ -18,22 +19,15 @@ SceneBattle::SceneBattle(PlayerManager* plm, Enemy* enemy)
 	// SceneBaseの各種初期化
 	mShadowMap.Initialize();
 	mSceneTarget.Initialize();
-
 	CreatePostEffectShader();
 
 	// SceneBattleの各種初期化
 	BattleState::CreateInst();
 	BattleState::GetInstance().SetState(BattleState::State::COMMAND_SELECT);
 
-	mBattleActorManager = std::make_unique<BattleActorManager>(plm, enemy);
+	mBattleCharacterManager = std::make_unique<BattleCharacterManager>(plm, enemy);
 	mSkybox = std::make_unique<Skybox>();
-
 	mTerrain = std::make_shared<Terrain>(DataBase::TERRAIN_ID_START);
-	mTerrain->Initialize();
-
-	Singleton<CameraManager>().GetInstance().Push(std::make_shared<CameraBattle>());
-
-	AUDIO.MusicPlay((int)Music::BATTLE);
 }
 
 SceneBattle::~SceneBattle()
@@ -43,15 +37,21 @@ SceneBattle::~SceneBattle()
 
 void SceneBattle::Initialize()
 {
-	mBattleActorManager->Initialize();
+	Singleton<CameraManager>().GetInstance().Push(std::make_shared<CameraBattle>());
+
 	mSkybox->Initialize(L"Data/Image/sky.png");
+	mTerrain->Initialize();
+	mBattleCharacterManager->Initialize();
+
+
+	AUDIO.MusicPlay((int)Music::BATTLE);
 }
 
 void SceneBattle::Update()
 {
-	mBattleActorManager->Update();
+	mBattleCharacterManager->Update();
 
-	Singleton<CameraManager>().GetInstance().Update(mBattleActorManager->GetMoveActor());
+	Singleton<CameraManager>().GetInstance().Update(mBattleCharacterManager->GetMoveChara());
 	mSkybox->SetEyePos(Singleton<CameraManager>().GetInstance().GetPos());
 	Singleton<EffectManager>().GetInstance().Update();
 }
@@ -65,14 +65,14 @@ void SceneBattle::Render()
 	// シャドウマップ
 	mShadowMap.Activate(lightDir, SHADOWMAP_TEXTURE_SLOT);
 	mTerrain->Render(mShadowMap.GetShader(), view, projection, lightDir);
-	mBattleActorManager->Render(mShadowMap.GetShader(), view, projection, lightDir);
+	mBattleCharacterManager->Render(mShadowMap.GetShader(), view, projection, lightDir);
 	mShadowMap.Deactivate(SHADOWMAP_TEXTURE_SLOT);
 
 	// シーンターゲット
 	mSceneTarget.Activate();
 	mSkybox->Render(view, projection);
 	mTerrain->Render(view, projection, lightDir);
-	mBattleActorManager->Render(view, projection, lightDir);
+	mBattleCharacterManager->Render(view, projection, lightDir);
 	Singleton<EffectManager>().GetInstance().Render(view, projection);
 	mSceneTarget.Deactivate();
 

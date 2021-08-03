@@ -1,6 +1,6 @@
-#include "BattleActor.h"
+#include "BattleCharacter.h"
 
-#include "BattleActorManager.h"
+#include "BattleCharacterManager.h"
 #include "CommandPlayer.h"
 
 BattleCharacter::BattleCharacter(const Character* chara, Status status) : Character(chara, chara->GetType())
@@ -8,9 +8,9 @@ BattleCharacter::BattleCharacter(const Character* chara, Status status) : Charac
 	mStatus = status;
 }
 
-void BattleCharacter::Update(const BattleActorManager* bam)
+void BattleCharacter::Update(const BattleCharacterManager* bcm)
 {
-	mCommand->Update(bam);
+	mCommand->Update(bcm);
 
 	UpdateWorld();
 }
