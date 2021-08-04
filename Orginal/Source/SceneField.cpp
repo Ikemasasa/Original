@@ -9,12 +9,15 @@
 #include "CollisionTerrain.h"
 #include "CameraTPS.h"
 #include "CameraManager.h"
+#include "DataBase.h"
 #include "Define.h"
 #include "EffectManager.h"
 #include "Light.h"
+#include "Player.h"
 #include "SceneManager.h"
 #include "SceneBattle.h"
 #include "Singleton.h"
+#include "Terrain.h"
 
 SceneField::SceneField()
 {

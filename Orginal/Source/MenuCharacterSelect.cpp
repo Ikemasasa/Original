@@ -4,6 +4,7 @@
 #include "lib/Input.h"
 
 #include "DataBase.h"
+#include "Player.h"
 #include "PlayerManager.h"
 #include "Singleton.h"
 #include "StatusData.h"

@@ -3,7 +3,7 @@
 #include "BattleCharacterManager.h"
 #include "CommandPlayer.h"
 
-BattleCharacter::BattleCharacter(const Character* chara, Status status) : Character(chara, chara->GetType())
+BattleCharacter::BattleCharacter(const Character* chara, Status status) : Character(chara)
 {
 	mStatus = status;
 }

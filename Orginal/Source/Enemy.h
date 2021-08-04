@@ -11,6 +11,7 @@ class Enemy : public Character
 	static constexpr float WALK_TO_WAIT_SEC = 4;
 	static constexpr float WALK_SPEED = 0.08f;
 	static constexpr float RUN_SPEED = WALK_SPEED * 2.0f;
+	static constexpr float MASS = 10;
 
 	enum MoveState
 	{

@@ -1,10 +1,12 @@
 #pragma once
+#include <DirectXMath.h>
 #include <vector>
 
 #include "Item.h"
-#include "Player.h"
 
 class CameraBase;
+class Player;
+class Shader;
 
 class PlayerManager
 {
@@ -25,6 +27,8 @@ private:
 	bool mIsInvincible = false;
 	float mInvincibleTimer = 0;
 
+
+	//std::vector<EquipmentData::Param> mEquipments;
 public:
 	PlayerManager() = default;
 	~PlayerManager() = default;
@@ -37,7 +41,7 @@ public:
 	void Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj, const DirectX::XMFLOAT4& lightDir);
 
 	// ÉQÉbÉ^Å[
-	Player* GetMovePlayer() { return mMovePlayer; }
+	Player* GetMovePlayer() const { return mMovePlayer; }
 	Player* GetPlayer(const size_t index) const { return mPlayers[index].get(); }
 	size_t GetNum() const {return mPlayers.size(); }
 	bool IsInvincible() const { return mIsInvincible; }

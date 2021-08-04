@@ -164,6 +164,7 @@
     <ClInclude Include="Source\CommandBase.h" />
     <ClInclude Include="Source\CommandCharaSelect.h" />
     <ClInclude Include="Source\CommandEnemy.h" />
+    <ClInclude Include="Source\CommandEscape.h" />
     <ClInclude Include="Source\CommandItem.h" />
     <ClInclude Include="Source\CommandPlayer.h" />
     <ClInclude Include="Source\DataBase.h" />
@@ -172,6 +173,7 @@
     <ClInclude Include="Source\Enemy.h" />
     <ClInclude Include="Source\EnemyBattle.h" />
     <ClInclude Include="Source\EnemyManager.h" />
+    <ClInclude Include="Source\EquipmentData.h" />
     <ClInclude Include="Source\FontValue.h" />
     <ClInclude Include="Source\GameManager.h" />
     <ClInclude Include="Source\GaussianBlur.h" />
@@ -260,6 +262,7 @@
     <ClCompile Include="Source\CommandBase.cpp" />
     <ClCompile Include="Source\CommandCharaSelect.cpp" />
     <ClCompile Include="Source\CommandEnemy.cpp" />
+    <ClCompile Include="Source\CommandEscape.cpp" />
     <ClCompile Include="Source\CommandItem.cpp" />
     <ClCompile Include="Source\CommandPlayer.cpp" />
     <ClCompile Include="Source\DataBase.cpp" />
@@ -267,6 +270,7 @@
     <ClCompile Include="Source\Enemy.cpp" />
     <ClCompile Include="Source\EnemyBattle.cpp" />
     <ClCompile Include="Source\EnemyManager.cpp" />
+    <ClCompile Include="Source\EquipmentData.cpp" />
     <ClCompile Include="Source\Fade.cpp" />
     <ClCompile Include="Source\FontValue.cpp" />
     <ClCompile Include="Source\GameManager.cpp" />

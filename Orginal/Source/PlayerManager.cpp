@@ -4,6 +4,7 @@
 
 #include "Fade.h"
 #include "GameManager.h"
+#include "Player.h"
 #include "SceneManager.h"
 #include "SceneMenu.h"
 #include "ItemData.h"

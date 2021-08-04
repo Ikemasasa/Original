@@ -6,6 +6,7 @@
 #include "CollisionTerrain.h"
 #include "EnemyManager.h"
 #include "Fade.h"
+#include "Player.h"
 #include "PlayerManager.h"
 #include "SceneManager.h"
 #include "SceneBattle.h"
@@ -32,9 +33,11 @@ void CharacterManager::Update()
 
 
 	// ’ÇX8•ª–Ø‚Æ‚©‚µ‚Ä‚Ý‚½‚¢
+	Player* player = mPlayerManager->GetMovePlayer();
 	for (int i = 0; i < mEnemyManager->GetNum(); ++i)
 	{
-		if (Collision::ColCapsules(mEnemyManager->GetEnemy(i)->GetCapsule(), mPlayerManager->GetMovePlayer()->GetCapsule()))
+		Enemy* enemy = mEnemyManager->GetEnemy(i);
+		if (Collision::ColCapsules(enemy->GetCapsule(), player->GetCapsule()))
 		{
 			// –³“GŽžŠÔ‚¶‚á‚È‚¯‚ê‚Î
 			if (!mPlayerManager->IsInvincible()) 
@@ -46,6 +49,11 @@ void CharacterManager::Update()
 				Fade::GetInstance().SetSceneImage(Fade::SPEED_SLOW);
 				SceneManager::GetInstance().SetStackScene(std::make_unique<SceneBattle>(mPlayerManager.get(), mEnemyManager->GetEnemy(i)));
 				break;
+			}
+			else
+			{
+				// –³“GŽžŠÔ’†‚È‚ç‰Ÿ‚µ‡‚¢‚ÌŒvŽZ‚ð‚·‚é
+				Collide(player, enemy);
 			}
 		}
 	}
@@ -63,3 +71,30 @@ void CharacterManager::Render(const Shader* shader, const DirectX::XMFLOAT4X4& v
 	mEnemyManager->Render(shader, view, projection, lightDir);
 }
 
+void CharacterManager::Collide(Character* a, Character* b)
+{
+	float massA = a->GetMass();
+	float massB = b->GetMass();
+	float totalMass = massA + massB;
+
+	float rateA = 0.0f, rateB = 0.0f;
+	if (totalMass <= 0.0f)
+	{
+		rateA = rateB = 0.5f;
+	}
+	else
+	{
+		rateA = massA / totalMass;
+		rateB = massB / totalMass;
+	}
+
+	// rate‚É‰ž‚¶‚Ä‚»‚ê‚¼‚êˆÚ“®
+	float totalSize = a->GetCapsule().radius + b->GetCapsule().radius;
+	Vector3 v = b->GetPos() - a->GetPos();
+	v.y = 0.0f; // ‚‚³–³Ž‹
+	float dist = v.Length();
+
+	a->SetPos(a->GetPos() - v * (totalSize - dist) * rateA);
+	b->SetPos(b->GetPos() + v * (totalSize - dist) * rateB);
+
+}

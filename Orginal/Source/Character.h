@@ -33,23 +33,21 @@ protected:
 	Vector3 mVelocity = { 0,0,0 };
 	Vector3 mScale = { 1, 1, 1 };
 	Vector3 mAngle = { 0,0,0 };
-	int mMass = 0;		//質量
+	float mMass = 0;		//質量
 	bool mExist = true;
 	Type mType = NONE;
 
 public:
 	Character(int charaID, Type type);
-	Character(const Character* org, Type type);
+	Character(const Character* org);
 	virtual ~Character() = default;
-
 
 	void UpdateWorld();
 	void Render(const DirectX::XMFLOAT4X4 & view, const DirectX::XMFLOAT4X4 & projection, const DirectX::XMFLOAT4 & lightDir);
 	void Render(const Shader * shader, const DirectX::XMFLOAT4X4 & view, const DirectX::XMFLOAT4X4 & projection, const DirectX::XMFLOAT4 & lightDir);
 
-
 	void CorrectionAngle();	// mVelocity方向に向く
-	void CorrectionAngle(const Vector3& dirN); // distN方向に向く
+	void CorrectionAngle(const Vector3& dirN); // dirN方向に向く
 
 	// モーション追加
 	void AddMotion(const char* filename, SkinnedMesh::MotionType type) { mMesh->AddMotion(filename, type); }
@@ -65,6 +63,7 @@ public:
 	AABB    GetAABB() const;
 	CAPSULE GetCapsule() const;
 	Type	GetType() const { return mType; }
+	float	GetMass() const { return mMass; }
 
 	// セッター
 	void SetPos(const Vector3 & p) { mPos = p; }

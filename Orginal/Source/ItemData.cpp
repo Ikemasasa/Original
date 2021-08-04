@@ -1,7 +1,6 @@
 #include "ItemData.h"
 
 #include <fstream>
-#include <string>
 #include <sstream>
 
 #include "lib/ConvertString.h"
@@ -62,7 +61,7 @@ void ItemData::LoadItemData()
 			item.defValue = std::stoi(data[index++]);
 			item.info = data[index++];
 
-			mItems.emplace_back(item);
+			mItems.push_back(item);
 		}
 	}
 

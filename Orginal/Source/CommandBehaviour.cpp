@@ -38,7 +38,6 @@ void CommandBehaviour::Update(const BattleCharacterManager* bcm, CommandBase* cm
 
 
 	// ‚±‚ñ‚ÈƒŒƒCƒAƒEƒg
-	// RFUŒ‚ L:–hŒä (‚±‚ê‚Í‚ ‚Æ‚Å‚¢‚¢)
 	//    “¹
 	// –h U ‹Z
 	//    “¦

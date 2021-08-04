@@ -357,6 +357,12 @@
     <ClInclude Include="Source\Character.h">
       <Filter>ヘッダー ファイル\Scene\Field</Filter>
     </ClInclude>
+    <ClInclude Include="Source\EquipmentData.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CommandEscape.h">
+      <Filter>ヘッダー ファイル\Scene\Battle\command</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\lib\Blend.cpp">
@@ -613,6 +619,12 @@
     </ClCompile>
     <ClCompile Include="Source\Character.cpp">
       <Filter>ソース ファイル\Scene\Field</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EquipmentData.cpp">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CommandEscape.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

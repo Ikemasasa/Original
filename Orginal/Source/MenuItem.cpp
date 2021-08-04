@@ -10,8 +10,10 @@
 
 #include "Item.h"
 #include "ItemData.h"
+#include "Player.h"
 #include "PlayerManager.h"
 #include "Singleton.h"
+#include "StatusData.h"
 
 void MenuItem::Initialize(const PlayerManager* plm)
 {
