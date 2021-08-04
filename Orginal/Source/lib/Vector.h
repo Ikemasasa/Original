@@ -55,10 +55,8 @@ public:
 	}
 
 	//ê≥ãKâª
-	void Normalize()
-	{
-		*this = DirectX::XMVector2Normalize(DirectX::XMVECTOR(*this));
-	}
+	void Normalize() { *this = DirectX::XMVector2Normalize(DirectX::XMVECTOR(*this)); }
+	Vector2 GetNormalize(){ return DirectX::XMVector2Normalize(DirectX::XMVECTOR(*this)); }
 };
 
 class Vector3 : public DirectX::XMFLOAT3
@@ -125,16 +123,10 @@ public:
 	}
 
 	//ê≥ãKâª
-	void Normalize() 
-	{
-		*this = DirectX::XMVector3Normalize(DirectX::XMVECTOR(*this));
-	}
+	void Normalize() { *this = DirectX::XMVector3Normalize(DirectX::XMVECTOR(*this)); }
+	Vector3 GetNormalize() { return DirectX::XMVector3Normalize(DirectX::XMVECTOR(*this)); }
 
-	void Normalize(Vector3* out) const
-	{
-		*out = DirectX::XMVector3Normalize(DirectX::XMVECTOR(*this));
-	}
-
+	// ç¿ïWïœä∑
 	Vector2 WorldToScreen(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj) const;
 };
 

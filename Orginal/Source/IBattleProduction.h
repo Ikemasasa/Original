@@ -1,8 +1,8 @@
 #pragma once
 #include "ProductionValue.h"
 
-class BattleActor;
-class BattleActorManager;
+class BattleCharacter;
+class BattleCharacterManager;
 
 class IBattleProduction
 {
@@ -12,10 +12,10 @@ protected: // •¶š‚ÌF
 	static const Vector3 HEAL_MP_RGB;
 
 protected:
-	 int mMoveActorID;
-	 int mTargetActorID;
-	BattleActor* mMoveActor = nullptr;	 // ID‚©‚çæ“¾‚µ‚½‚Ì‚ğ•Û‘¶‚·‚é‚æ‚¤
-	BattleActor* mTargetActor = nullptr; // “¯ã
+	 int mMoveCharaID;
+	 int mTargetCharaID;
+	BattleCharacter* mMoveChara = nullptr;	 // ID‚©‚çæ“¾‚µ‚½‚Ì‚ğ•Û‘¶‚·‚é‚æ‚¤
+	BattleCharacter* mTargetChara = nullptr; // “¯ã
 	//int mAmount = -1;
 
 	ProductionValue mProductionValue;
@@ -24,10 +24,10 @@ public:
 	IBattleProduction() = default;
 	~IBattleProduction() = default;
 
-	void Begin(const int moveActorID, const int targetActorID);
+	void Begin(const int moveCharaID, const int targetCharaID);
 
 	virtual void Initialize() = 0;
-	virtual void Update(const BattleActorManager* bam) = 0;
+	virtual void Update(const BattleCharacterManager* bcm) = 0;
 	virtual void Render() = 0;
 
 	bool IsFinished() const { return mIsFinished; }

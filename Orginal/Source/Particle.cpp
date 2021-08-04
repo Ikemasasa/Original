@@ -7,7 +7,7 @@
 
 void Particle::Animation(float animationPerSecond)
 {
-	float time = GameManager::elpsedTime;
+	float time = GameManager::elapsedTime;
 	for (auto& data: mParticleData) 
 	{
 		if (!data.isEnable) continue;
@@ -98,7 +98,7 @@ void Particle::Emitter(float duration, float rate, Vector3 center, float radius)
 
 void Particle::Update(float animationPerSecond)
 {
-	float time = GameManager::elpsedTime;
+	float time = GameManager::elapsedTime;
 
 	// エミッター
 	mLifeTime += time;

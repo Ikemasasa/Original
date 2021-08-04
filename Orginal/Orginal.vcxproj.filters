@@ -207,13 +207,10 @@
     <ClInclude Include="Source\CommandBase.h">
       <Filter>ヘッダー ファイル\Scene\Battle</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Actor.h">
+    <ClInclude Include="Source\CharacterManager.h">
       <Filter>ヘッダー ファイル\Scene\Field</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ActorManager.h">
-      <Filter>ヘッダー ファイル\Scene\Field</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\BattleActor.h">
+    <ClInclude Include="Source\BattleCharacter.h">
       <Filter>ヘッダー ファイル\Scene\Battle</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\Skybox.h">
@@ -225,7 +222,7 @@
     <ClInclude Include="Source\MeshDataLoader.h">
       <Filter>ヘッダー ファイル\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Source\BattleActorManager.h">
+    <ClInclude Include="Source\BattleCharacterManager.h">
       <Filter>ヘッダー ファイル\Scene\Battle</Filter>
     </ClInclude>
     <ClInclude Include="Source\EffectManager.h">
@@ -354,6 +351,12 @@
     <ClInclude Include="Source\lib\Random.h">
       <Filter>lib\ヘッダーファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Object.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Character.h">
+      <Filter>ヘッダー ファイル\Scene\Field</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\lib\Blend.cpp">
@@ -452,10 +455,10 @@
     <ClCompile Include="Source\EnemyManager.cpp">
       <Filter>ソース ファイル\Scene\Field</Filter>
     </ClCompile>
-    <ClCompile Include="Source\BattleActorManager.cpp">
+    <ClCompile Include="Source\BattleCharacterManager.cpp">
       <Filter>ソース ファイル\Scene\Battle</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ActorManager.cpp">
+    <ClCompile Include="Source\CharacterManager.cpp">
       <Filter>ソース ファイル\Scene\Field</Filter>
     </ClCompile>
     <ClCompile Include="Source\CommandPlayer.cpp">
@@ -473,11 +476,8 @@
     <ClCompile Include="Source\SceneMenu.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Source\BattleActor.cpp">
+    <ClCompile Include="Source\BattleCharacter.cpp">
       <Filter>ソース ファイル\Scene\Battle</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Actor.cpp">
-      <Filter>ソース ファイル\Scene\Field</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\Skybox.cpp">
       <Filter>ソース ファイル\Common</Filter>
@@ -607,6 +607,12 @@
     </ClCompile>
     <ClCompile Include="Source\lib\Random.cpp">
       <Filter>lib\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Object.cpp">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Character.cpp">
+      <Filter>ソース ファイル\Scene\Field</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

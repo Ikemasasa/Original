@@ -27,7 +27,7 @@ int Looper::Run(HWND hwnd)
 
 	while (IsLoop() && sm.IsLoop())
 	{
-		GameManager::elpsedTime = pm.GetElapsedTime();
+		GameManager::elapsedTime = pm.GetElapsedTime();
 
 		Input::Update();
 		sm.Update();

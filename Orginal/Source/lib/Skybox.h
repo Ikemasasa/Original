@@ -1,9 +1,8 @@
 #pragma once
-#include <d3d11.h>
-#include <wrl.h>
 #include <DirectXmath.h>
 #include <memory>
 
+#include "ConstantBuffer.h"
 #include "Vector.h"
 
 class Sprite;
@@ -11,7 +10,7 @@ class Shader;
 
 class Skybox
 {
-	struct ConstantBuffer
+	struct CbSky
 	{
 		DirectX::XMFLOAT4 cameraPos;
 		DirectX::XMFLOAT4X4 invView;
@@ -20,14 +19,9 @@ class Skybox
 
 	std::unique_ptr<Sprite> mTexture;
 	std::unique_ptr<Shader> mShader;
-	Microsoft::WRL::ComPtr<ID3D11Buffer> mConstBuffer;
+	ConstantBuffer mConstBuffer;
 
 	Vector3 mEyePos;
-
-	// èâä˙âªä÷êî
-	bool CreateShaders();
-	bool CreateConstantBuffer();
-
 public:
 	Skybox() = default;
 	~Skybox() = default;

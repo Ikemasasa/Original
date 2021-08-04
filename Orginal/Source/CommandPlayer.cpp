@@ -1,6 +1,6 @@
 #include "CommandPlayer.h"
 
-#include "BattleActorManager.h"
+#include "BattleCharacterManager.h"
 #include "BattleState.h"
 #include "CameraManager.h"
 #include "CommandBehaviour.h"
@@ -21,7 +21,7 @@ CommandPlayer::~CommandPlayer()
 	for (size_t i = 0; i < size; ++i) mCommand.pop();
 }
 
-void CommandPlayer::Update(const BattleActorManager* bam)
+void CommandPlayer::Update(const BattleCharacterManager* bcm)
 {
 	if (IsBehaviourEnable()) return;
 
@@ -38,7 +38,7 @@ void CommandPlayer::Update(const BattleActorManager* bam)
 		mCommand.emplace(nextCommand);
 	}
 
-	mCommand.top()->Update(bam, this);
+	mCommand.top()->Update(bcm, this);
 	if (IsBehaviourEnable()) // 1行上のupdateでコマンドが決まったら
 	{
 		// コマンドをリセットする(CommandBehaviourだけにする)

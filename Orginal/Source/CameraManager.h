@@ -7,7 +7,7 @@
 #include "CameraBase.h"
 #include "Singleton.h"
 
-class Actor;
+class Character;
 
 // singleton‚ğ’Ê‚·
 class CameraManager
@@ -22,7 +22,7 @@ public:
 	void Push(const std::shared_ptr<CameraBase>& camera) { mMainCamera.push(camera); };
 	void Pop() { mMainCamera.pop(); }
 
-	void Update(const Actor* target);
+	void Update(const Character* target);
 
 
 	// ƒQƒbƒ^[

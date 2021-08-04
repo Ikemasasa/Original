@@ -1,12 +1,12 @@
 #include "CommandEnemy.h"
 
-#include "BattleActorManager.h"
+#include "BattleCharacterManager.h"
 
-void CommandEnemy::Update(const BattleActorManager* bam)
+void CommandEnemy::Update(const BattleCharacterManager* bcm)
 {
 	if (IsBehaviourEnable()) return;
 
-	const std::vector<int>& aliveIDs = bam->GetAliveActorIDs(Actor::PLAYER);
+	const std::vector<int>& aliveIDs = bcm->GetAliveCharaIDs(Character::PLAYER);
 
 	int index = rand() % aliveIDs.size();
 	mTargetObjID = aliveIDs[index];

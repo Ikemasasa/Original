@@ -4,5 +4,5 @@
 class CommandEnemy : public CommandBase
 {
 public:
-	void Update(const BattleActorManager* bam) override;
+	void Update(const BattleCharacterManager* bcm) override;
 };

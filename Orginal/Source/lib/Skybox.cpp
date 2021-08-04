@@ -6,44 +6,16 @@
 #include "Shader.h"
 #include "Sprite.h"
 
-bool Skybox::CreateShaders()
-{
-	// 頂点シェーダ / ピクセルシェーダ　の作成
-	bool check = false;
-	check = mShader->Load2D(L"Shaders/SkyBox.fx", "VSMain", "PSMain");
-	if (!check) return false;
-
-	return true;
-}
-
-bool Skybox::CreateConstantBuffer()
-{
-	ID3D11Device* device = FRAMEWORK.GetDevice();
-	HRESULT hr = S_OK;
-
-	D3D11_BUFFER_DESC bd;
-	ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
-	bd.ByteWidth = sizeof(ConstantBuffer);
-	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	bd.CPUAccessFlags = 0;
-	hr = device->CreateBuffer(&bd, NULL, mConstBuffer.GetAddressOf());
-	if (FAILED(hr)) return false;
-
-	return true;
-}
-
 void Skybox::Initialize(const wchar_t* filename)
 {
 	mEyePos = Vector3::ZERO;
 
-	// 定数バッファ作成
-	mConstBuffer = nullptr;
-	CreateConstantBuffer();
-
 	// シェーダ作成
 	mShader = std::make_unique<Shader>();
-	CreateShaders();
+	mShader->Load2D(L"Shaders/SkyBox.fx", "VSMain", "PSMain");
+
+	// 定数バッファ
+	mConstBuffer.Create(sizeof(CbSky));
 
 	// テクスチャ読み込み
 	mTexture = std::make_unique<Sprite>(filename);
@@ -68,16 +40,15 @@ void Skybox::Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& 
 	DirectX::XMMATRIX matProj =	DirectX::XMLoadFloat4x4(&proj);
 
 	// CB更新
-	ConstantBuffer cb;
+	CbSky cb;
 	cb.cameraPos.x = mEyePos.x;
 	cb.cameraPos.y = mEyePos.y;
 	cb.cameraPos.z = mEyePos.z;
 	cb.cameraPos.w = 1.0f;
 	DirectX::XMStoreFloat4x4(&cb.invView, DirectX::XMMatrixInverse(nullptr, matView));
 	DirectX::XMStoreFloat4x4(&cb.invProj, DirectX::XMMatrixInverse(nullptr, matProj));
-	context->UpdateSubresource(mConstBuffer.Get(), 0, NULL, &cb, 0, 0);
-	context->VSSetConstantBuffers(0, 1, mConstBuffer.GetAddressOf());
-	context->PSSetConstantBuffers(0, 1, mConstBuffer.GetAddressOf());
+	mConstBuffer.Update(&cb);
+	mConstBuffer.Set(0);
 
 	{
 		// 描画

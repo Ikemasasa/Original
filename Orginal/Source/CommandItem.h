@@ -10,6 +10,6 @@ class CommandItem : public IDecideCommand
 public:
 	CommandItem();
 	~CommandItem();
-	virtual void Update(const BattleActorManager* bam, CommandBase* cmdBase) override;
+	virtual void Update(const BattleCharacterManager* bcm, CommandBase* cmdBase) override;
 	virtual void Render() override;
 };

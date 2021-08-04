@@ -3,14 +3,14 @@
 #include "lib/Input.h"
 #include "lib/Math.h"
 
+#include "Character.h"
 #include "Define.h"
-#include "Actor.h"
 
 CameraTPS::CameraTPS() : CameraBase()
 {
 }
 
-void CameraTPS::Update(const Actor* target)
+void CameraTPS::Update(const Character* target)
 {
 	mDistFromTargetY += Input::GetAxisRY() * 0.1f;
 	mAngle.y		 += Input::GetAxisRX() * DirectX::XMConvertToRadians(1.0f);

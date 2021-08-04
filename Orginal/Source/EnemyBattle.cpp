@@ -1,13 +1,12 @@
 #include "EnemyBattle.h"
 
-#include "Actor.h"
 #include "CommandEnemy.h"
 #include "Enemy.h"
 #include "DataBase.h"
 #include "Singleton.h"
 #include "StatusData.h"
 
-EnemyBattle::EnemyBattle(const Enemy* enemy) : BattleActor(enemy, Singleton<DataBase>().GetInstance().GetStatusData()->GetEnmStatus(enemy->GetCharaID()))
+EnemyBattle::EnemyBattle(const Enemy* enemy) : BattleCharacter(enemy, Singleton<DataBase>().GetInstance().GetStatusData()->GetEnmStatus(enemy->GetCharaID()))
 {
 	mCommand = std::make_unique<CommandEnemy>();// 後でコマンドエネミーにする
 }

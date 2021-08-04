@@ -1,9 +1,10 @@
 #pragma once
 #include "IDecideCommand.h"
-#include "Actor.h"
 
-class BattleActor;
-class BattleActorManager;
+#include "Character.h"
+
+class BattleCharacter;
+class BattleCharacterManager;
 class CommandBase;
 class Sprite;
 
@@ -14,13 +15,13 @@ class CommandCharaSelect : public IDecideCommand
 	std::unique_ptr<Sprite> mArrow;
 
 	int mCharaIndex = 0;
-	BattleActor* mTargetActor;
-	Actor::Type mCharaType;
+	BattleCharacter* mTargetChara;
+	Character::Type mCharaType;
 
 public:
-	CommandCharaSelect(Actor::Type characterType);
+	CommandCharaSelect(Character::Type characterType);
 	~CommandCharaSelect() = default;
 
-	void Update(const BattleActorManager* bam, CommandBase* cmdBase) override;
+	void Update(const BattleCharacterManager* bcm, CommandBase* cmdBase) override;
 	void Render() override;
 };

@@ -3,7 +3,7 @@
 #include "lib/Input.h"
 #include "lib/Math.h"
 
-#include "BattleActorManager.h"
+#include "BattleCharacterManager.h"
 #include "BattleState.h"
 #include "CommandItem.h"
 #include "CommandCharaSelect.h"
@@ -14,7 +14,7 @@ CommandBehaviour::CommandBehaviour()
 	mCommandIndex = { 1, 1 };
 }
 
-void CommandBehaviour::Update(const BattleActorManager* bam, CommandBase* cmdBase)
+void CommandBehaviour::Update(const BattleCharacterManager* bcm, CommandBase* cmdBase)
 {
 	BattleState::GetInstance().SetState(BattleState::State::COMMAND_SELECT);
 
@@ -47,7 +47,7 @@ void CommandBehaviour::Update(const BattleActorManager* bam, CommandBase* cmdBas
 		if (mCommandIndex.y == 0) mNextCommand = std::make_unique<CommandItem>();
 		else if (mCommandIndex.y == 2);
 		else if (mCommandIndex.x == 0);
-		else if (mCommandIndex.x == 1) mNextCommand = std::make_unique<CommandCharaSelect>(Actor::Type::ENEMY);
+		else if (mCommandIndex.x == 1) mNextCommand = std::make_unique<CommandCharaSelect>(Character::Type::ENEMY);
 		else if (mCommandIndex.x == 2);
 	}
 }

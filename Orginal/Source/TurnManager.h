@@ -5,8 +5,8 @@
 
 #include "IBattleProduction.h"
 
-class BattleActor;
-class BattleActorManager;
+class BattleCharacter;
+class BattleCharacterManager;
 
 // ターン進行のマネージャ
 class TurnManager
@@ -18,24 +18,24 @@ public:
 	static const int ITEM_DAMAGE_EFFECT_SLOT = 12;
 
 private:
-	std::queue<BattleActor*> mOrder;
+	std::queue<BattleCharacter*> mOrder;
 	std::unique_ptr<IBattleProduction> mProduction;
 	bool mIsTurnFinished = false;
 	bool mIsResult = false;
 
-	void SortOrder(const std::vector<std::shared_ptr<BattleActor>>& battleActorArray);
+	void SortOrder(const std::vector<std::shared_ptr<BattleCharacter>>& battleCharaArray);
 	void BeginProduction();
-	void OrganizeOrder(const std::vector<std::shared_ptr<BattleActor>>& battleActorArray);
+	void OrganizeOrder(const std::vector<std::shared_ptr<BattleCharacter>>& battleCharaArray);
 
 public:
-	void Initialize(const std::vector<std::shared_ptr<BattleActor>>& battleActorArray);
-	void Update(const BattleActorManager* bam);
+	void Initialize(const std::vector<std::shared_ptr<BattleCharacter>>& battleCharaArray);
+	void Update(const BattleCharacterManager* bcm);
 	void Render();
 
 	void ToResult();
 
 	// ゲッター
-	BattleActor* GetMoveActor() const { return mOrder.front(); }
+	BattleCharacter* GetMoveChara() const { return mOrder.front(); }
 	bool IsTurnFinished() const { return mIsTurnFinished; }
 	bool IsResult() const { return mIsResult; }
 };

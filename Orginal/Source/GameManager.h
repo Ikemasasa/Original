@@ -3,5 +3,5 @@
 class GameManager
 {
 public:
-	static float elpsedTime;
+	static float elapsedTime;
 };

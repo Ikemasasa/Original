@@ -3,16 +3,16 @@
 #include <random>
 #include <numeric>
 
-#include "BattleActorManager.h"
+#include "BattleCharacterManager.h"
 #include "CommandBase.h"
 #include "EffectManager.h"
 #include "ProductionAttack.h"
 #include "ProductionUseItem.h"
 #include "Singleton.h"
 
-void TurnManager::Initialize(const std::vector<std::shared_ptr<BattleActor>>& battleActorArray)
+void TurnManager::Initialize(const std::vector<std::shared_ptr<BattleCharacter>>& battleCharaArray)
 {
-	SortOrder(battleActorArray);
+	SortOrder(battleCharaArray);
 
 	// エフェクト読み込み
 	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/Death/Death.efk", DEATH_EFFECT_SLOT);
@@ -21,15 +21,15 @@ void TurnManager::Initialize(const std::vector<std::shared_ptr<BattleActor>>& ba
 	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/Explosion/explosion.efk", ITEM_DAMAGE_EFFECT_SLOT);
 }
 
-void TurnManager::Update(const BattleActorManager* bam)
+void TurnManager::Update(const BattleCharacterManager* bcm)
 {
 	// コマンド選択中
 	if (!mProduction)
 	{
 		mIsTurnFinished = false;
 
-		// BattleActorManagerのupdateでコマンドが決まったら
-		if (GetMoveActor()->GetCommand()->IsBehaviourEnable())
+		// BattleCharaManagerのupdateでコマンドが決まったら
+		if (GetMoveChara()->GetCommand()->IsBehaviourEnable())
 		{
 			// 演出開始
 			BeginProduction();
@@ -37,17 +37,17 @@ void TurnManager::Update(const BattleActorManager* bam)
 	}
 	else // 演出中
 	{
-		mProduction->Update(bam);
+		mProduction->Update(bcm);
 
 		// 演出が終了したら
 		if (mProduction->IsFinished())
 		{
 			// behaviour を noneにする
-			GetMoveActor()->GetCommand()->BehaviourFinished();
+			GetMoveChara()->GetCommand()->BehaviourFinished();
 
 			// mOrderを整理する
-			mOrder.pop(); // 今回のmoveactorは削除
-			OrganizeOrder(bam->GetBActors());
+			mOrder.pop(); // 今回のmoveCharaは削除
+			OrganizeOrder(bcm->GetBCharacters());
 
 			// 演出情報削除
 			mProduction.reset();
@@ -72,7 +72,7 @@ void TurnManager::ToResult()
 	mIsResult = true;
 }
 
-void TurnManager::SortOrder(const std::vector<std::shared_ptr<BattleActor>>& battleActorArray)
+void TurnManager::SortOrder(const std::vector<std::shared_ptr<BattleCharacter>>& battleCharaArray)
 {
 	// minからmaxまでの値をランダムに並べた配列を作るyatu
 	auto RandArrayNoDuplicate = [](const int min, const int max)
@@ -91,12 +91,12 @@ void TurnManager::SortOrder(const std::vector<std::shared_ptr<BattleActor>>& bat
 		return ret;
 	};
 
-	std::map<int, std::vector<BattleActor*>> agiOrder;
+	std::map<int, std::vector<BattleCharacter*>> agiOrder;
 
 	// マップのキーは昇順にソートされてる
-	for (auto& actor : battleActorArray)
+	for (auto& chara : battleCharaArray)
 	{
-		agiOrder[actor->GetStatus()->agi].push_back(actor.get());
+		agiOrder[chara->GetStatus()->agi].push_back(chara.get());
 	}
 
 	// 降順に代入したいからリバースイテレータ
@@ -120,7 +120,7 @@ void TurnManager::SortOrder(const std::vector<std::shared_ptr<BattleActor>>& bat
 
 void TurnManager::BeginProduction()
 {
-	CommandBase::Behaviour behaviour = GetMoveActor()->GetCommand()->GetBehaviour();
+	CommandBase::Behaviour behaviour = GetMoveChara()->GetCommand()->GetBehaviour();
 	switch (behaviour)
 	{
 	case CommandBase::Behaviour::ATTACK:   mProduction = std::make_unique<ProductionAttack>(); break;
@@ -129,12 +129,12 @@ void TurnManager::BeginProduction()
 
 	mProduction->Initialize();
 
-	int moveActorID = GetMoveActor()->GetObjID();
-	int targetActorID = GetMoveActor()->GetCommand()->GetTargetObjID();
-	mProduction->Begin(moveActorID, targetActorID);
+	int moveCharaID = GetMoveChara()->GetObjID();
+	int targetCharaID = GetMoveChara()->GetCommand()->GetTargetObjID();
+	mProduction->Begin(moveCharaID, targetCharaID);
 }
 
-void TurnManager::OrganizeOrder(const std::vector<std::shared_ptr<BattleActor>>& battleActorArray)
+void TurnManager::OrganizeOrder(const std::vector<std::shared_ptr<BattleCharacter>>& battleCharaArray)
 {
 	// mOrderを整理する
 	while (true)
@@ -142,7 +142,7 @@ void TurnManager::OrganizeOrder(const std::vector<std::shared_ptr<BattleActor>>&
 		// mOrderが空ならまた順番を作る
 		if (mOrder.empty())
 		{
-			SortOrder(battleActorArray);
+			SortOrder(battleCharaArray);
 		}
 
 		// 順番が来たアクタが倒されていたら

@@ -1,7 +1,7 @@
 #pragma once
 #include "ItemData.h"
 
-class BattleActorManager;
+class BattleCharacterManager;
 
 class CommandBase
 {
@@ -26,7 +26,7 @@ protected:
 public:
 	CommandBase() = default;
 	virtual ~CommandBase() = default;
-	virtual void Update(const BattleActorManager* bam) = 0;
+	virtual void Update(const BattleCharacterManager* bcm) = 0;
 	virtual void Render() const {};
 
 	bool IsBehaviourEnable() const { return (mBehaviour != Behaviour::NONE); }

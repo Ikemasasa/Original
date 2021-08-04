@@ -4,6 +4,7 @@
 #include "lib/Vector.h"
 
 struct Status;
+class BattleCharacterManager;
 
 class ProductionAttack : public IBattleProduction
 {
@@ -39,6 +40,6 @@ private:
 
 public:
 	void Initialize() override;
-	void Update(const BattleActorManager* bam) override;
+	void Update(const BattleCharacterManager* bcm) override;
 	void Render() override;
 };

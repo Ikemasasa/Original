@@ -1,6 +1,6 @@
 #include "ProductionUseItem.h"
 
-#include "BattleActorManager.h"
+#include "BattleCharacterManager.h"
 #include "CommandBase.h"
 #include "EffectManager.h"
 #include "GameManager.h"
@@ -13,15 +13,15 @@ void ProductionUseItem::Initialize()
 	mProductionValue.Initialize();
 }
 
-void ProductionUseItem::Update(const BattleActorManager* bam)
+void ProductionUseItem::Update(const BattleCharacterManager* bcm)
 {
 	switch (mState)
 	{
 	case State::INIT: // 初期設定
 
 		// IDからポインタ取得
-		mMoveActor = bam->GetActor(mMoveActorID);
-		mTargetActor = bam->GetActor(mTargetActorID);
+		mMoveChara = bcm->GetChara(mMoveCharaID);
+		mTargetChara = bcm->GetChara(mTargetCharaID);
 
 		StateInit();
 		// break;
@@ -51,10 +51,10 @@ void ProductionUseItem::Render()
 void ProductionUseItem::StateInit()
 {
 	// アイテム使用モーションセット
-	mMoveActor->SetMotion(SkinnedMesh::USE_ITEM, false);
+	mMoveChara->SetMotion(SkinnedMesh::USE_ITEM, false);
 
 	// 使用アイテム取得
-	const ItemData::ItemParam* param = mMoveActor->GetInventory()->GetItemParam(mMoveActor->GetCommand()->GetItemIndex());
+	const ItemData::ItemParam* param = mMoveChara->GetInventory()->GetItemParam(mMoveChara->GetCommand()->GetItemIndex());
 
 	// 効果量計算(m~Amountに代入される) 
 	switch (param->rate)
@@ -64,9 +64,9 @@ void ProductionUseItem::StateInit()
 	}
 
 	// ダメージアイテムのhpvalueはマイナスになってるからヒールで回復、ダメージ両方できる
-	mTargetActor->GetStatus()->HealHP(mHPAmount);
-	mTargetActor->GetStatus()->HealMP(mMPAmount);
-	mMoveActor->GetInventory()->Sub(mMoveActor->GetCommand()->GetItemIndex());
+	mTargetChara->GetStatus()->HealHP(mHPAmount);
+	mTargetChara->GetStatus()->HealMP(mMPAmount);
+	mMoveChara->GetInventory()->Sub(mMoveChara->GetCommand()->GetItemIndex());
 
 	// エフェクト決定
 	if (mHPAmount < 0) mEffectSlot = TurnManager::ITEM_DAMAGE_EFFECT_SLOT;
@@ -80,10 +80,10 @@ void ProductionUseItem::StateInit()
 void ProductionUseItem::StateUseItemWait()
 {
 	// モーションが終わったら
-	if (mMoveActor->IsMotionFinished())
+	if (mMoveChara->IsMotionFinished())
 	{
 		// エフェクト再生
-		Vector3 effectPos = mTargetActor->GetPos();
+		Vector3 effectPos = mTargetChara->GetPos();
 		mEffectInstHandle = Singleton<EffectManager>().GetInstance().Play(mEffectSlot, effectPos);
 		++mState;
 	}
@@ -97,11 +97,11 @@ void ProductionUseItem::StateWaitEffect()
 	if (!isPlay)
 	{
 		// 死んでたら死亡エフェクト
-		if (mTargetActor->GetStatus()->IsDead())
+		if (mTargetChara->GetStatus()->IsDead())
 		{
 			// Existをfalseにして、エフェクトを再生する
-			mTargetActor->SetExist(false); // 見えなくする
-			Vector3 effectPos(mTargetActor->GetPos().x, mTargetActor->GetPos().y + mTargetActor->GetLocalAABB().max.y * 0.5f, mTargetActor->GetPos().z);
+			mTargetChara->SetExist(false); // 見えなくする
+			Vector3 effectPos(mTargetChara->GetPos().x, mTargetChara->GetPos().y + mTargetChara->GetLocalAABB().max.y * 0.5f, mTargetChara->GetPos().z);
 			Singleton<EffectManager>().GetInstance().Play(TurnManager::DEATH_EFFECT_SLOT, effectPos);// えっふぇくと
 		}
 
@@ -110,13 +110,13 @@ void ProductionUseItem::StateWaitEffect()
 		const float ADDJUST_Y = 0.1f;
 		if (mHPAmount > 0)
 		{
-			Vector3 pos(mTargetActor->GetPos().x, mTargetActor->GetAABB().max.y - ADDJUST_Y * addNum, mTargetActor->GetPos().z);
+			Vector3 pos(mTargetChara->GetPos().x, mTargetChara->GetAABB().max.y - ADDJUST_Y * addNum, mTargetChara->GetPos().z);
 			mProductionValue.Add(mHPAmount, pos, HEAL_HP_RGB);
 			++addNum;
 		}
 		else if (mHPAmount < 0)
 		{
-			Vector3 pos(mTargetActor->GetPos().x, mTargetActor->GetAABB().max.y - ADDJUST_Y * addNum, mTargetActor->GetPos().z);
+			Vector3 pos(mTargetChara->GetPos().x, mTargetChara->GetAABB().max.y - ADDJUST_Y * addNum, mTargetChara->GetPos().z);
 			mProductionValue.Add(mHPAmount, pos, DAMAGE_RGB);
 			++addNum;
 		}
@@ -124,7 +124,7 @@ void ProductionUseItem::StateWaitEffect()
 		// MPの文字セット
 		if (mMPAmount > 0)
 		{
-			Vector3 pos(mTargetActor->GetPos().x, mTargetActor->GetAABB().max.y - ADDJUST_Y * addNum, mTargetActor->GetPos().z);
+			Vector3 pos(mTargetChara->GetPos().x, mTargetChara->GetAABB().max.y - ADDJUST_Y * addNum, mTargetChara->GetPos().z);
 			mProductionValue.Add(mHPAmount, pos, DAMAGE_RGB);
 			++addNum;
 		}
@@ -136,7 +136,7 @@ void ProductionUseItem::StateWaitEffect()
 void ProductionUseItem::StateWait()
 {
 	static float waitTimer = 0.0f;
-	waitTimer += GameManager::elpsedTime;
+	waitTimer += GameManager::elapsedTime;
 
 	const float WAIT_SEC = 1.5f;
 	if (waitTimer >= WAIT_SEC)
@@ -157,7 +157,7 @@ void ProductionUseItem::CalcAmountPercent(const ItemData::ItemParam* param)
 {
 	// hpValueは%なので、100で割る
 	const float MAX_PERCENT = 100.0f;
-	mHPAmount = (int)(mMoveActor->GetStatus()->maxHP * (param->hpValue / MAX_PERCENT));
-	mMPAmount = (int)(mMoveActor->GetStatus()->maxMP * (param->mpValue / MAX_PERCENT));
+	mHPAmount = (int)(mMoveChara->GetStatus()->maxHP * (param->hpValue / MAX_PERCENT));
+	mMPAmount = (int)(mMoveChara->GetStatus()->maxMP * (param->mpValue / MAX_PERCENT));
 }
 

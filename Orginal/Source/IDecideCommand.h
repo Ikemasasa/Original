@@ -1,8 +1,8 @@
 #pragma once
 #include <memory>
 
-class BattleActor;
-class BattleActorManager;
+class BattleCharacter;
+class BattleCharacterManager;
 class CommandBase;
 
 
@@ -28,7 +28,7 @@ public:
 	IDecideCommand() = default;
 	virtual ~IDecideCommand() = default;
 
-	virtual void Update(const BattleActorManager* bam, CommandBase* cmdBase) = 0;
+	virtual void Update(const BattleCharacterManager* bcm, CommandBase* cmdBase) = 0;
 	virtual void Render() {}
 
 	bool IsBackState() const { return mIsBackState; }

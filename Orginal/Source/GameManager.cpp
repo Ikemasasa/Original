@@ -1,3 +1,3 @@
 #include "GameManager.h"
 
-float GameManager::elpsedTime = 0.0f;
+float GameManager::elapsedTime = 0.0f;

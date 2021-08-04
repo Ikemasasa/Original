@@ -11,7 +11,7 @@ class CollisionTerrain
 	static std::vector<Terrain*> mTerrains;
 
 public:
-	static int RayPick(Vector3 sp, Vector3 ep, Vector3* outPos, Vector3* outNormal, float* outLen);
+	static int RayPick(const Vector3& sp, const Vector3& ep, Vector3* outPos, Vector3* outNormal, float* outLen);
 	static int MoveCheck(const Vector3& sp, const Vector3& ep, Vector3* outPos);
 	static bool RegisterTerrain(Terrain* t);
 	static bool UnRegisterTerrain(Terrain* t);

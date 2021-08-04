@@ -3,7 +3,6 @@
 #include <stack>
 
 #include "CommandBase.h"
-//#include "IDecideCommand.h"
 
 class IDecideCommand;
 class Sprite;
@@ -16,6 +15,6 @@ private:
 public:
 	CommandPlayer();
 	~CommandPlayer();
-	void Update(const BattleActorManager* bam) override;
+	void Update(const BattleCharacterManager* bcm) override;
 	void Render() const override;
 };

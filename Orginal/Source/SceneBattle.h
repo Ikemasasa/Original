@@ -6,8 +6,7 @@
 
 #include "SceneBase.h"
 
-class BattleActorManager;
-class CameraBattle;
+class BattleCharacterManager;
 class Enemy;
 class PlayerManager;
 class Skybox;
@@ -16,7 +15,7 @@ class Terrain;
 class SceneBattle : public SceneBase
 {
 private:
-	std::unique_ptr<BattleActorManager> mBattleActorManager = nullptr;
+	std::unique_ptr<BattleCharacterManager> mBattleCharacterManager = nullptr;
 	std::unique_ptr<Skybox>				mSkybox = nullptr;
 	std::shared_ptr<Terrain> mTerrain = nullptr;
 

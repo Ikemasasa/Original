@@ -42,7 +42,7 @@ void PlayerManager::Update()
 	// –³“GŽžŠÔ‚Ì’²®
 	if (mIsInvincible)
 	{
-		mInvincibleTimer += GameManager::elpsedTime;
+		mInvincibleTimer += GameManager::elapsedTime;
 
 		// INVINCIBLE_SECOND•bŒo‰ßŒãA–³“G‚ðoff‚É‚·‚é
 		if (mInvincibleTimer >= INVINCIBLE_SECOND)

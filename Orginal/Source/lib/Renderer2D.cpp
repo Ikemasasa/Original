@@ -70,10 +70,10 @@ void Renderer2D::UpdateVertex(ID3D11ShaderResourceView* srv, const Vector2& pos,
     context->RSGetViewports(&numViewports, &viewport);
 
     Vertex vertices[] = {
-        { Vector3(0.0f, 0.0f, 0.0f), {0.0f, 0.0f, -1.0f}, Vector2(0.0f, 0.0f), color },
-        { Vector3(1.0f, 0.0f, 0.0f), {0.0f, 0.0f, -1.0f}, Vector2(1.0f, 0.0f), color },
-        { Vector3(0.0f, 1.0f, 0.0f), {0.0f, 0.0f, -1.0f}, Vector2(0.0f, 1.0f), color },
-        { Vector3(1.0f, 1.0f, 0.0f), {0.0f, 0.0f, -1.0f}, Vector2(1.0f, 1.0f), color },
+        { Vector3(0.0f, 0.0f, 0.0f), {0.0f, 0.0f, 0.0f}, Vector2(0.0f, 0.0f), color },
+        { Vector3(1.0f, 0.0f, 0.0f), {0.0f, 0.0f, 0.0f}, Vector2(1.0f, 0.0f), color },
+        { Vector3(0.0f, 1.0f, 0.0f), {0.0f, 0.0f, 0.0f}, Vector2(0.0f, 1.0f), color },
+        { Vector3(1.0f, 1.0f, 0.0f), {0.0f, 0.0f, 0.0f}, Vector2(1.0f, 1.0f), color },
     };
 
     float sinValue = sinf(angle);

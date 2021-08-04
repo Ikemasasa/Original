@@ -4,6 +4,8 @@
 #include "FontValue.h"
 #include "ItemData.h"
 
+class BattleCharacterManager;
+
 class ProductionUseItem : public IBattleProduction
 {
 	enum State
@@ -34,6 +36,6 @@ private:
 
 public:
 	void Initialize();
-	void Update(const BattleActorManager* bam);
+	void Update(const BattleCharacterManager* bcm);
 	void Render();
 };
