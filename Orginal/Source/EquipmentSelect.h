@@ -27,6 +27,7 @@ class EquipmentSelect
 	std::unique_ptr<Sprite> mBoard;
 	std::unique_ptr<Sprite> mSelectFrame;
 	std::unique_ptr<Sprite> mInfoBoard;
+	std::unique_ptr<Sprite> mEquipmentMark;
 	int mSelectIndex = 0;
 	int mOldSelectIndex = 0;
 	std::vector<EquipmentInventory::Data> mEquipmentsData;

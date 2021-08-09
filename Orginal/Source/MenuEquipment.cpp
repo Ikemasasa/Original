@@ -68,26 +68,36 @@ MenuBase::Select MenuEquipment::Update(PlayerManager* plm)
 		int equipmentIndex = mEquipmentSelect.Update(inventory);
 		
 		// 選んだら
+		bool isEquip = true; // 装備中の装備を選んだ時外すよう
 		if (equipmentIndex != -1)
 		{
 			// すでに装備している人がいたら外す
-			if (inventory[equipmentIndex].equipmentChara)
+			const Character* chara = inventory[equipmentIndex].equipmentChara;
+			if (chara)
 			{
-				const Character* chara = inventory[equipmentIndex].equipmentChara;
-
 				// 装備を外す
 				Status equipCharaStatus = Singleton<DataBase>().GetInstance().GetStatusData()->GetPLStatus(chara->GetCharaID());
 				equipCharaStatus.equipments.UnEquip(inventory[equipmentIndex].equipmentID);
 				Singleton<DataBase>().GetInstance().GetStatusData()->SetPLStatus(chara->GetCharaID(), equipCharaStatus);
 
+				// 装備中のキャラの装備するキャラが同じなら、外すだけ
+				if (selectPlayer == chara)
+				{
+					isEquip = false;
+				}
+
 				// 参照キャラをnullにする
 				equipmentInventory->UnSetChara(type, equipmentIndex);
 			}
 
-			// 装備する
-			status.equipments.Equip(selectPlayer, inventory[equipmentIndex].equipmentID);
-			equipmentInventory->SetChara(type, selectPlayer, equipmentIndex);
-			Singleton<DataBase>().GetInstance().GetStatusData()->SetPLStatus(selectCharaID, status);
+			if (isEquip)
+			{
+				// 装備する
+				status.equipments.Equip(selectPlayer, inventory[equipmentIndex].equipmentID);
+				equipmentInventory->SetChara(type, selectPlayer, equipmentIndex);
+				Singleton<DataBase>().GetInstance().GetStatusData()->SetPLStatus(selectCharaID, status);
+			}
+
 			mIsDecideType = false;
 		}
 

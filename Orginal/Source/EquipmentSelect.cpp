@@ -14,6 +14,7 @@ void EquipmentSelect::Initialize()
 	mBoard = std::make_unique<Sprite>(L"Data/Image/board.png");
 	mSelectFrame = std::make_unique<Sprite>(L"Data/Image/select_frame.png");
 	mInfoBoard = std::make_unique<Sprite>(L"Data/Image/item_info_board.png");
+	mEquipmentMark = std::make_unique<Sprite>(L"Data/Image/Menu/equipment_mark.png");
 }
 
 int EquipmentSelect::Update(const std::vector<EquipmentInventory::Data>& equipmentsData)
@@ -52,6 +53,8 @@ void EquipmentSelect::Render(const Vector2& boardPos)
 	// ボード描画
 	mBoard->Render(boardPos, Vector2::ONE, Vector2::ZERO, mBoard->GetSize());
 
+	if (mEquipmentsData.empty()) return;
+
 	//アイコン描画
 	{
 		const float ICON_SCALE_SIZE = ICON_SCALE * ICON_SIZE;
@@ -68,6 +71,12 @@ void EquipmentSelect::Render(const Vector2& boardPos)
 
 			const EquipmentData::Param* param = Singleton<DataBase>().GetInstance().GetEquipmentData()->GetParam(mEquipmentsData[mSelectIndex].equipmentID);
 			param->icon->Render(pos, scale, Vector2::ZERO, size);
+
+			// 装備中の装備ならEを出す
+			if (mEquipmentsData[mSelectIndex].equipmentChara)
+			{
+				mEquipmentMark->Render(pos, scale, Vector2::ZERO, size);
+			}
 		}
 
 		// 選択のフレーム画像を描画
