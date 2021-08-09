@@ -57,6 +57,7 @@ void MenuSelect::Initialize(const PlayerManager* plm)
         std::wstring str[SELECT_NUM] =
         {
             L"アイテム",
+            L"装備品",
             L"ステータス"
         };
 
@@ -69,7 +70,7 @@ void MenuSelect::Initialize(const PlayerManager* plm)
     }
 }
 
-MenuSelect::Select MenuSelect::Update(const PlayerManager* plm)
+MenuSelect::Select MenuSelect::Update(PlayerManager* plm)
 {
     BeginAnimation();
 

@@ -23,7 +23,7 @@ void MenuItem::Initialize(const PlayerManager* plm)
 	mItemIndex = -1;
 }
 
-MenuBase::Select MenuItem::Update(const PlayerManager* plm)
+MenuBase::Select MenuItem::Update(PlayerManager* plm)
 {
 	if (mItemIndex == -1)
 	{

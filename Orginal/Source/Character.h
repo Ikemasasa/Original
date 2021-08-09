@@ -54,6 +54,7 @@ public:
 
 	//ゲッター
 	Vector3 GetPos() const { return mPos; }
+	Vector3 GetVelocity() const { return mVelocity; }
 	Vector3 GetScale() const { return mScale; }
 	Vector3 GetAngle() const { return mAngle; }
 	int		GetObjID() const { return mObjID; }
@@ -66,7 +67,8 @@ public:
 	float	GetMass() const { return mMass; }
 
 	// セッター
-	void SetPos(const Vector3 & p) { mPos = p; }
+	void SetPos(const Vector3& p) { mPos = p; }
+	void SetVelocity(const Vector3 & v) { mVelocity = v; }
 	void SetScale(const Vector3 & s) { mScale = s; }
 	void SetAngle(const Vector3 & a) { mAngle = a; }
 	void SetAngleY(float y) { mAngle.y = y; }

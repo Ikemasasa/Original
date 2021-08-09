@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "DataBase.h"
-#include "PlayerManager.h"
 
 class Sprite;
 
@@ -14,20 +13,21 @@ public:
 	enum ID
 	{
 		BEGINNERS_SWORD = DataBase::EQUIPMENT_ID_START,
-		BEGINNERS_ARMOR,
-
-		NUM
+		BEGINNERS_ARMOR
 	};
+
+	enum Type { WEAPON, ARMOR, TYPE_MAX};
 
 	struct Param
 	{
-		int id;
-		std::string name;
-		std::shared_ptr<Sprite> icon;
-		int atk;
-		int def;
-		int spd;
-		std::vector<bool> equipable;
+		std::wstring name;			  // 装備品の名前
+		int id;						  // 装備品のID
+		std::shared_ptr<Sprite> icon; // 装備品のアイコン画像
+		Type type;					  // 装備品のタイプ
+		int atk;					  // 攻撃力上昇量
+		int def;					  // 防御力上昇量
+		int spd;					  // 素早さ上昇量
+		std::vector<bool> equipable;  // 装備できるキャラリスト
 	};
 
 private:
@@ -38,5 +38,5 @@ public:
 	EquipmentData();
 	~EquipmentData();
 
-	Param GetParam(size_t id);
+	const Param* GetParam(size_t id) ;
 };

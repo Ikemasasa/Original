@@ -10,6 +10,7 @@ protected:
 	enum Select
 	{
 		ITEM,
+		EQUIPMENTS,
 		STATUS,
 		SELECT_NUM,
 
@@ -24,7 +25,7 @@ public:
 	virtual ~MenuBase() = default;
 
 	virtual void Initialize(const PlayerManager* plm) = 0;
-	virtual Select Update(const PlayerManager* plm) = 0;
+	virtual Select Update(PlayerManager* plm) = 0;
 	virtual void Render() = 0;
 	virtual void Release() = 0;
 };

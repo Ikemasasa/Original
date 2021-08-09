@@ -6,6 +6,8 @@
 #include "lib/ConvertString.h"
 #include "lib/Sprite.h"
 
+#include "PlayerManager.h"
+
 EquipmentData::EquipmentData()
 {
 	mEquipments.clear();
@@ -47,14 +49,15 @@ void EquipmentData::Initialize()
 			Param param;
 			int index = 0;
 
+			param.name = ConvertString::ConvertToWstirng(data[index++]);
 			param.id = std::stoi(data[index++]);
-			param.name = data[index++];
 			param.icon = std::make_shared<Sprite>(ConvertString::ConvertToWstirng(iconPath + data[index++]).c_str());
+			param.type = (Type)std::stoi(data[index++]);
 			param.atk = std::stoi(data[index++]);
 			param.def = std::stoi(data[index++]);
 			param.spd = std::stoi(data[index++]);
 			
-			for (int i = 0; i < PlayerManager::PL_NUM; ++i)
+			for (int i = 0; i < PlayerManager::ALL_PLAYER_NUM; ++i)
 			{
 				bool equipable = false;
 				if (strcmp("o", data[index++].c_str()) == 0)
@@ -69,9 +72,7 @@ void EquipmentData::Initialize()
 	}
 }
 
-
-
-EquipmentData::Param EquipmentData::GetParam(size_t id)
+const EquipmentData::Param* EquipmentData::GetParam(size_t id) 
 {
-	return mEquipments[id - DataBase::EQUIPMENT_ID_START];
+	return &mEquipments[id - DataBase::EQUIPMENT_ID_START];
 }

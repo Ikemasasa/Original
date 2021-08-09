@@ -26,4 +26,5 @@ public:
 
 	StatusData* GetStatusData() { return mStatusData.get(); }
 	ItemData* GetItemData() { return mItemData.get(); }
+	EquipmentData* GetEquipmentData() { return mEquipmentData.get(); }
 };

@@ -84,8 +84,8 @@ void CharacterManager::Collide(Character* a, Character* b)
 	}
 	else
 	{
-		rateA = massA / totalMass;
-		rateB = massB / totalMass;
+		rateA = massB / totalMass;
+		rateB = massA / totalMass;
 	}
 
 	// rate‚É‰ž‚¶‚Ä‚»‚ê‚¼‚êˆÚ“®

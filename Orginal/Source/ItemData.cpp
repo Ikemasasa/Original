@@ -48,8 +48,8 @@ void ItemData::LoadItemData()
 		{
 			ItemParam item = {};
 			int index = 0;
+			item.name = ConvertString::ConvertToWstirng(data[index++]);
 			item.id = std::stoi(data[index++]);
-			item.name = data[index++];
 			item.icon = std::make_shared<Sprite>(ConvertString::ConvertToWstirng(iconPath + data[index++]).c_str());
 			item.effect = (Effect)std::stoi(data[index++]);
 			item.target = (Target)std::stoi(data[index++]);

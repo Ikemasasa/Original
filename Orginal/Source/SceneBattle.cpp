@@ -84,7 +84,8 @@ void SceneBattle::Release()
 	Singleton<CameraManager>().GetInstance().Pop();
 	BattleState::DestroyInst();
 
-	// リザルトBGMストップ、フィールドBGM再生
+	// BGMストップ、フィールドBGM再生
 	AUDIO.MusicStop((int)Music::RESULT);
+	AUDIO.MusicStop((int)Music::BATTLE);
 	AUDIO.MusicPlay((int)Music::FIELD_REMAINS);
 }

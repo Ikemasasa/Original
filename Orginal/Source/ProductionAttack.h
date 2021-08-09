@@ -36,7 +36,6 @@ private:
 	void StateWaitAttack();
 	void StateMoveToOrigin();
 	void StateWait();
-	int CalcDamage(const Status* deal, Status* take);
 
 public:
 	void Initialize() override;

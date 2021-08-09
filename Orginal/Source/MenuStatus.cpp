@@ -43,7 +43,7 @@ void MenuStatus::Initialize(const PlayerManager* plm)
     mDelimFont.Add(L"/");
 }
 
-MenuBase::Select MenuStatus::Update(const PlayerManager* plm)
+MenuBase::Select MenuStatus::Update(PlayerManager* plm)
 {
     // 前の画面に戻す
     if (Input::GetButtonTrigger(0, Input::BUTTON::B)) return BACK;
@@ -58,9 +58,9 @@ MenuBase::Select MenuStatus::Update(const PlayerManager* plm)
     std::vector<int> maxValue; // 最大のステータス
     curValue.emplace_back(status.hp);
     curValue.emplace_back(status.mp);
-    curValue.emplace_back(status.GetTotalAtk());
-    curValue.emplace_back(status.GetTotalDef());
-    curValue.emplace_back(status.GetTotalSpd());
+    curValue.emplace_back(status.GetAtk());
+    curValue.emplace_back(status.GetDef());
+    curValue.emplace_back(status.GetSpd());
     maxValue.emplace_back(status.maxHP);
     maxValue.emplace_back(status.maxMP);
 

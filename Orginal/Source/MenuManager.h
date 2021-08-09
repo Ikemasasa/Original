@@ -22,7 +22,7 @@ public:
 	MenuManager();
 
 	void Initialize(const PlayerManager* plm);
-	void Update(const PlayerManager* plm);
+	void Update(PlayerManager* plm);
 	void Render();
 	void Release();
 };

@@ -41,23 +41,23 @@ void BattleCharacterManager::Initialize()
 	// 座標設定
 	{
 		// TODO: モデルの大きさを考慮していないから、モデルによったらバグる可能性あり
-		
+
 		// PLAYER
 		size_t size = mAliveCharaIDs[Character::Type::PLAYER].size();
-		float x = (POS_MAX_X - POS_MIN_X) / (size + 1);
+		float offsetX = (POS_MAX_X - POS_MIN_X) / (size + 1);
 		for (size_t i = 0; i < size; ++i)
 		{
-			Vector3 pos(x * (i + 1), 0, PLAYER_POS_Z);
+			Vector3 pos(POS_MIN_X + offsetX * (i + 1), 0, PLAYER_POS_Z);
 			mBCharacters[mAliveCharaIDs[Character::Type::PLAYER][i]]->SetPos(pos);
 			mBCharacters[mAliveCharaIDs[Character::Type::PLAYER][i]]->UpdateWorld();
 		}
 
 		// ENEMY
 		size = mAliveCharaIDs[Character::Type::ENEMY].size();
-		x = (POS_MAX_X - POS_MIN_X) / (size + 1);
+		offsetX = (POS_MAX_X - POS_MIN_X) / (size + 1);
 		for (size_t i = 0; i < size; ++i)
 		{
-			Vector3 pos(x * (i + 1), 0, ENEMY_POS_Z);
+			Vector3 pos(POS_MIN_X + offsetX * (i + 1), 0, ENEMY_POS_Z);
 			mBCharacters[mAliveCharaIDs[Character::Type::ENEMY][i]]->SetPos(pos);
 			mBCharacters[mAliveCharaIDs[Character::Type::ENEMY][i]]->UpdateWorld();
 		}

@@ -167,13 +167,17 @@
     <ClInclude Include="Source\CommandEscape.h" />
     <ClInclude Include="Source\CommandItem.h" />
     <ClInclude Include="Source\CommandPlayer.h" />
+    <ClInclude Include="Source\DamageCalculator.h" />
     <ClInclude Include="Source\DataBase.h" />
     <ClInclude Include="Source\DeferredDirLight.h" />
     <ClInclude Include="Source\EffectManager.h" />
     <ClInclude Include="Source\Enemy.h" />
     <ClInclude Include="Source\EnemyBattle.h" />
     <ClInclude Include="Source\EnemyManager.h" />
+    <ClInclude Include="Source\Equipment.h" />
     <ClInclude Include="Source\EquipmentData.h" />
+    <ClInclude Include="Source\EquipmentInventory.h" />
+    <ClInclude Include="Source\EquipmentSelect.h" />
     <ClInclude Include="Source\FontValue.h" />
     <ClInclude Include="Source\GameManager.h" />
     <ClInclude Include="Source\GaussianBlur.h" />
@@ -202,6 +206,7 @@
     <ClInclude Include="Source\MenuBase.h" />
     <ClInclude Include="Source\CharacterHealth.h" />
     <ClInclude Include="Source\MenuCharacterSelect.h" />
+    <ClInclude Include="Source\MenuEquipment.h" />
     <ClInclude Include="Source\MenuItem.h" />
     <ClInclude Include="Source\MenuManager.h" />
     <ClInclude Include="Source\MenuSelect.h" />
@@ -232,6 +237,7 @@
     <ClInclude Include="Source\Player.h" />
     <ClInclude Include="Source\PlayerBattle.h" />
     <ClInclude Include="Source\PlayerManager.h" />
+    <ClInclude Include="Source\ProductionEscape.h" />
     <ClInclude Include="Source\ProductionUseItem.h" />
     <ClInclude Include="Source\ProductionValue.h" />
     <ClInclude Include="Source\SceneBase.h" />
@@ -265,12 +271,16 @@
     <ClCompile Include="Source\CommandEscape.cpp" />
     <ClCompile Include="Source\CommandItem.cpp" />
     <ClCompile Include="Source\CommandPlayer.cpp" />
+    <ClCompile Include="Source\DamageCalculator.cpp" />
     <ClCompile Include="Source\DataBase.cpp" />
     <ClCompile Include="Source\EffectManager.cpp" />
     <ClCompile Include="Source\Enemy.cpp" />
     <ClCompile Include="Source\EnemyBattle.cpp" />
     <ClCompile Include="Source\EnemyManager.cpp" />
+    <ClCompile Include="Source\Equipment.cpp" />
     <ClCompile Include="Source\EquipmentData.cpp" />
+    <ClCompile Include="Source\EquipmentInventory.cpp" />
+    <ClCompile Include="Source\EquipmentSelect.cpp" />
     <ClCompile Include="Source\Fade.cpp" />
     <ClCompile Include="Source\FontValue.cpp" />
     <ClCompile Include="Source\GameManager.cpp" />
@@ -308,6 +318,7 @@
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\CharacterHealth.cpp" />
     <ClCompile Include="Source\MenuCharacterSelect.cpp" />
+    <ClCompile Include="Source\MenuEquipment.cpp" />
     <ClCompile Include="Source\MenuItem.cpp" />
     <ClCompile Include="Source\MenuManager.cpp" />
     <ClCompile Include="Source\MenuSelect.cpp" />
@@ -321,6 +332,7 @@
     <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="Source\PlayerBattle.cpp" />
     <ClCompile Include="Source\PlayerManager.cpp" />
+    <ClCompile Include="Source\ProductionEscape.cpp" />
     <ClCompile Include="Source\ProductionUseItem.cpp" />
     <ClCompile Include="Source\ProductionValue.cpp" />
     <ClCompile Include="Source\SceneBase.cpp" />

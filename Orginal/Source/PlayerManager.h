@@ -2,6 +2,7 @@
 #include <DirectXMath.h>
 #include <vector>
 
+#include "EquipmentInventory.h"
 #include "Item.h"
 
 class CameraBase;
@@ -12,14 +13,16 @@ class PlayerManager
 {
 	static const int INVINCIBLE_SECOND = 2;
 
+
 public:
 	enum PlList
 	{
 		PLAYER_A = DataBase::PL_ID_START,
 		PLAYER_B,
 
-		PL_NUM
+		PL_ID_MAX
 	};
+	static const int ALL_PLAYER_NUM = PL_ID_MAX - DataBase::PL_ID_START;
 
 private:
 	std::vector<std::unique_ptr<Player>> mPlayers;
@@ -27,11 +30,11 @@ private:
 	bool mIsInvincible = false;
 	float mInvincibleTimer = 0;
 
+	EquipmentInventory mEquipmentInventory;
 
-	//std::vector<EquipmentData::Param> mEquipments;
 public:
-	PlayerManager() = default;
-	~PlayerManager() = default;
+	PlayerManager();
+	~PlayerManager();
 
 	void Create(int charaID);
 
@@ -45,8 +48,8 @@ public:
 	Player* GetPlayer(const size_t index) const { return mPlayers[index].get(); }
 	size_t GetNum() const {return mPlayers.size(); }
 	bool IsInvincible() const { return mIsInvincible; }
+	EquipmentInventory* GetEquipmentInventory() { return &mEquipmentInventory; }
 
 	// セッター
 	void EnableInvincible() { mIsInvincible = true; }
-
 };

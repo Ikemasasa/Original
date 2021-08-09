@@ -6,6 +6,36 @@
 #include "DataBase.h"
 #include "lib/ConvertString.h"
 
+//---------------------------------------------
+// Status
+//---------------------------------------------
+int Status::GetAtk() const
+{
+	int atk = 0;
+	const EquipmentData::Param* param = equipments.GetParam(EquipmentData::WEAPON);
+	if (param) atk = param->atk;
+
+	return 	str + atk;
+}
+
+int Status::GetDef() const
+{
+	int def = 0;
+	const EquipmentData::Param* param = equipments.GetParam(EquipmentData::ARMOR);
+	if (param) def = param->def;
+
+	return 	vit + def;
+}
+
+int Status::GetSpd() const
+{
+	// ¡‚Íagi‚ğ•Ï‚¦‚·‚¾‚¯
+	return agi;
+}
+
+//---------------------------------------------
+// StatusData
+//---------------------------------------------
 StatusData::StatusData()
 {
 	mPLStatus.clear();
@@ -143,3 +173,4 @@ void StatusData::SetPLStatus(size_t charaID, const Status& status)
 //		mPLStatus[i] = status;
 //	}
 //}
+

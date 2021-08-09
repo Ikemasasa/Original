@@ -330,9 +330,6 @@
     <ClInclude Include="Source\lib\SkinnedMesh.h">
       <Filter>lib\ヘッダーファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ProductionUseItem.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Source\DeferredDirLight.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -362,6 +359,27 @@
     </ClInclude>
     <ClInclude Include="Source\CommandEscape.h">
       <Filter>ヘッダー ファイル\Scene\Battle\command</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ProductionUseItem.h">
+      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ProductionEscape.h">
+      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Equipment.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MenuEquipment.h">
+      <Filter>ヘッダー ファイル\Scene\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EquipmentSelect.h">
+      <Filter>ヘッダー ファイル\Scene\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EquipmentInventory.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DamageCalculator.h">
+      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -624,6 +642,24 @@
       <Filter>ソース ファイル\Common</Filter>
     </ClCompile>
     <ClCompile Include="Source\CommandEscape.cpp">
+      <Filter>ソース ファイル\Scene\Battle\command</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ProductionEscape.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Equipment.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MenuEquipment.cpp">
+      <Filter>ソース ファイル\Scene\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EquipmentSelect.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EquipmentInventory.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DamageCalculator.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

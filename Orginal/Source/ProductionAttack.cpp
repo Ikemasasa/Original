@@ -4,11 +4,13 @@
 
 #include "BattleCharacter.h"
 #include "BattleCharacterManager.h"
+#include "DamageCalculator.h"
 #include "Define.h"
 #include "EffectManager.h"
 #include "GameManager.h"
 #include "Singleton.h"
 #include "StatusData.h"
+
 
 void ProductionAttack::Initialize()
 {
@@ -26,7 +28,7 @@ void ProductionAttack::Update(const BattleCharacterManager* bcm)
 		mTargetChara = bcm->GetChara(mTargetCharaID);
 
 		// ダメージ計算
-		int damage = CalcDamage(mMoveChara->GetStatus(), mTargetChara->GetStatus());
+		int damage = DamageCalculator::CalcAttackDamage(mMoveChara->GetStatus(), mTargetChara->GetStatus());
 		mTargetChara->GetStatus()->HurtHP(damage);
 		mAmount = damage;
 	}
@@ -154,20 +156,4 @@ void ProductionAttack::StateWait()
 		mWaitTimer = 0.0f;
 		mIsFinished = true;
 	}
-}
-
-int ProductionAttack::CalcDamage(const Status* deal, Status* take)
-{
-	const int STR_DIV = 2;
-	const int VIT_DIV = 4;
-	const int WIDTH_DIV = 4;
-
-	int damage = deal->str / STR_DIV - take->vit / VIT_DIV; // 基礎ダメージ
-	int sign = (rand() % 2 == 0) ? -1 : 1; // 振れ幅の符号
-	int width = damage / WIDTH_DIV + 1; // ダメージの振れ幅の最大値
-	damage = damage + (rand() % width * sign);
-
-	if (damage < 0) damage = 0;
-
-	return damage;
 }
