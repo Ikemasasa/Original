@@ -7,6 +7,7 @@
 #include "CommandBase.h"
 #include "EffectManager.h"
 #include "ProductionAttack.h"
+#include "ProductionEscape.h"
 #include "ProductionUseItem.h"
 #include "Singleton.h"
 
@@ -125,6 +126,7 @@ void TurnManager::BeginProduction()
 	{
 	case CommandBase::Behaviour::ATTACK:   mProduction = std::make_unique<ProductionAttack>(); break;
 	case CommandBase::Behaviour::USE_ITEM: mProduction = std::make_unique<ProductionUseItem>(); break;
+	case CommandBase::Behaviour::ESCAPE:   mProduction = std::make_unique<ProductionEscape>(); break;
 	}
 
 	mProduction->Initialize();

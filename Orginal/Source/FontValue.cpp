@@ -76,7 +76,7 @@ void FontValue::Release()
 	mFont.Release();
 }
 
-float FontValue::GetWidth(const int value) const
+float FontValue::GetWidth(const int value) 
 {
 	std::wstring valueString = std::to_wstring(value);
 

@@ -20,6 +20,7 @@ public:
 private:
 	std::queue<BattleCharacter*> mOrder;
 	std::unique_ptr<IBattleProduction> mProduction;
+	std::vector<int> mDropItemIDs;
 	bool mIsTurnFinished = false;
 	bool mIsResult = false;
 

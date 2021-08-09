@@ -4,6 +4,8 @@
 
 #include "lib/Math.h"
 
+#include "Equipment.h"
+
 struct Status
 {
 	std::wstring name; // –¼‘O
@@ -17,13 +19,11 @@ struct Status
 	int agi;		  // ‘f‘‚³
 
 	// ‘•”õ•i
-	int equipAtk; // UŒ‚—Í
-	int equipDef; // –hŒä—Í
-	int equipSpd; // ‘f‘‚³
+	Equipment equipments;
 
-	int GetTotalAtk() const { return str + equipAtk; }
-	int GetTotalDef() const { return vit + equipDef; }
-	int GetTotalSpd() const { return agi + equipSpd; }
+	int GetAtk() const;
+	int GetDef() const;
+	int GetSpd() const;
 
 	bool IsDead() const { return hp <= 0; }
 	bool IsFullHP() const { return hp == maxHP; }

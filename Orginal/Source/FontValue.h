@@ -21,6 +21,6 @@ public:
 	void Render(bool isRenderClear = true);
 	void Release();
 
-	float GetWidth(const int value) const;
+	float GetWidth(const int value);
 	int GetFontSize() const { return mFont.GetFontSize(); }
 };

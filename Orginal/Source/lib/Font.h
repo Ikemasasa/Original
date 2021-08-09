@@ -33,7 +33,7 @@ private:
 		std::vector<FontTexture> textures;
 		std::vector<Vector2> pos;
 		std::vector<Vector2> size;
-
+		float width;
 	};
 
 	struct RenderData
@@ -64,7 +64,7 @@ public:
 
 	bool Add(const wchar_t* str);
 	bool Find(const wchar_t* str);
-	float GetWidth(const WCHAR* str) const;
+	float GetWidth(const WCHAR* str);
 	float GetWidth(const UINT index) const;
 	int GetFontSize() const { return mFontSize; }
 	size_t GetNum() const { return mFonts.size(); }

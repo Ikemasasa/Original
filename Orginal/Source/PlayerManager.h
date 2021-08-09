@@ -1,14 +1,18 @@
 #pragma once
+#include <DirectXMath.h>
 #include <vector>
 
+#include "EquipmentInventory.h"
 #include "Item.h"
-#include "Player.h"
 
 class CameraBase;
+class Player;
+class Shader;
 
 class PlayerManager
 {
 	static const int INVINCIBLE_SECOND = 2;
+
 
 public:
 	enum PlList
@@ -16,8 +20,9 @@ public:
 		PLAYER_A = DataBase::PL_ID_START,
 		PLAYER_B,
 
-		PL_NUM
+		PL_ID_MAX
 	};
+	static const int ALL_PLAYER_NUM = PL_ID_MAX - DataBase::PL_ID_START;
 
 private:
 	std::vector<std::unique_ptr<Player>> mPlayers;
@@ -25,9 +30,11 @@ private:
 	bool mIsInvincible = false;
 	float mInvincibleTimer = 0;
 
+	EquipmentInventory mEquipmentInventory;
+
 public:
-	PlayerManager() = default;
-	~PlayerManager() = default;
+	PlayerManager();
+	~PlayerManager();
 
 	void Create(int charaID);
 
@@ -37,12 +44,12 @@ public:
 	void Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj, const DirectX::XMFLOAT4& lightDir);
 
 	// ゲッター
-	Player* GetMovePlayer() { return mMovePlayer; }
+	Player* GetMovePlayer() const { return mMovePlayer; }
 	Player* GetPlayer(const size_t index) const { return mPlayers[index].get(); }
 	size_t GetNum() const {return mPlayers.size(); }
 	bool IsInvincible() const { return mIsInvincible; }
+	EquipmentInventory* GetEquipmentInventory() { return &mEquipmentInventory; }
 
 	// セッター
 	void EnableInvincible() { mIsInvincible = true; }
-
 };

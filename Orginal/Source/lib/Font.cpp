@@ -59,6 +59,18 @@ bool Font::RenderSet(const wchar_t* str, const Vector2& pos, const Vector2& cent
 		return true;
 	}
 
+	// なかったらつくる
+	if (Add(str))
+	{
+		data.fontIndex = mFonts.size() - 1;
+		data.scrPos = pos;
+		data.center = center;
+		data.scale = scale;
+		data.color = color;
+		mRenderData.emplace_back(data);
+		return true;
+	}
+
 	return false;
 }
 
@@ -149,6 +161,7 @@ bool Font::Add(const wchar_t* str)
 		data.size[i].x = static_cast<float>(gm.gmBlackBoxX);
 		data.size[i].y = static_cast<float>(gm.gmBlackBoxY);
 	}
+	data.width = offsetX;
 
 	return true;
 }
@@ -165,7 +178,7 @@ bool Font::Find(const wchar_t* str)
 	return false;
 }
 
-float Font::GetWidth(const WCHAR* str) const
+float Font::GetWidth(const WCHAR* str) 
 {	
 	// 同じ文字列があるかチェック
 	size_t fontIndex = -1;
@@ -178,19 +191,17 @@ float Font::GetWidth(const WCHAR* str) const
 		break;
 	}
 
-	// 見つからなかったら０を返す
-	if (fontIndex == -1) return 0.0f;
+	// 見つからなかったら作る
+	if (fontIndex == -1)
+	{
+		if(Add(str))
+			fontIndex = mFonts.size() - 1;
+	}
 
 	return GetWidth(fontIndex);
 }
 
 float Font::GetWidth(const UINT index) const
 {
-	float width = 0.0f;
-	for (const auto& size : mFonts[index].size)
-	{
-		width += size.x;
-	}
-
-	return width;
+	return mFonts[index].width;
 }

@@ -14,6 +14,8 @@ Enemy::Enemy(int charaID) : Character(charaID, Character::ENEMY)
 	Shader* shader = new Shader;
 	shader->Load(L"Shaders/Character.fx", "VSMain", "PSMain");
 	ChangeShader(shader);
+
+	mMass = MASS;
 }
 
 Enemy::~Enemy()

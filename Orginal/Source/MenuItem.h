@@ -10,8 +10,6 @@
 #include "CharacterHealth.h"
 #include "ItemSelect.h"
 
-class PlayerManager;
-class Sprite;
 class Item;
 
 class MenuItem : public MenuBase
@@ -23,7 +21,6 @@ class MenuItem : public MenuBase
 	static constexpr float HEALTH_PLATE_Y = 100.0f;
 
 private:
-	PlayerManager* mPlayerManager;
 	Item* mInventory;
 
 	int mItemIndex;
@@ -36,7 +33,7 @@ public:
 	~MenuItem() = default;
 
 	void Initialize(const PlayerManager* plm) override;
-	Select Update(const PlayerManager* plm) override;
+	Select Update(PlayerManager* plm) override;
 	void Render() override;
 	void Release() override;
 };

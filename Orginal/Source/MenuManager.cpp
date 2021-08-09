@@ -4,6 +4,7 @@
 #include "lib/Sprite.h"
 
 #include "Fade.h"
+#include "MenuEquipment.h"
 #include "MenuItem.h"
 #include "MenuStatus.h"
 #include "SceneManager.h"
@@ -21,7 +22,7 @@ void MenuManager::Initialize(const PlayerManager* plm)
 	mNextState = MenuBase::NONE;
 }
 
-void MenuManager::Update(const PlayerManager* plm)
+void MenuManager::Update(PlayerManager* plm)
 {
 	// 次のメニューがあれば更新する
 	if (mNextMenu)
@@ -33,8 +34,9 @@ void MenuManager::Update(const PlayerManager* plm)
 
 	switch (mNextState)
 	{
-	case MenuBase::ITEM:   if (!mNextMenu) mNextMenu = std::make_unique<MenuItem>();   break;
-	case MenuBase::STATUS: if (!mNextMenu) mNextMenu = std::make_unique<MenuStatus>(); break;
+	case MenuBase::ITEM:       if (!mNextMenu) mNextMenu = std::make_unique<MenuItem>();   break;
+	case MenuBase::EQUIPMENTS: if (!mNextMenu) mNextMenu = std::make_unique<MenuEquipment>(); break;
+	case MenuBase::STATUS:     if (!mNextMenu) mNextMenu = std::make_unique<MenuStatus>(); break;
 
 	case MenuBase::BACK:
 		mMenuStack.top()->Release();

@@ -1,7 +1,6 @@
 #include "ItemData.h"
 
 #include <fstream>
-#include <string>
 #include <sstream>
 
 #include "lib/ConvertString.h"
@@ -49,8 +48,8 @@ void ItemData::LoadItemData()
 		{
 			ItemParam item = {};
 			int index = 0;
+			item.name = ConvertString::ConvertToWstirng(data[index++]);
 			item.id = std::stoi(data[index++]);
-			item.name = data[index++];
 			item.icon = std::make_shared<Sprite>(ConvertString::ConvertToWstirng(iconPath + data[index++]).c_str());
 			item.effect = (Effect)std::stoi(data[index++]);
 			item.target = (Target)std::stoi(data[index++]);
@@ -62,7 +61,7 @@ void ItemData::LoadItemData()
 			item.defValue = std::stoi(data[index++]);
 			item.info = data[index++];
 
-			mItems.emplace_back(item);
+			mItems.push_back(item);
 		}
 	}
 

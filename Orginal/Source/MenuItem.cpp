@@ -10,8 +10,10 @@
 
 #include "Item.h"
 #include "ItemData.h"
+#include "Player.h"
 #include "PlayerManager.h"
 #include "Singleton.h"
+#include "StatusData.h"
 
 void MenuItem::Initialize(const PlayerManager* plm)
 {
@@ -21,7 +23,7 @@ void MenuItem::Initialize(const PlayerManager* plm)
 	mItemIndex = -1;
 }
 
-MenuBase::Select MenuItem::Update(const PlayerManager* plm)
+MenuBase::Select MenuItem::Update(PlayerManager* plm)
 {
 	if (mItemIndex == -1)
 	{

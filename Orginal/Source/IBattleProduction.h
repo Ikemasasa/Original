@@ -28,7 +28,7 @@ public:
 
 	virtual void Initialize() = 0;
 	virtual void Update(const BattleCharacterManager* bcm) = 0;
-	virtual void Render() = 0;
+	virtual void Render() {};
 
 	bool IsFinished() const { return mIsFinished; }
 };

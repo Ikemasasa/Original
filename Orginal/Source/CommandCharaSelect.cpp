@@ -71,7 +71,8 @@ void CommandCharaSelect::Render()
 {
 	const CameraManager& camera = Singleton<CameraManager>().GetInstance();
 
-	Vector3 targetPos = mTargetChara->GetPos() + Vector3(0, mTargetChara->GetLocalAABB().max.y, 0);
+	Vector3 targetPos = mTargetChara->GetPos();
+	targetPos.y += mTargetChara->GetLocalAABB().max.y;
 	Vector2 screen = targetPos.WorldToScreen(camera.GetView(), camera.GetProj());
 
 	Vector2 scale(ARROW_SCALE, ARROW_SCALE);

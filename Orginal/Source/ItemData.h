@@ -26,8 +26,8 @@ public:
 
 	struct ItemParam
 	{
+		std::wstring name; // アイテム名
 		size_t id;		  // アイテムID(いる？ いる)
-		std::string name; // アイテム名
 		std::shared_ptr<Sprite> icon; // 画像
 		Effect effect;	  // 効果
 		Target target;	  // 対象

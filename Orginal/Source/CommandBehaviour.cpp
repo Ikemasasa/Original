@@ -5,8 +5,9 @@
 
 #include "BattleCharacterManager.h"
 #include "BattleState.h"
-#include "CommandItem.h"
 #include "CommandCharaSelect.h"
+#include "CommandEscape.h"
+#include "CommandItem.h"
 
 CommandBehaviour::CommandBehaviour()
 {
@@ -38,14 +39,13 @@ void CommandBehaviour::Update(const BattleCharacterManager* bcm, CommandBase* cm
 
 
 	// Ç±ÇÒÇ»ÉåÉCÉAÉEÉg
-	// RÅFçUåÇ L:ñhå‰ (Ç±ÇÍÇÕÇ†Ç∆Ç≈Ç¢Ç¢)
 	//    ìπ
 	// ñh çU ãZ
 	//    ì¶
 	if (Input::GetButtonTrigger(0, Input::A))
 	{
 		if (mCommandIndex.y == 0) mNextCommand = std::make_unique<CommandItem>();
-		else if (mCommandIndex.y == 2);
+		else if (mCommandIndex.y == 2) mNextCommand = std::make_unique<CommandEscape>();
 		else if (mCommandIndex.x == 0);
 		else if (mCommandIndex.x == 1) mNextCommand = std::make_unique<CommandCharaSelect>(Character::Type::ENEMY);
 		else if (mCommandIndex.x == 2);

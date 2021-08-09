@@ -2,6 +2,7 @@
 
 #include "BattleCharacterManager.h"
 #include "CommandBase.h"
+#include "DamageCalculator.h"
 #include "EffectManager.h"
 #include "GameManager.h"
 #include "Item.h"
@@ -64,6 +65,7 @@ void ProductionUseItem::StateInit()
 	}
 
 	// ダメージアイテムのhpvalueはマイナスになってるからヒールで回復、ダメージ両方できる
+	if (mHPAmount < 0) mHPAmount = DamageCalculator::CalcItemDamage(mHPAmount, mTargetChara->GetStatus());
 	mTargetChara->GetStatus()->HealHP(mHPAmount);
 	mTargetChara->GetStatus()->HealMP(mMPAmount);
 	mMoveChara->GetInventory()->Sub(mMoveChara->GetCommand()->GetItemIndex());
@@ -117,7 +119,7 @@ void ProductionUseItem::StateWaitEffect()
 		else if (mHPAmount < 0)
 		{
 			Vector3 pos(mTargetChara->GetPos().x, mTargetChara->GetAABB().max.y - ADDJUST_Y * addNum, mTargetChara->GetPos().z);
-			mProductionValue.Add(mHPAmount, pos, DAMAGE_RGB);
+			mProductionValue.Add(-mHPAmount, pos, DAMAGE_RGB); // -を描画させないため-mHPAmountにしてる
 			++addNum;
 		}
 

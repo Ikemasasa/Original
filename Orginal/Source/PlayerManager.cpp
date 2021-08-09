@@ -2,11 +2,24 @@
 
 #include "lib/Input.h"
 
+#include "DataBase.h"
 #include "Fade.h"
 #include "GameManager.h"
+#include "Player.h"
 #include "SceneManager.h"
 #include "SceneMenu.h"
+#include "Singleton.h"
 #include "ItemData.h"
+
+PlayerManager::PlayerManager()
+{
+	mPlayers.clear();
+}
+
+PlayerManager::~PlayerManager()
+{
+	mPlayers.clear();
+}
 
 void PlayerManager::Create(int charaID)
 {
@@ -16,7 +29,10 @@ void PlayerManager::Create(int charaID)
 
 void PlayerManager::Initialize()
 {
-	for (int i = DataBase::PL_ID_START; i < PL_NUM; ++i)
+	mEquipmentInventory.Push(EquipmentData::BEGINNERS_SWORD);
+	mEquipmentInventory.Push(EquipmentData::BEGINNERS_ARMOR);
+
+	for (int i = DataBase::PL_ID_START; i < PL_ID_MAX; ++i)
 	{
 		Create(i);
 		mPlayers.back()->Initialize();

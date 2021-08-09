@@ -21,13 +21,15 @@ Player::Player(int charaID) : Character(charaID, Character::PLAYER)
 	shader->Load(L"Shaders/Character.fx", "VSMain", "PSMain");
 	ChangeShader(shader);
 
-	// テスト
-	for (int i = 0; i < 3; ++i)
+	// とりあえずアイテムを何個か渡す
+	for (int i = 0; i < 2; ++i)
 	{
 		mInventory.Add(Singleton<DataBase>().GetInstance().GetItemData()->GetItemParam(ItemData::PORTION));
 		mInventory.Add(Singleton<DataBase>().GetInstance().GetItemData()->GetItemParam(ItemData::MAGIC_PORTION));
 		mInventory.Add(Singleton<DataBase>().GetInstance().GetItemData()->GetItemParam(ItemData::BOMB));
 	}
+
+	mMass = MASS;
 }
 
 void Player::Initialize()

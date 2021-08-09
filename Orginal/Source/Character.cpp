@@ -27,15 +27,16 @@ Character::Character(int charaID, Type type)
 	mHit = std::make_shared<GeometricCapsule>(cTop, cBottom, mCapsuleParam.radius);
 }
 
-Character::Character(const Character* org, Type type)
+Character::Character(const Character* org)
 {
 	// ƒ‚ƒfƒ‹‚¾‚¯ˆê‚ÉŽg‚¤
 	mMesh = org->mMesh;
 	mHit = org->mHit;
 
 	mScale = org->mScale;
+	mMass = org->mMass;
 	mCharaID = org->mCharaID;
-	mType = type;
+	mType = org->mType;
 
 	mCapsuleParam = org->mCapsuleParam;
 

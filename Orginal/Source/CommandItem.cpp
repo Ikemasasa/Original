@@ -44,6 +44,7 @@ void CommandItem::Update(const BattleCharacterManager* bcm, CommandBase* cmdBase
 	// CommandBehaviour‚É–ß‚é
 	if (Input::GetButtonTrigger(0, Input::BUTTON::B))
 	{
+		cmdBase->SetItemIndex(noSelect);
 		mIsBackState = true;
 	}
 }

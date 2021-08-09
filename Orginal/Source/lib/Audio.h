@@ -50,7 +50,7 @@ public:
     void LoadMusic(int slot, const wchar_t* waveFilename, float volume = 0.5f);
     void UnLoadMusic(int slot);
 
-    void LoadSound(int slot, const wchar_t* waveFilename, float volume = 0.5f);
+    void LoadSound(int slot, const wchar_t* waveFilename, float volume = 1.0f);
     void UnLoadSound(int slot);
 
     void MusicStopAll(); // 全部ストップ

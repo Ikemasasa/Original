@@ -109,39 +109,29 @@ void ItemSelect::Render(const Vector2& boardOffset)
 void ItemSelect::UpdateInfo()
 {
 	// インフォ更新
+
+	// インデックスが更新されたら
+	if (mOldSelectIndex != mSelectIndex)
 	{
-		// インデックスが更新されたら
-		if (mOldSelectIndex != mSelectIndex)
-		{
-			// 前回のアイテム情報を削除
-			mInfo.clear();
+		// 前回のアイテム情報を削除
+		mInfo.clear();
 
-			const ItemData::ItemParam* param = mInventory->GetItemParam(mSelectIndex);
-			std::string range;
+		const ItemData::ItemParam* param = mInventory->GetItemParam(mSelectIndex);
+		std::string range;
 
-			// 名前
-			mInfo.push_back(ConvertString::ConvertToWstirng(param->name));
+		// 名前
+		mInfo.push_back(param->name.c_str());
 
-			// hp value
-			if (param->hpValue > 0) mInfo.push_back(L"HPを回復する");
-			if (param->hpValue < 0) mInfo.push_back(L"敵にダメージを与える");
+		// hp valuew
+		if (param->hpValue > 0) mInfo.push_back(L"HPを回復する");
+		if (param->hpValue < 0) mInfo.push_back(L"敵にダメージを与える");
 
-			// mpvalue
-			if (param->mpValue > 0) mInfo.push_back(L"MPを回復する");
+		// mpvalue
+		if (param->mpValue > 0) mInfo.push_back(L"MPを回復する");
 
-			// バフ系
-			if (param->atkValue > 0) mInfo.push_back(L"攻撃力を高める");
-			if (param->defValue > 0) mInfo.push_back(L"守備力を高める");
-
-			// フォント作成
-			for (size_t i = 0; i < mInfo.size(); ++i)
-			{
-				if (mFont.Find(mInfo[i].c_str())) continue;
-
-				// 未作成なら作る
-				mFont.Add(mInfo[i].c_str());
-			}
-		}
+		// バフ系
+		if (param->atkValue > 0) mInfo.push_back(L"攻撃力を高める");
+		if (param->defValue > 0) mInfo.push_back(L"守備力を高める");
 	}
 
 }
@@ -151,7 +141,7 @@ void ItemSelect::RenderSetInfo(const Vector2& infoBoardPos)
 	Vector2 pos;// あとでボードの座標を足す(相対座標
 	Vector2 center(0.0f, 0.0f);
 	Vector2 scale(1.0f, 1.0f);
-	Vector4 color(0.51f, 0.22f, 0.0f, 1.0f); // 適当に決めてる
+	Vector4 color(0.5f, 0.2f, 0.0f, 1.0f); // 適当に決めてる
 	
 	const float NAME_OFFSET_Y = 28;
 	const float INFO_OFFSET_Y = 256.0f;

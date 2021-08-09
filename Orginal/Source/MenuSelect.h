@@ -50,7 +50,7 @@ public:
 
 	void BeginAnimation();
 	void Initialize(const PlayerManager* plm) override;
-	Select Update(const PlayerManager* plm) override;
+	Select Update(PlayerManager* plm) override;
 	void Render() override;
 	void Release() override;
 };

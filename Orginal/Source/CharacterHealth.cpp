@@ -27,8 +27,8 @@ void CharacterHealth::Initialize(const Vector2& leftTop)
 
 void CharacterHealth::Update(const std::vector<Status>& statusArray)
 {
-	if (Input::GetButtonTrigger(0, Input::BUTTON::RB)) mSelectIndex = (mSelectIndex + 1) % mHealthPlates.size();
-	if (Input::GetButtonTrigger(0, Input::BUTTON::LB)) mSelectIndex = (mSelectIndex + (mHealthPlates.size() - 1)) % mHealthPlates.size();
+	if (Input::GetButtonTrigger(0, Input::BUTTON::UP))   mSelectIndex = (mSelectIndex + (mHealthPlates.size() - 1)) % mHealthPlates.size();
+	if (Input::GetButtonTrigger(0, Input::BUTTON::DOWN)) mSelectIndex = (mSelectIndex + 1) % mHealthPlates.size();
 
 	// 名前, HP, MPのフォントセット
 		// health_plate作成
