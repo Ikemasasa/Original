@@ -1,9 +1,10 @@
 #pragma once
 #include <memory>
 
-class StatusData;
-class ItemData;
+class DropData;
 class EquipmentData;
+class ItemData;
+class StatusData;
 
 // Singleton‚ð’Ê‚·
 class DataBase
@@ -16,15 +17,17 @@ public:
 	static const int EQUIPMENT_ID_START = 50000;
 
 private:
-	std::unique_ptr<StatusData> mStatusData;
-	std::unique_ptr<ItemData> mItemData;
+	std::unique_ptr<StatusData>	   mStatusData;
+	std::unique_ptr<ItemData>	   mItemData;
 	std::unique_ptr<EquipmentData> mEquipmentData;
+	std::unique_ptr<DropData> mDropData;
 
 public:
 	DataBase();
 	~DataBase();
 
-	StatusData* GetStatusData() { return mStatusData.get(); }
-	ItemData* GetItemData() { return mItemData.get(); }
+	DropData* GetDropData() { return mDropData.get(); }
 	EquipmentData* GetEquipmentData() { return mEquipmentData.get(); }
+	ItemData* GetItemData() { return mItemData.get(); }
+	StatusData* GetStatusData() { return mStatusData.get(); }
 };

@@ -74,6 +74,7 @@ MenuBase::Select MenuItem::Update(PlayerManager* plm)
 				AUDIO.SoundPlay((int)Sound::CANCEL);
 			}
 
+			mItemIndex = -1;// アイテム未選択状態に戻す
 		}
 		else if(Input::GetButtonTrigger(0, Input::BUTTON::B))
 		{

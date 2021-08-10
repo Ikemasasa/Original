@@ -170,6 +170,7 @@
     <ClInclude Include="Source\DamageCalculator.h" />
     <ClInclude Include="Source\DataBase.h" />
     <ClInclude Include="Source\DeferredDirLight.h" />
+    <ClInclude Include="Source\DropData.h" />
     <ClInclude Include="Source\EffectManager.h" />
     <ClInclude Include="Source\Enemy.h" />
     <ClInclude Include="Source\EnemyBattle.h" />
@@ -273,6 +274,7 @@
     <ClCompile Include="Source\CommandPlayer.cpp" />
     <ClCompile Include="Source\DamageCalculator.cpp" />
     <ClCompile Include="Source\DataBase.cpp" />
+    <ClCompile Include="Source\DropData.cpp" />
     <ClCompile Include="Source\EffectManager.cpp" />
     <ClCompile Include="Source\Enemy.cpp" />
     <ClCompile Include="Source\EnemyBattle.cpp" />

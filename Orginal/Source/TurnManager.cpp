@@ -5,6 +5,7 @@
 
 #include "BattleCharacterManager.h"
 #include "CommandBase.h"
+#include "DropData.h"
 #include "EffectManager.h"
 #include "ProductionAttack.h"
 #include "ProductionEscape.h"

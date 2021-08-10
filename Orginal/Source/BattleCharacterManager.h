@@ -41,12 +41,14 @@ public:
 private:
 	std::vector<std::shared_ptr<BattleCharacter>> mBCharacters;
 	std::vector<int> mAliveCharaIDs[BATTLECHARA_KIND];
+	std::vector<int> mDropItemIDs;
 	int mPlayerNum;
 
 	CharacterHealth mCharacterHealth;
 	TurnManager mTurnManager;
 
 	Enemy* mHitEnemy = nullptr; // field‚Å“–‚½‚Á‚½“G
+	PlayerManager* mPlayerManager;
 
 	Result CheckBattleFinish();
 	void OrganizeCharacter();
@@ -54,7 +56,7 @@ private:
 	void PlayerCreateAndRegister(Player* pl);
 	void EnemyCreateAndRegister(Enemy* enm);
 public:	
-	BattleCharacterManager(PlayerManager* player, Enemy* enemy);
+	BattleCharacterManager(PlayerManager* pm, Enemy* enemy);
 	~BattleCharacterManager() = default;
 
 	void Initialize();
@@ -67,5 +69,4 @@ public:
 	const std::vector<int>& GetAliveCharaIDs(Character::Type kind) const { return mAliveCharaIDs[kind]; }
 	BattleCharacter* GetChara(int objectID) const { return mBCharacters[objectID].get(); }
 	const std::vector<std::shared_ptr<BattleCharacter>>& GetBCharacters() const { return mBCharacters; }
-
 };

@@ -37,6 +37,9 @@ public:
 
 	// ÉQÉbÉ^Å[
 	BattleCharacter* GetMoveChara() const { return mOrder.front(); }
+	std::vector<int> GetDropItemIDs() const { return mDropItemIDs; }
+
 	bool IsTurnFinished() const { return mIsTurnFinished; }
 	bool IsResult() const { return mIsResult; }
+
 };

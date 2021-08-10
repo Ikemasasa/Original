@@ -381,6 +381,9 @@
     <ClInclude Include="Source\DamageCalculator.h">
       <Filter>ヘッダー ファイル\Scene\Battle</Filter>
     </ClInclude>
+    <ClInclude Include="Source\DropData.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\lib\Blend.cpp">
@@ -660,6 +663,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\DamageCalculator.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DropData.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

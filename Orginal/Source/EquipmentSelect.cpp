@@ -69,11 +69,11 @@ void EquipmentSelect::Render(const Vector2& boardPos)
 			float y = i / HORIZONTAL_NUM * ICON_SCALE_SIZE + offset.y;
 			Vector2 pos(x, y);
 
-			const EquipmentData::Param* param = Singleton<DataBase>().GetInstance().GetEquipmentData()->GetParam(mEquipmentsData[mSelectIndex].equipmentID);
+			const EquipmentData::Param* param = Singleton<DataBase>().GetInstance().GetEquipmentData()->GetParam(mEquipmentsData[i].equipmentID);
 			param->icon->Render(pos, scale, Vector2::ZERO, size);
 
 			// ‘•”õ’†‚Ì‘•”õ‚È‚çE‚ðo‚·
-			if (mEquipmentsData[mSelectIndex].equipmentChara)
+			if (mEquipmentsData[i].equipmentChara)
 			{
 				mEquipmentMark->Render(pos, scale, Vector2::ZERO, size);
 			}

@@ -8,6 +8,7 @@
 #include "lib/Math.h"
 
 #include "BattleState.h"
+#include "DropData.h"
 #include "EffectManager.h"
 #include "Enemy.h"
 #include "EnemyBattle.h"
@@ -17,15 +18,16 @@
 #include "SceneManager.h"
 #include "Singleton.h"
 
-BattleCharacterManager::BattleCharacterManager(PlayerManager* player, Enemy* enemy)
+BattleCharacterManager::BattleCharacterManager(PlayerManager* pm, Enemy* enemy)
 {
+	mPlayerManager = pm;
 	mHitEnemy = enemy;
 
 	// プレイヤー登録
-	mPlayerNum = player->GetNum();
+	mPlayerNum = pm->GetNum();
 	for (int i = 0; i < mPlayerNum; ++i)
 	{
-		PlayerCreateAndRegister(player->GetPlayer(i));
+		PlayerCreateAndRegister(pm->GetPlayer(i));
 	}
 
 	// 敵登録
@@ -133,6 +135,12 @@ void BattleCharacterManager::Update()
 					Singleton<DataBase>().GetInstance().GetStatusData()->SetPLStatus(pl->GetCharaID(), *pl->GetStatus());
 				}
 
+				// ドロップアイテムをインベントリに加える
+				for (auto& dropID : mDropItemIDs)
+				{
+					mPlayerManager->GetEquipmentInventory()->Push(dropID);
+				}
+
 				// BGMをリザルトのやつにする
 				AUDIO.MusicStop((int)Music::BATTLE);
 				AUDIO.MusicPlay((int)Music::RESULT);
@@ -199,10 +207,19 @@ void BattleCharacterManager::OrganizeCharacter()
 		// 体力が1以上ならcontinue, すでにexistがfalseなら
 		if (!ba->GetStatus()->IsDead()) continue;
 
+		// 敵ならドロップのチェックをする
+		if (ba->GetType() == Character::ENEMY)
+		{
+			int dropItemID = 0;
+			Singleton<DataBase>().GetInstance().GetDropData()->DecideDropItem(ba->GetCharaID(), &dropItemID);
+			mDropItemIDs.push_back(dropItemID);
+		}
+
 		// 0以下なら mAliveCharaIDs から消す
 		auto& ids = mAliveCharaIDs[ba->GetType()];
 		for (auto it = ids.begin(); it != ids.end(); ++it)
 		{
+			// 敵ならドロップのチェックをする
 			if (*it == ba->GetObjID())
 			{
 				ids.erase(it);
