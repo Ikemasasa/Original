@@ -183,17 +183,10 @@ public:
 	);
 
 	int RayPick(
-		const DirectX::XMFLOAT3& sp,
-		const DirectX::XMFLOAT3& ep,
-		DirectX::XMFLOAT3* outPos,
-		DirectX::XMFLOAT3* outNormal,
-		float* outLen);
-
-	int RayPick(
-		const RAY& ray, 
-		DirectX::XMFLOAT3* outPos,
-		DirectX::XMFLOAT3* outNormal,
-		float* outLen);
+		const Vector3& pos,
+		const Vector3& velocity,
+		Vector3* outPos,
+		Vector3* outNormal);
 
 	void ChangeShader(Shader* shader);
 

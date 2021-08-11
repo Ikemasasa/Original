@@ -6,6 +6,7 @@
 
 #include "BattleCharacter.h"
 #include "CharacterHealth.h"
+#include "DropItemShower.h"
 #include "TurnManager.h"
 
 class Enemy;
@@ -46,6 +47,7 @@ private:
 
 	CharacterHealth mCharacterHealth;
 	TurnManager mTurnManager;
+	DropItemShower mDropItemShower;
 
 	Enemy* mHitEnemy = nullptr; // field‚Å“–‚½‚Á‚½“G
 	PlayerManager* mPlayerManager;

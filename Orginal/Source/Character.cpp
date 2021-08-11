@@ -16,7 +16,7 @@ Character::Character(int charaID, Type type)
 	// カプセルのサイズ決定
 	const Vector3& min = mMesh->mAABB.min;
 	const Vector3& max = mMesh->mAABB.max;
-	float radius = (max.z - min.z) * 0.5f;
+	float radius = (max.z - min.z);// 直径にしてる(そっちの方がぽいから)
 	float x = min.x + ((max.x - min.x) * 0.5f);
 	float z = min.z + ((max.z - min.z) * 0.5f);
 	Vector3 cTop(x, max.y - radius, z);

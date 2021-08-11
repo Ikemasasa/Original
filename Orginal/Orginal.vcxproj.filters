@@ -384,6 +384,9 @@
     <ClInclude Include="Source\DropData.h">
       <Filter>ヘッダー ファイル\Common</Filter>
     </ClInclude>
+    <ClInclude Include="Source\DropItemShower.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\lib\Blend.cpp">
@@ -666,6 +669,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\DropData.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DropItemShower.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

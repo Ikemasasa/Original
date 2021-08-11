@@ -47,36 +47,19 @@ void Object::Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const
 	mMesh->Render(shader, wvp, mWorld, lightDir, GameManager::elapsedTime);
 }
 
-int Object::RayPickSRT(const DirectX::XMFLOAT3& sp, const DirectX::XMFLOAT3& ep, DirectX::XMFLOAT3* outPos, DirectX::XMFLOAT3* outNormal, float* outLen)
+int Object::RayPickSRT(const Vector3& sp, const Vector3& velocity, Vector3* outPos, Vector3* outNormal)
 {
 	DirectX::XMMATRIX world = DirectX::XMLoadFloat4x4(&mWorld);
 	DirectX::XMMATRIX worldInverse = DirectX::XMMatrixInverse(nullptr, world);
 
-	// 前回のオブジェクト空間でのレイに変換
-	DirectX::XMVECTOR vSp = DirectX::XMLoadFloat3(&sp);
-	DirectX::XMVECTOR vEp = DirectX::XMLoadFloat3(&ep);
-	vSp = DirectX::XMVector3TransformCoord(vSp, worldInverse);
-	vEp = DirectX::XMVector3TransformCoord(vEp, worldInverse);
+	DirectX::XMVECTOR spInv  = DirectX::XMVector3TransformCoord(sp, worldInverse);
+	DirectX::XMVECTOR velInv = DirectX::XMVector3TransformCoord(velocity, worldInverse);
 
-	// レイピック
-	DirectX::XMFLOAT3 fSp, fEp;
-	DirectX::XMStoreFloat3(&fSp, vSp);
-	DirectX::XMStoreFloat3(&fEp, vEp);
-
-	float len = 0.0f;
-	int ret = -1;
-	ret = mMesh->RayPick(fSp, fEp, outPos, outNormal, &len);
-
+	int ret = mMesh->RayPick(spInv, velInv, outPos, outNormal);
 	if (ret != -1)
 	{
-		// オブジェクト空間から現在のワールド空間へ変換
-		DirectX::XMVECTOR op = DirectX::XMLoadFloat3(outPos);
-		DirectX::XMVECTOR on = DirectX::XMLoadFloat3(outNormal);
-		op = DirectX::XMVector3TransformCoord(op, world);
-		on = DirectX::XMVector3TransformCoord(on, world);
-
-		DirectX::XMStoreFloat3(outPos, op);
-		DirectX::XMStoreFloat3(outNormal, on);
+		*outPos    = DirectX::XMVector3TransformCoord(*outPos,    world);
+		*outNormal = DirectX::XMVector3TransformCoord(*outNormal, world);
 	}
 
 	return ret;

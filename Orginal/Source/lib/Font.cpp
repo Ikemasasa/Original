@@ -166,6 +166,19 @@ bool Font::Add(const wchar_t* str)
 	return true;
 }
 
+bool Font::Remove(const wchar_t* str)
+{
+	for (auto it = mFonts.begin(); it != mFonts.end(); ++it)
+	{
+		if (wcscmp(it->str, str) != 0) continue;
+
+		mFonts.erase(it);
+		return true;
+	}
+
+	return false;
+}
+
 bool Font::Find(const wchar_t* str)
 {
 	for(auto& font : mFonts)

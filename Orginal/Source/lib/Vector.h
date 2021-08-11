@@ -93,10 +93,10 @@ public:
 	static Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
 
 	// ベクトルの内積
-	float Dot(const Vector3& In) const { return x * In.x + y * In.y + z * In.z; }
+	static float Dot(const Vector3& v0, const Vector3& v1) { return v0.x * v1.x + v0.y * v1.y + v0.z * v1.z; }
 
 	// ベクトルの外積
-	Vector3 Cross(const Vector3& In) const { return Vector3(y * In.z - z * In.y, z * In.x - x * In.z, x * In.y - y * In.x); }
+	static Vector3 Cross(const Vector3& v0, const Vector3& v1) { return Vector3(v0.y * v1.z - v0.z * v1.y, v0.z * v1.x - v0.x * v1.z, v0.x * v1.y - v0.y * v1.x); }
 
 	//代入
 	Vector3& operator=(const DirectX::XMVECTOR & other) 

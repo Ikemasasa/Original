@@ -56,7 +56,6 @@ void Player::Update()
 		mVelocity  = cFrontVector * axisY;
 		mVelocity += cRightVector * axisX;
 		mVelocity *= MOVE_SPEED;
-		mPos += mVelocity;
 
 		// 向き補正
 		CorrectionAngle();
@@ -64,26 +63,18 @@ void Player::Update()
 		// 座標補正
 		{
 			const float RAYPICK_DIST = 0.25f;
-			Vector3 outPos, outNormal;
 
-			// 移動方向(y = posだと、うまいことあたらないから、少し上にあげる)
-			Vector3 oldPos = mPos - mVelocity;
-			Vector3 sp = Vector3(oldPos.x, oldPos.y + RAYPICK_DIST, oldPos.z); // 移動前の座標
-			Vector3 ep = Vector3(mPos.x, mPos.y + RAYPICK_DIST, mPos.z);	   // 移動後の座標
-			if (-1 != CollisionTerrain::MoveCheck(sp, ep, &outPos))
+			// 移動方向
+			Vector3 outVelocity;
+			if (CollisionTerrain::MoveCheck(mPos + Vector3(0, RAYPICK_DIST, 0), mVelocity, GetCapsule().radius, &outVelocity))
 			{
-				mPos.x = outPos.x;
-				mPos.z = outPos.z;
+				mVelocity = outVelocity;
 			}
+			mPos += mVelocity;
+
 
 			// 下方向
-			sp = Vector3(mPos.x, mPos.y + RAYPICK_DIST, mPos.z);
-			ep = Vector3(mPos.x, mPos.y - RAYPICK_DIST, mPos.z);
-			float len;
-			if (-1 != CollisionTerrain::RayPick(sp, ep, &outPos, &outNormal, &len))
-			{
-				mPos.y = outPos.y;
-			}
+			mPos.y = CollisionTerrain::GetHeight(mPos, RAYPICK_DIST);
 		}
 
 		SetMotion(SkinnedMesh::RUN);

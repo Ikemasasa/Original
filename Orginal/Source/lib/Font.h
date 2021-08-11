@@ -63,6 +63,7 @@ public:
 	void Render(bool isRenderClear = true);
 
 	bool Add(const wchar_t* str);
+	bool Remove(const wchar_t* str);
 	bool Find(const wchar_t* str);
 	float GetWidth(const WCHAR* str);
 	float GetWidth(const UINT index) const;

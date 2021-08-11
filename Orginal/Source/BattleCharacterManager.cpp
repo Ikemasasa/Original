@@ -152,7 +152,7 @@ void BattleCharacterManager::Update()
 		}
 	}
 
-
+	mDropItemShower.Update();
 }
 
 void BattleCharacterManager::Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir)
@@ -166,6 +166,8 @@ void BattleCharacterManager::Render(const DirectX::XMFLOAT4X4& view, const Direc
 		mCharacterHealth.Render(false); // ÉLÉÉÉâÇÃHPÇï\é¶
 		mTurnManager.Render();
 	}
+
+	mDropItemShower.Render();
 }
 
 void BattleCharacterManager::Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir)
@@ -212,7 +214,11 @@ void BattleCharacterManager::OrganizeCharacter()
 		{
 			int dropItemID = 0;
 			Singleton<DataBase>().GetInstance().GetDropData()->DecideDropItem(ba->GetCharaID(), &dropItemID);
-			mDropItemIDs.push_back(dropItemID);
+			if (dropItemID != -1)
+			{
+				mDropItemIDs.push_back(dropItemID);
+				mDropItemShower.Add(dropItemID, ba->GetPos());
+			}
 		}
 
 		// 0à»â∫Ç»ÇÁ mAliveCharaIDs Ç©ÇÁè¡Ç∑

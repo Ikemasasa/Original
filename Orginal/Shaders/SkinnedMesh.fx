@@ -65,6 +65,8 @@ float4 PSMain(PSInput input) : SV_TARGET
 	float3 L = normalize(LightDir).xyz;
 	float I = -dot(N, L); // Intensity
 	float3 LColor = saturate(I + 0.0);
+	//float3 ramp = Ramp.Sample(Sampler, float2((I + 1) / 2, 0.5)).rgb;
+	//float3 LColor = ramp;
 	color.rgb *= LColor;
 
 	//color.rgb = N;
@@ -141,7 +143,6 @@ float4 PSMain(PSInput input) : SV_TARGET
 		float minShadowColor = 0.5;
 		color.rgb *= GetVSMFactor(shadowUV, input.shadowParam.z - shadowBias, minShadowColor);
 	}
-
 
 	return color;
 }
