@@ -33,7 +33,7 @@ void CommandCharaSelect::Update(const BattleCharacterManager* bcm, CommandBase* 
 	// キャラ選択したら
 	if (Input::GetButtonTrigger(0, Input::BUTTON::A))
 	{
-		cmdBase->SetTargetObjID(ids[mCharaIndex]);
+		cmdBase->AddTargetObjID(ids[mCharaIndex]);
 		
 		// アイテムが登録されているかどうかで分岐
 		if (cmdBase->GetItemIndex() != -1)

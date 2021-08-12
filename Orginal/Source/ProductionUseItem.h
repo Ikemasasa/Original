@@ -22,7 +22,7 @@ class ProductionUseItem : public IBattleProduction
 	int mHPAmount;
 	int mMPAmount;
 	int mEffectSlot;
-	int mEffectInstHandle;
+	std::vector<int> mEffectInstHandles;
 
 private:
 	void StateInit();
@@ -35,6 +35,9 @@ private:
 	void CalcAmountPercent(const ItemData::ItemParam* param);// äÑçáílåvéZ
 
 public:
+	ProductionUseItem() = default;
+	~ProductionUseItem() = default;
+
 	void Initialize();
 	void Update(const BattleCharacterManager* bcm);
 	void Render();

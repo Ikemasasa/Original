@@ -4,5 +4,5 @@ void CommandBase::BehaviourFinished()
 {
 	mBehaviour = Behaviour::NONE;
 	mUseItemIndex = -1;
-	mTargetObjID = -1;
+	mTargetObjIDs.clear();
 }

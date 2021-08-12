@@ -48,9 +48,9 @@ void ShadowMap::Activate(const DirectX::XMFLOAT4& lightDir, int textureSlot)
 
 	// 定数バッファ
 	{
-		DirectX::XMMATRIX proj = DirectX::XMMatrixOrthographicLH(150, 150, 0.1f, 600.0f);
+		DirectX::XMMATRIX proj = DirectX::XMMatrixOrthographicLH(175, 175, 0.1f, 1000.0f);
 
-		Vector3 lightPos(30.0f, 30.0f, 30.0f); // 適当
+		Vector3 lightPos(60.0f, 60.0f, 60.0f); // 適当
 		lightPos.x *= -lightDir.x;
 		//lightPos.y *= -lightDir.y;
 		lightPos.z *= -lightDir.z;

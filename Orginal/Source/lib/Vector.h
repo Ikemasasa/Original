@@ -80,6 +80,9 @@ public:
 	inline BOOL operator == (const Vector3& r) const { return x == r.x && y == r.y && z == r.z; }
 	inline BOOL operator != (const Vector3& r) const { return x != r.x || y != r.y || z != r.z; }
 
+	//inline Vector3 operator +(const Vector3& r) const { return Vector3(x + r.x, y + r.y, z + r.z); }
+	//inline Vector3 operator -(const Vector3& r) const { return Vector3(x - r.x, y - r.y, z - r.z); }
+
 	inline Vector3 operator +(const float r)  const { return Vector3(x + r, y + r, z + r); }
 	inline Vector3 operator -(const float r)  const { return Vector3(x - r, y - r, z - r); }
 	inline Vector3 operator *(const float r)  const { return Vector3(x * r, y * r, z * r); }
@@ -88,6 +91,7 @@ public:
 	inline void operator +=(const Vector3& r) { x += r.x, y += r.y, z += r.z; }
 	inline void operator -=(const Vector3& r) { x -= r.x, y -= r.y, z -= r.z; }
 
+	inline void operator /=(const float r) { x /= r, y /= r, z /= r; }
 	inline void operator *=(const float r) { x *= r, y *= r, z *= r; }
 
 	static Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);

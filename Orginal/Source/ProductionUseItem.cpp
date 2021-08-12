@@ -22,7 +22,10 @@ void ProductionUseItem::Update(const BattleCharacterManager* bcm)
 
 		// IDからポインタ取得
 		mMoveChara = bcm->GetChara(mMoveCharaID);
-		mTargetChara = bcm->GetChara(mTargetCharaID);
+		for (int i = 0; i < mTargetCharaIDs.size(); ++i)
+		{
+			mTargetCharas.push_back(bcm->GetChara(mTargetCharaIDs[i]));
+		}
 
 		StateInit();
 		// break;
@@ -64,11 +67,15 @@ void ProductionUseItem::StateInit()
 	case ItemData::PERCENT: CalcAmountPercent(param); break;
 	}
 
-	// ダメージアイテムのhpvalueはマイナスになってるからヒールで回復、ダメージ両方できる
-	if (mHPAmount < 0) mHPAmount = DamageCalculator::CalcItemDamage(mHPAmount, mTargetChara->GetStatus());
-	mTargetChara->GetStatus()->HealHP(mHPAmount);
-	mTargetChara->GetStatus()->HealMP(mMPAmount);
-	mMoveChara->GetInventory()->Sub(mMoveChara->GetCommand()->GetItemIndex());
+	for (int i = 0; i < mTargetCharas.size(); ++i)
+	{
+		// ダメージアイテムのhpvalueはマイナスになってるからヒールで回復、ダメージ両方できる
+		if (mHPAmount < 0) mHPAmount = DamageCalculator::CalcItemDamage(mHPAmount, mTargetCharas[i]->GetStatus());
+		mTargetCharas[i]->GetStatus()->HealHP(mHPAmount);
+		mTargetCharas[i]->GetStatus()->HealMP(mMPAmount);
+		mMoveChara->GetInventory()->Sub(mMoveChara->GetCommand()->GetItemIndex());
+	}
+
 
 	// エフェクト決定
 	if (mHPAmount < 0) mEffectSlot = TurnManager::ITEM_DAMAGE_EFFECT_SLOT;
@@ -85,40 +92,49 @@ void ProductionUseItem::StateUseItemWait()
 	if (mMoveChara->IsMotionFinished())
 	{
 		// エフェクト再生
-		Vector3 effectPos = mTargetChara->GetPos();
-		mEffectInstHandle = Singleton<EffectManager>().GetInstance().Play(mEffectSlot, effectPos);
-		++mState;
+		for (int i = 0; i < mTargetCharas.size(); ++i)
+		{
+			Vector3 effectPos = mTargetCharas[i]->GetPos();
+			mEffectInstHandles.push_back(Singleton<EffectManager>().GetInstance().Play(mEffectSlot, effectPos));
+			++mState;
+		}
 	}
 }
 
 void ProductionUseItem::StateWaitEffect()
 {
-	bool isPlay = Singleton<EffectManager>().GetInstance().IsPlay(mEffectInstHandle);
+	std::vector<bool> isPlay;
+	isPlay.resize(mTargetCharas.size());
+	for (int i = 0; i < mTargetCharas.size(); ++i)
+	{
+		isPlay[i] = Singleton<EffectManager>().GetInstance().IsPlay(mEffectInstHandles[i]);
+	}
 
-	// エフェクトの再生がおわったら 
-	if (!isPlay)
+	// 終了していないエフェクトがあれば処理しない
+	if(std::find(isPlay.begin(), isPlay.end(), false) == isPlay.end()) return; 
+
+	for (int i = 0; i < mTargetCharas.size(); ++i)
 	{
 		// 死んでたら死亡エフェクト
-		if (mTargetChara->GetStatus()->IsDead())
+		if (mTargetCharas[i]->GetStatus()->IsDead())
 		{
 			// Existをfalseにして、エフェクトを再生する
-			mTargetChara->SetExist(false); // 見えなくする
-			Vector3 effectPos(mTargetChara->GetPos().x, mTargetChara->GetPos().y + mTargetChara->GetLocalAABB().max.y * 0.5f, mTargetChara->GetPos().z);
+			mTargetCharas[i]->SetExist(false); // 見えなくする
+			Vector3 effectPos(mTargetCharas[i]->GetPos().x, mTargetCharas[i]->GetPos().y + mTargetCharas[i]->GetLocalAABB().max.y * 0.5f, mTargetCharas[i]->GetPos().z);
 			Singleton<EffectManager>().GetInstance().Play(TurnManager::DEATH_EFFECT_SLOT, effectPos);// えっふぇくと
 		}
 
 		// HPの文字セット
 		int addNum = 0;
 		const float ADDJUST_Y = 0.1f;
+		Vector3 pos(mTargetCharas[i]->GetPos().x, mTargetCharas[i]->GetAABB().max.y - ADDJUST_Y * addNum, mTargetCharas[i]->GetPos().z);
 		if (mHPAmount > 0)
 		{
-			Vector3 pos(mTargetChara->GetPos().x, mTargetChara->GetAABB().max.y - ADDJUST_Y * addNum, mTargetChara->GetPos().z);
 			mProductionValue.Add(mHPAmount, pos, HEAL_HP_RGB);
 			++addNum;
 		}
 		else if (mHPAmount < 0)
 		{
-			Vector3 pos(mTargetChara->GetPos().x, mTargetChara->GetAABB().max.y - ADDJUST_Y * addNum, mTargetChara->GetPos().z);
 			mProductionValue.Add(-mHPAmount, pos, DAMAGE_RGB); // -を描画させないため-mHPAmountにしてる
 			++addNum;
 		}
@@ -126,13 +142,14 @@ void ProductionUseItem::StateWaitEffect()
 		// MPの文字セット
 		if (mMPAmount > 0)
 		{
-			Vector3 pos(mTargetChara->GetPos().x, mTargetChara->GetAABB().max.y - ADDJUST_Y * addNum, mTargetChara->GetPos().z);
-			mProductionValue.Add(mHPAmount, pos, DAMAGE_RGB);
+			mProductionValue.Add(mHPAmount, pos, HEAL_HP_RGB);
 			++addNum;
 		}
 
 		++mState;
 	}
+
+
 }
 
 void ProductionUseItem::StateWait()

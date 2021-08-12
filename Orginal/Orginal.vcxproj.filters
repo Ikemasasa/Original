@@ -650,9 +650,6 @@
     <ClCompile Include="Source\CommandEscape.cpp">
       <Filter>ソース ファイル\Scene\Battle\command</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ProductionEscape.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Equipment.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -673,6 +670,9 @@
     </ClCompile>
     <ClCompile Include="Source\DropItemShower.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ProductionEscape.cpp">
+      <Filter>ソース ファイル\Scene\Battle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

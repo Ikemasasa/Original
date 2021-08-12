@@ -20,7 +20,8 @@ public:
 
 protected:
 	Behaviour mBehaviour = Behaviour::NONE;
-	int mTargetObjID = -1;
+	std::vector<int> mTargetObjIDs;
+	//int mTargetObjID = -1;
 	int mUseItemIndex = -1;
 
 public:
@@ -32,11 +33,11 @@ public:
 	bool IsBehaviourEnable() const { return (mBehaviour != Behaviour::NONE); }
 	void BehaviourFinished();
 
-	int GetTargetObjID() const { return mTargetObjID; }
+	std::vector<int> GetTargetObjIDs() const { return mTargetObjIDs; }
 	Behaviour GetBehaviour() const { return mBehaviour; }
 	int GetItemIndex() const { return mUseItemIndex; }
 	
 	void SetBehaviour(const Behaviour behaviour) { mBehaviour = behaviour; }
-	void SetTargetObjID(const int targetObjID) { mTargetObjID = targetObjID; }
 	void SetItemIndex(const int index)  { mUseItemIndex = index; }
+	void AddTargetObjID(const int targetObjID) { mTargetObjIDs.push_back(targetObjID); }
 };

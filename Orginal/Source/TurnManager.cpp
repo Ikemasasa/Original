@@ -133,8 +133,8 @@ void TurnManager::BeginProduction()
 	mProduction->Initialize();
 
 	int moveCharaID = GetMoveChara()->GetObjID();
-	int targetCharaID = GetMoveChara()->GetCommand()->GetTargetObjID();
-	mProduction->Begin(moveCharaID, targetCharaID);
+	std::vector<int> targetCharaIDs = GetMoveChara()->GetCommand()->GetTargetObjIDs();
+	mProduction->Begin(moveCharaID, targetCharaIDs);
 }
 
 void TurnManager::OrganizeOrder(const std::vector<std::shared_ptr<BattleCharacter>>& battleCharaArray)

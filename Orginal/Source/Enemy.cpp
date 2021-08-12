@@ -28,8 +28,8 @@ void Enemy::Initialize()
 
 	// TODO : ‚à‚Á‚Æ‚µ‚Á‚©‚è‚µ‚½‚â‚Â‚ğì‚ë‚¤
 	
-	float x = Random::RandomRangef(-40.0f, 40.0f);
-	float z = Random::RandomRangef(-40.0f, 40.0f);
+	float x = Random::RandomRangef(-30.0f, 30.0f);
+	float z = Random::RandomRangef(-30.0f, 30.0f);
 	mPos = Vector3(x, 0.0f, z);
 	mScale = Vector3(0.02f, 0.02f, 0.02f);
 

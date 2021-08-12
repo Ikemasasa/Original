@@ -1,5 +1,7 @@
 #include "CommandEnemy.h"
 
+#include "lib/Random.h"
+
 #include "BattleCharacterManager.h"
 
 void CommandEnemy::Update(const BattleCharacterManager* bcm)
@@ -8,8 +10,8 @@ void CommandEnemy::Update(const BattleCharacterManager* bcm)
 
 	const std::vector<int>& aliveIDs = bcm->GetAliveCharaIDs(Character::PLAYER);
 
-	int index = rand() % aliveIDs.size();
-	mTargetObjID = aliveIDs[index];
+	int index = Random::RandomRange(0, aliveIDs.size() - 1);
+	mTargetObjIDs.push_back(aliveIDs[index]);
 
 	mBehaviour = Behaviour::ATTACK;
 }

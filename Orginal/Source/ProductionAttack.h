@@ -28,7 +28,7 @@ class ProductionAttack : public IBattleProduction
 	Vector3 mDestinationPos;
 	float mLerpFactor = 0.0f;
 	float mWaitTimer = 0;
-	int mAmount = -1;
+	std::vector<int> mAmounts;
 
 private:
 	void StateInit();
@@ -38,6 +38,9 @@ private:
 	void StateWait();
 
 public:
+	ProductionAttack() = default;
+	~ProductionAttack() = default;
+
 	void Initialize() override;
 	void Update(const BattleCharacterManager* bcm) override;
 	void Render() override;
