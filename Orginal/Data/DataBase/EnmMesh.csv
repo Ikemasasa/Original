@@ -12,3 +12,7 @@
 モンスターB,20001,RUN,3,MonsterB/Run.fbx
 モンスターB,20001,ATTACK,4,MonsterB/Attack.fbx
 モンスターB,20001,DIE,5,MonsterB/Die.fbx
+ボスモンスター,20002,DEFAULT,0,BossMonster/BossMonster.fbx
+ボスモンスター,20002,IDLE,1,BossMonster/Idle.fbx
+ボスモンスター,20002,RUN,3,BossMonster/Run.fbx
+ボスモンスター,20002,ATTACK,4,BossMonster/Attack.fbx

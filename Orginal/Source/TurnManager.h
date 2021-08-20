@@ -23,6 +23,7 @@ private:
 	std::vector<int> mDropItemIDs;
 	bool mIsTurnFinished = false;
 	bool mIsResult = false;
+	bool mIsBeginnig = true;
 
 	void SortOrder(const std::vector<std::shared_ptr<BattleCharacter>>& battleCharaArray);
 	void BeginProduction();

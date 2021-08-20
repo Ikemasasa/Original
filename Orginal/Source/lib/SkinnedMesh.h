@@ -25,6 +25,7 @@ public:
 		WALK,
 		RUN,
 		ATTACK,
+		GUARD,
 		DIE,
 		DAMAGE,
 		USE_ITEM,

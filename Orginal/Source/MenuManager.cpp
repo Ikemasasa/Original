@@ -1,5 +1,6 @@
 #include "MenuManager.h"
 
+#include "lib/Audio.h"
 #include "lib/Input.h"
 #include "lib/Sprite.h"
 
@@ -24,6 +25,12 @@ void MenuManager::Initialize(const PlayerManager* plm)
 
 void MenuManager::Update(PlayerManager* plm)
 {
+	// 効果音
+	if (Input::GetButtonTrigger(0, Input::BUTTON::A)) AUDIO.SoundPlay((int)Sound::SELECT);
+	if (Input::GetButtonTrigger(0, Input::BUTTON::B)) AUDIO.SoundPlay((int)Sound::CANCEL);
+
+	int oldSelectIndex = mMenuStack.top()->mSelectIndex;
+
 	// 次のメニューがあれば更新する
 	if (mNextMenu)
 	{
@@ -31,6 +38,9 @@ void MenuManager::Update(PlayerManager* plm)
 		mMenuStack.top()->Initialize(plm);
 	}
 	mNextState = mMenuStack.top()->Update(plm);
+
+	if (oldSelectIndex != mMenuStack.top()->mSelectIndex) AUDIO.SoundPlay((int)Sound::CURSOR_MOVE);
+
 
 	switch (mNextState)
 	{

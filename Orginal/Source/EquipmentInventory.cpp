@@ -22,7 +22,7 @@ void EquipmentInventory::Push(int id)
 	const EquipmentData::Param* param = Singleton<DataBase>().GetInstance().GetEquipmentData()->GetParam(id);
 
 	Data data;
-	data.equipmentChara = nullptr;
+	data.equipChara = nullptr;
 	data.equipmentID = param->id;
 	mEquipmentsData[param->type].push_back(data);
 }
@@ -37,6 +37,18 @@ void EquipmentInventory::Remove(int id)
 		if (it->equipmentID == id)
 		{
 			mEquipmentsData[param->type].erase(it);
+			break;
+		}
+	}
+}
+
+void EquipmentInventory::UnSetChara(EquipmentData::Type type, const Character* chara)
+{
+	for (auto& equipment : mEquipmentsData[type])
+	{
+		if (equipment.equipChara == chara)
+		{
+			equipment.equipChara = nullptr;
 			break;
 		}
 	}

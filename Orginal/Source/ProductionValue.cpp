@@ -51,7 +51,7 @@ void ProductionValue::Update()
 		// alphaの値を増減させる
 		data.color.w = data.color.w + ALPHA_ADD * data.alphaSign;
 
-		mFontValue.RenderSet(data.value, scrPos, data.center, data.scale, data.color);
+		mFontValue.RenderSet(data.value, scrPos, data.center, data.color);
 
 		// アルファがSIGN_CHANGE_VALUE以上になれば、符号を反転させる(次からalpha値を下げる)
 		if (data.color.w >= SIGN_CHANGE_VALUE)

@@ -9,9 +9,9 @@ class Sprite;
 
 class DropItemShower
 {
-	static constexpr float VELOCITY_Y = 1.5f;
-	static constexpr float ALPHA_ADD = 0.05f;
-	static constexpr float ALPHA_TURN_VALUE = 1.5f;
+	static constexpr float VELOCITY_Y = 1.0f;
+	static constexpr float ALPHA_ADD = 0.025f;
+	static constexpr float ALPHA_TURN_VALUE = 1.8f;
 
 	static constexpr float BOARD_SCALE = 0.5f;
 	static constexpr float STR_OFFSET_Y = 4.0f;

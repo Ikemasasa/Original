@@ -2,6 +2,7 @@
 #include "Define.h"
 
 #include "lib/Framework.h"
+#include "lib/Sprite.h"
 
 
 bool Fade::Set(float fadeSpeed)

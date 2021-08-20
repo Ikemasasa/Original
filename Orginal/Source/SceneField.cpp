@@ -19,6 +19,8 @@
 #include "Singleton.h"
 #include "Terrain.h"
 
+
+
 SceneField::SceneField()
 {
 	mRamp.Load(L"Data/Image/Ramp.png");
@@ -93,7 +95,7 @@ void SceneField::Render()
 	mSceneTarget.Activate();
 	mSkybox->Render(view, proj);
 	mTerrain->Render(view, proj, lightDir);
-	mCharaManager->Render(view, proj, lightDir);
+	mCharaManager->Render(view, proj, lightDir);	
 	mSceneTarget.Deactivate();
 
 	mSceneTarget.Render(mPostEffect.get());

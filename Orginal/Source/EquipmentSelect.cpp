@@ -6,6 +6,7 @@
 #include "lib/Sprite.h"
 
 #include "DataBase.h"
+#include "Define.h"
 #include "EquipmentData.h"
 #include "Singleton.h"
 
@@ -73,7 +74,7 @@ void EquipmentSelect::Render(const Vector2& boardPos)
 			param->icon->Render(pos, scale, Vector2::ZERO, size);
 
 			// 装備中の装備ならEを出す
-			if (mEquipmentsData[i].equipmentChara)
+			if (mEquipmentsData[i].equipChara)
 			{
 				mEquipmentMark->Render(pos, scale, Vector2::ZERO, size);
 			}
@@ -119,14 +120,11 @@ void EquipmentSelect::RenderSetInfo(const Vector2& infoBoardPos)
 
 	// 装備品データ取得
 	const EquipmentData::Param* param = Singleton<DataBase>().GetInstance().GetEquipmentData()->GetParam(mEquipmentsData[mSelectIndex].equipmentID);
-	
-	Vector2 scale(Vector2::ONE);
-	Vector4 color(0.35f, 0.2f, 0.1f, 1.0f);
 
 	// 名前
 	Vector2 namePos = infoBoardPos + Vector2(mInfoBoard->GetSize().x / 2.0f, NAME_OFFSET_Y);
 	Vector2 nameCenter(mFont.GetWidth(param->name.c_str()) / 2.0f, 0.0f);
-	mFont.RenderSet(param->name.c_str(), namePos, nameCenter, scale, color);
+	mFont.RenderSet(param->name.c_str(), namePos, nameCenter, Define::FONT_COLOR);
 
 	// パラメーター
 	std::wstring str[PARAM_NUM] =
@@ -141,6 +139,6 @@ void EquipmentSelect::RenderSetInfo(const Vector2& infoBoardPos)
 	for (int i = 0; i < PARAM_NUM; ++i)
 	{
 		pos = infoBoardPos + Vector2(INFO_OFFSET_X, INFO_OFFSET_Y + INFO_ADD_Y * i);
-		mFont.RenderSet(str[i].c_str(), pos, center, scale, color);
+		mFont.RenderSet(str[i].c_str(), pos, center, Define::FONT_COLOR);
 	}
 }

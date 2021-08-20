@@ -1,5 +1,13 @@
 #include "EnemyManager.h"
 
+#include "lib/Shader.h"
+
+#include "Enemy.h"
+#include "BossEnemy.h"
+#include "DataBase.h"
+#include "StatusData.h"
+#include "Singleton.h"
+
 EnemyManager::EnemyManager()
 {
 	mEnemies.clear();
@@ -12,7 +20,14 @@ EnemyManager::~EnemyManager()
 
 void EnemyManager::Create(int charaID)
 {
-	mEnemies.push_back(std::make_unique<Enemy>(charaID));
+	StatusData::EnemyType type = Singleton<DataBase>().GetInstance().GetStatusData()->GetEnmType(charaID);
+	switch (type)
+	{
+	case StatusData::MOB:  mEnemies.push_back(std::make_unique<Enemy>(charaID)); break;
+	case StatusData::BOSS: mEnemies.push_back(std::make_unique<BossEnemy>(charaID)); break;
+	}
+
+	mEnemies.back()->SetEnmType(type);
 	mEnemies.back()->SetObjID(mEnemies.size() - 1);
 }
 

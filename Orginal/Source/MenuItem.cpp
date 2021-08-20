@@ -50,6 +50,9 @@ MenuBase::Select MenuItem::Update(PlayerManager* plm)
 
 		if (Input::GetButtonTrigger(0, Input::BUTTON::A))
 		{
+			// 決定のサウンドを鳴らさない
+			AUDIO.SoundStop((int)Sound::SELECT);
+
 			int charaindex = mCharacterHealth.GetSelectIndex();
 			int id = plm->GetPlayer(charaindex)->GetCharaID();
 
@@ -62,20 +65,20 @@ MenuBase::Select MenuItem::Update(PlayerManager* plm)
 			if (!plStatus.IsFullMP() && param->mpValue > 0) isHeal = true; // MPがmaxじゃないかつmp回復
 			if (isHeal) // 回復
 			{
-				plStatus.HealHP(param->hpValue);
-				plStatus.HealMP(param->mpValue);
+				plStatus.AddHP(param->hpValue);
+				plStatus.AddMP(param->mpValue);
 				Singleton<DataBase>().GetInstance().GetStatusData()->SetPLStatus(id, plStatus); //ステータス更新
 				mInventory->Sub(mItemIndex); // アイテム減らす
 
 				AUDIO.SoundPlay((int)Sound::HEAL);
+				mItemIndex = -1;// アイテム未選択状態に戻す
 			}
 			else // 回復しない
 			{
 				AUDIO.SoundPlay((int)Sound::CANCEL);
 			}
-
-			mItemIndex = -1;// アイテム未選択状態に戻す
 		}
+
 		else if(Input::GetButtonTrigger(0, Input::BUTTON::B))
 		{
 			mItemIndex = -1; // アイテム未選択状態に戻す

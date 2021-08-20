@@ -60,7 +60,8 @@ public:
     void MusicResume(int slot); // ÄŠJ
     void MusicSetVolume(int slot, float volume); //‰¹—Êİ’è
 
-    void SoundPlay(int slot); 
+    void SoundPlay(int slot);
+    void SoundStop(int slot);
 
     static Audio& GetInstance()
     {

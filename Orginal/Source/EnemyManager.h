@@ -1,8 +1,12 @@
 #pragma once
 #include <list>
 
-#include "Enemy.h"
+#include "lib/Vector.h"
+
 #include "DataBase.h"
+
+class Enemy;
+class Shader;
 
 class EnemyManager
 {
@@ -11,6 +15,7 @@ public:
 	{
 		MONSTER_A = DataBase::ENM_ID_START,
 		MONSTER_B,
+		BOSS_MONSTER,
 
 		ENM_NUM
 	};

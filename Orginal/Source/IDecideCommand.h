@@ -31,7 +31,8 @@ public:
 	virtual void Update(const BattleCharacterManager* bcm, CommandBase* cmdBase) = 0;
 	virtual void Render() {}
 
-	bool IsBackState() const { return mIsBackState; }
+	virtual void ResetParam() {}
 
+	bool IsBackState() const { return mIsBackState; }
 	IDecideCommand* GetNextCommandState() { return mNextCommand.release(); }
 };

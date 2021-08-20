@@ -71,7 +71,7 @@ void DropItemShower::Render()
 
 		center.x = mFont.GetWidth(param->name.c_str()) / 2.0f;
 		color.w = data.alpha;
-		mFont.RenderSet(param->name.c_str(), Vector2(data.pos.x, data.pos.y + STR_OFFSET_Y), center, scale, color);
+		mFont.RenderSet(param->name.c_str(), Vector2(data.pos.x, data.pos.y + STR_OFFSET_Y), center, color);
 	}
 
 	mFont.Render();

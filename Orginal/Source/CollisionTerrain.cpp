@@ -12,7 +12,7 @@ float CollisionTerrain::GetHeight(const Vector3& pos, const float dist)
     const Vector3 vel(0, -1, 0);
     for (auto& t : mTerrains)
     {
-        int n = t->RayPickSRT(pos, vel, &outPos, &outNormal);
+        int n = t->RayPickSRT(pos + Vector3(0, dist, 0), vel, &outPos, &outNormal);
         if (n != -1) return outPos.y;
     }
 

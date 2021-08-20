@@ -23,7 +23,7 @@ SceneBattle::SceneBattle(PlayerManager* plm, Enemy* enemy)
 
 	// SceneBattle‚ÌŠeí‰Šú‰»
 	BattleState::CreateInst();
-	BattleState::GetInstance().SetState(BattleState::State::COMMAND_SELECT);
+	BattleState::GetInstance().SetState(BattleState::State::BEGIN);
 
 	mBattleCharacterManager = std::make_unique<BattleCharacterManager>(plm, enemy);
 	mSkybox = std::make_unique<Skybox>();

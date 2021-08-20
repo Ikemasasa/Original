@@ -3,6 +3,7 @@
 #include "lib/Input.h"
 
 #include "CommandBase.h"
+#include "Define.h"
 
 CommandEscape::CommandEscape()
 {
@@ -16,19 +17,11 @@ CommandEscape::CommandEscape()
 		mFont.Add(L"A : ‚Í‚¢");
 		mFont.Add(L"B : ‚¢‚¢‚¦");
 
-		const Vector4 colors[] =
-		{
-			{0.56f, 0.3f, 0.2f, 1.0f},
-			{0.93f, 0.25f, 0.13f, 1.0f},
-			{0.0f, 0.32f, 0.65f, 1.0f}
-		};
-
 		Vector2 pos(PLATE_POS_X, PLATE_POS_Y + FIRST_OFFSET_Y - mBoard->GetSize().y/ 2.0f);
-		const Vector2 SCALE = Vector2::ONE;
 		for (int i = 0; i < mFont.GetNum(); ++i)
 		{
 			Vector2 center(mFont.GetWidth(i) / 2.0f, 0.0f);
-			mFont.RenderSet(i, pos, center, SCALE, colors[i]);
+			mFont.RenderSet(i, pos, center, Define::FONT_COLOR);
 
 			pos.y += ADD_OFFSET_Y;
 		}

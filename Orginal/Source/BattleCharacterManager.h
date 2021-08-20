@@ -41,7 +41,7 @@ public:
 
 private:
 	std::vector<std::shared_ptr<BattleCharacter>> mBCharacters;
-	std::vector<int> mAliveCharaIDs[BATTLECHARA_KIND];
+	std::vector<int> mAliveObjIDs[BATTLECHARA_KIND];
 	std::vector<int> mDropItemIDs;
 	int mPlayerNum;
 
@@ -68,7 +68,7 @@ public:
 
 	// ÉQÉbÉ^Å[
 	BattleCharacter* GetMoveChara() const { return mTurnManager.GetMoveChara(); }
-	const std::vector<int>& GetAliveCharaIDs(Character::Type kind) const { return mAliveCharaIDs[kind]; }
+	const std::vector<int>& GetAliveObjIDs(Character::Type kind) const { return mAliveObjIDs[kind]; }
 	BattleCharacter* GetChara(int objectID) const { return mBCharacters[objectID].get(); }
 	const std::vector<std::shared_ptr<BattleCharacter>>& GetBCharacters() const { return mBCharacters; }
 };

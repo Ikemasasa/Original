@@ -9,7 +9,7 @@ class Sprite;
 class ItemSelect
 {
 	static const int HORIZONTAL_NUM = 5; // アイコン横列の数
-	static const int VERTICAL_NUM = 6;   // アイコン縦列の数
+	static const int STATUS_NUM = 6;   // アイコン縦列の数
 
 	static constexpr float ICON_OFFSET = 19.0f; // ボードの左上からアイコン描画位置までの距離(XY両方)
 	static constexpr float ICON_SIZE = 256.0f;

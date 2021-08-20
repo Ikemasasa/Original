@@ -12,7 +12,7 @@ public:
 		USE_ITEM,
 		SKILL,
 		ATTACK,
-		DEFENCE,
+		GUARD,
 		ESCAPE,
 
 		MAX
@@ -21,7 +21,6 @@ public:
 protected:
 	Behaviour mBehaviour = Behaviour::NONE;
 	std::vector<int> mTargetObjIDs;
-	//int mTargetObjID = -1;
 	int mUseItemIndex = -1;
 
 public:
@@ -31,7 +30,7 @@ public:
 	virtual void Render() const {};
 
 	bool IsBehaviourEnable() const { return (mBehaviour != Behaviour::NONE); }
-	void BehaviourFinished();
+	virtual void BehaviourFinished();
 
 	std::vector<int> GetTargetObjIDs() const { return mTargetObjIDs; }
 	Behaviour GetBehaviour() const { return mBehaviour; }

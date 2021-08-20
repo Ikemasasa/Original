@@ -1,6 +1,7 @@
 #include "BattleCharacter.h"
 
 #include "BattleCharacterManager.h"
+#include "BattleState.h"
 #include "CommandPlayer.h"
 
 BattleCharacter::BattleCharacter(const Character* chara, Status status) : Character(chara)
@@ -10,12 +11,21 @@ BattleCharacter::BattleCharacter(const Character* chara, Status status) : Charac
 
 void BattleCharacter::Update(const BattleCharacterManager* bcm)
 {
-	mCommand->Update(bcm);
+	// 開始演出中じゃないならコマンド操作しない
+	if (BattleState::GetInstance().GetState() != BattleState::State::BEGIN)
+	{
+		mCommand->Update(bcm);
+	}
+
 
 	UpdateWorld();
 }
 
 void BattleCharacter::RenderCommand() const
 {
-	mCommand->Render();
+	// 開始演出中じゃないなら描画
+	if (BattleState::GetInstance().GetState() != BattleState::State::BEGIN)
+	{
+		mCommand->Render();
+	}
 }

@@ -2,6 +2,8 @@
 #include <Windows.h>
 #include <directXmath.h>
 
+class Matrix;
+
 class Vector2 : public DirectX::XMFLOAT2
 {
 public:
@@ -94,13 +96,11 @@ public:
 	inline void operator /=(const float r) { x /= r, y /= r, z /= r; }
 	inline void operator *=(const float r) { x *= r, y *= r, z *= r; }
 
+	static float Dot(const Vector3& v0, const Vector3& v1);
+	static Vector3 Cross(const Vector3& v0, const Vector3& v1);
 	static Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
-
-	// ベクトルの内積
-	static float Dot(const Vector3& v0, const Vector3& v1) { return v0.x * v1.x + v0.y * v1.y + v0.z * v1.z; }
-
-	// ベクトルの外積
-	static Vector3 Cross(const Vector3& v0, const Vector3& v1) { return Vector3(v0.y * v1.z - v0.z * v1.y, v0.z * v1.x - v0.x * v1.z, v0.x * v1.y - v0.y * v1.x); }
+	void Transform(const Vector3& v, const Matrix& m);
+	void TransformCoord(const Vector3& v, const Matrix& m);
 
 	//代入
 	Vector3& operator=(const DirectX::XMVECTOR & other) 
@@ -117,14 +117,8 @@ public:
 	}
 
 	//長さ
-	float Length() const 
-	{
-		return (static_cast<Vector3>(DirectX::XMVector3Length(DirectX::XMVECTOR(*this)))).x;
-	}
-	float LengthSq() const
-	{
-		return (static_cast<Vector3>(DirectX::XMVector3LengthSq(DirectX::XMVECTOR(*this)))).x;
-	}
+	float Length() const { return sqrtf(x * x + y * y + z * z); }
+	float LengthSq() const { return x * x + y * y + z * z; }
 
 	//正規化
 	void Normalize() { *this = DirectX::XMVector3Normalize(DirectX::XMVECTOR(*this)); }
@@ -145,6 +139,10 @@ public:
 	Vector4(float x, float y, float z, float w)
 	{
 		this->x = x; this->y = y; this->z = z; this->w = w;
+	}
+	Vector4(const Vector3& rgb, float a)
+	{
+		this->x = rgb.x; this->y = rgb.y; this->z = rgb.z; this->w = a;
 	}
 	Vector4(const DirectX::XMVECTOR& other) : XMFLOAT4() {
 		DirectX::XMVECTOR temp = other;

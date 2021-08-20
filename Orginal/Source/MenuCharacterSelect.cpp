@@ -4,6 +4,7 @@
 #include "lib/Input.h"
 
 #include "DataBase.h"
+#include "Define.h"
 #include "Player.h"
 #include "PlayerManager.h"
 #include "Singleton.h"
@@ -25,7 +26,7 @@ void MenuCharacterSelect::Initialize(const PlayerManager* plm)
 		wchar_t name[LEN] = {};
 
 		int charaID = plm->GetPlayer(i)->GetCharaID();
-		name[0] = Singleton<DataBase>().GetInstance().GetStatusData()->GetPLStatus(charaID).name[0];
+		name[0] = Singleton<DataBase>().GetInstance().GetStatusData()->GetPLStatus(charaID).GetName()[0];
 
 		mNameFont.Add(name);
 		++mCharacterNum;
@@ -51,18 +52,21 @@ void MenuCharacterSelect::Render(Vector2 leftBottom)
 	Vector2 size(mPlate->GetSize());
 	Vector2 center(0.0f, size.y); // leftBottomを受け取るため y = size.y;
 	float angle = 0.0f;
-	Vector4 defaultColor(0.5f, 0.5f, 0.5f, 1.0f);
-	Vector4 SelectColor(1.0f, 1.0f, 1.0f, 1.0f);
 	for (int i = 0; i < mCharacterNum; ++i)
 	{
 		Vector2 pos(leftBottom.x + (size.x * scale.x * i), leftBottom.y);
-		Vector4 color = defaultColor;
-		if (i == mSelectIndex) color = SelectColor;
+		Vector3 plateRGB = Vector3::ONE;
+		Vector3 fontRGB = Vector3(Define::FONT_COLOR.x, Define::FONT_COLOR.y, Define::FONT_COLOR.z);
+		if (i != mSelectIndex)
+		{
+			plateRGB *= 0.5f;
+			fontRGB *= 0.5f;
+		}
 
-		mPlate->Render(pos, scale, texPos, size, center, angle, color);
+		mPlate->Render(pos, scale, texPos, size, center, angle, Vector4(plateRGB, 1.0f));
 
 		Vector2 namePos(pos.x + FONT_OFFSET.x, pos.y - FONT_OFFSET.y); // プレートのposが左下中心だから y - offset
-		mNameFont.RenderSet(i, namePos, Vector2::ZERO, Vector2::ONE, color);
+		mNameFont.RenderSet(i, namePos, Vector2::ZERO, Vector4(fontRGB, 1.0f));
 	}
 
 	mNameFont.Render();

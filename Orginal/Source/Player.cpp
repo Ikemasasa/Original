@@ -62,7 +62,7 @@ void Player::Update()
 
 		// À•W•â³
 		{
-			const float RAYPICK_DIST = 0.25f;
+			const float RAYPICK_DIST = 0.5f;
 
 			// ˆÚ“®•ûŒü
 			Vector3 outVelocity;

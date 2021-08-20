@@ -24,10 +24,10 @@ void CommandCharaSelect::Update(const BattleCharacterManager* bcm, CommandBase* 
 	else if (mCharaType == Character::ENEMY) BattleState::GetInstance().SetState(BattleState::State::ENEMY_SELECT);
 
 	// 生きてる同じタイプのアクターから選択する
-	const std::vector<int>& ids = bcm->GetAliveCharaIDs(mCharaType);
-	int max = static_cast<int>(ids.size() - 1);
-	if (Input::GetButtonTrigger(0, Input::BUTTON::RIGHT)) mCharaIndex = Math::Min(mCharaIndex + 1, max);
-	if (Input::GetButtonTrigger(0, Input::BUTTON::LEFT))  mCharaIndex = Math::Max(mCharaIndex - 1, 0);
+	const std::vector<int>& ids = bcm->GetAliveObjIDs(mCharaType);
+	int num = static_cast<int>(ids.size());
+	if (Input::GetButtonTrigger(0, Input::BUTTON::RIGHT)) mCharaIndex = (mCharaIndex + num - 1) % num; 
+	if (Input::GetButtonTrigger(0, Input::BUTTON::LEFT))  mCharaIndex = (mCharaIndex + 1) % num;
 	mTargetChara = bcm->GetChara(ids[mCharaIndex]); // Renderでつかうから ここで代入
 
 	// キャラ選択したら
@@ -48,8 +48,8 @@ void CommandCharaSelect::Update(const BattleCharacterManager* bcm, CommandBase* 
 			if (itemParam->effect == ItemData::HEAL)
 			{
 				//HP回復でHPがマックス, MP回復でMPがマックス なら使用不可
-				if      (itemParam->hpValue > 0 && moveChara->GetStatus()->IsFullHP()) isUseable = false;
-				else if (itemParam->mpValue > 0 && moveChara->GetStatus()->IsFullMP()) isUseable = false;
+				if      (itemParam->hpValue > 0 && mTargetChara->GetStatus()->IsFullHP()) isUseable = false;
+				else if (itemParam->mpValue > 0 && mTargetChara->GetStatus()->IsFullMP()) isUseable = false;
 			}
 
 			if (isUseable) cmdBase->SetBehaviour(CommandBase::Behaviour::USE_ITEM);

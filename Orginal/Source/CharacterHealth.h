@@ -12,32 +12,28 @@ struct Status;
 
 class CharacterHealth
 {
-	static const int VERTICAL_NUM = 3;
+	static const int STATUS_NUM = 2;
+	static constexpr float SELECT_OFFSET = 5;
 
-	struct HealthPlate
-	{
-		// Ç±ÇÃï”ÇÃêîéöÇÕìKìñ
-		static constexpr float FIRST_OFFSET_X = 16.0f;
-		static constexpr float CUR_OFFSET_X = 100.0f;
-		static constexpr float DELIM_OFFSET_X = 4.0f;
-		static constexpr float MAX_OFFSET_X = 64.0f;
+	// ï∂éöÇÃà íu
+	static constexpr float FIRST_OFFSET_X = 16.0f;
+	static constexpr float CUR_OFFSET_X = 100.0f;
+	static constexpr float DELIM_OFFSET_X = 4.0f;
+	static constexpr float MAX_OFFSET_X = 64.0f;
 
-		static constexpr float FIRST_OFFSET_Y = 12.0f;
-		static constexpr float ADD_OFFSET_Y = 32.0f;
+	static constexpr float FIRST_OFFSET_Y = 12.0f;
+	static constexpr float ADD_OFFSET_Y = 32.0f;
 
-		std::wstring name;
-	};
-
+private:
 	std::unique_ptr<Sprite> mHealthPlate;
 	std::unique_ptr<Sprite> mSelect;
 
-	Font mPlNameFont;
-	Font mStatusNameFont;
-	Font mDelimFont;
+	Font mFont;
 	FontValue mFontValue;
-	std::vector<HealthPlate> mHealthPlates;
 	Vector2 mPlateLeftTop;
 	int mSelectIndex;
+	int mPlateNum;
+
 public:
 	CharacterHealth() = default;
 	~CharacterHealth() = default;

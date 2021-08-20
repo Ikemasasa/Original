@@ -42,7 +42,7 @@ void Font::DisableTTF()
 	}
 }
 
-bool Font::RenderSet(const wchar_t* str, const Vector2& pos, const Vector2& center, const Vector2& scale, const Vector4& color)
+bool Font::RenderSet(const wchar_t* str, const Vector2& pos, const Vector2& center, const Vector4& color)
 {
 	RenderData data;
 
@@ -53,7 +53,6 @@ bool Font::RenderSet(const wchar_t* str, const Vector2& pos, const Vector2& cent
 		data.fontIndex = i;
 		data.scrPos = pos;
 		data.center = center;
-		data.scale = scale;
 		data.color = color;
 		mRenderData.emplace_back(data);
 		return true;
@@ -65,7 +64,6 @@ bool Font::RenderSet(const wchar_t* str, const Vector2& pos, const Vector2& cent
 		data.fontIndex = mFonts.size() - 1;
 		data.scrPos = pos;
 		data.center = center;
-		data.scale = scale;
 		data.color = color;
 		mRenderData.emplace_back(data);
 		return true;
@@ -74,7 +72,7 @@ bool Font::RenderSet(const wchar_t* str, const Vector2& pos, const Vector2& cent
 	return false;
 }
 
-bool Font::RenderSet(const int index, const Vector2& pos, const Vector2& center, const Vector2& scale, const Vector4& color)
+bool Font::RenderSet(const int index, const Vector2& pos, const Vector2& center, const Vector4& color)
 {
 	if (mFonts.size() < static_cast<size_t>(index)) return false;
 
@@ -83,7 +81,6 @@ bool Font::RenderSet(const int index, const Vector2& pos, const Vector2& center,
 	data.fontIndex = index;
 	data.scrPos = pos;
 	data.center = center;
-	data.scale = scale;
 	data.color = color;
 	mRenderData.emplace_back(data);
 	return true;
@@ -115,7 +112,7 @@ void Font::Render(bool isRenderClear)
 	for (auto& data : mRenderData)
 	{
 		const FontData& font = mFonts[data.fontIndex];
-		scale = data.scale;
+		scale = Vector2::ONE;
 		center = data.center;
 		color = data.color;
 

@@ -4,9 +4,11 @@
 プレイヤーA,10000,IDLE,1,PlayerA/Idle.fbx
 プレイヤーA,10000,RUN,3,PlayerA/Run.fbx
 プレイヤーA,10000,ATTACK,4,PlayerA/Attack.fbx
-プレイヤーA,10000,USEITEM,7,PlayerA/UseItem.fbx
+プレイヤーA,10000,GUARD,5,PlayerA/Guard.fbx
+プレイヤーA,10000,USEITEM,8,PlayerA/UseItem.fbx
 プレイヤーB,10001,DEFAULT,0,PlayerB/PlayerB.fbx
 プレイヤーB,10001,IDLE,1,PlayerB/Idle.fbx
 プレイヤーB,10001,RUN,3,PlayerB/Run.fbx
 プレイヤーB,10001,ATTACK,4,PlayerB/Attack.fbx
-プレイヤーB,10001,USEITEM,7,PlayerB/UseItem.fbx
+プレイヤーB,10001,GUARD,5,PlayerB/Guard.fbx
+プレイヤーB,10001,USEITEM,8,PlayerB/UseItem.fbx

@@ -24,7 +24,7 @@ void MenuEquipment::Initialize(const PlayerManager* plm)
 	for (int i = 0; i < playerNum; ++i)
 	{
 		Status status = Singleton<DataBase>().GetInstance().GetStatusData()->GetPLStatus(plm->GetPlayer(i)->GetCharaID());
-		mNameFont.Add(status.name.c_str());
+		mNameFont.Add(status.GetName().c_str());
 	}
 
 	mFont.Initialize();
@@ -72,55 +72,59 @@ MenuBase::Select MenuEquipment::Update(PlayerManager* plm)
 		if (equipmentIndex != -1)
 		{
 			// すでに装備している人がいたら外す
-			const Character* chara = inventory[equipmentIndex].equipmentChara;
-			if (chara)
+			const Character* equipChara = inventory[equipmentIndex].equipChara;
+			if (equipChara)
 			{
 				// 装備を外す
-				Status equipCharaStatus = Singleton<DataBase>().GetInstance().GetStatusData()->GetPLStatus(chara->GetCharaID());
-				equipCharaStatus.equipments.UnEquip(inventory[equipmentIndex].equipmentID);
-				Singleton<DataBase>().GetInstance().GetStatusData()->SetPLStatus(chara->GetCharaID(), equipCharaStatus);
+				Status equipCharaStatus = Singleton<DataBase>().GetInstance().GetStatusData()->GetPLStatus(equipChara->GetCharaID());
+				equipCharaStatus.GetEquipments()->UnEquip(inventory[equipmentIndex].equipmentID);
+				Singleton<DataBase>().GetInstance().GetStatusData()->SetPLStatus(equipChara->GetCharaID(), equipCharaStatus);
 
 				// 装備中のキャラの装備するキャラが同じなら、外すだけ
-				if (selectPlayer == chara)
+				if (selectPlayer == equipChara)
 				{
 					isEquip = false;
 				}
 
 				// 参照キャラをnullにする
-				equipmentInventory->UnSetChara(type, equipmentIndex);
+				equipmentInventory->UnSetChara(type, equipChara);
 			}
 
 			if (isEquip)
 			{
+				// 同タイプのものを装備していたら外す
+				status.GetEquipments()->UnEquip(type);
+				equipmentInventory->UnSetChara(type, selectPlayer);
+
 				// 装備する
-				status.equipments.Equip(selectPlayer, inventory[equipmentIndex].equipmentID);
+				status.GetEquipments()->Equip(selectPlayer, inventory[equipmentIndex].equipmentID);
 				equipmentInventory->SetChara(type, selectPlayer, equipmentIndex);
 				Singleton<DataBase>().GetInstance().GetStatusData()->SetPLStatus(selectCharaID, status);
 			}
 
 			mIsDecideType = false;
+			mEquipmentSelect.ClearData();
 		}
 
 		// 前の状態に戻る
 		if (Input::GetButtonTrigger(0, Input::BUTTON::B))
 		{
 			mIsDecideType = false;
+			mEquipmentSelect.ClearData();
 		}
 	}
 
 	// フォントレンダーに追加
 	Vector2 boardPos(BOARD_POS_X, BOARD_POS_Y);
 	Vector2 pos(boardPos.x + FIRST_OFFSET_X, boardPos.y + FIRST_OFFSET_Y);
-	Vector2 scale(Vector2::ONE);
 	Vector2 center(Vector2::ZERO);
-	Vector4 color(0.4f, 0.2f, 0.0f, 1.0f);
 	{
 		// 名前
 		float nameX = boardPos.x + mBoard->GetSize().x / 2.0f;
 		float nameY = boardPos.y + FIRST_OFFSET_Y;
 		Vector2 namePos(nameX, nameY);
 		Vector2 nameCenter(mNameFont.GetWidth(mCharacterSelect.GetIndex()) / 2.0f, 0.0f);
-		mNameFont.RenderSet(mCharacterSelect.GetIndex(), namePos, nameCenter, scale, color);
+		mNameFont.RenderSet(mCharacterSelect.GetIndex(), namePos, nameCenter, Define::FONT_COLOR);
 
 
 		// 装備品
@@ -129,24 +133,24 @@ MenuBase::Select MenuEquipment::Update(PlayerManager* plm)
 
 		// 武器
 		pos.y += ADD_OFFSET_Y;
-		mFont.RenderSet(WEAPON_INDEX, pos, center, scale, color);
+		mFont.RenderSet(WEAPON_INDEX, pos, center, Define::FONT_COLOR);
 
 		// 武器名
-		const EquipmentData::Param* param = status.equipments.GetParam(EquipmentData::WEAPON);
+		const EquipmentData::Param* param = status.GetEquipments()->GetParam(EquipmentData::WEAPON);
 		if (param)
 		{
-			mFont.RenderSet(param->name.c_str(), Vector2(pos.x + mFont.GetWidth(WEAPON_INDEX), pos.y), center, scale, color);
+			mFont.RenderSet(param->name.c_str(), Vector2(pos.x + mFont.GetWidth(WEAPON_INDEX), pos.y), center, Define::FONT_COLOR);
 		}
 
 		// 防具
 		pos.y += ADD_OFFSET_Y;
-		mFont.RenderSet(ARMOR_INDEX, pos, center, scale, color);
+		mFont.RenderSet(ARMOR_INDEX, pos, center, Define::FONT_COLOR);
 
 		// 防具名
-		param = status.equipments.GetParam(EquipmentData::ARMOR);
+		param = status.GetEquipments()->GetParam(EquipmentData::ARMOR);
 		if (param)
 		{
-			mFont.RenderSet(param->name.c_str(), Vector2(pos.x + mFont.GetWidth(ARMOR_INDEX), pos.y), center, scale, color);
+			mFont.RenderSet(param->name.c_str(), Vector2(pos.x + mFont.GetWidth(ARMOR_INDEX), pos.y), center, Define::FONT_COLOR);
 		}
 	}
 

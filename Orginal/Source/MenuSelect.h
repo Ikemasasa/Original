@@ -20,6 +20,7 @@ private:
 	static constexpr float PLATE_OFFSET_X = 100.0f;
 	static constexpr float PLATE_OFFSET_Y = 50.0f;
 	static constexpr float PLATE_FIRST_OFFSET_Y = 75.0f;
+	static constexpr float SELECT_OFFSET = 5.0f; // xy—¼•û
 
 	static constexpr float FADE = 0.15f;
 
@@ -39,6 +40,7 @@ private:
 	std::vector<Data> mDatas;
 	Font mFont;
 	int mSelectIndex = 0;
+	int mOldSelectIndex = 0;
 	
 	float mBeginMoveX = 0.0f;
 

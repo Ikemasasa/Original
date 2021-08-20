@@ -18,6 +18,7 @@ class MenuManager
 
 	std::unique_ptr<MenuItem> mMenuItem;
 
+
 public:
 	MenuManager();
 

@@ -5,6 +5,7 @@
 
 #include "BattleCharacterManager.h"
 #include "BattleState.h"
+#include "CommandBase.h"
 #include "CommandCharaSelect.h"
 #include "CommandEscape.h"
 #include "CommandItem.h"
@@ -12,6 +13,7 @@
 CommandBehaviour::CommandBehaviour()
 {
 	mIcons = std::make_unique<Sprite>(L"Data/Image/Battle/command_icons.png");
+	mCommandNamePlate = std::make_unique<Sprite>(L"Data/Image/Battle/command_name_plate.png");
 	mCommandIndex = { 1, 1 };
 }
 
@@ -46,7 +48,7 @@ void CommandBehaviour::Update(const BattleCharacterManager* bcm, CommandBase* cm
 	{
 		if (mCommandIndex.y == 0) mNextCommand = std::make_unique<CommandItem>();
 		else if (mCommandIndex.y == 2) mNextCommand = std::make_unique<CommandEscape>();
-		else if (mCommandIndex.x == 0);
+		else if (mCommandIndex.x == 0) cmdBase->SetBehaviour(CommandBase::Behaviour::GUARD);
 		else if (mCommandIndex.x == 1) mNextCommand = std::make_unique<CommandCharaSelect>(Character::Type::ENEMY);
 		else if (mCommandIndex.x == 2);
 	}
@@ -54,18 +56,61 @@ void CommandBehaviour::Update(const BattleCharacterManager* bcm, CommandBase* cm
 
 void CommandBehaviour::Render()
 {
-	const float offsetX = 300.0f;
-	const float offsetY = 300.0f;
+	const float LeftTopX = 300.0f;
+	const float LeftTopY = 350.0f;
 
 	const Vector2 scale(ICON_SCALE, ICON_SCALE);
 	const Vector2 size(ICON_SIZE, ICON_SIZE);
 	const Vector2 scaleSize = Vector2(size.x * scale.x, size.y * scale.y);
 
-	// 上から「道具」「防御」「攻撃」「技」「逃」「選択中」の画像
-	mIcons->Render(Vector2(offsetX + scaleSize.x, offsetY)													, scale, Vector2(ICON_ITEM_X, 0.0f)	  , size);
-	mIcons->Render(Vector2(offsetX, offsetY + scaleSize.y)													, scale, Vector2(ICON_DEFENCE_X, 0.0f), size);
-	mIcons->Render(Vector2(offsetX + scaleSize.x, offsetY + scaleSize.y)									, scale, Vector2(ICON_ATTACK_X, 0.0f) , size);
-	mIcons->Render(Vector2(offsetX + scaleSize.x * 2, offsetY + scaleSize.y)								, scale, Vector2(ICON_SKILL_X, 0.0f)  , size);
-	mIcons->Render(Vector2(offsetX + scaleSize.x, offsetY + scaleSize.y * 2)								, scale, Vector2(ICON_ESCAPE_X, 0.0f) , size);
-	mIcons->Render(Vector2(offsetX + mCommandIndex.x * scaleSize.x, offsetY + mCommandIndex.y * scaleSize.y), scale, Vector2(ICON_SELECT_X, 0.0f) , size);
+	// 上から「道具」「防御」「攻撃」「技」「逃」の座標
+	Vector2 pos[] =
+	{
+		{ LeftTopX + scaleSize.x, LeftTopY },
+		{ LeftTopX, LeftTopY + scaleSize.y },
+		{ LeftTopX + scaleSize.x, LeftTopY + scaleSize.y },
+		{ LeftTopX + scaleSize.x * 2, LeftTopY + scaleSize.y },
+		{ LeftTopX + scaleSize.x, LeftTopY + scaleSize.y * 2 },
+	};
+	Vector2 selectPos = Vector2(LeftTopX + mCommandIndex.x * scaleSize.x, LeftTopY + mCommandIndex.y * scaleSize.y);
+
+	const wchar_t* commandName[] =
+	{
+		L"アイテム", L"防御", L"攻撃", L"スキル", L"逃げる"
+	};
+
+	// コマンドの名前を入れるプレートを描画
+	Vector2 namePlatePos(LeftTopX, LeftTopY - mCommandNamePlate->GetSize().y * scale.y);
+	mCommandNamePlate->Render(namePlatePos, scale, Vector2::ZERO, mCommandNamePlate->GetSize());
+
+	for (int i = 0; i < COMMAND_NUM; ++i)
+	{
+		// まずベースのアイコンを描画する
+		mIcons->Render(pos[i], scale, Vector2(ICON_BASE_X, 0.0f), size);
+
+		if (pos[i] == selectPos)
+		{
+			// 選択中の画像を描画する
+			mIcons->Render(selectPos, scale, Vector2(ICON_SELECT_X, 0.0f), size);
+			
+			float fontOffsetY = 3.0f;
+			Vector2 center(mFont.GetWidth(commandName[i]) / 2.0f, 0.0f);
+			mFont.RenderSet(commandName[i], namePlatePos + Vector2(mCommandNamePlate->GetSize().x / 2.0f * scale.x, fontOffsetY), center, Define::FONT_COLOR);
+		}
+
+		// それぞれのアイコンを描画する
+		Vector2 texPos(i * ICON_SIZE, 0.0f);
+		mIcons->Render(pos[i], scale, texPos, size);
+	}
+
+	mFont.Render();
+}
+
+void CommandBehaviour::ResetParam()
+{
+	// ターン開始時中央をさしててほしいので 1
+	mCommandIndex.x = 1;
+	mCommandIndex.y = 1;
+	mOldCommandIndex.x = 1;
+	mOldCommandIndex.y = 1;
 }

@@ -183,9 +183,6 @@
     <ClInclude Include="Source\SceneBattle.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Source\CommandPlayer.h">
-      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Enemy.h">
       <Filter>ヘッダー ファイル\Scene\Field</Filter>
     </ClInclude>
@@ -203,9 +200,6 @@
     </ClInclude>
     <ClInclude Include="Source\SceneTitle.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\CommandBase.h">
-      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
     </ClInclude>
     <ClInclude Include="Source\CharacterManager.h">
       <Filter>ヘッダー ファイル\Scene\Field</Filter>
@@ -233,9 +227,6 @@
     </ClInclude>
     <ClInclude Include="Source\lib\Input.h">
       <Filter>lib\ヘッダーファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\CommandEnemy.h">
-      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
     </ClInclude>
     <ClInclude Include="Source\CameraManager.h">
       <Filter>ヘッダー ファイル\Common\Camera</Filter>
@@ -304,9 +295,6 @@
       <Filter>ヘッダー ファイル\Scene\Battle</Filter>
     </ClInclude>
     <ClInclude Include="Source\CollisionTerrain.h">
-      <Filter>ヘッダー ファイル\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameManager.h">
       <Filter>ヘッダー ファイル\Common</Filter>
     </ClInclude>
     <ClInclude Include="Source\Item.h">
@@ -386,6 +374,30 @@
     </ClInclude>
     <ClInclude Include="Source\DropItemShower.h">
       <Filter>ヘッダー ファイル\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BossEnemy.h">
+      <Filter>ヘッダー ファイル\Scene\Field</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameManager.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BossEnemyBattle.h">
+      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CommandBase.h">
+      <Filter>ヘッダー ファイル\Scene\Battle\command</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CommandEnemy.h">
+      <Filter>ヘッダー ファイル\Scene\Battle\command</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CommandPlayer.h">
+      <Filter>ヘッダー ファイル\Scene\Battle\command</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CommandBossEnemy.h">
+      <Filter>ヘッダー ファイル\Scene\Battle\command</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ProductionGuard.h">
+      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -491,9 +503,6 @@
     <ClCompile Include="Source\CharacterManager.cpp">
       <Filter>ソース ファイル\Scene\Field</Filter>
     </ClCompile>
-    <ClCompile Include="Source\CommandPlayer.cpp">
-      <Filter>ソース ファイル\Scene\Battle</Filter>
-    </ClCompile>
     <ClCompile Include="Source\PlayerManager.cpp">
       <Filter>ソース ファイル\Scene\Field</Filter>
     </ClCompile>
@@ -520,9 +529,6 @@
     </ClCompile>
     <ClCompile Include="Source\lib\Input.cpp">
       <Filter>lib\ソースファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\CommandEnemy.cpp">
-      <Filter>ソース ファイル\Scene\Battle</Filter>
     </ClCompile>
     <ClCompile Include="Source\Terrain.cpp">
       <Filter>ソース ファイル\Scene\Field</Filter>
@@ -620,9 +626,6 @@
     <ClCompile Include="Source\SceneBase.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Light.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\GaussianBlur.cpp">
       <Filter>ソース ファイル\Scene\Battle</Filter>
     </ClCompile>
@@ -650,29 +653,53 @@
     <ClCompile Include="Source\CommandEscape.cpp">
       <Filter>ソース ファイル\Scene\Battle\command</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Equipment.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\MenuEquipment.cpp">
       <Filter>ソース ファイル\Scene\Menu</Filter>
     </ClCompile>
-    <ClCompile Include="Source\EquipmentSelect.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\EquipmentInventory.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DamageCalculator.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DropData.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DropItemShower.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\ProductionEscape.cpp">
       <Filter>ソース ファイル\Scene\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BossEnemy.cpp">
+      <Filter>ソース ファイル\Scene\Field</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DropItemShower.cpp">
+      <Filter>ソース ファイル\Scene\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DamageCalculator.cpp">
+      <Filter>ソース ファイル\Scene\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DropData.cpp">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Equipment.cpp">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EquipmentInventory.cpp">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EquipmentSelect.cpp">
+      <Filter>ソース ファイル\Scene\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Light.cpp">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Define.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BossEnemyBattle.cpp">
+      <Filter>ソース ファイル\Scene\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CommandEnemy.cpp">
+      <Filter>ソース ファイル\Scene\Battle\command</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CommandPlayer.cpp">
+      <Filter>ソース ファイル\Scene\Battle\command</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CommandBossEnemy.cpp">
+      <Filter>ソース ファイル\Scene\Battle\command</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ProductionGuard.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

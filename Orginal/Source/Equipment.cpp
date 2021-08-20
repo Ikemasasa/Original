@@ -57,6 +57,20 @@ void Equipment::UnEquip(int id)
 	}
 }
 
+
+void Equipment::UnEquip(EquipmentData::Type type)
+{
+	// 同じIDのものを探して、ベクターから削除
+	for (auto it = mEquipments.begin(); it != mEquipments.end(); ++it)
+	{
+		if ((*it)->type == type)
+		{
+			mEquipments.erase(it);
+			break;
+		}
+	}
+}
+
 const EquipmentData::Param* Equipment::GetParam(const EquipmentData::Type type) const
 {
 	const EquipmentData::Param* ret = nullptr;

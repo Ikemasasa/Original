@@ -35,7 +35,7 @@ void ProductionAttack::Update(const BattleCharacterManager* bcm)
 		for (size_t i = 0; i < mTargetCharas.size(); ++i)
 		{
 			int damage = DamageCalculator::CalcAttackDamage(mMoveChara->GetStatus(), mTargetCharas[i]->GetStatus());
-			mTargetCharas[i]->GetStatus()->HurtHP(damage);
+			mTargetCharas[i]->GetStatus()->SubHP(damage);
 			mAmounts.push_back(damage);
 		}
 	}

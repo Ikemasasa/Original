@@ -6,18 +6,23 @@ class CameraBase;
 class BattleState : public SingletonManual<BattleState>
 {
 public:
+	static constexpr float BEGIN_TIME = 1.0f;
+
 	enum class State
 	{
-		SORT_ORDER,
+		BEGIN,
+		BEGIN_FINISHED,
 		COMMAND_SELECT,
 		PARTY_SELECT,
 		ENEMY_SELECT,
+		PLAYER_ATTACK,
+		ENEMY_ATTACK,
 		RESULT,
 		MAX
 	};
 
 private:
-	State mState = State::SORT_ORDER;
+	State mState = State::BEGIN;
 
 public:
 	BattleState() = default;

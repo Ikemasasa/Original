@@ -3,6 +3,7 @@
 #include "lib/Input.h"
 
 #include "DataBase.h"
+#include "Define.h"
 #include "Player.h"
 #include "PlayerManager.h"
 #include "Singleton.h"
@@ -21,7 +22,7 @@ void MenuStatus::Initialize(const PlayerManager* plm)
     // プレイヤーの名前追加
     for (size_t i = 0; i < plm->GetNum(); ++i)
     {
-        std::wstring name = Singleton<DataBase>().GetInstance().GetStatusData()->GetPLStatus(plm->GetPlayer(i)->GetCharaID()).name;
+        std::wstring name = Singleton<DataBase>().GetInstance().GetStatusData()->GetPLStatus(plm->GetPlayer(i)->GetCharaID()).GetName();
         mPlNameFont.Add(name.c_str());
     }
 
@@ -48,6 +49,8 @@ MenuBase::Select MenuStatus::Update(PlayerManager* plm)
     // 前の画面に戻す
     if (Input::GetButtonTrigger(0, Input::BUTTON::B)) return BACK;
 
+    // 決定音を鳴らさない
+    AUDIO.SoundStop((int)Sound::SELECT);
 
     mCharacterSelect.Update();
 
@@ -56,13 +59,13 @@ MenuBase::Select MenuStatus::Update(PlayerManager* plm)
     const Status status = Singleton<DataBase>().GetInstance().GetStatusData()->GetPLStatus(charaID);
     std::vector<int> curValue; // 現在のステータス
     std::vector<int> maxValue; // 最大のステータス
-    curValue.emplace_back(status.hp);
-    curValue.emplace_back(status.mp);
+    curValue.emplace_back(status.GetHP());
+    curValue.emplace_back(status.GetMP());
     curValue.emplace_back(status.GetAtk());
     curValue.emplace_back(status.GetDef());
     curValue.emplace_back(status.GetSpd());
-    maxValue.emplace_back(status.maxHP);
-    maxValue.emplace_back(status.maxMP);
+    maxValue.emplace_back(status.GetMaxHP());
+    maxValue.emplace_back(status.GetMaxMP());
 
     for (int i = 0; i < STATUS_NUM; ++i)
     {
@@ -73,10 +76,10 @@ MenuBase::Select MenuStatus::Update(PlayerManager* plm)
         // かなりごり押し、ほかにいい方法あれば変える
         if (i == NAME)
         {
-            width = mPlNameFont.GetWidth(status.name.c_str());
+            width = mPlNameFont.GetWidth(status.GetName().c_str());
             pos = Vector2(PLATE_X + mStatusPlate->GetSize().x * 0.5f, PLATE_Y + FIRST_OFFSET_Y);
             center = Vector2(width * 0.5f, 0.0f);
-            mPlNameFont.RenderSet(playerIndex, pos, center);
+            mPlNameFont.RenderSet(playerIndex, pos, center, Define::FONT_COLOR);
         }
         else if (i == HP || i == MP)
         {
@@ -86,23 +89,23 @@ MenuBase::Select MenuStatus::Update(PlayerManager* plm)
 
             // ステータス名
             width = mStatusNameFont.GetWidth(statusIndex);
-            mStatusNameFont.RenderSet(statusIndex, pos); 
+            mStatusNameFont.RenderSet(statusIndex, pos, Vector2::ZERO, Define::FONT_COLOR);
 
             // 現在の値 (cur)
             width = mFontValue.GetWidth(curValue[statusIndex]);
             pos.x += CUR_OFFSET_X;
             center.x = width;
-            mFontValue.RenderSet(curValue[statusIndex], pos, center);
+            mFontValue.RenderSet(curValue[statusIndex], pos, center, Define::FONT_COLOR);
 
             // 区切り (/)
             pos.x += DELIM_OFFSET_X;
-            mDelimFont.RenderSet(0, pos);
+            mDelimFont.RenderSet(0, pos, Vector2::ZERO, Define::FONT_COLOR);
 
             // 最大の値 (max)
             width = mFontValue.GetWidth(maxValue[statusIndex]);
             pos.x += DELIM_OFFSET_X + MAX_OFFSET_X;
             center.x = width;
-            mFontValue.RenderSet(maxValue[statusIndex], pos, center);
+            mFontValue.RenderSet(maxValue[statusIndex], pos, center, Define::FONT_COLOR);
         }
         else
         {
@@ -111,13 +114,13 @@ MenuBase::Select MenuStatus::Update(PlayerManager* plm)
 
             // ステータス名
             width = mStatusNameFont.GetWidth(statusIndex);
-            mStatusNameFont.RenderSet(statusIndex, pos);
+            mStatusNameFont.RenderSet(statusIndex, pos, Vector2::ZERO, Define::FONT_COLOR);
 
             // 現在の値 (cur)
             width = mFontValue.GetWidth(curValue[statusIndex]);
             pos.x += CUR_OFFSET_X;
             center.x = width;
-            mFontValue.RenderSet(curValue[statusIndex], pos, center);
+            mFontValue.RenderSet(curValue[statusIndex], pos, center, Define::FONT_COLOR);
         }
     }
 

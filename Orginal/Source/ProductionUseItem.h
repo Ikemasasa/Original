@@ -23,6 +23,7 @@ class ProductionUseItem : public IBattleProduction
 	int mMPAmount;
 	int mEffectSlot;
 	std::vector<int> mEffectInstHandles;
+	Vector3 mFontRGB;
 
 private:
 	void StateInit();

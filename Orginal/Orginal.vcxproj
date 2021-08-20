@@ -152,6 +152,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Source\BossEnemy.h" />
+    <ClInclude Include="Source\BossEnemyBattle.h" />
     <ClInclude Include="Source\Character.h" />
     <ClInclude Include="Source\CharacterManager.h" />
     <ClInclude Include="Source\BattleCharacter.h" />
@@ -162,6 +164,7 @@
     <ClInclude Include="Source\Collision.h" />
     <ClInclude Include="Source\CollisionTerrain.h" />
     <ClInclude Include="Source\CommandBase.h" />
+    <ClInclude Include="Source\CommandBossEnemy.h" />
     <ClInclude Include="Source\CommandCharaSelect.h" />
     <ClInclude Include="Source\CommandEnemy.h" />
     <ClInclude Include="Source\CommandEscape.h" />
@@ -240,6 +243,7 @@
     <ClInclude Include="Source\PlayerBattle.h" />
     <ClInclude Include="Source\PlayerManager.h" />
     <ClInclude Include="Source\ProductionEscape.h" />
+    <ClInclude Include="Source\ProductionGuard.h" />
     <ClInclude Include="Source\ProductionUseItem.h" />
     <ClInclude Include="Source\ProductionValue.h" />
     <ClInclude Include="Source\SceneBase.h" />
@@ -256,6 +260,8 @@
     <ClInclude Include="Source\TurnManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\BossEnemy.cpp" />
+    <ClCompile Include="Source\BossEnemyBattle.cpp" />
     <ClCompile Include="Source\CharacterManager.cpp" />
     <ClCompile Include="Source\BattleCharacter.cpp" />
     <ClCompile Include="Source\BattleCharacterManager.cpp" />
@@ -268,6 +274,7 @@
     <ClCompile Include="Source\Collision.cpp" />
     <ClCompile Include="Source\CollisionTerrain.cpp" />
     <ClCompile Include="Source\CommandBase.cpp" />
+    <ClCompile Include="Source\CommandBossEnemy.cpp" />
     <ClCompile Include="Source\CommandCharaSelect.cpp" />
     <ClCompile Include="Source\CommandEnemy.cpp" />
     <ClCompile Include="Source\CommandEscape.cpp" />
@@ -275,6 +282,7 @@
     <ClCompile Include="Source\CommandPlayer.cpp" />
     <ClCompile Include="Source\DamageCalculator.cpp" />
     <ClCompile Include="Source\DataBase.cpp" />
+    <ClCompile Include="Source\Define.cpp" />
     <ClCompile Include="Source\DropData.cpp" />
     <ClCompile Include="Source\DropItemShower.cpp" />
     <ClCompile Include="Source\EffectManager.cpp" />
@@ -337,6 +345,7 @@
     <ClCompile Include="Source\PlayerBattle.cpp" />
     <ClCompile Include="Source\PlayerManager.cpp" />
     <ClCompile Include="Source\ProductionEscape.cpp" />
+    <ClCompile Include="Source\ProductionGuard.cpp" />
     <ClCompile Include="Source\ProductionUseItem.cpp" />
     <ClCompile Include="Source\ProductionValue.cpp" />
     <ClCompile Include="Source\SceneBase.cpp" />

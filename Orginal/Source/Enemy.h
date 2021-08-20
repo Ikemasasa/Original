@@ -3,7 +3,7 @@
 #include <DirectXMath.h>
 
 #include "Character.h"
-
+#include "StatusData.h"
 
 class Enemy : public Character
 {
@@ -23,6 +23,7 @@ class Enemy : public Character
 	};
 
 	MoveState mState = WAIT;
+	StatusData::EnemyType mEnmType;
 	float mTimer = 0;
 	float mMoveAngle; // •à‚«‚ÌŽž‚ÌŠp“x
 
@@ -33,9 +34,11 @@ class Enemy : public Character
 	void StateChase(const Vector3& playerPos);
 public:
 	Enemy(int charaID);
-	~Enemy();
+	virtual ~Enemy();
 
-	void Initialize();
-	void Update(const Vector3& playerPos);
-
+	virtual void Initialize();
+	virtual void Update(const Vector3& playerPos);
+	
+	StatusData::EnemyType GetEnmType() const { return mEnmType; }
+	void SetEnmType(const StatusData::EnemyType& type) { mEnmType = type; }
 };

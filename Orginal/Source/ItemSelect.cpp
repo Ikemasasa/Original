@@ -154,14 +154,14 @@ void ItemSelect::RenderSetInfo(const Vector2& infoBoardPos)
 			// –¼‘O
 			pos = infoBoardPos + Vector2(mInfoBoard->GetSize().x / 2.0f, NAME_OFFSET_Y);
 			center = Vector2(mFont.GetWidth(mInfo[i].c_str()) / 2.0f, 0.0f);
-			mFont.RenderSet(mInfo[i].c_str(), pos, center, scale, color);
+			mFont.RenderSet(mInfo[i].c_str(), pos, center, color);
 		}
 		else
 		{
 			// î•ñ
 			pos = infoBoardPos + Vector2(mInfoBoard->GetSize().x / 2.0f, INFO_OFFSET_Y + INFO_Y_ADD * (i - 1)); // name‚ÍŠÜ‚ß‚È‚¢‚©‚ç-1
 			center = Vector2(mFont.GetWidth(mInfo[i].c_str()) / 2.0f, 0.0f);
-			mFont.RenderSet(mInfo[i].c_str(), pos, center, scale, color);
+			mFont.RenderSet(mInfo[i].c_str(), pos, center, color);
 		}
 	}
 

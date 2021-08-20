@@ -12,7 +12,7 @@ class Sprite;
 class EquipmentSelect
 {
 	static const int HORIZONTAL_NUM = 5; // アイコン横列の数
-	static const int VERTICAL_NUM = 6;   // アイコン縦列の数
+	static const int STATUS_NUM = 6;   // アイコン縦列の数
 	static const int PARAM_NUM = 3;
 
 	static constexpr float ICON_OFFSET = 19.0f; // ボードの左上からアイコン描画位置までの距離(XY両方)
@@ -43,4 +43,6 @@ public:
 	void Initialize();
 	int Update(const std::vector<EquipmentInventory::Data>& equipmentsData);
 	void Render(const Vector2& boardPos);
+
+	void ClearData() { mEquipmentsData.clear(); }
 };

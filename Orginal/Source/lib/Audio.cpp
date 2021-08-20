@@ -127,3 +127,9 @@ void Audio::SoundPlay(int slot)
 	mSoundInst[slot]->Play(false); // ƒ‹[ƒv‚µ‚È‚¢
 	mSoundInst[slot]->SetVolume(mMusicVolume[slot]);
 }
+
+void Audio::SoundStop(int slot)
+{
+	if (!mSoundInst[slot]) return;
+	mSoundInst[slot]->Stop();
+}

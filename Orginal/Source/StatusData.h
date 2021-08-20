@@ -8,6 +8,16 @@
 
 struct Status
 {
+	friend class StatusData;
+
+public:
+	struct BuffData
+	{
+		float rate = 1.0f;
+		int turn = 0;
+	};
+
+private:
 	std::wstring name; // 名前
 	int id;			  // ID
 	int hp;			  // HP
@@ -21,18 +31,44 @@ struct Status
 	// 装備品
 	Equipment equipments;
 
-	int GetAtk() const;
-	int GetDef() const;
-	int GetSpd() const;
+	// バフデバフ量
+	BuffData buffStr;
+	BuffData buffVit;
 
+public:	
+
+	// 簡易チェック
 	bool IsDead() const { return hp <= 0; }
 	bool IsFullHP() const { return hp == maxHP; }
 	bool IsFullMP() const { return mp == maxMP; }
 
-	void HealHP(const int healValue) { hp = Math::Min(hp + healValue, maxHP); }
-	void HurtHP(const int hurtValue) { hp = Math::Clamp(hp - hurtValue, 0, maxHP); }
-	void HealMP(const int healValue) { mp = Math::Min(mp + healValue, maxMP); }
-	void HurtMP(const int hurtValue) { mp = Math::Clamp(mp - hurtValue, 0, maxMP); }
+	// ゲッター
+	std::wstring GetName() const { return name; }
+	//int GetID() const { return id; }
+	int GetID()    const { return id; }
+	int GetHP()    const { return hp; }
+	int GetMaxHP() const { return maxHP; }
+	int GetMP()    const { return mp; }
+	int GetMaxMP() const { return maxMP; }
+
+	int GetAtk() const;
+	int GetDef() const;
+	int GetSpd() const;
+
+	Equipment* GetEquipments() { return &equipments; }
+
+	// セッター
+	void SetHP(const int value) { hp = Math::Clamp(value, 0, maxHP); }
+	void SubHP(const int value) { hp = Math::Max(0, hp - value);     }
+	void AddHP(const int value) { hp = Math::Min(maxHP, hp + value); }
+
+	void SetMP(const int value) { mp = Math::Clamp(value, 0, maxMP); }
+	void SubMP(const int value) { mp = Math::Max(0, mp - value);     }
+	void AddMP(const int value) { mp = Math::Min(maxMP, mp + value); }
+
+	void SetBuffStrRate(const float rate, const int turn);
+	void SetBuffVitRate(const float rate, const int turn);
+	void AdvanceBuffTurn();
 };
 
 class StatusData
@@ -44,13 +80,23 @@ class StatusData
 	void LoadEnmStatus();
 
 public:
+	enum EnemyType
+	{
+		MOB,
+		BOSS,
+
+		NONE
+	};
+
+public:
 	StatusData();
 	~StatusData();
 
 	void Initialize();
 	Status GetPLStatus(size_t id) const;
 	Status GetEnmStatus(size_t id) const;
+	EnemyType GetEnmType(size_t id) const;
+
 
 	void SetPLStatus(size_t charaID, const Status& status);
-	//void SetPLStatus(const std::wstring& name, const Status& status);
 };

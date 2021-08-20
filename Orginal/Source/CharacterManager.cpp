@@ -4,6 +4,7 @@
 
 #include "Collision.h"
 #include "CollisionTerrain.h"
+#include "Enemy.h"
 #include "EnemyManager.h"
 #include "Fade.h"
 #include "Player.h"

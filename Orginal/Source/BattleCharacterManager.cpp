@@ -8,6 +8,7 @@
 #include "lib/Math.h"
 
 #include "BattleState.h"
+#include "BossEnemyBattle.h"
 #include "DropData.h"
 #include "EffectManager.h"
 #include "Enemy.h"
@@ -45,27 +46,26 @@ void BattleCharacterManager::Initialize()
 		// TODO: モデルの大きさを考慮していないから、モデルによったらバグる可能性あり
 
 		// PLAYER
-		size_t size = mAliveCharaIDs[Character::Type::PLAYER].size();
+		size_t size = mAliveObjIDs[Character::Type::PLAYER].size();
 		float offsetX = (POS_MAX_X - POS_MIN_X) / (size + 1);
 		for (size_t i = 0; i < size; ++i)
 		{
 			Vector3 pos(POS_MIN_X + offsetX * (i + 1), 0, PLAYER_POS_Z);
-			mBCharacters[mAliveCharaIDs[Character::Type::PLAYER][i]]->SetPos(pos);
-			mBCharacters[mAliveCharaIDs[Character::Type::PLAYER][i]]->UpdateWorld();
+			mBCharacters[mAliveObjIDs[Character::Type::PLAYER][i]]->SetPos(pos);
+			mBCharacters[mAliveObjIDs[Character::Type::PLAYER][i]]->UpdateWorld();
 		}
 
 		// ENEMY
-		size = mAliveCharaIDs[Character::Type::ENEMY].size();
+		size = mAliveObjIDs[Character::Type::ENEMY].size();
 		offsetX = (POS_MAX_X - POS_MIN_X) / (size + 1);
 		for (size_t i = 0; i < size; ++i)
 		{
 			Vector3 pos(POS_MIN_X + offsetX * (i + 1), 0, ENEMY_POS_Z);
-			mBCharacters[mAliveCharaIDs[Character::Type::ENEMY][i]]->SetPos(pos);
-			mBCharacters[mAliveCharaIDs[Character::Type::ENEMY][i]]->UpdateWorld();
+			mBCharacters[mAliveObjIDs[Character::Type::ENEMY][i]]->SetPos(pos);
+			mBCharacters[mAliveObjIDs[Character::Type::ENEMY][i]]->UpdateWorld();
 		}
 
 	}
-
 }
 
 void BattleCharacterManager::Update()
@@ -180,23 +180,28 @@ void BattleCharacterManager::PlayerCreateAndRegister(Player* pl)
 	int objID = mBCharacters.size();
 	mBCharacters.emplace_back(std::make_shared<PlayerBattle>(pl));
 	mBCharacters.back()->SetObjID(objID);
-	mAliveCharaIDs[mBCharacters.back()->GetType()].push_back(objID);
+	mAliveObjIDs[mBCharacters.back()->GetType()].push_back(objID);
 }
 
 void BattleCharacterManager::EnemyCreateAndRegister(Enemy* enm)
 {
 	int objID = mBCharacters.size();
-	mBCharacters.emplace_back(std::make_shared<EnemyBattle>(enm));
+	switch (enm->GetEnmType())
+	{
+	case StatusData::EnemyType::MOB:  mBCharacters.emplace_back(std::make_shared<EnemyBattle>(enm)); break;
+	case StatusData::EnemyType::BOSS: mBCharacters.emplace_back(std::make_shared<BossEnemyBattle>(enm)); break;
+	}
+
 	mBCharacters.back()->SetObjID(objID);
-	mAliveCharaIDs[mBCharacters.back()->GetType()].push_back(objID);
+	mAliveObjIDs[mBCharacters.back()->GetType()].push_back(objID);
 }
 
 BattleCharacterManager::Result BattleCharacterManager::CheckBattleFinish()
 {
 	// mAliveCharaIDsをチェックする
 	Result ret = NONE;
-	if (mAliveCharaIDs[Character::ENEMY].empty())  ret = PLAYER_WIN;
-	if (mAliveCharaIDs[Character::PLAYER].empty()) ret = PLAYER_LOSE;
+	if (mAliveObjIDs[Character::ENEMY].empty())  ret = PLAYER_WIN;
+	if (mAliveObjIDs[Character::PLAYER].empty()) ret = PLAYER_LOSE;
 
 	return ret;
 }
@@ -222,7 +227,7 @@ void BattleCharacterManager::OrganizeCharacter()
 		}
 
 		// 0以下なら mAliveCharaIDs から消す
-		auto& ids = mAliveCharaIDs[ba->GetType()];
+		auto& ids = mAliveObjIDs[ba->GetType()];
 		for (auto it = ids.begin(); it != ids.end(); ++it)
 		{
 			// 敵ならドロップのチェックをする

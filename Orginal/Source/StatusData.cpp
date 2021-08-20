@@ -14,8 +14,9 @@ int Status::GetAtk() const
 	int atk = 0;
 	const EquipmentData::Param* param = equipments.GetParam(EquipmentData::WEAPON);
 	if (param) atk = param->atk;
+	atk += str * buffStr.rate;
 
-	return 	str + atk;
+	return 	atk;
 }
 
 int Status::GetDef() const
@@ -23,14 +24,38 @@ int Status::GetDef() const
 	int def = 0;
 	const EquipmentData::Param* param = equipments.GetParam(EquipmentData::ARMOR);
 	if (param) def = param->def;
+	def += vit * buffVit.rate;
 
-	return 	vit + def;
+	return 	def;
 }
 
 int Status::GetSpd() const
 {
 	// 今はagiを変えすだけ
 	return agi;
+}
+
+void Status::SetBuffStrRate(const float rate, const int turn)
+{
+	buffStr.rate = rate;
+	buffStr.turn = turn;
+}
+
+void Status::SetBuffVitRate(const float rate, const int turn)
+{
+	buffVit.rate = rate;
+	buffVit.turn = turn;
+}
+
+void Status::AdvanceBuffTurn()
+{
+	// 攻撃バフ
+	buffStr.turn = Math::Max(0, buffStr.turn - 1);
+	if (buffStr.turn <= 0) buffStr.rate = 1.0f;
+
+	// 防御バフ
+	buffVit.turn = Math::Max(0, buffVit.turn - 1);
+	if (buffVit.turn <= 0) buffVit.rate = 1.0f;
 }
 
 //---------------------------------------------
@@ -126,6 +151,10 @@ void StatusData::LoadEnmStatus()
 			int index = 0;
 			s.name = ConvertString::ConvertToWstirng(data[index++]);
 			s.id = std::stoi(data[index++]);
+
+			// 敵タイプ、タイプIDを無視
+			index += 2;
+
 			s.hp = std::stoi(data[index++]);
 			s.maxHP = s.hp;
 			s.mp = std::stoi(data[index++]);
@@ -141,6 +170,40 @@ void StatusData::LoadEnmStatus()
 	fin.close();
 }
 
+StatusData::EnemyType StatusData::GetEnmType(size_t id) const
+{
+	const char* filename = "Data/DataBase/EnmStatus.csv";
+
+	std::ifstream fin;
+	fin.open(filename);
+	if (!fin.is_open()) return NONE;
+
+	std::string line;  // 1行取得用
+
+	// タグを無視
+	std::getline(fin, line);
+
+	for (int i = DataBase::ENM_ID_START; i <= id; ++i)
+	{
+		std::getline(fin, line);
+	}
+
+	const char delim = ','; // 区切り文字
+	std::istringstream istr(line);
+	std::string chunk; // コンマ区切りの内容取得用
+
+	// コンマ区切りでの取得
+	const int TYPE_ID_INDEX = 4;
+	int count = 0;
+	while (std::getline(istr, chunk, delim)) // 区切りごとに取得
+	{
+		++count;
+		if (count == TYPE_ID_INDEX) break;
+	}
+
+	EnemyType ret = (EnemyType)std::stoi(chunk);
+	return ret;
+}
 
 void StatusData::Initialize()
 {

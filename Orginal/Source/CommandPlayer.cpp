@@ -53,3 +53,9 @@ void CommandPlayer::Render() const
 
 	mCommand.top()->Render();
 }
+
+void CommandPlayer::BehaviourFinished()
+{
+	mCommand.top()->ResetParam();
+	CommandBase::BehaviourFinished();
+}

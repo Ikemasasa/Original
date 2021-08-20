@@ -26,6 +26,7 @@ class MenuEquipment : public MenuBase
 	Font mNameFont;
 	Font mFont;
 	bool mIsDecideType;
+	int mOldSelectIndex;
 public:
 	void Initialize(const PlayerManager* plm) override;
 	Select Update(PlayerManager* plm) override;

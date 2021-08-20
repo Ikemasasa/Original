@@ -8,7 +8,7 @@ class EquipmentInventory
 public:
 	struct Data
 	{
-		const Character* equipmentChara = nullptr;
+		const Character* equipChara = nullptr;
 		int equipmentID = -1;
 	};
 
@@ -24,6 +24,6 @@ public:
 	void Remove(int id);
 
 	const std::vector<Data>& GetInventory(EquipmentData::Type type) const { return mEquipmentsData[type]; }
-	void SetChara(EquipmentData::Type type, const Character* chara, int inventoryIndex) { mEquipmentsData[type][inventoryIndex].equipmentChara = chara; }
-	void UnSetChara(EquipmentData::Type type, int inventoryIndex) { mEquipmentsData[type][inventoryIndex].equipmentChara = nullptr; }
+	void SetChara(EquipmentData::Type type, const Character* chara, int inventoryIndex) { mEquipmentsData[type][inventoryIndex].equipChara = chara; }
+	void UnSetChara(EquipmentData::Type type, const Character* chara);
 };

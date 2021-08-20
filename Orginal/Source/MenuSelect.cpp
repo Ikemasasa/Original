@@ -1,15 +1,17 @@
 #include "MenuSelect.h"
 
+#include "lib/Audio.h"
 #include "lib/Math.h"
 #include "lib/Sprite.h"
 #include "lib/Input.h"
 
+#include "Define.h"
 #include "Fade.h"
 #include "SceneManager.h"
 
 MenuSelect::MenuSelect()
 {
-    mSelectBar = std::make_unique<Sprite>(L"Data/Image/Menu/plate_select.png");
+    mSelectBar = std::make_unique<Sprite>(L"Data/Image/Menu/str_plate_select.png");
     mBar = std::make_unique<Sprite>(L"Data/Image/Menu/str_plate.png");
 }
 
@@ -75,8 +77,10 @@ MenuSelect::Select MenuSelect::Update(PlayerManager* plm)
     BeginAnimation();
 
     // selectIndex‘€ì
+    mOldSelectIndex = mSelectIndex;
     if (Input::GetButtonTrigger(0, Input::BUTTON::UP))   mSelectIndex = (mSelectIndex + SELECT_NUM - 1) % SELECT_NUM;
     if (Input::GetButtonTrigger(0, Input::BUTTON::DOWN)) mSelectIndex = (mSelectIndex + 1) % SELECT_NUM;
+    if (mOldSelectIndex != mSelectIndex) AUDIO.SoundPlay((int)Sound::CURSOR_MOVE);
 
     if (Input::GetButtonTrigger(0, Input::BUTTON::A))
     {
@@ -97,22 +101,24 @@ MenuSelect::Select MenuSelect::Update(PlayerManager* plm)
 
 void MenuSelect::Render()
 {
-    if (!mDatas.empty())
-    {
-        const Vector2 pos(mDatas[mSelectIndex].pos.x + mDatas[mSelectIndex].moveX + mSelectBar->GetSize().x / 2.0f, mDatas[mSelectIndex].pos.y);
-        const Vector2 scale(1.25f, 1.0f);
-        const Vector2 center(mSelectBar->GetSize().x / 2.0f, 0.0f);
-        const Vector4 color(0.5f, 0.8f, 0.95f, 0.8f);
-        mSelectBar->Render(pos, scale, Vector2::ZERO, mSelectBar->GetSize(), center, 0.0f, color);
-    }
-
     int i = 0;
     for (auto& data : mDatas)
     {
         const Vector2 strOffset(data.pos.x + data.moveX + STR_OFFSET_X, data.pos.y + STR_OFFSET_Y);
         data.plate->Render(data.pos + Vector2(data.moveX, 0.0f), Vector2::ONE, Vector2::ZERO, data.plate->GetSize());
-        mFont.RenderSet(i, strOffset, Vector2::ZERO, Vector2::ONE, Vector4::ONE);
+        mFont.RenderSet(i, strOffset, Vector2::ZERO, Define::FONT_COLOR);
         ++i;
+    }
+
+    // ‘I‘ð‰æ‘œ
+    if (!mDatas.empty())
+    {
+        float x = mDatas[mSelectIndex].pos.x + mDatas[mSelectIndex].moveX + mSelectBar->GetSize().x / 2.0f - SELECT_OFFSET;
+        float y = mDatas[mSelectIndex].pos.y - SELECT_OFFSET;
+        const Vector2 pos(x, y);
+        const Vector2 scale(1.0f, 1.0f);
+        const Vector2 center(mSelectBar->GetSize().x / 2.0f, 0.0f);
+        mSelectBar->Render(pos, scale, Vector2::ZERO, mSelectBar->GetSize(), center);
     }
 
     mFont.Render();

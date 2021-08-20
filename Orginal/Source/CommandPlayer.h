@@ -17,4 +17,6 @@ public:
 	~CommandPlayer();
 	void Update(const BattleCharacterManager* bcm) override;
 	void Render() const override;
+
+	void BehaviourFinished() override;
 };
