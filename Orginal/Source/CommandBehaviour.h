@@ -13,8 +13,9 @@ class CommandBehaviour : public IDecideCommand
 	static const int COMMAND_MIN_Y = 0;
 	static const int COMMAND_MAX_Y = 2;
 	static const int COMMAND_NUM = 5;
+	static const int COMMAND_VERTICAL = 3;
 
-	static const int ICON_SIZE = 256;
+	static constexpr float ICON_SIZE = 256.0f;
 	static constexpr float ICON_SCALE = 0.25f;
 
 	static const int ICON_SELECT_X = ICON_SIZE * 5;
@@ -22,17 +23,17 @@ class CommandBehaviour : public IDecideCommand
 
 private:
 	TVector2<int> mCommandIndex;
-	TVector2<int> mOldCommandIndex;
 	std::unique_ptr<Sprite> mIcons;
-	std::unique_ptr<Sprite> mCommandNamePlate;
+	std::unique_ptr<Sprite> mCommandNameBoard;
 	Font mFont;
 
 public:
 	CommandBehaviour();
 	~CommandBehaviour() = default;
 
-	virtual void Update(const BattleCharacterManager* bcm, CommandBase* cmdBase) override;
-	virtual void Render() override;
+	void Initialize(const BattleCharacterManager* bcm) override;
+	void Update(const BattleCharacterManager* bcm, CommandBase* cmdBase) override;
+	void Render() override;
 
 	void ResetParam() override;
 };

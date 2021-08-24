@@ -14,14 +14,18 @@ class CommandCharaSelect : public IDecideCommand
 
 	std::unique_ptr<Sprite> mArrow;
 
-	int mCharaIndex = 0;
 	BattleCharacter* mTargetChara;
 	Character::Type mCharaType;
+
+	void SetBehaviourAttack(CommandBase* cmdBase);
+	void SetBehaviourUseItem(CommandBase* cmdBase);
+	void SetBehaviourUseSkill(CommandBase* cmdBase);
 
 public:
 	CommandCharaSelect(Character::Type characterType);
 	~CommandCharaSelect() = default;
 
+	void Initialize(const BattleCharacterManager* bcm) override;
 	void Update(const BattleCharacterManager* bcm, CommandBase* cmdBase) override;
 	void Render() override;
 };

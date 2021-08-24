@@ -12,9 +12,9 @@
 
 void EquipmentSelect::Initialize()
 {
-	mBoard = std::make_unique<Sprite>(L"Data/Image/board.png");
-	mSelectFrame = std::make_unique<Sprite>(L"Data/Image/select_frame.png");
-	mInfoBoard = std::make_unique<Sprite>(L"Data/Image/item_info_board.png");
+	mBoard = std::make_unique<Sprite>(L"Data/Image/Menu/item_board.png");
+	mSelectFrame = std::make_unique<Sprite>(L"Data/Image/Menu/item_board_select.png");
+	mInfoBoard = std::make_unique<Sprite>(L"Data/Image/Menu/item_info_board.png");
 	mEquipmentMark = std::make_unique<Sprite>(L"Data/Image/Menu/equipment_mark.png");
 }
 

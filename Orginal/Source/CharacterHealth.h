@@ -25,14 +25,14 @@ class CharacterHealth
 	static constexpr float ADD_OFFSET_Y = 32.0f;
 
 private:
-	std::unique_ptr<Sprite> mHealthPlate;
+	std::unique_ptr<Sprite> mHealthBoard;
 	std::unique_ptr<Sprite> mSelect;
 
 	Font mFont;
 	FontValue mFontValue;
-	Vector2 mPlateLeftTop;
+	Vector2 mBoardLeftTop;
 	int mSelectIndex;
-	int mPlateNum;
+	int mBoardNum;
 
 public:
 	CharacterHealth() = default;

@@ -1,6 +1,5 @@
 #include "MenuSelect.h"
 
-#include "lib/Audio.h"
 #include "lib/Math.h"
 #include "lib/Sprite.h"
 #include "lib/Input.h"
@@ -9,51 +8,11 @@
 #include "Fade.h"
 #include "SceneManager.h"
 
-MenuSelect::MenuSelect()
-{
-    mSelectBar = std::make_unique<Sprite>(L"Data/Image/Menu/str_plate_select.png");
-    mBar = std::make_unique<Sprite>(L"Data/Image/Menu/str_plate.png");
-}
-
-bool MenuSelect::Add(Sprite* plate, const wchar_t* str)
-{
-    Data data;
-    data.plate = plate;
-    wcscpy_s(data.str, STR_MAX, str);
-    data.pos.x = PLATE_OFFSET_X;
-    data.pos.y = PLATE_FIRST_OFFSET_Y + (PLATE_OFFSET_Y * mDatas.size()) + (plate->GetSize().y * mDatas.size());
-    data.moveX = MOVE_MAX;
-
-
-    mDatas.emplace_back(data);
-    return true;
-}
-
-void MenuSelect::BeginAnimation()
-{
-    const float MOVE_ADD = 2.0f;
-    const float NEXT_MOVE = MOVE_MAX - MOVE_MAX / 5.0f; // 次が動き出す値
-
-    for (int i = 0; i < SELECT_NUM; ++i)
-    {
-        bool isAnim = false;
-
-        if (i == 0) isAnim = true;
-        else
-        {
-            if (mDatas[i - 1].moveX > NEXT_MOVE) isAnim = true;
-        }
-
-        if(isAnim) mDatas[i].moveX = Math::Min(mDatas[i].moveX + MOVE_ADD, 0.0f);
-    }
-
-}
-
 void MenuSelect::Initialize(const PlayerManager* plm)
 {
-    const int FONT_SIZE = 64;
-    const int FONT_WEIGHT = 64;
-    mFont.Initialize(FONT_SIZE, FONT_WEIGHT);
+    mStrBoard = std::make_unique<Sprite>(L"Data/Image/Menu/str_board.png");
+    mStrSelect = std::make_unique<Sprite>(L"Data/Image/Menu/str_select.png");
+    mFont.Initialize();
 
     {
         std::wstring str[SELECT_NUM] =
@@ -66,9 +25,13 @@ void MenuSelect::Initialize(const PlayerManager* plm)
         for (int i = 0; i < SELECT_NUM; ++i)
         {
             mFont.Add(str[i].c_str());
-            Add(mBar.get(), str[i].c_str());
-        }
 
+            Data data;
+            data.pos.x = BOARD_POS_X;
+            data.pos.y = BOARD_POS_Y + ((mStrBoard->GetSize().y + BOARD_OFFSET_Y) * i);
+            data.moveX = MOVE_MAX;
+            mDatas.push_back(data);
+        }
     }
 }
 
@@ -77,10 +40,8 @@ MenuSelect::Select MenuSelect::Update(PlayerManager* plm)
     BeginAnimation();
 
     // selectIndex操作
-    mOldSelectIndex = mSelectIndex;
     if (Input::GetButtonTrigger(0, Input::BUTTON::UP))   mSelectIndex = (mSelectIndex + SELECT_NUM - 1) % SELECT_NUM;
     if (Input::GetButtonTrigger(0, Input::BUTTON::DOWN)) mSelectIndex = (mSelectIndex + 1) % SELECT_NUM;
-    if (mOldSelectIndex != mSelectIndex) AUDIO.SoundPlay((int)Sound::CURSOR_MOVE);
 
     if (Input::GetButtonTrigger(0, Input::BUTTON::A))
     {
@@ -101,24 +62,20 @@ MenuSelect::Select MenuSelect::Update(PlayerManager* plm)
 
 void MenuSelect::Render()
 {
-    int i = 0;
-    for (auto& data : mDatas)
+    // ボードを描画(ついでにフォントもセット
+    const Vector2 scale(Vector2::ONE);
+    const Vector2 texPos(Vector2::ZERO);
+    for (size_t i = 0; i < mDatas.size(); ++i)
     {
-        const Vector2 strOffset(data.pos.x + data.moveX + STR_OFFSET_X, data.pos.y + STR_OFFSET_Y);
-        data.plate->Render(data.pos + Vector2(data.moveX, 0.0f), Vector2::ONE, Vector2::ZERO, data.plate->GetSize());
-        mFont.RenderSet(i, strOffset, Vector2::ZERO, Define::FONT_COLOR);
-        ++i;
-    }
+        const Vector2 pos(mDatas[i].pos.x + mDatas[i].moveX, mDatas[i].pos.y);
+        mStrBoard->Render(pos, scale, texPos, mStrBoard->GetSize());
+        mFont.RenderSet(i, pos + Vector2(STR_OFFSET_X, STR_OFFSET_Y), Vector2::ZERO, Define::FONT_COLOR);
 
-    // 選択画像
-    if (!mDatas.empty())
-    {
-        float x = mDatas[mSelectIndex].pos.x + mDatas[mSelectIndex].moveX + mSelectBar->GetSize().x / 2.0f - SELECT_OFFSET;
-        float y = mDatas[mSelectIndex].pos.y - SELECT_OFFSET;
-        const Vector2 pos(x, y);
-        const Vector2 scale(1.0f, 1.0f);
-        const Vector2 center(mSelectBar->GetSize().x / 2.0f, 0.0f);
-        mSelectBar->Render(pos, scale, Vector2::ZERO, mSelectBar->GetSize(), center);
+        // 選択画像を描画
+        if (mSelectIndex == i)
+        {
+            mStrSelect->Render(pos, scale, texPos, mStrSelect->GetSize());
+        }
     }
 
     mFont.Render();
@@ -129,3 +86,21 @@ void MenuSelect::Release()
     mFont.Release();
 }
 
+void MenuSelect::BeginAnimation()
+{
+    const float MOVE_ADD = -2.0f;
+    const float NEXT_MOVE = MOVE_MAX - MOVE_MAX / 3.0f; // 次が動き出す値
+
+    for (int i = 0; i < SELECT_NUM; ++i)
+    {
+        bool isAnim = false;
+
+        if (i == 0) isAnim = true;
+        else
+        {
+            if (mDatas[i - 1].moveX < NEXT_MOVE) isAnim = true;
+        }
+
+        if (isAnim) mDatas[i].moveX = Math::Max(mDatas[i].moveX + MOVE_ADD, 0.0f);
+    }
+}

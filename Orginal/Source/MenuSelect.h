@@ -13,41 +13,31 @@ class Sprite;
 class MenuSelect : public MenuBase
 {
 private:
-	static const int STR_MAX = 8;
-	static const int STR_OFFSET_X = 10;
-	static const int STR_OFFSET_Y = 0;
+	static constexpr float BOARD_POS_X = 100.0f;
+	static constexpr float BOARD_POS_Y = 75.0f;
+	static constexpr float BOARD_OFFSET_Y = 15.0f;
 
-	static constexpr float PLATE_OFFSET_X = 100.0f;
-	static constexpr float PLATE_OFFSET_Y = 50.0f;
-	static constexpr float PLATE_FIRST_OFFSET_Y = 75.0f;
-	static constexpr float SELECT_OFFSET = 5.0f; // xy両方
+	static const int STR_OFFSET_X = 5;
+	static const int STR_OFFSET_Y = 5;
 
 	static constexpr float FADE = 0.15f;
 
-	const float MOVE_MAX = -30.0f; // data.pos + MOVE_MAX の位置が最初に位置になる
+	const float MOVE_MAX = 30.0f; // data.pos + MOVE_MAX の位置が最初に位置になる
 
 
 	struct Data
 	{
-		Sprite* plate;
-		wchar_t str[STR_MAX];
 		Vector2 pos;
 		float moveX;
 	};
 
-	std::unique_ptr<Sprite> mSelectBar;
-	std::unique_ptr<Sprite> mBar;
+	std::unique_ptr<Sprite> mStrBoard;
+	std::unique_ptr<Sprite> mStrSelect;
 	std::vector<Data> mDatas;
 	Font mFont;
-	int mSelectIndex = 0;
-	int mOldSelectIndex = 0;
-	
-	float mBeginMoveX = 0.0f;
 
-
-	bool Add(Sprite* plate, const wchar_t* str);
 public:
-	MenuSelect();
+	MenuSelect() = default;
 	~MenuSelect() = default;
 
 	void BeginAnimation();

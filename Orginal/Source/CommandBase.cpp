@@ -3,6 +3,7 @@
 void CommandBase::BehaviourFinished()
 {
 	mBehaviour = Behaviour::NONE;
-	mUseItemIndex = -1;
+	mUseItemParam = nullptr;
+	mUseSkillParam = nullptr;
 	mTargetObjIDs.clear();
 }

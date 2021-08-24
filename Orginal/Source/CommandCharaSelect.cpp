@@ -11,10 +11,16 @@
 #include "Item.h"
 #include "Singleton.h"
 
+
+
 CommandCharaSelect::CommandCharaSelect(Character::Type characterType)
 {
-	mArrow = std::make_unique<Sprite>(L"Data/Image/Battle/arrow.png");
 	mCharaType = characterType;
+}
+
+void CommandCharaSelect::Initialize(const BattleCharacterManager* bcm)
+{
+	mArrow = std::make_unique<Sprite>(L"Data/Image/Battle/arrow.png");
 }
 
 void CommandCharaSelect::Update(const BattleCharacterManager* bcm, CommandBase* cmdBase)
@@ -26,39 +32,19 @@ void CommandCharaSelect::Update(const BattleCharacterManager* bcm, CommandBase* 
 	// 生きてる同じタイプのアクターから選択する
 	const std::vector<int>& ids = bcm->GetAliveObjIDs(mCharaType);
 	int num = static_cast<int>(ids.size());
-	if (Input::GetButtonTrigger(0, Input::BUTTON::RIGHT)) mCharaIndex = (mCharaIndex + num - 1) % num; 
-	if (Input::GetButtonTrigger(0, Input::BUTTON::LEFT))  mCharaIndex = (mCharaIndex + 1) % num;
-	mTargetChara = bcm->GetChara(ids[mCharaIndex]); // Renderでつかうから ここで代入
+	if (Input::GetButtonTrigger(0, Input::BUTTON::RIGHT)) mSelectIndex = (mSelectIndex + num - 1) % num; 
+	if (Input::GetButtonTrigger(0, Input::BUTTON::LEFT))  mSelectIndex = (mSelectIndex + 1) % num;
+	mTargetChara = bcm->GetChara(ids[mSelectIndex]); // Renderでつかうから ここで代入
 
 	// キャラ選択したら
 	if (Input::GetButtonTrigger(0, Input::BUTTON::A))
 	{
-		cmdBase->AddTargetObjID(ids[mCharaIndex]);
+		cmdBase->AddTargetObjID(ids[mSelectIndex]);
 		
-		// アイテムが登録されているかどうかで分岐
-		if (cmdBase->GetItemIndex() != -1)
-		{
-			// アイテム使用者のインベントリ取得
-			BattleCharacter* moveChara = bcm->GetMoveChara();
-			Item* moveCharaInventory = moveChara->GetInventory();
-			
-			// 使用アイテムが回復アイテムなら HP、MPが最大かチェック
-			bool isUseable = true;
-			const ItemData::ItemParam* itemParam = moveCharaInventory->GetItemParam(cmdBase->GetItemIndex());
-			if (itemParam->effect == ItemData::HEAL)
-			{
-				//HP回復でHPがマックス, MP回復でMPがマックス なら使用不可
-				if      (itemParam->hpValue > 0 && mTargetChara->GetStatus()->IsFullHP()) isUseable = false;
-				else if (itemParam->mpValue > 0 && mTargetChara->GetStatus()->IsFullMP()) isUseable = false;
-			}
-
-			if (isUseable) cmdBase->SetBehaviour(CommandBase::Behaviour::USE_ITEM);
-			else AUDIO.SoundPlay((int)Sound::CANCEL);// 使えないならキャンセル音
-		}
-		else // アイテムが登録されていない
-		{
-			cmdBase->SetBehaviour(CommandBase::Behaviour::ATTACK);
-		}
+		// スキル、アイテムが登録されているかチェック
+		if		(cmdBase->GetItemParam())  SetBehaviourUseItem(cmdBase);
+		else if (cmdBase->GetSkillParam()) SetBehaviourUseSkill(cmdBase);
+		else							   SetBehaviourAttack(cmdBase);
 	}
 
 	if (Input::GetButtonTrigger(0, Input::BUTTON::B))
@@ -81,3 +67,30 @@ void CommandCharaSelect::Render()
 	Vector2 center(size.x / 2.0f, size.y);
 	mArrow->Render(screen, scale, texPos, size, center);
 }
+
+void CommandCharaSelect::SetBehaviourAttack(CommandBase* cmdBase)
+{
+	cmdBase->SetBehaviour(CommandBase::Behaviour::ATTACK);
+}
+
+void CommandCharaSelect::SetBehaviourUseItem(CommandBase* cmdBase)
+{
+	// 使用アイテムが回復アイテムなら HP、MPが最大かチェック
+	bool isUseable = true;
+	const ItemData::ItemParam* itemParam = cmdBase->GetItemParam();
+	if (itemParam->effect == ItemData::HEAL)
+	{
+		//HP回復でHPがマックス, MP回復でMPがマックス なら使用不可
+		if (itemParam->hpValue > 0 && mTargetChara->GetStatus()->IsFullHP()) isUseable = false;
+		else if (itemParam->mpValue > 0 && mTargetChara->GetStatus()->IsFullMP()) isUseable = false;
+	}
+
+	if (isUseable) cmdBase->SetBehaviour(CommandBase::Behaviour::USE_ITEM);
+	else AUDIO.SoundPlay((int)Sound::CANCEL);// 使えないならキャンセル音
+}
+
+void CommandCharaSelect::SetBehaviourUseSkill(CommandBase* cmdBase)
+{
+	cmdBase->SetBehaviour(CommandBase::Behaviour::SKILL);
+}
+

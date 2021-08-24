@@ -8,10 +8,13 @@ class Sprite;
 
 class ItemSelect
 {
-	static const int HORIZONTAL_NUM = 5; // アイコン横列の数
-	static const int STATUS_NUM = 6;   // アイコン縦列の数
+public:
+	static constexpr float ICON_OFFSET = 10.0f; // ボードの左上からアイコン描画位置までの距離(XY両方)
 
-	static constexpr float ICON_OFFSET = 19.0f; // ボードの左上からアイコン描画位置までの距離(XY両方)
+private:
+	static const int HORIZONTAL_NUM = 5; // アイコン横列の数
+	static const int VERTICAL_NUM = 6;   // アイコン縦列の数
+
 	static constexpr float ICON_SIZE = 256.0f;
 	static constexpr float ICON_SCALE = 0.25f;
 		
@@ -21,9 +24,9 @@ class ItemSelect
 	static constexpr float INFO_ICON_SCALE = 0.5f;
 
 	int mSelectIndex;
-	int mOldSelectIndex ;
+	int mOldSelectIndex;
 	const Item* mInventory = nullptr;
-	std::unique_ptr<Sprite> mBoard;
+	std::unique_ptr<Sprite> mItemBoard;
 	std::unique_ptr<Sprite> mSelectFrame;
 	std::unique_ptr<Sprite> mInfoBoard;
 	std::vector<std::wstring> mInfo;
@@ -38,6 +41,8 @@ public:
 	~ItemSelect() = default;
 
 	void Initialize();
-	int Update(const Item* inventory);
+	void Update(const Item* inventory);
 	void Render(const Vector2& boardOffset);
+
+	int GetIndex() const { return mSelectIndex; }
 };

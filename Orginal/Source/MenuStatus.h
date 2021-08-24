@@ -11,13 +11,14 @@ class MenuStatus : public MenuBase
 	static constexpr float PLATE_X = 512.0f;
 	static constexpr float PLATE_Y = 128.0f;
 
-	static constexpr float FIRST_OFFSET_X = 16.0f;
-	static constexpr float CUR_OFFSET_X = 128.0f;
+	static constexpr float NAME_OFFSET_Y = 10.0f;
+	static constexpr float STATUS_OFFSET_X = 20.0f;
+	static constexpr float CUR_OFFSET_X = 96.0f;
 	static constexpr float DELIM_OFFSET_X = 4.0f;
-	static constexpr float MAX_OFFSET_X = 64.0f;
-
-	static constexpr float FIRST_OFFSET_Y = 12.0f;
-	static constexpr float ADD_OFFSET_Y = 33.0f;
+	static constexpr float MAX_OFFSET_X = 12.0f;
+	
+	static constexpr float STATUS_OFFSET_Y = 60.0f;
+	static constexpr float STATUS_ADD_Y = 34.0f;
 
 	enum StatusKind
 	{
@@ -30,13 +31,10 @@ class MenuStatus : public MenuBase
 		STATUS_NUM
 	};
 
-	Font mPlNameFont;
-	Font mStatusNameFont;
-	Font mDelimFont;
+	Font mFont;
 	FontValue mFontValue;
 
 	MenuCharacterSelect mCharacterSelect;
-
 	std::unique_ptr<Sprite> mStatusPlate;
 
 public:

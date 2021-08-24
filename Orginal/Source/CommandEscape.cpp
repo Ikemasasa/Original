@@ -2,13 +2,18 @@
 
 #include "lib/Input.h"
 
+#include "BattleCharacterManager.h"
 #include "CommandBase.h"
+#include "DataBase.h"
 #include "Define.h"
+#include "Singleton.h"
+#include "StatusData.h"
 
-CommandEscape::CommandEscape()
+
+void CommandEscape::Initialize(const BattleCharacterManager* bcm)
 {
-	// 画像読み込み(都合よさそうだから、health_plateを使ってる)
-	mBoard = std::make_unique<Sprite>(L"Data/Image/Menu/health_plate.png");
+	// 画像読み込み(都合よさそうだから、health_boardを使ってる)
+	mBoard = std::make_unique<Sprite>(L"Data/Image/Menu/health_board.png");
 
 	// フォントセット
 	{
@@ -17,7 +22,7 @@ CommandEscape::CommandEscape()
 		mFont.Add(L"A : はい");
 		mFont.Add(L"B : いいえ");
 
-		Vector2 pos(PLATE_POS_X, PLATE_POS_Y + FIRST_OFFSET_Y - mBoard->GetSize().y/ 2.0f);
+		Vector2 pos(BOARD_POS_X, BOARD_POS_Y + FIRST_OFFSET_Y - mBoard->GetSize().y / 2.0f);
 		for (int i = 0; i < mFont.GetNum(); ++i)
 		{
 			Vector2 center(mFont.GetWidth(i) / 2.0f, 0.0f);
@@ -26,18 +31,19 @@ CommandEscape::CommandEscape()
 			pos.y += ADD_OFFSET_Y;
 		}
 	}
-
-}
-
-CommandEscape::~CommandEscape()
-{
-	mFont.ClearRenderSet();
 }
 
 void CommandEscape::Update(const BattleCharacterManager* bcm, CommandBase* cmdBase)
 {
 	if (Input::GetButtonTrigger(0, Input::BUTTON::A))
 	{
+		// ステータス保存
+		for (const auto& chara : bcm->GetBCharacters())
+		{
+			if (chara->GetType() != Character::PLAYER) break;
+			Singleton<DataBase>().GetInstance().GetStatusData()->SetPLStatus(chara->GetCharaID(), *chara->GetStatus());
+		}
+
 		cmdBase->SetBehaviour(CommandBase::Behaviour::ESCAPE);
 	}
 	else if (Input::GetButtonTrigger(0, Input::BUTTON::B))
@@ -48,7 +54,7 @@ void CommandEscape::Update(const BattleCharacterManager* bcm, CommandBase* cmdBa
 
 void CommandEscape::Render()
 {
-	Vector2 pos(PLATE_POS_X, PLATE_POS_Y);
+	Vector2 pos(BOARD_POS_X, BOARD_POS_Y);
 	Vector2 scale = Vector2::ONE;
 	Vector2 texPos = Vector2::ZERO;
 	Vector2 center = mBoard->GetSize() / 2.0f;

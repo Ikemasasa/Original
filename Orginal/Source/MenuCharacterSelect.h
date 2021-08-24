@@ -8,12 +8,15 @@ class Sprite;
 
 class MenuCharacterSelect
 {
-	std::unique_ptr<Sprite> mPlate;
+	static constexpr float FONT_OFFSET_X = 5;
+	static constexpr float FONT_OFFSET_Y = 32; // フォントサイズ
+
+	std::unique_ptr<Sprite> mBoard;
 	int mCharacterNum = 0;
 	int mSelectIndex = 0;
 	int mOldSelectIndex = 0;
 
-	Font mNameFont;
+	Font mFont;
 
 public:
 	void Initialize(const PlayerManager* plm);

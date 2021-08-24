@@ -12,53 +12,44 @@
 void ItemSelect::Initialize()
 {
 	mSelectIndex = 0;
-	mOldSelectIndex = -1;
 
-	mBoard = std::make_unique<Sprite>(L"Data/Image/board.png");
-	mSelectFrame = std::make_unique<Sprite>(L"Data/Image/select_frame.png");
-	mInfoBoard = std::make_unique<Sprite>(L"Data/Image/item_info_board.png");
+	mItemBoard = std::make_unique<Sprite>(L"Data/Image/Menu/item_board.png");
+	mSelectFrame = std::make_unique<Sprite>(L"Data/Image/Menu/item_board_select.png");
+	mInfoBoard = std::make_unique<Sprite>(L"Data/Image/Menu/item_info_board.png");
 }
 
-int ItemSelect::Update(const Item* inventory)
+void ItemSelect::Update(const Item* inventory)
 {
 	// SelectIndex操作
-	{
-		mInventory = inventory;
-		int inventorySize = mInventory->GetItemNum();
+	mInventory = inventory;
+	int inventorySize = mInventory->GetItemNum();
+	mOldSelectIndex = mSelectIndex;
 
-		if (Input::GetButtonTrigger(0, Input::BUTTON::RIGHT)) ++mSelectIndex;
-		if (Input::GetButtonTrigger(0, Input::BUTTON::LEFT))  --mSelectIndex;
-		if (mSelectIndex >= inventorySize) mSelectIndex -= inventorySize;
-		if (mSelectIndex < 0) mSelectIndex += inventorySize;
+	if (Input::GetButtonTrigger(0, Input::BUTTON::RIGHT)) ++mSelectIndex;
+	if (Input::GetButtonTrigger(0, Input::BUTTON::LEFT))  --mSelectIndex;
+	if (mSelectIndex >= inventorySize) mSelectIndex -= inventorySize;
+	if (mSelectIndex < 0) mSelectIndex += inventorySize;
 
-		if (Input::GetButtonTrigger(0, Input::BUTTON::UP))    mSelectIndex -= HORIZONTAL_NUM;
-		if (Input::GetButtonTrigger(0, Input::BUTTON::DOWN))  mSelectIndex += HORIZONTAL_NUM;
-		if (mSelectIndex >= inventorySize) mSelectIndex -= inventorySize + 1;
-		if (mSelectIndex < 0) mSelectIndex += inventorySize + 1;
-		mSelectIndex = Math::Clamp(mSelectIndex, 0, inventorySize - 1); // 帳尻あわんかったからclampしてる
+	if (Input::GetButtonTrigger(0, Input::BUTTON::UP))    mSelectIndex -= HORIZONTAL_NUM;
+	if (Input::GetButtonTrigger(0, Input::BUTTON::DOWN))  mSelectIndex += HORIZONTAL_NUM;
+	if (mSelectIndex >= inventorySize) mSelectIndex -= inventorySize + 1;
+	if (mSelectIndex < 0) mSelectIndex += inventorySize + 1;
+	mSelectIndex = Math::Clamp(mSelectIndex, 0, inventorySize - 1); // 帳尻あわんかったからclampしてる
 
-		// アイテム情報更新
-		UpdateInfo();
+	// アイテム情報更新
+	UpdateInfo();
 
-		if (mOldSelectIndex != mSelectIndex) AUDIO.SoundPlay((int)Sound::CURSOR_MOVE);
-		mOldSelectIndex = mSelectIndex;
-	}
+	// サウンド
+	if (mOldSelectIndex != mSelectIndex) AUDIO.SoundPlay((int)Sound::CURSOR_MOVE);
 
-
-
-	// アイテム選択
-	if (Input::GetButtonTrigger(0, Input::BUTTON::A))
-	{
-		return mSelectIndex;
-	}
-
-	return -1;
 }
 
 void ItemSelect::Render(const Vector2& boardOffset)
 {
+	if (mSelectIndex >= mInventory->GetItemNum()) mSelectIndex = mInventory->GetItemNum() - 1;
+
 	// ボード描画
-	mBoard->Render(boardOffset, Vector2::ONE, Vector2::ZERO, mBoard->GetSize());
+	mItemBoard->Render(boardOffset, Vector2::ONE, Vector2::ZERO, mItemBoard->GetSize());
 
 
 	// アイテムアイコン描画
@@ -109,30 +100,28 @@ void ItemSelect::Render(const Vector2& boardOffset)
 void ItemSelect::UpdateInfo()
 {
 	// インフォ更新
+	// 前回のアイテム情報を削除
+	mInfo.clear();
 
-	// インデックスが更新されたら
-	if (mOldSelectIndex != mSelectIndex)
+	const ItemData::ItemParam* param = mInventory->GetItemParam(mSelectIndex);
+	std::string range;
+
+	// 名前
+	mInfo.push_back(param->name.c_str());
+
+	// hp valuew
+	if (param->hpValue > 0)
 	{
-		// 前回のアイテム情報を削除
-		mInfo.clear();
-
-		const ItemData::ItemParam* param = mInventory->GetItemParam(mSelectIndex);
-		std::string range;
-
-		// 名前
-		mInfo.push_back(param->name.c_str());
-
-		// hp valuew
-		if (param->hpValue > 0) mInfo.push_back(L"HPを回復する");
-		if (param->hpValue < 0) mInfo.push_back(L"敵にダメージを与える");
-
-		// mpvalue
-		if (param->mpValue > 0) mInfo.push_back(L"MPを回復する");
-
-		// バフ系
-		if (param->atkValue > 0) mInfo.push_back(L"攻撃力を高める");
-		if (param->defValue > 0) mInfo.push_back(L"守備力を高める");
+		if (param->effect == ItemData::Effect::HEAL)   mInfo.push_back(L"HPを回復する");
+		if (param->effect == ItemData::Effect::DAMAGE) mInfo.push_back(L"敵にダメージを与える");
 	}
+
+	// mpvalue
+	if (param->mpValue > 0) mInfo.push_back(L"MPを回復する");
+
+	// バフ系
+	if (param->atkValue > 0) mInfo.push_back(L"攻撃力を高める");
+	if (param->defValue > 0) mInfo.push_back(L"守備力を高める");
 
 }
 

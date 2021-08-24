@@ -25,8 +25,8 @@ class BattleCharacterManager
 	};
 
 
-	static constexpr float HEALTH_PLATE_X = 900.0f;
-	static constexpr float HEALTH_PLATE_Y = 0.0f;
+	static constexpr float HEALTH_BOARD_X = 900.0f;
+	static constexpr float HEALTH_BOARD_Y = 0.0f;
 
 	static const int BATTLECHARA_MAX = 12;
 	static const int BATTLECHARA_KIND = 2; // Player, Enemy‚Ì2‚Â 

@@ -193,19 +193,14 @@ public:
 		float m[16];
 	};
 
-	float* Data() { return m; }
-
-	void Identity();
+private:
 	void Multiply(const Matrix& mat1, const Matrix& mat2);
 	void Multiply(float val);
+
+public:
+	float* Data() { return m; }
+	void Identity();
 	void Inverse();
-
-
-	Matrix& operator *=(const Matrix& mat)
-	{
-		Multiply(*this, mat);
-		return *this;
-	}
 
 	Matrix operator *(const Matrix& mat) const
 	{
@@ -232,5 +227,11 @@ public:
 			m.m[i] = this->m[i] * val;
 		}
 		return m;
+	}
+
+	Matrix& operator *=(const Matrix& mat)
+	{
+		Multiply(*this, mat);
+		return *this;
 	}
 };

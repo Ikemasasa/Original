@@ -22,7 +22,7 @@ void ProductionUseItem::Update(const BattleCharacterManager* bcm)
 
 		// IDからポインタ取得
 		mMoveChara = bcm->GetChara(mMoveCharaID);
-		for (int i = 0; i < mTargetCharaIDs.size(); ++i)
+		for (size_t i = 0; i < mTargetCharaIDs.size(); ++i)
 		{
 			mTargetCharas.push_back(bcm->GetChara(mTargetCharaIDs[i]));
 		}
@@ -58,7 +58,7 @@ void ProductionUseItem::StateInit()
 	mMoveChara->SetMotion(SkinnedMesh::USE_ITEM, false);
 
 	// 使用アイテム取得
-	const ItemData::ItemParam* param = mMoveChara->GetInventory()->GetItemParam(mMoveChara->GetCommand()->GetItemIndex());
+	const ItemData::ItemParam* param = mMoveChara->GetCommand()->GetItemParam();
 
 	// 効果量計算(m~Amountに代入される) 
 	switch (param->rate)
@@ -67,7 +67,7 @@ void ProductionUseItem::StateInit()
 	case ItemData::PERCENT: CalcAmountPercent(param); break;
 	}
 
-	for (int i = 0; i < mTargetCharas.size(); ++i)
+	for (size_t i = 0; i < mTargetCharas.size(); ++i)
 	{
 		switch (param->effect)
 		{
@@ -108,8 +108,7 @@ void ProductionUseItem::StateInit()
 	}
 
 	// アイテムを減らす
-	mMoveChara->GetInventory()->Sub(mMoveChara->GetCommand()->GetItemIndex());
-
+	mMoveChara->GetInventory()->Sub(param->id);
 	++mState;
 }
 
@@ -119,7 +118,7 @@ void ProductionUseItem::StateUseItemWait()
 	if (mMoveChara->IsMotionFinished())
 	{
 		// エフェクト再生
-		for (int i = 0; i < mTargetCharas.size(); ++i)
+		for (size_t i = 0; i < mTargetCharas.size(); ++i)
 		{
 			Vector3 effectPos = mTargetCharas[i]->GetPos();
 			mEffectInstHandles.push_back(Singleton<EffectManager>().GetInstance().Play(mEffectSlot, effectPos));
@@ -140,7 +139,7 @@ void ProductionUseItem::StateWaitEffect()
 	// 終了していないエフェクトがあれば処理しない
 	if(std::find(isPlay.begin(), isPlay.end(), false) == isPlay.end()) return; 
 
-	for (int i = 0; i < mTargetCharas.size(); ++i)
+	for (size_t i = 0; i < mTargetCharas.size(); ++i)
 	{
 		// 死んでたら死亡エフェクト
 		if (mTargetCharas[i]->GetStatus()->IsDead())

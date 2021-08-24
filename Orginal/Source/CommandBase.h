@@ -1,5 +1,6 @@
 #pragma once
 #include "ItemData.h"
+#include "SkillData.h"
 
 class BattleCharacterManager;
 
@@ -21,7 +22,8 @@ public:
 protected:
 	Behaviour mBehaviour = Behaviour::NONE;
 	std::vector<int> mTargetObjIDs;
-	int mUseItemIndex = -1;
+	const ItemData::ItemParam* mUseItemParam    = nullptr;
+	const SkillData::SkillParam* mUseSkillParam = nullptr;
 
 public:
 	CommandBase() = default;
@@ -34,9 +36,11 @@ public:
 
 	std::vector<int> GetTargetObjIDs() const { return mTargetObjIDs; }
 	Behaviour GetBehaviour() const { return mBehaviour; }
-	int GetItemIndex() const { return mUseItemIndex; }
+	const ItemData::ItemParam* GetItemParam() const { return mUseItemParam; }
+	const SkillData::SkillParam* GetSkillParam() const { return mUseSkillParam; }
 	
 	void SetBehaviour(const Behaviour behaviour) { mBehaviour = behaviour; }
-	void SetItemIndex(const int index)  { mUseItemIndex = index; }
+	void SetItemParam(const ItemData::ItemParam* param) { mUseItemParam = param; }
+	void SetSkillParam(const SkillData::SkillParam* param)  { mUseSkillParam = param; }
 	void AddTargetObjID(const int targetObjID) { mTargetObjIDs.push_back(targetObjID); }
 };

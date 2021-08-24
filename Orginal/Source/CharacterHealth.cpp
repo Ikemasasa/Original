@@ -11,10 +11,10 @@
 
 void CharacterHealth::Initialize(const Vector2& leftTop)
 {
-	mHealthPlate = std::make_unique<Sprite>(L"Data/Image/Menu/health_plate.png");
-	mSelect = std::make_unique<Sprite>(L"Data/Image/Menu/health_plate_select.png");
+	mHealthBoard = std::make_unique<Sprite>(L"Data/Image/Menu/health_board.png");
+	mSelect = std::make_unique<Sprite>(L"Data/Image/Menu/health_board_select.png");
 
-	mPlateLeftTop = leftTop;
+	mBoardLeftTop = leftTop;
 
 	mFont.Initialize();
 	mFontValue.Initialize();
@@ -23,23 +23,23 @@ void CharacterHealth::Initialize(const Vector2& leftTop)
 void CharacterHealth::Update(const std::vector<Status>& statusArray)
 {
 	// プレートの必要数取得
-	mPlateNum = statusArray.size();
+	mBoardNum = statusArray.size();
 
-	if (Input::GetButtonTrigger(0, Input::BUTTON::UP))   mSelectIndex = (mSelectIndex + (mPlateNum - 1)) % mPlateNum;
-	if (Input::GetButtonTrigger(0, Input::BUTTON::DOWN)) mSelectIndex = (mSelectIndex + 1) % mPlateNum;
+	if (Input::GetButtonTrigger(0, Input::BUTTON::UP))   mSelectIndex = (mSelectIndex + (mBoardNum - 1)) % mBoardNum;
+	if (Input::GetButtonTrigger(0, Input::BUTTON::DOWN)) mSelectIndex = (mSelectIndex + 1) % mBoardNum;
 
 	// 名前, HP, MPのフォントセット
 	const wchar_t* statusName[STATUS_NUM] = { L"HP", L"MP" };
-	for (size_t i = 0; i < mPlateNum; ++i)
+	for (size_t i = 0; i < mBoardNum; ++i)
 	{
-		float plateY = i * mHealthPlate->GetSize().y;
+		float boardY = i * mHealthBoard->GetSize().y;
 		float width = 0.0f;
 		Vector2 pos = {};
 		Vector2 center = {};
 
 		// 名前
 		width = mFont.GetWidth(statusArray[i].GetName().c_str());
-		pos = Vector2(mPlateLeftTop.x + mHealthPlate->GetSize().x * 0.5f, mPlateLeftTop.y + FIRST_OFFSET_Y + plateY);
+		pos = Vector2(mBoardLeftTop.x + mHealthBoard->GetSize().x * 0.5f, mBoardLeftTop.y + FIRST_OFFSET_Y + boardY);
 		center = Vector2(width * 0.5f, 0.0f);
 		mFont.RenderSet(statusArray[i].GetName().c_str(), pos, center, Define::FONT_COLOR);
 
@@ -49,8 +49,8 @@ void CharacterHealth::Update(const std::vector<Status>& statusArray)
 		for (size_t k = 0; k < STATUS_NUM; ++k)
 		{
 			// 始めの座標設定
-			pos.x = mPlateLeftTop.x + FIRST_OFFSET_X;
-			pos.y = mPlateLeftTop.y + FIRST_OFFSET_Y + (ADD_OFFSET_Y * (k + 1)) + plateY;
+			pos.x = mBoardLeftTop.x + FIRST_OFFSET_X;
+			pos.y = mBoardLeftTop.y + FIRST_OFFSET_Y + (ADD_OFFSET_Y * (k + 1)) + boardY;
 
 			// ステータス名
 			width = mFont.GetWidth(statusName[k]);
@@ -80,14 +80,14 @@ void CharacterHealth::Render(bool isSelectRender)
 	Vector2 scale = Vector2::ONE;
 	Vector2 texPos = Vector2::ZERO;
 	Vector2 center = Vector2::ZERO;
-	for (size_t i = 0; i < mPlateNum; ++i)
+	for (size_t i = 0; i < mBoardNum; ++i)
 	{
-		Vector2 platePos(mPlateLeftTop.x, mPlateLeftTop.y + mHealthPlate->GetSize().y * i);
+		Vector2 boardPos(mBoardLeftTop.x, mBoardLeftTop.y + mHealthBoard->GetSize().y * i);
 
-		mHealthPlate->Render(platePos, scale, texPos, mHealthPlate->GetSize());
+		mHealthBoard->Render(boardPos, scale, texPos, mHealthBoard->GetSize());
 		if (isSelectRender && mSelectIndex == i)
 		{
-			mSelect->Render(platePos - Vector2(SELECT_OFFSET, SELECT_OFFSET), scale, texPos, mSelect->GetSize());
+			mSelect->Render(boardPos - Vector2(SELECT_OFFSET, SELECT_OFFSET), scale, texPos, mSelect->GetSize());
 		}
 	}
 

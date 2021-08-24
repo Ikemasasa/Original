@@ -5,6 +5,7 @@ class DropData;
 class EquipmentData;
 class ItemData;
 class StatusData;
+class SkillData;
 
 // Singleton‚ð’Ê‚·
 class DataBase
@@ -21,6 +22,7 @@ private:
 	std::unique_ptr<ItemData>	   mItemData;
 	std::unique_ptr<EquipmentData> mEquipmentData;
 	std::unique_ptr<DropData> mDropData;
+	std::unique_ptr<SkillData> mSkillData;
 
 public:
 	DataBase();
@@ -30,4 +32,5 @@ public:
 	EquipmentData* GetEquipmentData() { return mEquipmentData.get(); }
 	ItemData* GetItemData() { return mItemData.get(); }
 	StatusData* GetStatusData() { return mStatusData.get(); }
+	SkillData* GetSkillData() { return mSkillData.get(); }
 };

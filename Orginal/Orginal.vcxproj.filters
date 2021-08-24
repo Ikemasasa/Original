@@ -285,7 +285,7 @@
     <ClInclude Include="Source\IDecideCommand.h">
       <Filter>ヘッダー ファイル\Scene\Battle\command</Filter>
     </ClInclude>
-    <ClInclude Include="Source\CommandItem.h">
+    <ClInclude Include="Source\CommandItemSelect.h">
       <Filter>ヘッダー ファイル\Scene\Battle\command</Filter>
     </ClInclude>
     <ClInclude Include="Source\CommandCharaSelect.h">
@@ -398,6 +398,18 @@
     </ClInclude>
     <ClInclude Include="Source\ProductionGuard.h">
       <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SkillData.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ProductionSkill.h">
+      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CommandSkillSelect.h">
+      <Filter>ヘッダー ファイル\Scene\Battle\command</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SkillSelect.h">
+      <Filter>ヘッダー ファイル\Scene\Menu</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -575,7 +587,7 @@
     <ClCompile Include="Source\CommandBehaviour.cpp">
       <Filter>ソース ファイル\Scene\Battle\command</Filter>
     </ClCompile>
-    <ClCompile Include="Source\CommandItem.cpp">
+    <ClCompile Include="Source\CommandItemSelect.cpp">
       <Filter>ソース ファイル\Scene\Battle\command</Filter>
     </ClCompile>
     <ClCompile Include="Source\CommandCharaSelect.cpp">
@@ -699,6 +711,15 @@
       <Filter>ソース ファイル\Scene\Battle\command</Filter>
     </ClCompile>
     <ClCompile Include="Source\ProductionGuard.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SkillData.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CommandSkillSelect.cpp">
+      <Filter>ソース ファイル\Scene\Battle\command</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SkillSelect.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

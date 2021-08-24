@@ -37,7 +37,7 @@ BattleCharacterManager::BattleCharacterManager(PlayerManager* pm, Enemy* enemy)
 
 void BattleCharacterManager::Initialize()
 {
-	mCharacterHealth.Initialize(Vector2(HEALTH_PLATE_X, HEALTH_PLATE_Y));
+	mCharacterHealth.Initialize(Vector2(HEALTH_BOARD_X, HEALTH_BOARD_Y));
 	mTurnManager.Initialize(mBCharacters);
 
 	for (auto& ba : mBCharacters) ba->Initialize();
@@ -96,7 +96,7 @@ void BattleCharacterManager::Update()
 			chara->UpdateWorld();
 		}
 
-		// healthplate更新
+		// healthboard更新
 		{
 			std::vector<Status> statusArray;
 			for (int i = 0; i < mPlayerNum; ++i)

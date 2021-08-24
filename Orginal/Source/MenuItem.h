@@ -17,8 +17,8 @@ class MenuItem : public MenuBase
 	static constexpr float BOARD_OFFSET_X = 300.0f;
 	static constexpr float BOARD_OFFSET_Y = 150.0f;
 
-	static constexpr float HEALTH_PLATE_X = 900.0f;
-	static constexpr float HEALTH_PLATE_Y = 100.0f;
+	static constexpr float HEALTH_BOARD_X = 900.0f;
+	static constexpr float HEALTH_BOARD_Y = 100.0f;
 
 private:
 	Item* mInventory;

@@ -8,13 +8,18 @@
 #include "CommandBase.h"
 #include "CommandCharaSelect.h"
 #include "CommandEscape.h"
-#include "CommandItem.h"
+#include "CommandItemSelect.h"
+#include "CommandSkillSelect.h"
 
 CommandBehaviour::CommandBehaviour()
 {
 	mIcons = std::make_unique<Sprite>(L"Data/Image/Battle/command_icons.png");
-	mCommandNamePlate = std::make_unique<Sprite>(L"Data/Image/Battle/command_name_plate.png");
+	mCommandNameBoard = std::make_unique<Sprite>(L"Data/Image/Battle/command_name_board.png");
 	mCommandIndex = { 1, 1 };
+}
+
+void CommandBehaviour::Initialize(const BattleCharacterManager* bcm)
+{
 }
 
 void CommandBehaviour::Update(const BattleCharacterManager* bcm, CommandBase* cmdBase)
@@ -22,23 +27,24 @@ void CommandBehaviour::Update(const BattleCharacterManager* bcm, CommandBase* cm
 	BattleState::GetInstance().SetState(BattleState::State::COMMAND_SELECT);
 
 	// もっと最適化できると思うけど、とりあえずゴリ
-	mOldCommandIndex = mCommandIndex;
-
+	TVector2<int> oldIndex = mCommandIndex;
 	if (Input::GetButtonTrigger(0, Input::UP))    mCommandIndex.y = Math::Max(mCommandIndex.y - 1, COMMAND_MIN_Y);
 	if (Input::GetButtonTrigger(0, Input::DOWN))  mCommandIndex.y = Math::Min(mCommandIndex.y + 1, COMMAND_MAX_Y);
 	if (Input::GetButtonTrigger(0, Input::RIGHT)) mCommandIndex.x = Math::Min(mCommandIndex.x + 1, COMMAND_MAX_X);
 	if (Input::GetButtonTrigger(0, Input::LEFT))  mCommandIndex.x = Math::Max(mCommandIndex.x - 1, COMMAND_MIN_X);
 
 
-	if (mCommandIndex.y != 1 && mOldCommandIndex.y != mCommandIndex.y)	// Yが1以外で 前回のYと違う値なら
+	if (mCommandIndex.y != 1 && oldIndex.y != mCommandIndex.y)	// Yが1以外で 前回のYと違う値なら
 	{
 		mCommandIndex.x = 1;
 	}
-	if (mCommandIndex.x != 1 && mOldCommandIndex.x != mCommandIndex.x) // Xが1以外で 前回のXと違う値なら
+	if (mCommandIndex.x != 1 && oldIndex.x != mCommandIndex.x) // Xが1以外で 前回のXと違う値なら
 	{
 		mCommandIndex.y = 1;
 	}
 
+	// CommandPlayer効果音を鳴らすため、mSelectIndexに変換する
+	mSelectIndex = mCommandIndex.y * COMMAND_VERTICAL + mCommandIndex.x;
 
 	// こんなレイアウト
 	//    道
@@ -46,11 +52,11 @@ void CommandBehaviour::Update(const BattleCharacterManager* bcm, CommandBase* cm
 	//    逃
 	if (Input::GetButtonTrigger(0, Input::A))
 	{
-		if (mCommandIndex.y == 0) mNextCommand = std::make_unique<CommandItem>();
+		if (mCommandIndex.y == 0) mNextCommand = std::make_unique<CommandItemSelect>();
 		else if (mCommandIndex.y == 2) mNextCommand = std::make_unique<CommandEscape>();
 		else if (mCommandIndex.x == 0) cmdBase->SetBehaviour(CommandBase::Behaviour::GUARD);
 		else if (mCommandIndex.x == 1) mNextCommand = std::make_unique<CommandCharaSelect>(Character::Type::ENEMY);
-		else if (mCommandIndex.x == 2);
+		else if (mCommandIndex.x == 2) mNextCommand = std::make_unique<CommandSkillSelect>();
 	}
 }
 
@@ -80,8 +86,8 @@ void CommandBehaviour::Render()
 	};
 
 	// コマンドの名前を入れるプレートを描画
-	Vector2 namePlatePos(LeftTopX, LeftTopY - mCommandNamePlate->GetSize().y * scale.y);
-	mCommandNamePlate->Render(namePlatePos, scale, Vector2::ZERO, mCommandNamePlate->GetSize());
+	Vector2 nameBoardPos(LeftTopX, LeftTopY - mCommandNameBoard->GetSize().y * scale.y);
+	mCommandNameBoard->Render(nameBoardPos, scale, Vector2::ZERO, mCommandNameBoard->GetSize());
 
 	for (int i = 0; i < COMMAND_NUM; ++i)
 	{
@@ -95,7 +101,7 @@ void CommandBehaviour::Render()
 			
 			float fontOffsetY = 3.0f;
 			Vector2 center(mFont.GetWidth(commandName[i]) / 2.0f, 0.0f);
-			mFont.RenderSet(commandName[i], namePlatePos + Vector2(mCommandNamePlate->GetSize().x / 2.0f * scale.x, fontOffsetY), center, Define::FONT_COLOR);
+			mFont.RenderSet(commandName[i], nameBoardPos + Vector2(mCommandNameBoard->GetSize().x / 2.0f * scale.x, fontOffsetY), center, Define::FONT_COLOR);
 		}
 
 		// それぞれのアイコンを描画する
@@ -111,6 +117,4 @@ void CommandBehaviour::ResetParam()
 	// ターン開始時中央をさしててほしいので 1
 	mCommandIndex.x = 1;
 	mCommandIndex.y = 1;
-	mOldCommandIndex.x = 1;
-	mOldCommandIndex.y = 1;
 }

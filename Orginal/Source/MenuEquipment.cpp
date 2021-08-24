@@ -14,8 +14,8 @@ void MenuEquipment::Initialize(const PlayerManager* plm)
 	int playerNum = plm->GetNum();
 
 	// 画像の読み込み
-	mBoard			 = std::make_unique<Sprite>(L"Data/Image/Menu/status_plate.png");
-	mTypeSelect = std::make_unique<Sprite>(L"Data/Image/Menu/select.png");
+	mTypeBoard  = std::make_unique<Sprite>(L"Data/Image/Menu/equipment_type_board.png");
+	mTypeSelect = std::make_unique<Sprite>(L"Data/Image/Menu/equipment_type_select.png");
 	mCharacterSelect.Initialize(plm);
 	mEquipmentSelect.Initialize();
 
@@ -116,12 +116,12 @@ MenuBase::Select MenuEquipment::Update(PlayerManager* plm)
 
 	// フォントレンダーに追加
 	Vector2 boardPos(BOARD_POS_X, BOARD_POS_Y);
-	Vector2 pos(boardPos.x + FIRST_OFFSET_X, boardPos.y + FIRST_OFFSET_Y);
+	Vector2 pos(boardPos.x + FONT_OFFSET_X, boardPos.y + FONT_OFFSET_Y);
 	Vector2 center(Vector2::ZERO);
 	{
 		// 名前
-		float nameX = boardPos.x + mBoard->GetSize().x / 2.0f;
-		float nameY = boardPos.y + FIRST_OFFSET_Y;
+		float nameX = boardPos.x + mTypeBoard->GetSize().x / 2.0f;
+		float nameY = boardPos.y + FONT_OFFSET_Y;
 		Vector2 namePos(nameX, nameY);
 		Vector2 nameCenter(mNameFont.GetWidth(mCharacterSelect.GetIndex()) / 2.0f, 0.0f);
 		mNameFont.RenderSet(mCharacterSelect.GetIndex(), namePos, nameCenter, Define::FONT_COLOR);
@@ -132,7 +132,7 @@ MenuBase::Select MenuEquipment::Update(PlayerManager* plm)
 		const int ARMOR_INDEX = 1;
 
 		// 武器
-		pos.y += ADD_OFFSET_Y;
+		pos.y += FONT_ADD_Y;
 		mFont.RenderSet(WEAPON_INDEX, pos, center, Define::FONT_COLOR);
 
 		// 武器名
@@ -143,7 +143,7 @@ MenuBase::Select MenuEquipment::Update(PlayerManager* plm)
 		}
 
 		// 防具
-		pos.y += ADD_OFFSET_Y;
+		pos.y += FONT_ADD_Y;
 		mFont.RenderSet(ARMOR_INDEX, pos, center, Define::FONT_COLOR);
 
 		// 防具名
@@ -160,15 +160,15 @@ MenuBase::Select MenuEquipment::Update(PlayerManager* plm)
 void MenuEquipment::Render()
 {
 	Vector2 pos(BOARD_POS_X, BOARD_POS_Y);
-	mCharacterSelect.Render(pos);
+	mCharacterSelect.Render(pos + Vector2(FONT_OFFSET_X, 0.0f));
 
 	Vector2 scale(Vector2::ONE);
 	Vector2 texPos(Vector2::ZERO);
-	mBoard->Render(pos, scale, texPos, mBoard->GetSize());
+	mTypeBoard->Render(pos, scale, texPos, mTypeBoard->GetSize());
 
 	// セレクト画像描画
-	pos.x += FIRST_OFFSET_X;
-	pos.y += FIRST_OFFSET_Y + (mSelectIndex + 1) * ADD_OFFSET_Y;
+	pos.x += FONT_OFFSET_X;
+	pos.y += FONT_OFFSET_Y + (mSelectIndex + 1) * FONT_ADD_Y;
 	mTypeSelect->Render(pos, scale, texPos, mTypeSelect->GetSize());
 
 	// 文字描画
@@ -179,7 +179,7 @@ void MenuEquipment::Render()
 	if (mIsDecideType)
 	{
 		const float ADDJUST = 10.0f;
-		const float OFFSET_X = mBoard->GetSize().x + ADDJUST;
+		const float OFFSET_X = mTypeBoard->GetSize().x + ADDJUST;
 		Vector2 selectPos(BOARD_POS_X + OFFSET_X, BOARD_POS_Y);
 		mEquipmentSelect.Render(selectPos);
 	}

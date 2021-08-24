@@ -168,8 +168,9 @@
     <ClInclude Include="Source\CommandCharaSelect.h" />
     <ClInclude Include="Source\CommandEnemy.h" />
     <ClInclude Include="Source\CommandEscape.h" />
-    <ClInclude Include="Source\CommandItem.h" />
+    <ClInclude Include="Source\CommandItemSelect.h" />
     <ClInclude Include="Source\CommandPlayer.h" />
+    <ClInclude Include="Source\CommandSkillSelect.h" />
     <ClInclude Include="Source\DamageCalculator.h" />
     <ClInclude Include="Source\DataBase.h" />
     <ClInclude Include="Source\DeferredDirLight.h" />
@@ -244,6 +245,7 @@
     <ClInclude Include="Source\PlayerManager.h" />
     <ClInclude Include="Source\ProductionEscape.h" />
     <ClInclude Include="Source\ProductionGuard.h" />
+    <ClInclude Include="Source\ProductionSkill.h" />
     <ClInclude Include="Source\ProductionUseItem.h" />
     <ClInclude Include="Source\ProductionValue.h" />
     <ClInclude Include="Source\SceneBase.h" />
@@ -255,6 +257,8 @@
     <ClInclude Include="Source\CommandBehaviour.h" />
     <ClInclude Include="Source\ShadowMap.h" />
     <ClInclude Include="Source\Singleton.h" />
+    <ClInclude Include="Source\SkillData.h" />
+    <ClInclude Include="Source\SkillSelect.h" />
     <ClInclude Include="Source\StatusData.h" />
     <ClInclude Include="Source\Terrain.h" />
     <ClInclude Include="Source\TurnManager.h" />
@@ -278,8 +282,9 @@
     <ClCompile Include="Source\CommandCharaSelect.cpp" />
     <ClCompile Include="Source\CommandEnemy.cpp" />
     <ClCompile Include="Source\CommandEscape.cpp" />
-    <ClCompile Include="Source\CommandItem.cpp" />
+    <ClCompile Include="Source\CommandItemSelect.cpp" />
     <ClCompile Include="Source\CommandPlayer.cpp" />
+    <ClCompile Include="Source\CommandSkillSelect.cpp" />
     <ClCompile Include="Source\DamageCalculator.cpp" />
     <ClCompile Include="Source\DataBase.cpp" />
     <ClCompile Include="Source\Define.cpp" />
@@ -357,6 +362,8 @@
     <ClCompile Include="Source\CommandBehaviour.cpp" />
     <ClCompile Include="Source\ShadowMap.cpp" />
     <ClCompile Include="Source\Singleton.cpp" />
+    <ClCompile Include="Source\SkillData.cpp" />
+    <ClCompile Include="Source\SkillSelect.cpp" />
     <ClCompile Include="Source\StatusData.cpp" />
     <ClCompile Include="Source\Terrain.cpp" />
     <ClCompile Include="Source\TurnManager.cpp" />

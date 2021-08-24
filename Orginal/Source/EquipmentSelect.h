@@ -15,13 +15,13 @@ class EquipmentSelect
 	static const int STATUS_NUM = 6;   // アイコン縦列の数
 	static const int PARAM_NUM = 3;
 
-	static constexpr float ICON_OFFSET = 19.0f; // ボードの左上からアイコン描画位置までの距離(XY両方)
+	static constexpr float ICON_OFFSET = 10.0f; // ボードの左上からアイコン描画位置までの距離(XY両方)
 	static constexpr float ICON_SIZE = 256.0f;
 	static constexpr float ICON_SCALE = 0.25f;
 
 	static constexpr float INFO_BOARD_OFFSET_X = 400.0f;
 	static constexpr float INFO_ICON_OFFSET_X = 114.0f;
-	static constexpr float INFO_ICON_OFFSET_Y = 76.0f; // このオフセットとかはまじでGIMPとかで見てやってる、サイズ考えてアセット作るの大変だね
+	static constexpr float INFO_ICON_OFFSET_Y = 76.0f;
 	static constexpr float INFO_ICON_SCALE = 0.5f;
 
 	std::unique_ptr<Sprite> mBoard;

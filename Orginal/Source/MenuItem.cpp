@@ -17,7 +17,7 @@
 
 void MenuItem::Initialize(const PlayerManager* plm)
 {
-	mCharacterHealth.Initialize(Vector2(HEALTH_PLATE_X, HEALTH_PLATE_Y));
+	mCharacterHealth.Initialize(Vector2(HEALTH_BOARD_X, HEALTH_BOARD_Y));
 	mCharacterSelect.Initialize(plm);
 	mItemSelect.Initialize();
 	mItemIndex = -1;
@@ -30,7 +30,22 @@ MenuBase::Select MenuItem::Update(PlayerManager* plm)
 		mCharacterSelect.Update(); // 誰のインベントリを参照するか決める
 
 		mInventory = plm->GetPlayer(mCharacterSelect.GetIndex())->GetInventory(); // 参照するインベントリ保存
-		mItemIndex = mItemSelect.Update(mInventory); // アイテム選択
+		mItemSelect.Update(mInventory); 
+
+		// アイテム選択
+		if (Input::GetButtonTrigger(0, Input::BUTTON::A))
+		{
+			int index = mItemSelect.GetIndex();
+			const ItemData::ItemParam* param = mInventory->GetItemParam(index);
+			
+			// 回復アイテムなら使える
+			if(param->effect == ItemData::Effect::HEAL)	mItemIndex = mItemSelect.GetIndex();
+			else
+			{
+				AUDIO.SoundStop((int)Sound::SELECT);
+				AUDIO.SoundPlay((int)Sound::CANCEL);
+			}
+		}
 
 		// 前の画面に戻る
 		if (Input::GetButtonTrigger(0, Input::BUTTON::B))
@@ -68,7 +83,7 @@ MenuBase::Select MenuItem::Update(PlayerManager* plm)
 				plStatus.AddHP(param->hpValue);
 				plStatus.AddMP(param->mpValue);
 				Singleton<DataBase>().GetInstance().GetStatusData()->SetPLStatus(id, plStatus); //ステータス更新
-				mInventory->Sub(mItemIndex); // アイテム減らす
+				mInventory->Sub(param->id); // アイテム減らす
 
 				AUDIO.SoundPlay((int)Sound::HEAL);
 				mItemIndex = -1;// アイテム未選択状態に戻す
@@ -90,7 +105,7 @@ MenuBase::Select MenuItem::Update(PlayerManager* plm)
 
 void MenuItem::Render()
 {
-	mCharacterSelect.Render(Vector2(BOARD_OFFSET_X, BOARD_OFFSET_Y));
+	mCharacterSelect.Render(Vector2(BOARD_OFFSET_X + ItemSelect::ICON_OFFSET, BOARD_OFFSET_Y));
 	mItemSelect.Render(Vector2(BOARD_OFFSET_X, BOARD_OFFSET_Y));
 
 	if (mItemIndex != -1)

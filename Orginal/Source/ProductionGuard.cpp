@@ -32,7 +32,9 @@ void ProductionGuard::Update(const BattleCharacterManager* bcm)
 		mMoveChara->SetMotion(SkinnedMesh::GUARD);
 		mMoveChara->GetStatus()->SetBuffVitRate(DamageCalculator::DEFENCE_VIT_RATE, 1);
 		// break;
+
 	case WAIT:
+		// ガードの文字をセット
 		DirectX::XMFLOAT4X4 view = Singleton<CameraManager>().GetInstance().GetView();
 		DirectX::XMFLOAT4X4 proj = Singleton<CameraManager>().GetInstance().GetProj();
 		Vector3 pos = mMoveChara->GetPos();
@@ -41,6 +43,7 @@ void ProductionGuard::Update(const BattleCharacterManager* bcm)
 		const wchar_t* str = L"Guard";
 		mFont.RenderSet(str, scrPos, Vector2(mFont.GetWidth(str) / 2.0f, 0.0f), Define::FONT_COLOR);
 
+		// タイマーを進める
 		mTimer += GameManager::elapsedTime;
 		if (mTimer >= WAIT_SEC)
 		{
