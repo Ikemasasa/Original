@@ -8,12 +8,11 @@
 #include "BattleCharacterManager.h"
 #include "BattleState.h"
 #include "CameraManager.h"
-#include "CommandBehaviour.h"
-#include "CommandItemSelect.h"
+#include "DecideBehaviour.h"
 
 CommandPlayer::CommandPlayer() : CommandBase()
 {
-	mCommand.push(std::make_unique<CommandBehaviour>());
+	mCommand.push(std::make_unique<DecideBehaviour>());
 }
 
 CommandPlayer::~CommandPlayer()

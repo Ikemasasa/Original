@@ -14,7 +14,7 @@ int Status::GetAtk() const
 	int atk = 0;
 	const EquipmentData::Param* param = equipments.GetParam(EquipmentData::WEAPON);
 	if (param) atk = param->atk;
-	atk += str * buffStr.rate;
+	atk += static_cast<int>(str * buffStr.rate);
 
 	return 	atk;
 }
@@ -24,7 +24,7 @@ int Status::GetDef() const
 	int def = 0;
 	const EquipmentData::Param* param = equipments.GetParam(EquipmentData::ARMOR);
 	if (param) def = param->def;
-	def += vit * buffVit.rate;
+	def += static_cast<int>(vit * buffVit.rate);
 
 	return 	def;
 }
@@ -182,8 +182,8 @@ StatusData::EnemyType StatusData::GetEnmType(size_t id) const
 
 	// ƒ^ƒO‚ð–³Ž‹
 	std::getline(fin, line);
-
-	for (int i = DataBase::ENM_ID_START; i <= id; ++i)
+	
+	for (size_t i = DataBase::ENM_ID_START; i <= id; ++i)
 	{
 		std::getline(fin, line);
 	}

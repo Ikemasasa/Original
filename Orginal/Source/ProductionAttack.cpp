@@ -83,7 +83,7 @@ void ProductionAttack::StateInit()
 	{
 		targetPos += mTargetCharas[i]->GetPos();
 	}
-	targetPos /= mTargetCharas.size();
+	targetPos /= static_cast<float>(mTargetCharas.size());
 	Vector3 orgToTarget = targetPos - mOrgPos;
 	Vector3 N = orgToTarget.GetNormalize();
 
@@ -121,7 +121,7 @@ void ProductionAttack::StateWaitAttack()
 	// ƒ‚[ƒVƒ‡ƒ“‚ªI‚í‚Á‚½‚ç
 	if (mMoveChara->IsMotionFinished())
 	{
-		for (int i = 0; i < mTargetCharas.size(); ++i)
+		for (size_t i = 0; i < mTargetCharas.size(); ++i)
 		{
 			if (mTargetCharas[i]->GetStatus()->IsDead())
 			{

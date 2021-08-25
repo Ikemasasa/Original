@@ -100,7 +100,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)Source\lib\DirectXTK\lib\Debug;$(ProjectDir)Source\lib\FBX SDK\lib\x86\debug;$(ProjectDir)Source\Effekseer/lib/Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d11.lib;d3dCompiler.lib;dxgi.lib;DirectXTK.lib;DirectXTKAudioWin8.lib;libfbxsdk-md.lib;winmm.lib;Effekseerd.lib;EffekseerRendererDX11d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;d3dCompiler.lib;dxgi.lib;DirectXTK.lib;libfbxsdk-md.lib;winmm.lib;Effekseerd.lib;EffekseerRendererDX11d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -120,7 +120,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)Source\lib\DirectXTK\lib\Release;$(ProjectDir)Source\lib\FBX SDK\lib\x86\release;$(ProjectDir)Source\Effekseer\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;DirectXTK.lib;DirectXTKAudioWin8.lib;libfbxsdk-md.lib;Effekseer.lib;EffekseerRendererDX11.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;DirectXTK.lib;libfbxsdk-md.lib;Effekseer.lib;EffekseerRendererDX11.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -165,12 +165,12 @@
     <ClInclude Include="Source\CollisionTerrain.h" />
     <ClInclude Include="Source\CommandBase.h" />
     <ClInclude Include="Source\CommandBossEnemy.h" />
-    <ClInclude Include="Source\CommandCharaSelect.h" />
+    <ClInclude Include="Source\DecideTargetChara.h" />
     <ClInclude Include="Source\CommandEnemy.h" />
-    <ClInclude Include="Source\CommandEscape.h" />
-    <ClInclude Include="Source\CommandItemSelect.h" />
+    <ClInclude Include="Source\DecideEscape.h" />
+    <ClInclude Include="Source\DecideItem.h" />
     <ClInclude Include="Source\CommandPlayer.h" />
-    <ClInclude Include="Source\CommandSkillSelect.h" />
+    <ClInclude Include="Source\DecideSkill.h" />
     <ClInclude Include="Source\DamageCalculator.h" />
     <ClInclude Include="Source\DataBase.h" />
     <ClInclude Include="Source\DeferredDirLight.h" />
@@ -254,7 +254,7 @@
     <ClInclude Include="Source\SceneManager.h" />
     <ClInclude Include="Source\SceneMenu.h" />
     <ClInclude Include="Source\SceneTitle.h" />
-    <ClInclude Include="Source\CommandBehaviour.h" />
+    <ClInclude Include="Source\DecideBehaviour.h" />
     <ClInclude Include="Source\ShadowMap.h" />
     <ClInclude Include="Source\Singleton.h" />
     <ClInclude Include="Source\SkillData.h" />
@@ -279,12 +279,12 @@
     <ClCompile Include="Source\CollisionTerrain.cpp" />
     <ClCompile Include="Source\CommandBase.cpp" />
     <ClCompile Include="Source\CommandBossEnemy.cpp" />
-    <ClCompile Include="Source\CommandCharaSelect.cpp" />
+    <ClCompile Include="Source\DecideTargetChara.cpp" />
     <ClCompile Include="Source\CommandEnemy.cpp" />
-    <ClCompile Include="Source\CommandEscape.cpp" />
-    <ClCompile Include="Source\CommandItemSelect.cpp" />
+    <ClCompile Include="Source\DecideEscape.cpp" />
+    <ClCompile Include="Source\DecideItemSelect.cpp" />
     <ClCompile Include="Source\CommandPlayer.cpp" />
-    <ClCompile Include="Source\CommandSkillSelect.cpp" />
+    <ClCompile Include="Source\DecideSkillSelect.cpp" />
     <ClCompile Include="Source\DamageCalculator.cpp" />
     <ClCompile Include="Source\DataBase.cpp" />
     <ClCompile Include="Source\Define.cpp" />
@@ -359,7 +359,7 @@
     <ClCompile Include="Source\SceneManager.cpp" />
     <ClCompile Include="Source\SceneMenu.cpp" />
     <ClCompile Include="Source\SceneTitle.cpp" />
-    <ClCompile Include="Source\CommandBehaviour.cpp" />
+    <ClCompile Include="Source\DecideBehaviour.cpp" />
     <ClCompile Include="Source\ShadowMap.cpp" />
     <ClCompile Include="Source\Singleton.cpp" />
     <ClCompile Include="Source\SkillData.cpp" />

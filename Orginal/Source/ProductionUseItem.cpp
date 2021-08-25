@@ -131,7 +131,7 @@ void ProductionUseItem::StateWaitEffect()
 {
 	std::vector<bool> isPlay;
 	isPlay.resize(mTargetCharas.size());
-	for (int i = 0; i < mTargetCharas.size(); ++i)
+	for (size_t i = 0; i < mTargetCharas.size(); ++i)
 	{
 		isPlay[i] = Singleton<EffectManager>().GetInstance().IsPlay(mEffectInstHandles[i]);
 	}

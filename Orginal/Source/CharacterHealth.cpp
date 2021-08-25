@@ -30,7 +30,7 @@ void CharacterHealth::Update(const std::vector<Status>& statusArray)
 
 	// 名前, HP, MPのフォントセット
 	const wchar_t* statusName[STATUS_NUM] = { L"HP", L"MP" };
-	for (size_t i = 0; i < mBoardNum; ++i)
+	for (int i = 0; i < mBoardNum; ++i)
 	{
 		float boardY = i * mHealthBoard->GetSize().y;
 		float width = 0.0f;
@@ -46,7 +46,7 @@ void CharacterHealth::Update(const std::vector<Status>& statusArray)
 		// ステータス数値を配列化
 		int statusValue[STATUS_NUM] = { statusArray[i].GetHP(), statusArray[i].GetMP() };
 		int statusMax[STATUS_NUM] = { statusArray[i].GetMaxHP(), statusArray[i].GetMaxMP() };
-		for (size_t k = 0; k < STATUS_NUM; ++k)
+		for (int k = 0; k < STATUS_NUM; ++k)
 		{
 			// 始めの座標設定
 			pos.x = mBoardLeftTop.x + FIRST_OFFSET_X;
@@ -80,7 +80,7 @@ void CharacterHealth::Render(bool isSelectRender)
 	Vector2 scale = Vector2::ONE;
 	Vector2 texPos = Vector2::ZERO;
 	Vector2 center = Vector2::ZERO;
-	for (size_t i = 0; i < mBoardNum; ++i)
+	for (int i = 0; i < mBoardNum; ++i)
 	{
 		Vector2 boardPos(mBoardLeftTop.x, mBoardLeftTop.y + mHealthBoard->GetSize().y * i);
 

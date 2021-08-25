@@ -16,7 +16,7 @@ class CommandBossEnemy : public CommandBase
 	State mState = State::TARGET_ONE;
 
 	// lowHP‚ÌƒLƒƒƒ‰‚ÌCharaID‚ð•Ô‚·
-	std::vector<int> SearchLowHPChara(const int num, const BattleCharacterManager* bcm);
+	std::vector<int> SearchLowHPChara(const size_t num, const BattleCharacterManager* bcm);
 public:
 	CommandBossEnemy();
 	~CommandBossEnemy();

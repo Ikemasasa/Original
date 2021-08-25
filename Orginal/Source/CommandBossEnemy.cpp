@@ -52,7 +52,7 @@ void CommandBossEnemy::Update(const BattleCharacterManager* bcm)
 }
 
 
-std::vector<int> CommandBossEnemy::SearchLowHPChara(const int num, const BattleCharacterManager* bcm)
+std::vector<int> CommandBossEnemy::SearchLowHPChara(const size_t num, const BattleCharacterManager* bcm)
 {
 	const std::vector<int>& aliveObjIDs = bcm->GetAliveObjIDs(Character::PLAYER);
 	const std::vector<std::shared_ptr<BattleCharacter>>& bCharacters = bcm->GetBCharacters();
@@ -65,7 +65,7 @@ std::vector<int> CommandBossEnemy::SearchLowHPChara(const int num, const BattleC
 	for (auto& aliveObjID : aliveObjIDs)
 	{
 		bool isContinue = false;
-		for (int i = 0; i < num; ++i)
+		for (size_t i = 0; i < num; ++i)
 		{
 			// 未登録なら登録する
 			if (currentObjIDs[i] == -1)
@@ -79,7 +79,7 @@ std::vector<int> CommandBossEnemy::SearchLowHPChara(const int num, const BattleC
 
 		// HP取得
 		std::vector<int> currentCharaHPs(num, 0);
-		for (int i = 0; i < num; ++i)
+		for (size_t i = 0; i < num; ++i)
 		{
 			int charaID = bCharacters[currentObjIDs[i]]->GetCharaID();
 			currentCharaHPs[i] = Singleton<StatusData>().GetInstance().GetPLStatus(charaID).GetHP();
@@ -89,7 +89,7 @@ std::vector<int> CommandBossEnemy::SearchLowHPChara(const int num, const BattleC
 		// 今の最小値と比べて、変更があるかチェック
 		int changeIndex = -1;
 		int subMin = 0;
-		for (int i = 0; i < num; ++i)
+		for (size_t i = 0; i < num; ++i)
 		{
 			int sub = nextCharaHP - currentCharaHPs[i];
 			if (sub < subMin)

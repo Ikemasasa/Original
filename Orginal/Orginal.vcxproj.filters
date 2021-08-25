@@ -79,6 +79,12 @@
     <Filter Include="lib\Shader\Deferred">
       <UniqueIdentifier>{0df4c3cb-c6a8-451c-bbb3-afc5e278ad1e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Scene\Battle\command\Decide">
+      <UniqueIdentifier>{5a80f3a0-7c99-4b95-80ca-4cbf537b556d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene\Battle\command\Decide">
+      <UniqueIdentifier>{44e8fddd-2fed-4c75-924b-8dae185d1571}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\lib\Blend.h">
@@ -279,18 +285,6 @@
     <ClInclude Include="Source\lib\TVector.h">
       <Filter>lib\ヘッダーファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\CommandBehaviour.h">
-      <Filter>ヘッダー ファイル\Scene\Battle\command</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\IDecideCommand.h">
-      <Filter>ヘッダー ファイル\Scene\Battle\command</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\CommandItemSelect.h">
-      <Filter>ヘッダー ファイル\Scene\Battle\command</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\CommandCharaSelect.h">
-      <Filter>ヘッダー ファイル\Scene\Battle\command</Filter>
-    </ClInclude>
     <ClInclude Include="Source\ProductionValue.h">
       <Filter>ヘッダー ファイル\Scene\Battle</Filter>
     </ClInclude>
@@ -344,9 +338,6 @@
     </ClInclude>
     <ClInclude Include="Source\EquipmentData.h">
       <Filter>ヘッダー ファイル\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\CommandEscape.h">
-      <Filter>ヘッダー ファイル\Scene\Battle\command</Filter>
     </ClInclude>
     <ClInclude Include="Source\ProductionUseItem.h">
       <Filter>ヘッダー ファイル\Scene\Battle</Filter>
@@ -405,11 +396,26 @@
     <ClInclude Include="Source\ProductionSkill.h">
       <Filter>ヘッダー ファイル\Scene\Battle</Filter>
     </ClInclude>
-    <ClInclude Include="Source\CommandSkillSelect.h">
-      <Filter>ヘッダー ファイル\Scene\Battle\command</Filter>
-    </ClInclude>
     <ClInclude Include="Source\SkillSelect.h">
       <Filter>ヘッダー ファイル\Scene\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DecideEscape.h">
+      <Filter>ヘッダー ファイル\Scene\Battle\command\Decide</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DecideBehaviour.h">
+      <Filter>ヘッダー ファイル\Scene\Battle\command\Decide</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DecideItem.h">
+      <Filter>ヘッダー ファイル\Scene\Battle\command\Decide</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\IDecideCommand.h">
+      <Filter>ヘッダー ファイル\Scene\Battle\command\Decide</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DecideTargetChara.h">
+      <Filter>ヘッダー ファイル\Scene\Battle\command\Decide</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DecideSkill.h">
+      <Filter>ヘッダー ファイル\Scene\Battle\command\Decide</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -584,15 +590,6 @@
     <ClCompile Include="Source\ItemSelect.cpp">
       <Filter>ソース ファイル\Common</Filter>
     </ClCompile>
-    <ClCompile Include="Source\CommandBehaviour.cpp">
-      <Filter>ソース ファイル\Scene\Battle\command</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\CommandItemSelect.cpp">
-      <Filter>ソース ファイル\Scene\Battle\command</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\CommandCharaSelect.cpp">
-      <Filter>ソース ファイル\Scene\Battle\command</Filter>
-    </ClCompile>
     <ClCompile Include="Source\ProductionValue.cpp">
       <Filter>ソース ファイル\Scene\Battle</Filter>
     </ClCompile>
@@ -662,9 +659,6 @@
     <ClCompile Include="Source\EquipmentData.cpp">
       <Filter>ソース ファイル\Common</Filter>
     </ClCompile>
-    <ClCompile Include="Source\CommandEscape.cpp">
-      <Filter>ソース ファイル\Scene\Battle\command</Filter>
-    </ClCompile>
     <ClCompile Include="Source\MenuEquipment.cpp">
       <Filter>ソース ファイル\Scene\Menu</Filter>
     </ClCompile>
@@ -716,11 +710,23 @@
     <ClCompile Include="Source\SkillData.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\CommandSkillSelect.cpp">
-      <Filter>ソース ファイル\Scene\Battle\command</Filter>
-    </ClCompile>
     <ClCompile Include="Source\SkillSelect.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DecideBehaviour.cpp">
+      <Filter>ソース ファイル\Scene\Battle\command\Decide</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DecideTargetChara.cpp">
+      <Filter>ソース ファイル\Scene\Battle\command\Decide</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DecideEscape.cpp">
+      <Filter>ソース ファイル\Scene\Battle\command\Decide</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DecideItemSelect.cpp">
+      <Filter>ソース ファイル\Scene\Battle\command\Decide</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DecideSkillSelect.cpp">
+      <Filter>ソース ファイル\Scene\Battle\command\Decide</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

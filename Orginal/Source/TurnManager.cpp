@@ -95,7 +95,7 @@ void TurnManager::SortOrder(const std::vector<std::shared_ptr<BattleCharacter>>&
 		std::random_device rnd;
 		std::mt19937 mt(rnd());
 
-		// 0~DISTの値を生成して、シャッフルする
+		// min~maxの値を生成して、シャッフルする
 		std::vector<int> ret(DIST);
 		std::iota(ret.begin(), ret.end(), min);
 		std::shuffle(ret.begin(), ret.end(), mt);
@@ -106,7 +106,7 @@ void TurnManager::SortOrder(const std::vector<std::shared_ptr<BattleCharacter>>&
 	std::map<int, std::vector<BattleCharacter*>> spdOrder;
 
 	// マップのキーは昇順にソートされてる
-	const float WIDTH = 5; // スピードの乱数の幅+-
+	const int WIDTH = 5; // スピードの乱数の幅+-
 	for (auto& chara : battleCharaArray)
 	{
 		int spd = chara->GetStatus()->GetSpd();
