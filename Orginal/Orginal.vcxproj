@@ -351,6 +351,7 @@
     <ClCompile Include="Source\PlayerManager.cpp" />
     <ClCompile Include="Source\ProductionEscape.cpp" />
     <ClCompile Include="Source\ProductionGuard.cpp" />
+    <ClCompile Include="Source\ProductionSkill.cpp" />
     <ClCompile Include="Source\ProductionUseItem.cpp" />
     <ClCompile Include="Source\ProductionValue.cpp" />
     <ClCompile Include="Source\SceneBase.cpp" />

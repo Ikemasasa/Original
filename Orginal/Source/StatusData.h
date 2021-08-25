@@ -51,6 +51,10 @@ public:
 	int GetMP()    const { return mp; }
 	int GetMaxMP() const { return maxMP; }
 
+	int GetStr() const { return str; }
+	int GetVit() const { return vit; }
+	int GetAgi() const { return agi; }
+
 	int GetAtk() const;
 	int GetDef() const;
 	int GetSpd() const;

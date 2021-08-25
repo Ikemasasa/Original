@@ -728,6 +728,9 @@
     <ClCompile Include="Source\DecideSkill.cpp">
       <Filter>ソース ファイル\Scene\Battle\command\Decide</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ProductionSkill.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="テキスト1.txt">
