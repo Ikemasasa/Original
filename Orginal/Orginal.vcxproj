@@ -282,9 +282,9 @@
     <ClCompile Include="Source\DecideTargetChara.cpp" />
     <ClCompile Include="Source\CommandEnemy.cpp" />
     <ClCompile Include="Source\DecideEscape.cpp" />
-    <ClCompile Include="Source\DecideItemSelect.cpp" />
+    <ClCompile Include="Source\DecideItem.cpp" />
     <ClCompile Include="Source\CommandPlayer.cpp" />
-    <ClCompile Include="Source\DecideSkillSelect.cpp" />
+    <ClCompile Include="Source\DecideSkill.cpp" />
     <ClCompile Include="Source\DamageCalculator.cpp" />
     <ClCompile Include="Source\DataBase.cpp" />
     <ClCompile Include="Source\Define.cpp" />

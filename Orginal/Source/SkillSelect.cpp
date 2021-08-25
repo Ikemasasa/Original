@@ -32,7 +32,6 @@ void SkillSelect::Update()
 		if (Input::GetButtonTrigger(0, Input::BUTTON::DOWN)) mSkillIndex = (mSkillIndex + 1) % num;
 		if (oldIndex != mSkillIndex) AUDIO.SoundPlay((int)Sound::CURSOR_MOVE);
 
-
 		// ÉXÉLÉãñº
 		int loopNum = Math::Min(VERTICAL_SKILL_MAX, num);
 		for (int i = 0; i < loopNum; ++i)

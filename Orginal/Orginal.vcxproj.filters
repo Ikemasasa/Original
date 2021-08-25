@@ -722,10 +722,10 @@
     <ClCompile Include="Source\DecideEscape.cpp">
       <Filter>ソース ファイル\Scene\Battle\command\Decide</Filter>
     </ClCompile>
-    <ClCompile Include="Source\DecideItemSelect.cpp">
+    <ClCompile Include="Source\DecideItem.cpp">
       <Filter>ソース ファイル\Scene\Battle\command\Decide</Filter>
     </ClCompile>
-    <ClCompile Include="Source\DecideSkillSelect.cpp">
+    <ClCompile Include="Source\DecideSkill.cpp">
       <Filter>ソース ファイル\Scene\Battle\command\Decide</Filter>
     </ClCompile>
   </ItemGroup>

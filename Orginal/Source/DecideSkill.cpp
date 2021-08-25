@@ -15,10 +15,9 @@ void DecideSkill::Initialize(const BattleCharacterManager* bcm)
 
 void DecideSkill::Update(const BattleCharacterManager* bcm, CommandBase* cb)
 {
+	mSkillSelect.Update();
 	if (mSkillSelect.ExistSkill())
 	{
-		mSkillSelect.Update();
-
 		// ƒXƒLƒ‹‘I‘ð‚µ‚½‚ç
 		if (Input::GetButtonTrigger(0, Input::BUTTON::A))
 		{
