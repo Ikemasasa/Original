@@ -1,5 +1,6 @@
 #include "DecideSkill.h"
 
+#include "lib/Audio.h"
 #include "lib/Input.h"
 
 #include "BattleCharacterManager.h"
@@ -15,6 +16,9 @@ void DecideSkill::Initialize(const BattleCharacterManager* bcm)
 
 void DecideSkill::Update(const BattleCharacterManager* bcm, CommandBase* cb)
 {
+	// 効果音を鳴らす
+	SoundPlay();
+
 	mSkillSelect.Update();
 	if (mSkillSelect.ExistSkill())
 	{
@@ -24,17 +28,25 @@ void DecideSkill::Update(const BattleCharacterManager* bcm, CommandBase* cb)
 			// スキル情報取得
 			const SkillData::SkillParam* param = mSkillSelect.GetSelectSkill();
 
-			// スキルのパラメータ保存
-			cb->SetSkillParam(param);
-
-			//次のコマンドを決める
-			Character::Type charaType;
-			switch (param->target)
+			if (bcm->GetMoveChara()->GetStatus()->GetMP() >= param->useMP)
 			{
-			case SkillData::Target::PARTY: charaType = Character::PLAYER; break;
-			case SkillData::Target::ENEMY: charaType = Character::ENEMY;  break;
+				// スキルのパラメータ保存
+				cb->SetSkillParam(param);
+
+				//次のコマンドを決める
+				Character::Type charaType;
+				switch (param->target)
+				{
+				case SkillData::Target::PARTY: charaType = Character::PLAYER; break;
+				case SkillData::Target::ENEMY: charaType = Character::ENEMY;  break;
+				}
+				mNextCommand = std::make_unique<DecideTargetChara>(charaType);
 			}
-			mNextCommand = std::make_unique<DecideTargetChara>(charaType);
+			else
+			{
+				AUDIO.SoundStop((int)Sound::SELECT);
+				AUDIO.SoundPlay((int)Sound::CANCEL);
+			}
 
 		}
 	}

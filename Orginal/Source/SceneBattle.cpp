@@ -1,6 +1,5 @@
 #include "SceneBattle.h"
 
-#include "lib/Audio.h"
 #include "lib/Skybox.h"
 
 #include "BattleCharacterManager.h"
@@ -9,10 +8,13 @@
 #include "CameraManager.h"
 #include "DataBase.h"
 #include "EffectManager.h"
+#include "Enemy.h"
 #include "Light.h"
 #include "SceneManager.h"
 #include "Terrain.h"
 
+Music SceneBattle::music;
+Music SceneBattle::result;
 
 SceneBattle::SceneBattle(PlayerManager* plm, Enemy* enemy)
 {
@@ -28,6 +30,19 @@ SceneBattle::SceneBattle(PlayerManager* plm, Enemy* enemy)
 	mBattleCharacterManager = std::make_unique<BattleCharacterManager>(plm, enemy);
 	mSkybox = std::make_unique<Skybox>();
 	mTerrain = std::make_shared<Terrain>(DataBase::TERRAIN_ID_START);
+
+	switch (enemy->GetEnmType())
+	{
+	case StatusData::MOB:
+		music = Music::BATTLE;
+		result = Music::RESULT;
+		break;
+
+	case StatusData::BOSS:
+		music = Music::BOSS_BATTLE;
+		result = Music::BOSS_RESULT;
+		break;
+	}
 }
 
 SceneBattle::~SceneBattle()
@@ -44,7 +59,7 @@ void SceneBattle::Initialize()
 	mBattleCharacterManager->Initialize();
 
 
-	AUDIO.MusicPlay((int)Music::BATTLE);
+	AUDIO.MusicPlay((int)music);
 }
 
 void SceneBattle::Update()
@@ -85,7 +100,7 @@ void SceneBattle::Release()
 	BattleState::DestroyInst();
 
 	// BGMストップ、フィールドBGM再生
-	AUDIO.MusicStop((int)Music::RESULT);
-	AUDIO.MusicStop((int)Music::BATTLE);
+	AUDIO.MusicStop((int)result);
+	AUDIO.MusicStop((int)music);
 	AUDIO.MusicPlay((int)Music::FIELD_REMAINS);
 }

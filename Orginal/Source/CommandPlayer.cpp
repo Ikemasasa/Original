@@ -44,8 +44,6 @@ void CommandPlayer::Update(const BattleCharacterManager* bcm)
 	int currentIndex = mCommand.top()->GetSelectIndex();
 
 	// Œø‰Ê‰¹‚ð‚È‚ç‚·
-	if (Input::GetButtonTrigger(0, Input::BUTTON::A)) AUDIO.SoundPlay((int)Sound::SELECT);
-	if (Input::GetButtonTrigger(0, Input::BUTTON::B)) AUDIO.SoundPlay((int)Sound::CANCEL);
 	if (oldIndex != currentIndex) AUDIO.SoundPlay((int)Sound::CURSOR_MOVE);
 
 	if (IsBehaviourEnable()) // ƒRƒ}ƒ“ƒh‚ªŒˆ‚Ü‚Á‚½‚ç

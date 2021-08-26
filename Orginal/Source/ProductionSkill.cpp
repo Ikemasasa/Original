@@ -2,7 +2,12 @@
 
 #include "BattleCharacterManager.h"
 #include "CommandBase.h"
+#include "DataBase.h"
+#include "EffectManager.h"
+#include "GameManager.h"
 #include "SkillData.h"
+#include "Singleton.h"
+#include "StatusData.h"
 
 void ProductionSkill::Initialize()
 {
@@ -18,8 +23,11 @@ void ProductionSkill::Update(const BattleCharacterManager* bcm)
 		{
 			mTargetCharas.push_back(bcm->GetChara(mTargetCharaIDs[i]));
 		}
+		mEffectInstHandles.resize(mTargetCharaIDs.size());
 
-		mMoveChara->SetMotion(SkinnedMesh::USE_ITEM);
+		StateInit();
+
+		mMoveChara->SetMotion(SkinnedMesh::USE_ITEM, false);
 
 		++mState;
 		//break;
@@ -27,8 +35,47 @@ void ProductionSkill::Update(const BattleCharacterManager* bcm)
 	case MOTION_WAIT:
 		if (mMoveChara->IsMotionFinished())
 		{
+			int index = 0;
+			for (auto target : mTargetCharas)
+			{
+				int handle = Singleton<EffectManager>().GetInstance().Play(TurnManager::ATK_BUFF_EFFECT_SLOT, target->GetPos(), 0, 1.0f, 2.5f);
+				mEffectInstHandles[index] = handle;
+				++index;
+			}
+
 			++mState;
 		}
+		break;
+
+	case EFFECT_WAIT:
+	{
+		bool isEffectFinished = true;
+		for (size_t i = 0; i < mEffectInstHandles.size(); ++i)
+		{
+			int handle = mEffectInstHandles[i];
+			if (Singleton<EffectManager>().GetInstance().IsPlay(handle))
+			{
+				isEffectFinished = false;
+			}
+		}
+
+		// エフェクトが終わったら
+		if (isEffectFinished)
+		{
+			++mState;
+		}
+	}
+
+		break;
+
+	case WAIT:
+		mTimer += GameManager::elapsedTime;
+		if (mTimer >= WAIT_SEC)
+		{
+			mIsFinished = true;
+			mTimer = 0.0f;
+		}
+		break;
 	}
 }
 
@@ -36,41 +83,29 @@ void ProductionSkill::Render()
 {
 }
 
-void ProductionSkill::StateInit(const BattleCharacterManager* bcm)
+void ProductionSkill::StateInit()
 {
 	// 使用アイテム取得
 	const SkillData::SkillParam* param = mMoveChara->GetCommand()->GetSkillParam();
 
-	for (auto& targetID : mTargetCharaIDs)
+	// バフセット
+	for (auto& target : mTargetCharas)
 	{
-		bcm->GetChara(targetID)->GetStatus()->SetBuffStrRate(param->atkValue, param->turn);
-	}
-
-	for (size_t i = 0; i < mTargetCharas.size(); ++i)
-	{
-		switch (param->type)
-		{
-		case ItemData::Effect::DAMAGE:
-			mHPAmount = DamageCalculator::CalcItemDamage(mHPAmount, mTargetCharas[i]->GetStatus());
-
-			mTargetCharas[i]->GetStatus()->SubHP(mHPAmount);
-			mTargetCharas[i]->GetStatus()->SubMP(mMPAmount);
-			break;
-
-		case ItemData::Effect::HEAL:
-			mTargetCharas[i]->GetStatus()->AddHP(mHPAmount);
-			mTargetCharas[i]->GetStatus()->AddMP(mMPAmount);
-			break;
-		}
+		target->GetStatus()->SetBuffAtkRate(param->atkValue, param->turn);
+		target->GetStatus()->SubMP(param->useMP);
+		Singleton<DataBase>().GetInstance().GetStatusData()->SetPLStatus(target->GetCharaID(), *target->GetStatus());
 	}
 }
 
-int ProductionSkill::CalcAmountValue(float* value, const BattleCharacterManager* bcm)
+std::vector<float> ProductionSkill::CalcAmountValue(const SkillData::SkillParam* param)
 {
-	for (auto& targetID : mTargetCharaIDs)
+	std::vector<float> ret;
+	for (auto& target : mTargetCharas)
 	{
-		Status* status = bcm->GetChara(targetID)->GetStatus();
-		float rate = 1.0f + *value / status->GetStr();
-		*value = rate;
+		Status* status = target->GetStatus();
+		float rate = 1.0f + param->atkValue / status->GetStr();
+		ret.push_back(rate);
 	}
+
+	return ret;
 }

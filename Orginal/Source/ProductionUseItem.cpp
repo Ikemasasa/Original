@@ -121,7 +121,7 @@ void ProductionUseItem::StateUseItemWait()
 		for (size_t i = 0; i < mTargetCharas.size(); ++i)
 		{
 			Vector3 effectPos = mTargetCharas[i]->GetPos();
-			mEffectInstHandles.push_back(Singleton<EffectManager>().GetInstance().Play(mEffectSlot, effectPos));
+			mEffectInstHandles.push_back(Singleton<EffectManager>().GetInstance().Play(mEffectSlot, effectPos, 0, 1.0f, 2.0f));
 			++mState;
 		}
 	}

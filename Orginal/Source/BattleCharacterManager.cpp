@@ -16,6 +16,7 @@
 #include "Fade.h"
 #include "PlayerBattle.h"
 #include "PlayerManager.h"
+#include "SceneBattle.h"
 #include "SceneManager.h"
 #include "Singleton.h"
 
@@ -132,6 +133,7 @@ void BattleCharacterManager::Update()
 				for (int i = 0; i < mPlayerNum; ++i)
 				{
 					BattleCharacter* pl = mBCharacters[i].get();
+					pl->GetStatus()->ResetBuff();
 					Singleton<DataBase>().GetInstance().GetStatusData()->SetPLStatus(pl->GetCharaID(), *pl->GetStatus());
 				}
 
@@ -142,8 +144,8 @@ void BattleCharacterManager::Update()
 				}
 
 				// BGM‚ðƒŠƒUƒ‹ƒg‚Ì‚â‚Â‚É‚·‚é
-				AUDIO.MusicStop((int)Music::BATTLE);
-				AUDIO.MusicPlay((int)Music::RESULT);
+				AUDIO.MusicStop((int)SceneBattle::music);
+				AUDIO.MusicPlay((int)SceneBattle::result);
 			}
 			else
 			{

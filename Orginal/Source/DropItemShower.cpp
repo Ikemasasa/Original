@@ -1,5 +1,6 @@
 #include "DropItemShower.h"
 
+#include "lib/Math.h"
 #include "lib/Sprite.h"
 
 #include "CameraManager.h"
@@ -9,7 +10,8 @@
 
 DropItemShower::DropItemShower()
 {
-	mBoard = std::make_unique<Sprite>(L"Data/Image/Menu/str_plate.png");
+	mBoard = std::make_unique<Sprite>(L"Data/Image/Menu/str_board.png");
+	mFont.Initialize();
 }
 
 void DropItemShower::Add(const int dropItemID, const Vector3& dropCharaPos)
@@ -67,7 +69,7 @@ void DropItemShower::Render()
 		const EquipmentData::Param* param = Singleton<DataBase>().GetInstance().GetEquipmentData()->GetParam(data.itemID);
 
 		center.x = mBoard->GetSize().x / 2.0f;
-		mBoard->Render(data.pos, Vector2(BOARD_SCALE, BOARD_SCALE), Vector2::ZERO, mBoard->GetSize(), center, 0.0f, Vector4(1,1,1,data.alpha));
+		mBoard->Render(data.pos, scale, Vector2::ZERO, mBoard->GetSize(), center, 0.0f, Vector4(1,1,1, Math::Clamp01(data.alpha)));
 
 		center.x = mFont.GetWidth(param->name.c_str()) / 2.0f;
 		color.w = data.alpha;

@@ -4,16 +4,37 @@
 #include "lib/Sprite.h"
 #include "lib/Input.h"
 
+#include "CharacterHealth.h"
+#include "DataBase.h"
 #include "Define.h"
 #include "Fade.h"
+#include "Player.h"
+#include "PlayerManager.h"
 #include "SceneManager.h"
+#include "Singleton.h"
+#include "StatusData.h"
 
 void MenuSelect::Initialize(const PlayerManager* plm)
 {
     mStrBoard = std::make_unique<Sprite>(L"Data/Image/Menu/str_board.png");
     mStrSelect = std::make_unique<Sprite>(L"Data/Image/Menu/str_select.png");
+
+    mCharacterHealth = std::make_unique<CharacterHealth>();
+    mCharacterHealth->Initialize(Vector2(HEALTH_BOARD_POS_X, BOARD_POS_Y));
+
     mFont.Initialize();
 
+    // CharacterHealth作成
+    std::vector<Status> statusArray;
+    for (int i = 0; i < plm->GetNum(); ++i)
+    {
+        int charaID = plm->GetPlayer(i)->GetCharaID();
+        Status status = Singleton<DataBase>().GetInstance().GetStatusData()->GetPLStatus(charaID);
+        statusArray.push_back(status);
+    }
+    mCharacterHealth->Update(statusArray);
+
+    // フォント作成
     {
         std::wstring str[SELECT_NUM] =
         {
@@ -48,6 +69,7 @@ MenuSelect::Select MenuSelect::Update(PlayerManager* plm)
         return (Select)mSelectIndex;
     }
 
+
     // メニュー画面からフィールドに戻す
     if (Input::GetButtonTrigger(0, Input::BUTTON::B))
     {
@@ -77,6 +99,8 @@ void MenuSelect::Render()
             mStrSelect->Render(pos, scale, texPos, mStrSelect->GetSize());
         }
     }
+
+    mCharacterHealth->Render(false, false);
 
     mFont.Render();
 }

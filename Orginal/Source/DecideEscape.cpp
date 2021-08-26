@@ -35,6 +35,9 @@ void DecideEscape::Initialize(const BattleCharacterManager* bcm)
 
 void DecideEscape::Update(const BattleCharacterManager* bcm, CommandBase* cmdBase)
 {
+	// Œø‰Ê‰¹‚ð–Â‚ç‚·
+	SoundPlay();
+
 	// “¦‚°‚é
 	if (Input::GetButtonTrigger(0, Input::BUTTON::A))
 	{

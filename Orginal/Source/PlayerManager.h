@@ -17,8 +17,8 @@ class PlayerManager
 public:
 	enum PlList
 	{
-		PLAYER_A = DataBase::PL_ID_START,
-		PLAYER_B,
+		ERIKA = DataBase::PL_ID_START,
+		PALADIN,
 
 		PL_ID_MAX
 	};

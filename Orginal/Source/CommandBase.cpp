@@ -4,6 +4,18 @@ void CommandBase::BehaviourFinished()
 {
 	mBehaviour = Behaviour::NONE;
 	mUseItemParam = nullptr;
-	mUseSkillParam = nullptr;
+	mIsUseSkill = false;
 	mTargetObjIDs.clear();
+}
+
+void CommandBase::SetSkillParam(const SkillData::SkillParam* param)
+{
+	if (!param)
+	{
+		mIsUseSkill = false;
+		return;
+	}
+
+	mUseSkillParam = *param;
+	mIsUseSkill = true;
 }

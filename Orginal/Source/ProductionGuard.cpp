@@ -30,7 +30,7 @@ void ProductionGuard::Update(const BattleCharacterManager* bcm)
 		}
 
 		mMoveChara->SetMotion(SkinnedMesh::GUARD);
-		mMoveChara->GetStatus()->SetBuffVitRate(DamageCalculator::DEFENCE_VIT_RATE, 1);
+		mMoveChara->GetStatus()->SetBuffDefRate(DamageCalculator::DEFENCE_VIT_RATE, 1);
 		// break;
 
 	case WAIT:

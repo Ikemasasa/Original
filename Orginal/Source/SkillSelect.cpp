@@ -20,6 +20,7 @@ void SkillSelect::Initialize(const int charaID, const Vector2& leftTop)
 	mBoardPos = leftTop;
 
 	mFont.Initialize();
+	mFontValue.Initialize();
 }
 
 void SkillSelect::Update()
@@ -32,17 +33,21 @@ void SkillSelect::Update()
 		if (Input::GetButtonTrigger(0, Input::BUTTON::DOWN)) mSkillIndex = (mSkillIndex + 1) % num;
 		if (oldIndex != mSkillIndex) AUDIO.SoundPlay((int)Sound::CURSOR_MOVE);
 
-		// スキル名
+		// スキル名、消費MP
 		int loopNum = Math::Min(VERTICAL_SKILL_MAX, num);
+		const wchar_t* str = L"消費MP:";
 		for (int i = 0; i < loopNum; ++i)
 		{
 			Vector2 pos = {};
 			pos.x = mBoardPos.x + SKILLNAME_POS_X;
 			pos.y = mBoardPos.y + SKILLNAME_POS_Y + i * FONT_SIZE;
-
 			Vector2 center = Vector2::ZERO;
-
 			mFont.RenderSet(mParams[i].skillName.c_str(), pos, center, Define::FONT_COLOR);
+
+			pos.x += USE_MP_OFFSET_X;
+			mFont.RenderSet(str, pos, center, Define::FONT_COLOR);
+			pos.x += mFont.GetWidth(str);
+			mFontValue.RenderSet(mParams[i].useMP, pos, center, Define::FONT_COLOR);
 		}
 
 		// スキル情報(白字にしてみる
@@ -73,4 +78,5 @@ void SkillSelect::Render()
 
 	// フォントを描画
 	mFont.Render();
+	mFontValue.Render();
 }

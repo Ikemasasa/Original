@@ -11,9 +11,9 @@ public:
 	{
 		NONE,
 		USE_ITEM,
-		SKILL,
-		ATTACK,
 		GUARD,
+		ATTACK,
+		SKILL,
 		ESCAPE,
 
 		MAX
@@ -23,7 +23,9 @@ protected:
 	Behaviour mBehaviour = Behaviour::NONE;
 	std::vector<int> mTargetObjIDs;
 	const ItemData::ItemParam* mUseItemParam    = nullptr;
-	const SkillData::SkillParam* mUseSkillParam = nullptr;
+
+	bool mIsUseSkill = false;
+	SkillData::SkillParam mUseSkillParam;
 
 public:
 	CommandBase() = default;
@@ -31,16 +33,17 @@ public:
 	virtual void Update(const BattleCharacterManager* bcm) = 0;
 	virtual void Render() const {};
 
+	bool IsUseSkill() const { return mIsUseSkill; }
 	bool IsBehaviourEnable() const { return (mBehaviour != Behaviour::NONE); }
 	virtual void BehaviourFinished();
 
 	std::vector<int> GetTargetObjIDs() const { return mTargetObjIDs; }
 	Behaviour GetBehaviour() const { return mBehaviour; }
 	const ItemData::ItemParam* GetItemParam() const { return mUseItemParam; }
-	const SkillData::SkillParam* GetSkillParam() const { return mUseSkillParam; }
+	const SkillData::SkillParam* GetSkillParam() const { return &mUseSkillParam; }
 	
 	void SetBehaviour(const Behaviour behaviour) { mBehaviour = behaviour; }
 	void SetItemParam(const ItemData::ItemParam* param) { mUseItemParam = param; }
-	void SetSkillParam(const SkillData::SkillParam* param)  { mUseSkillParam = param; }
+	void SetSkillParam(const SkillData::SkillParam* param);
 	void AddTargetObjID(const int targetObjID) { mTargetObjIDs.push_back(targetObjID); }
 };

@@ -9,6 +9,7 @@
 #include "lib/Font.h"
 
 class Sprite;
+class CharacterHealth;
 
 class MenuSelect : public MenuBase
 {
@@ -16,6 +17,8 @@ private:
 	static constexpr float BOARD_POS_X = 100.0f;
 	static constexpr float BOARD_POS_Y = 75.0f;
 	static constexpr float BOARD_OFFSET_Y = 15.0f;
+
+	static constexpr float HEALTH_BOARD_POS_X = 800.0f;
 
 	static const int STR_OFFSET_X = 5;
 	static const int STR_OFFSET_Y = 5;
@@ -33,6 +36,7 @@ private:
 
 	std::unique_ptr<Sprite> mStrBoard;
 	std::unique_ptr<Sprite> mStrSelect;
+	std::unique_ptr<CharacterHealth> mCharacterHealth;
 	std::vector<Data> mDatas;
 	Font mFont;
 

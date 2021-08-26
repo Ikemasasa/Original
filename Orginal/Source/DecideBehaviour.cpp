@@ -1,5 +1,6 @@
 #include "DecideBehaviour.h"
 
+#include "lib/Audio.h"
 #include "lib/Input.h"
 #include "lib/Math.h"
 
@@ -26,6 +27,9 @@ void DecideBehaviour::Initialize(const BattleCharacterManager* bcm)
 void DecideBehaviour::Update(const BattleCharacterManager* bcm, CommandBase* cmdBase)
 {
 	BattleState::GetInstance().SetState(BattleState::State::COMMAND_SELECT);
+
+	// Œø‰Ê‰¹‚ğ–Â‚ç‚·
+	SoundPlay();
 
 	// ‚à‚Á‚ÆÅ“K‰»‚Å‚«‚é‚Æv‚¤‚¯‚ÇA‚Æ‚è‚ ‚¦‚¸ƒSƒŠ
 	TVector2<int> oldIndex = mCommandIndex;

@@ -14,9 +14,9 @@ int Status::GetAtk() const
 	int atk = 0;
 	const EquipmentData::Param* param = equipments.GetParam(EquipmentData::WEAPON);
 	if (param) atk = param->atk;
-	atk += static_cast<int>(str * buffStr.rate);
+	atk = (str + atk) * buffAtk.rate;
 
-	return 	atk;
+	return atk;
 }
 
 int Status::GetDef() const
@@ -24,9 +24,9 @@ int Status::GetDef() const
 	int def = 0;
 	const EquipmentData::Param* param = equipments.GetParam(EquipmentData::ARMOR);
 	if (param) def = param->def;
-	def += static_cast<int>(vit * buffVit.rate);
+	def = (vit + def) * buffDef.rate;
 
-	return 	def;
+	return def;
 }
 
 int Status::GetSpd() const
@@ -35,27 +35,35 @@ int Status::GetSpd() const
 	return agi;
 }
 
-void Status::SetBuffStrRate(const float rate, const int turn)
+void Status::SetBuffAtkRate(const float rate, const int turn)
 {
-	buffStr.rate = rate;
-	buffStr.turn = turn;
+	buffAtk.rate = Math::Max(buffAtk.rate, rate);
+	buffAtk.turn = Math::Max(buffAtk.turn, turn);
 }
 
-void Status::SetBuffVitRate(const float rate, const int turn)
+void Status::SetBuffDefRate(const float rate, const int turn)
 {
-	buffVit.rate = rate;
-	buffVit.turn = turn;
+	buffDef.rate = Math::Max(buffDef.rate, rate);
+	buffDef.turn = Math::Max(buffDef.turn, turn);
 }
 
 void Status::AdvanceBuffTurn()
 {
 	// çUåÇÉoÉt
-	buffStr.turn = Math::Max(0, buffStr.turn - 1);
-	if (buffStr.turn <= 0) buffStr.rate = 1.0f;
+	buffAtk.turn = Math::Max(0, buffAtk.turn - 1);
+	if (buffAtk.turn <= 0) buffAtk.rate = 1.0f;
 
 	// ñhå‰ÉoÉt
-	buffVit.turn = Math::Max(0, buffVit.turn - 1);
-	if (buffVit.turn <= 0) buffVit.rate = 1.0f;
+	buffDef.turn = Math::Max(0, buffDef.turn - 1);
+	if (buffDef.turn <= 0) buffDef.rate = 1.0f;
+}
+
+void Status::ResetBuff()
+{
+	buffAtk.rate = 1.0f;
+	buffAtk.turn = 0;
+	buffDef.rate = 1.0f;
+	buffDef.turn = 0;
 }
 
 //---------------------------------------------

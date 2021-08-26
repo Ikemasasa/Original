@@ -303,6 +303,7 @@
     <ClCompile Include="Source\GameManager.cpp" />
     <ClCompile Include="Source\GaussianBlur.cpp" />
     <ClCompile Include="Source\IBattleProduction.cpp" />
+    <ClCompile Include="Source\IDecideCommand.cpp" />
     <ClCompile Include="Source\Item.cpp" />
     <ClCompile Include="Source\ItemData.cpp" />
     <ClCompile Include="Source\ItemSelect.cpp" />

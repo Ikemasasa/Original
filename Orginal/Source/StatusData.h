@@ -32,8 +32,8 @@ private:
 	Equipment equipments;
 
 	// バフデバフ量
-	BuffData buffStr;
-	BuffData buffVit;
+	BuffData buffAtk;
+	BuffData buffDef;
 
 public:	
 
@@ -59,6 +59,9 @@ public:
 	int GetDef() const;
 	int GetSpd() const;
 
+	float GetBuffAtkRate() const { return buffAtk.rate; }
+	float GetBuffDefRate() const { return buffDef.rate; }
+
 	Equipment* GetEquipments() { return &equipments; }
 
 	// セッター
@@ -70,9 +73,10 @@ public:
 	void SubMP(const int value) { mp = Math::Max(0, mp - value);     }
 	void AddMP(const int value) { mp = Math::Min(maxMP, mp + value); }
 
-	void SetBuffStrRate(const float rate, const int turn);
-	void SetBuffVitRate(const float rate, const int turn);
+	void SetBuffAtkRate(const float rate, const int turn);
+	void SetBuffDefRate(const float rate, const int turn);
 	void AdvanceBuffTurn();
+	void ResetBuff();
 };
 
 class StatusData

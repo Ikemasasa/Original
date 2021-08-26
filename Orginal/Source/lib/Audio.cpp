@@ -29,11 +29,12 @@ Audio::~Audio()
 
 void Audio::Initialize()
 {
-	// TODO : ‰¼
 	LoadMusic((int)Music::TITLE, L"Data/Audio/Music/title.wav");
 	LoadMusic((int)Music::FIELD_REMAINS, L"Data/Audio/Music/field.wav");
 	LoadMusic((int)Music::BATTLE, L"Data/Audio/Music/battle.wav");
+	LoadMusic((int)Music::BOSS_BATTLE, L"Data/Audio/Music/boss_battle.wav");
 	LoadMusic((int)Music::RESULT, L"Data/Audio/Music/result.wav");
+	LoadMusic((int)Music::BOSS_RESULT, L"Data/Audio/Music/boss_result.wav");
 
 	LoadSound((int)Sound::SELECT, L"Data/Audio/Sound/select.wav");
 	LoadSound((int)Sound::SELECT_LONG, L"Data/Audio/Sound/select_long.wav");

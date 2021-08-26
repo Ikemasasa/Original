@@ -11,7 +11,8 @@ MeshDataLoader::MeshData MeshDataLoader::LoadMesh(int charaID)
 {
 	MeshData md;
 
-	const char* filename = nullptr;
+	const char* csvFilename = nullptr;
+	const char* fbxFilepath = "Data/Mesh/";
 	{
 		// charaIDからどの種類(敵かプレイヤーか等)を判別
 		int pl = abs(charaID - DataBase::PL_ID_START);
@@ -21,22 +22,23 @@ MeshDataLoader::MeshData MeshDataLoader::LoadMesh(int charaID)
 
 		if (pl == check)
 		{
-			filename = "Data/DataBase/PLMesh.csv";
+			csvFilename = "Data/DataBase/PLMesh.csv";
+			fbxFilepath = "Data/Mesh/Players/";
 		}
 		else if (enm == check)
 		{
-			filename = "Data/DataBase/EnmMesh.csv";
+			csvFilename = "Data/DataBase/EnmMesh.csv";
 		}
 		else if (ter == check)
 		{
-			filename = "Data/DataBase/TerrainMesh.csv";
+			csvFilename = "Data/DataBase/TerrainMesh.csv";
 		}
 
 
 	}
 
 	std::ifstream fin;
-	fin.open(filename);
+	fin.open(csvFilename);
 	if (!fin.is_open()) return md;
 
 	std::string line;  // 1行取得用
@@ -46,7 +48,6 @@ MeshDataLoader::MeshData MeshDataLoader::LoadMesh(int charaID)
 	// 変数用意
 	std::vector<std::string> meshFilenames;
 	std::vector<int> motionIDs;
-	const char* path = "Data/Mesh/";
 	const char delim = ',';
 	while (std::getline(fin, line)) // 一行読み込み
 	{
@@ -72,7 +73,7 @@ MeshDataLoader::MeshData MeshDataLoader::LoadMesh(int charaID)
 
 			// モーションのファイル名
 			std::getline(istr, chunk, delim);
-			meshFilenames.emplace_back(path + chunk);
+			meshFilenames.emplace_back(fbxFilepath + chunk);
 		}
 		if (charaID < id) break;
 	}

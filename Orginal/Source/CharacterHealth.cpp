@@ -12,7 +12,8 @@
 void CharacterHealth::Initialize(const Vector2& leftTop)
 {
 	mHealthBoard = std::make_unique<Sprite>(L"Data/Image/Menu/health_board.png");
-	mSelect = std::make_unique<Sprite>(L"Data/Image/Menu/health_board_select.png");
+	mSelect = std::make_unique<Sprite>(L"Data/Image/Menu/health_select.png");
+	mBuffIcon = std::make_unique<Sprite>(L"Data/Image/Battle/buff_icon.png");
 
 	mBoardLeftTop = leftTop;
 
@@ -24,12 +25,14 @@ void CharacterHealth::Update(const std::vector<Status>& statusArray)
 {
 	// プレートの必要数取得
 	mBoardNum = statusArray.size();
+	
+	// バフデータ数更新
+	mBuffData.resize(mBoardNum);
 
 	if (Input::GetButtonTrigger(0, Input::BUTTON::UP))   mSelectIndex = (mSelectIndex + (mBoardNum - 1)) % mBoardNum;
 	if (Input::GetButtonTrigger(0, Input::BUTTON::DOWN)) mSelectIndex = (mSelectIndex + 1) % mBoardNum;
 
 	// 名前, HP, MPのフォントセット
-	const wchar_t* statusName[STATUS_NUM] = { L"HP", L"MP" };
 	for (int i = 0; i < mBoardNum; ++i)
 	{
 		float boardY = i * mHealthBoard->GetSize().y;
@@ -39,60 +42,100 @@ void CharacterHealth::Update(const std::vector<Status>& statusArray)
 
 		// 名前
 		width = mFont.GetWidth(statusArray[i].GetName().c_str());
-		pos = Vector2(mBoardLeftTop.x + mHealthBoard->GetSize().x * 0.5f, mBoardLeftTop.y + FIRST_OFFSET_Y + boardY);
+		pos = Vector2(mBoardLeftTop.x + mHealthBoard->GetSize().x * 0.5f, mBoardLeftTop.y + NAME_OFFSET_Y + boardY);
 		center = Vector2(width * 0.5f, 0.0f);
 		mFont.RenderSet(statusArray[i].GetName().c_str(), pos, center, Define::FONT_COLOR);
 
+		// バフアイコン
+		pos.x -= width * 0.5f + (ICON_SCALESIZE + ARROW_SCALESIZE_X);
+		float rates[2] = { statusArray[i].GetBuffAtkRate(), statusArray[i].GetBuffDefRate() };
+
+		for (int k = 0; k < 2; ++k)
+		{
+			// バフがかかってるなら
+			if (rates[k] > 1.0f)
+			{
+				BuffData data;
+				data.buffIndex = k;
+				data.pos = pos;
+				mBuffData[i].push_back(data);
+
+				// 座標を更新
+				pos.x -= (ICON_SCALESIZE + ARROW_SCALESIZE_X);
+			}
+		}
+
+
 		// ステータス数値を配列化
+		const wchar_t* statusName[STATUS_NUM] = { L"HP", L"MP" };
 		int statusValue[STATUS_NUM] = { statusArray[i].GetHP(), statusArray[i].GetMP() };
 		int statusMax[STATUS_NUM] = { statusArray[i].GetMaxHP(), statusArray[i].GetMaxMP() };
+		center = Vector2::ZERO;
 		for (int k = 0; k < STATUS_NUM; ++k)
 		{
 			// 始めの座標設定
-			pos.x = mBoardLeftTop.x + FIRST_OFFSET_X;
-			pos.y = mBoardLeftTop.y + FIRST_OFFSET_Y + (ADD_OFFSET_Y * (k + 1)) + boardY;
+			pos.x = mBoardLeftTop.x + STATUS_OFFSET_X;
+			pos.y = mBoardLeftTop.y + STATUS_OFFSET_Y + (STATUS_ADD_Y * k) + boardY;
 
 			// ステータス名
-			width = mFont.GetWidth(statusName[k]);
 			mFont.RenderSet(statusName[k], pos, Vector2::ZERO, Define::FONT_COLOR);
 
 			// 現在の値 (cur)
-			width = mFontValue.GetWidth(statusValue[k]);
 			pos.x += CUR_OFFSET_X;
-			center.x = width;
 			mFontValue.RenderSet(statusValue[k], pos, center, Define::FONT_COLOR);
 
 			// 区切り (/)
-			pos.x += DELIM_OFFSET_X;
-			mFont.RenderSet(L"/ ", pos, Vector2::ZERO, Define::FONT_COLOR);
+			pos.x += mFontValue.GetWidth(statusValue[k]) + DELIM_OFFSET_X;
+			mFont.RenderSet(L"/", pos, Vector2::ZERO, Define::FONT_COLOR);
 
 			// 最大の値 (max)
-			width = mFontValue.GetWidth(statusMax[k]);
-			pos.x += MAX_OFFSET_X;
-			center.x = width;
+			pos.x += mFont.GetWidth(L"/") + DELIM_OFFSET_X;
 			mFontValue.RenderSet(statusMax[k], pos, center, Define::FONT_COLOR);
 		}
 	}
 }
 
-void CharacterHealth::Render(bool isSelectRender)
+void CharacterHealth::Render(bool isSelectRender, bool isFontClear)
 {
-	Vector2 scale = Vector2::ONE;
-	Vector2 texPos = Vector2::ZERO;
-	Vector2 center = Vector2::ZERO;
+
 	for (int i = 0; i < mBoardNum; ++i)
 	{
-		Vector2 boardPos(mBoardLeftTop.x, mBoardLeftTop.y + mHealthBoard->GetSize().y * i);
+		Vector2 pos(mBoardLeftTop.x, mBoardLeftTop.y + mHealthBoard->GetSize().y * i);
+		Vector2 scale = Vector2::ONE;
+		Vector2 texPos = Vector2::ZERO;
+		Vector2 size = mHealthBoard->GetSize();
+		Vector2 center = Vector2::ZERO;
 
-		mHealthBoard->Render(boardPos, scale, texPos, mHealthBoard->GetSize());
-		if (isSelectRender && mSelectIndex == i)
+		mHealthBoard->Render(pos, scale, texPos, size);
+
+		for (auto data : mBuffData[i])
 		{
-			mSelect->Render(boardPos - Vector2(SELECT_OFFSET, SELECT_OFFSET), scale, texPos, mSelect->GetSize());
+			// 矢印
+			scale  = Vector2(ARROW_SCALE, ARROW_SCALE);
+			size   = Vector2(ARROW_SIZE_X, ARROW_SIZE_Y);
+			texPos = Vector2(ARROW_TEXPOS_X, 0.0f);
+			mBuffIcon->Render(data.pos + Vector2(ICON_SCALESIZE, 0.0f), scale, texPos, size, center, 0.0f, Define::FONT_BUFF_COLOR);
+
+			// アイコン
+			scale  = Vector2(ICON_SCALE, ICON_SCALE);
+			size   = Vector2(ICON_SIZE, ICON_SIZE);
+			texPos = Vector2(data.buffIndex * ICON_SIZE, 0.0f);
+			mBuffIcon->Render(data.pos, scale, texPos, size);
 		}
 	}
 
-	mFont.Render();
-	mFontValue.Render();
+	// 選択画像を描画
+	if (isSelectRender)
+	{
+		Vector2 selectPos(mBoardLeftTop.x, mBoardLeftTop.y + mHealthBoard->GetSize().y * mSelectIndex);
+		mSelect->Render(selectPos, Vector2::ONE, Vector2::ZERO, mSelect->GetSize());
+	}
+
+	// フォントクリアしない = updateを1回しかしない、なのでこう
+	if(isFontClear)mBuffData.clear();
+
+	mFont.Render(isFontClear);
+	mFontValue.Render(isFontClear);
 }
 
 void CharacterHealth::Release()

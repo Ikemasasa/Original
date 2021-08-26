@@ -34,9 +34,9 @@ public:
 	virtual void Render() {}
 
 	virtual void ResetParam() {}
+	void SoundPlay();
 
 	bool IsBackState() const { return mIsBackState; }
 	int GetSelectIndex() const { return mSelectIndex; }
 	IDecideCommand* GetNextCommandState() { return mNextCommand.release(); }
-
 };

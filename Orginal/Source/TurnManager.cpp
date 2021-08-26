@@ -11,8 +11,9 @@
 #include "DropData.h"
 #include "EffectManager.h"
 #include "ProductionAttack.h"
-#include "ProductionGuard.h"
 #include "ProductionEscape.h"
+#include "ProductionGuard.h"
+#include "ProductionSkill.h"
 #include "ProductionUseItem.h"
 #include "Singleton.h"
 
@@ -23,8 +24,9 @@ void TurnManager::Initialize(const std::vector<std::shared_ptr<BattleCharacter>>
 	// エフェクト読み込み
 	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/Death/Death.efk", DEATH_EFFECT_SLOT);
 	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/HealPotion/heal_potion.efk", HEAL_POTION_EFFECT_SLOT);
-	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/HealPotion/magic_potion.efk", MAGIC_POTION_EFFECT_SLOT);
+	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/MagicPotion/magic_potion.efk", MAGIC_POTION_EFFECT_SLOT);
 	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/Explosion/explosion.efk", ITEM_DAMAGE_EFFECT_SLOT);
+	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/AtkBuff/atk_buff.efk", ATK_BUFF_EFFECT_SLOT);
 
 	mIsBeginnig = true;
 }
@@ -141,6 +143,7 @@ void TurnManager::BeginProduction()
 	case CommandBase::Behaviour::USE_ITEM: mProduction = std::make_unique<ProductionUseItem>(); break;
 	case CommandBase::Behaviour::GUARD:    mProduction = std::make_unique<ProductionGuard>();   break;
 	case CommandBase::Behaviour::ATTACK:   mProduction = std::make_unique<ProductionAttack>();  break;
+	case CommandBase::Behaviour::SKILL:    mProduction = std::make_unique<ProductionSkill>();  break;
 	case CommandBase::Behaviour::ESCAPE:   mProduction = std::make_unique<ProductionEscape>();  break;
 	}
 

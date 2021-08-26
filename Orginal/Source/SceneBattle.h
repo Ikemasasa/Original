@@ -2,6 +2,7 @@
 #include <memory>
 #include <DirectXMath.h>
 
+#include "lib/Audio.h"
 #include "lib/Vector.h"
 
 #include "SceneBase.h"
@@ -18,6 +19,10 @@ private:
 	std::unique_ptr<BattleCharacterManager> mBattleCharacterManager = nullptr;
 	std::unique_ptr<Skybox>				mSkybox = nullptr;
 	std::shared_ptr<Terrain> mTerrain = nullptr;
+
+public:
+	static Music music;
+	static Music result;
 
 public:
 	SceneBattle(PlayerManager* plm, Enemy* enemy);

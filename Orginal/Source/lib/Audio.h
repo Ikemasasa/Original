@@ -6,7 +6,9 @@ enum class Music
     TITLE,
     FIELD_REMAINS,
     BATTLE,
+    BOSS_BATTLE,
     RESULT,
+    BOSS_RESULT,
     NUM
 };
 

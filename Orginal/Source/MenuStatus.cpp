@@ -69,7 +69,6 @@ MenuBase::Select MenuStatus::Update(PlayerManager* plm)
             pos = Vector2(PLATE_X + STATUS_OFFSET_X, PLATE_Y + STATUS_OFFSET_Y + STATUS_ADD_Y * (i - 1));
 
             // ステータス名
-            width = mFont.GetWidth(statusName[statusIndex]);
             mFont.RenderSet(statusName[statusIndex], pos, Vector2::ZERO, Define::FONT_COLOR);
 
             // 現在の値 (cur)
@@ -81,7 +80,7 @@ MenuBase::Select MenuStatus::Update(PlayerManager* plm)
             mFont.RenderSet(L"/", pos, Vector2::ZERO, Define::FONT_COLOR);
 
             // 最大の値 (max)
-            pos.x += DELIM_OFFSET_X + MAX_OFFSET_X;
+            pos.x += mFont.GetWidth(L"/") + DELIM_OFFSET_X;
             mFontValue.RenderSet(maxValue[statusIndex], pos, center, Define::FONT_COLOR);
         }
         else
@@ -89,7 +88,6 @@ MenuBase::Select MenuStatus::Update(PlayerManager* plm)
             pos = Vector2(PLATE_X + STATUS_OFFSET_X, PLATE_Y + STATUS_OFFSET_Y + STATUS_ADD_Y * (i - 1));
             
             // ステータス名
-            width = mFont.GetWidth(statusName[statusIndex]);
             mFont.RenderSet(statusName[statusIndex], pos, Vector2::ZERO, Define::FONT_COLOR);
 
             // 現在の値 (cur)

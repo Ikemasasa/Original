@@ -15,6 +15,9 @@ void DecideItem::Initialize(const BattleCharacterManager* bcm)
 
 void DecideItem::Update(const BattleCharacterManager* bcm, CommandBase* cmdBase)
 {
+	// Œø‰Ê‰¹‚ð–Â‚ç‚·
+	SoundPlay();
+
 	BattleCharacter* moveChara = bcm->GetMoveChara();
 	mItemSelect.Update(moveChara->GetInventory());
 

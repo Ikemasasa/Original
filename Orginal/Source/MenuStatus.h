@@ -15,7 +15,6 @@ class MenuStatus : public MenuBase
 	static constexpr float STATUS_OFFSET_X = 20.0f;
 	static constexpr float CUR_OFFSET_X = 96.0f;
 	static constexpr float DELIM_OFFSET_X = 4.0f;
-	static constexpr float MAX_OFFSET_X = 12.0f;
 	
 	static constexpr float STATUS_OFFSET_Y = 60.0f;
 	static constexpr float STATUS_ADD_Y = 34.0f;

@@ -25,6 +25,9 @@ void DecideTargetChara::Initialize(const BattleCharacterManager* bcm)
 
 void DecideTargetChara::Update(const BattleCharacterManager* bcm, CommandBase* cmdBase)
 {
+	// 効果音を鳴らす
+	SoundPlay();
+
 	// キャラタイプによってStateを変える
 	if (mCharaType == Character::PLAYER)     BattleState::GetInstance().SetState(BattleState::State::PARTY_SELECT);
 	else if (mCharaType == Character::ENEMY) BattleState::GetInstance().SetState(BattleState::State::ENEMY_SELECT);
@@ -42,9 +45,9 @@ void DecideTargetChara::Update(const BattleCharacterManager* bcm, CommandBase* c
 		cmdBase->AddTargetObjID(ids[mSelectIndex]);
 		
 		// スキル、アイテムが登録されているかチェック
-		if		(cmdBase->GetItemParam())  SetBehaviourUseItem(cmdBase);
-		else if (cmdBase->GetSkillParam()) SetBehaviourUseSkill(cmdBase);
-		else							   SetBehaviourAttack(cmdBase);
+		if		(cmdBase->GetItemParam()) SetBehaviourUseItem(cmdBase);
+		else if (cmdBase->IsUseSkill())   SetBehaviourUseSkill(cmdBase);
+		else							  SetBehaviourAttack(cmdBase);
 	}
 
 	if (Input::GetButtonTrigger(0, Input::BUTTON::B))

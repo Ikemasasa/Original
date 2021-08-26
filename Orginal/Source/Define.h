@@ -22,4 +22,5 @@ struct Define final
 	static constexpr float PI = 3.1416f;
 
 	static const Vector4 FONT_COLOR;
+	static const Vector4 FONT_BUFF_COLOR;
 };
