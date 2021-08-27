@@ -38,7 +38,6 @@ void DecideBehaviour::Update(const BattleCharacterManager* bcm, CommandBase* cmd
 	if (Input::GetButtonTrigger(0, Input::RIGHT)) mCommandIndex.x = Math::Min(mCommandIndex.x + 1, COMMAND_MAX_X);
 	if (Input::GetButtonTrigger(0, Input::LEFT))  mCommandIndex.x = Math::Max(mCommandIndex.x - 1, COMMAND_MIN_X);
 
-
 	if (mCommandIndex.y != 1 && oldIndex.y != mCommandIndex.y)	// Y‚ª1ˆÈŠO‚Å ‘O‰ñ‚ÌY‚Æˆá‚¤’l‚È‚ç
 	{
 		mCommandIndex.x = 1;

@@ -6,6 +6,9 @@
 #include "MeshManager.h"
 #include "Singleton.h"
 
+
+#include "lib/TimeStamp.h"
+
 Character::Character(int charaID, Type type)
 {
 	// メッシュロード
@@ -46,7 +49,6 @@ Character::Character(const Character* org)
 void Character::UpdateWorld()
 {
 	// 各種更新の後に呼び出す
-
 	// モーションがあるならskinning
 	if (mMesh->GetMotion() != SkinnedMesh::DEFAULT)
 	{
@@ -64,6 +66,7 @@ void Character::UpdateWorld()
 		// 現フレームのワールド行列を代入
 		DirectX::XMStoreFloat4x4(&mWorld, world);
 	}
+
 }
 
 void Character::Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir)

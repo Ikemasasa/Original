@@ -19,7 +19,7 @@
 #include "Singleton.h"
 #include "Terrain.h"
 
-
+#include "lib/TimeStamp.h"
 
 SceneField::SceneField()
 {
@@ -73,6 +73,7 @@ void SceneField::Update()
 {
 	mCharaManager->Update();
 	Singleton<CameraManager>().GetInstance().Update(mCharaManager->GetMovePlayer());
+
 
 	mSkybox->SetEyePos(Singleton<CameraManager>().GetInstance().GetPos());
 

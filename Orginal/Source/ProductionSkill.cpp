@@ -88,12 +88,12 @@ void ProductionSkill::StateInit()
 	// 使用アイテム取得
 	const SkillData::SkillParam* param = mMoveChara->GetCommand()->GetSkillParam();
 
+	mMoveChara->GetStatus()->SubMP(param->useMP);
+
 	// バフセット
 	for (auto& target : mTargetCharas)
 	{
 		target->GetStatus()->SetBuffAtkRate(param->atkValue, param->turn);
-		target->GetStatus()->SubMP(param->useMP);
-		Singleton<DataBase>().GetInstance().GetStatusData()->SetPLStatus(target->GetCharaID(), *target->GetStatus());
 	}
 }
 

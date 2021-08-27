@@ -11,8 +11,11 @@
 #include "SceneField.h"
 #include "Fade.h"
 
+#include "lib/TimeStamp.h"
+
 int Looper::Run(HWND hwnd)
 {
+
 	auto& f = FRAMEWORK;
 	f.Initialize(hwnd);
 
@@ -28,7 +31,6 @@ int Looper::Run(HWND hwnd)
 	while (IsLoop() && sm.IsLoop())
 	{
 		GameManager::elapsedTime = pm.GetElapsedTime();
-
 		Input::Update();
 		sm.Update();
 		Fade::GetInstance().Update();

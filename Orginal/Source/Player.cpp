@@ -14,6 +14,8 @@
 #include "lib/Input.h"
 #include "lib/Math.h"
 
+#include "lib/TimeStamp.h"
+
 Player::Player(int charaID) : Character(charaID, Character::PLAYER)
 {
 	// シェーダ書き換え
@@ -56,10 +58,8 @@ void Player::Update()
 		mVelocity  = cFrontVector * axisY;
 		mVelocity += cRightVector * axisX;
 		mVelocity *= MOVE_SPEED;
-
 		// 向き補正
 		CorrectionAngle();
-
 		// 座標補正
 		{
 			const float RAYPICK_DIST = 0.5f;

@@ -205,6 +205,7 @@
     <ClInclude Include="Source\lib\ShaderManager.h" />
     <ClInclude Include="Source\lib\SkinnedMesh.h" />
     <ClInclude Include="Source\lib\Sprite.h" />
+    <ClInclude Include="Source\lib\TimeStamp.h" />
     <ClInclude Include="Source\lib\TVector.h" />
     <ClInclude Include="Source\lib\Vector.h" />
     <ClInclude Include="Source\lib\Input.h" />
@@ -328,6 +329,7 @@
     <ClCompile Include="Source\lib\Renderer2D.cpp" />
     <ClCompile Include="Source\lib\Font.cpp" />
     <ClCompile Include="Source\lib\Sprite.cpp" />
+    <ClCompile Include="Source\lib\TimeStamp.cpp" />
     <ClCompile Include="Source\lib\Vector.cpp" />
     <ClCompile Include="Source\lib\Window.cpp" />
     <ClCompile Include="Source\lib\Input.cpp" />

@@ -26,8 +26,6 @@ void Enemy::Initialize()
 {
 	mVelocity = Vector3::ZERO;
 
-	// TODO : ‚à‚Á‚Æ‚µ‚Á‚©‚è‚µ‚½‚â‚Â‚ğì‚ë‚¤
-	
 	float x = Random::RandomRangef(-30.0f, 30.0f);
 	float z = Random::RandomRangef(-30.0f, 30.0f);
 	mPos = Vector3(x, 0.0f, z);
