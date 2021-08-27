@@ -417,8 +417,8 @@
     <ClInclude Include="Source\DecideSkill.h">
       <Filter>ヘッダー ファイル\Scene\Battle\command\Decide</Filter>
     </ClInclude>
-    <ClInclude Include="Source\lib\TimeStamp.h">
-      <Filter>lib\ヘッダーファイル</Filter>
+    <ClInclude Include="Source\TimeStamp.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -737,8 +737,8 @@
     <ClCompile Include="Source\IDecideCommand.cpp">
       <Filter>ソース ファイル\Scene\Battle\command\Decide</Filter>
     </ClCompile>
-    <ClCompile Include="Source\lib\TimeStamp.cpp">
-      <Filter>lib\ソースファイル</Filter>
+    <ClCompile Include="Source\TimeStamp.cpp">
+      <Filter>ソース ファイル\Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

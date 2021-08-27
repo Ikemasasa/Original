@@ -14,7 +14,7 @@
 #include "lib/Input.h"
 #include "lib/Math.h"
 
-#include "lib/TimeStamp.h"
+#include "TimeStamp.h"
 
 Player::Player(int charaID) : Character(charaID, Character::PLAYER)
 {
@@ -84,5 +84,7 @@ void Player::Update()
 		SetMotion(SkinnedMesh::IDLE);
 	}
 
+	TimeStamp::Start();
 	Character::UpdateWorld();
+	TimeStamp::End();
 }

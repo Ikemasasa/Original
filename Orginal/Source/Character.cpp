@@ -6,9 +6,6 @@
 #include "MeshManager.h"
 #include "Singleton.h"
 
-
-#include "lib/TimeStamp.h"
-
 Character::Character(int charaID, Type type)
 {
 	// メッシュロード

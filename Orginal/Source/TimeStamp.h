@@ -1,17 +1,17 @@
 #pragma once
 #include <chrono>
 
-#include "Font.h"
-#include "Vector.h"
+#include "FontValue.h"
+#include "lib/Vector.h"
 
 class TimeStamp
 {
 	static std::chrono::system_clock::time_point mStart;
 	static std::chrono::system_clock::time_point mEnd;
-	static Font mFont;
+	static FontValue mFontValue;
 
 public:
-	TimeStamp() { mFont.Initialize(); }
+	TimeStamp() { mFontValue.Initialize(); }
 
 	static void Start() { mStart = std::chrono::system_clock::now(); };
 	static void End() { mEnd = std::chrono::system_clock::now(); };

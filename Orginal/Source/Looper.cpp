@@ -11,7 +11,7 @@
 #include "SceneField.h"
 #include "Fade.h"
 
-#include "lib/TimeStamp.h"
+#include "TimeStamp.h"
 
 int Looper::Run(HWND hwnd)
 {

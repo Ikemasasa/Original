@@ -19,9 +19,9 @@ void FontValue::Initialize(int fontSize, int fontWeight)
 {
 	mFont.Initialize(fontSize, fontWeight);
 
-	const int STR_NUM = 10;
+	const int STR_NUM = 11;
 	const wchar_t* str[STR_NUM] = {
-		L"0", L"1", L"2", L"3" ,L"4", L"5", L"6", L"7", L"8", L"9"
+		L"0", L"1", L"2", L"3" ,L"4", L"5", L"6", L"7", L"8", L"9", L"."
 	};
 
 	for (int i = 0; i < STR_NUM; ++i)
@@ -63,6 +63,22 @@ void FontValue::RenderSet(const int value, const Vector2& pos, const Vector2& ce
 		std::wstring val;
 		val = valueStr[i];
 		mFont.RenderSet(val.c_str(), Vector2(pos.x + widthPerWord * i, pos.y), center, color);
+	}
+}
+
+void FontValue::RenderSet(const float value, const Vector2& pos, const Vector2& center, const Vector4& color)
+{
+	std::wstring valueStr = std::to_wstring(value);
+	const size_t SIZE = valueStr.size(); // Œ…”
+
+	float offsetX = 0.0f;
+	for (size_t i = 0; i < SIZE; ++i)
+	{
+		std::wstring val;
+		val = valueStr[i];
+		mFont.RenderSet(val.c_str(), Vector2(pos.x + offsetX, pos.y), center, color);
+
+		offsetX += mFont.GetWidth(val.c_str());
 	}
 }
 
