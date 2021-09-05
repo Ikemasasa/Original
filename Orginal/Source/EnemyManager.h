@@ -1,8 +1,12 @@
 #pragma once
 #include <list>
 
-#include "Enemy.h"
+#include "lib/Vector.h"
+
 #include "DataBase.h"
+
+class Enemy;
+class Shader;
 
 class EnemyManager
 {
@@ -11,6 +15,7 @@ public:
 	{
 		MONSTER_A = DataBase::ENM_ID_START,
 		MONSTER_B,
+		BOSS_MONSTER,
 
 		ENM_NUM
 	};
@@ -27,7 +32,7 @@ public:
 	std::list<std::unique_ptr<Enemy>>::iterator Destroy(int objID);
 
 	void Initialize();
-	void Update();
+	void Update(const bool isTalking);
 	void Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj, const DirectX::XMFLOAT4& lightDir);
 	void Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj, const DirectX::XMFLOAT4& lightDir);
 

@@ -1,16 +1,40 @@
 #include "Item.h"
 
-void Item::Add(ItemData::ItemParam param)
+void Item::Add(const int itemID)
 {
-	mItems.emplace_back(param);
+	ItemData::BaseData param = *ItemData::GetBaseData(itemID);
+	if (param.type == ItemData::ItemType::EQUIPMENT) return; // 装備品は別インベントリ
+
+	// 挿入場所を探す
+	auto insertIterator = mItems.begin();
+	for (auto it = mItems.begin(); it != mItems.end(); ++it)
+	{
+		if (it->id <= param.id) insertIterator = it;
+		if (insertIterator->id >= param.id) break;
+	}
+
+	// 挿入( param.id より insert先のIDの方が大きかったら末尾
+	if (!mItems.empty() && insertIterator->id >= param.id) mItems.insert(insertIterator, param);
+	else mItems.push_back(param);
+
 }
 
-void Item::Sub(const int index)
+void Item::Sub(const int itemID)
 {
-	int count = 0;
-	std::vector<ItemData::ItemParam>::iterator it = mItems.begin();
-	for (;it != mItems.end(); ++it, ++count)
-		if (count == index) break;
+	for (auto it = mItems.begin(); it != mItems.end(); ++it)
+	{
+		if (it->id == itemID)
+		{
+			mItems.erase(it);
+			break;
+		}
+	}
+}
 
-	mItems.erase(it);
+const ItemData::BaseData* Item::GetItemParam(const int index) const
+{
+	// リストがからならnull
+	if (mItems.empty()) return nullptr;
+
+	return &(*std::next(mItems.begin(), index));
 }

@@ -1,5 +1,6 @@
 #include "MenuManager.h"
 
+#include "lib/Audio.h"
 #include "lib/Input.h"
 #include "lib/Sprite.h"
 
@@ -24,14 +25,11 @@ void MenuManager::Initialize(const PlayerManager* plm)
 
 void MenuManager::Update(PlayerManager* plm)
 {
-	// 次のメニューがあれば更新する
-	if (mNextMenu)
-	{
-		mMenuStack.emplace(mNextMenu.release()); // スタック
-		mMenuStack.top()->Initialize(plm);
-	}
-	mNextState = mMenuStack.top()->Update(plm);
+	// 効果音
+	if (Input::GetButtonTrigger(0, Input::BUTTON::A)) AUDIO.SoundPlay((int)Sound::SELECT);
+	if (Input::GetButtonTrigger(0, Input::BUTTON::B)) AUDIO.SoundPlay((int)Sound::CANCEL);
 
+	// ステートによって次のメニューを決める
 	switch (mNextState)
 	{
 	case MenuBase::ITEM:       if (!mNextMenu) mNextMenu = std::make_unique<MenuItem>();   break;
@@ -43,6 +41,18 @@ void MenuManager::Update(PlayerManager* plm)
 		mMenuStack.pop();
 		break;
 	}
+
+	int oldSelectIndex = mMenuStack.top()->mSelectIndex;
+
+	// 次のメニューがあれば更新する
+	if (mNextMenu)
+	{
+		mMenuStack.emplace(mNextMenu.release()); // スタック
+		mMenuStack.top()->Initialize(plm);
+	}
+	mNextState = mMenuStack.top()->Update(plm);
+
+	if (oldSelectIndex != mMenuStack.top()->mSelectIndex) AUDIO.SoundPlay((int)Sound::CURSOR_MOVE);
 }
 
 void MenuManager::Render()

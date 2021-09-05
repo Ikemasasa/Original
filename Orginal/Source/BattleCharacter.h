@@ -2,18 +2,18 @@
 #include <memory>
 
 #include "Character.h"
+#include "Item.h"
 #include "StatusData.h"
 
 class CommandBase;
 class BattleCharacterManager;
-class Item;
 
 class BattleCharacter : public Character
 {
 protected:
 	std::unique_ptr<CommandBase> mCommand = nullptr;
 	Status mStatus;
-	Item* mInventory;
+	Item mInventory;
 
 public:
 	BattleCharacter(const Character* chara, Status status);
@@ -25,7 +25,5 @@ public:
 
 	CommandBase* GetCommand() { return mCommand.get(); }
 	Status* GetStatus() { return &mStatus; }
-	Item* GetInventory() { return mInventory; }
-
-	bool IsDead() const { return mStatus.hp <= 0; }
+	Item* GetInventory() { return &mInventory; }
 };

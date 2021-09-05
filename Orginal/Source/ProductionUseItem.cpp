@@ -7,7 +7,7 @@
 #include "GameManager.h"
 #include "Item.h"
 #include "Singleton.h"
-
+#include "TurnManager.h"
 
 void ProductionUseItem::Initialize()
 {
@@ -22,7 +22,10 @@ void ProductionUseItem::Update(const BattleCharacterManager* bcm)
 
 		// IDからポインタ取得
 		mMoveChara = bcm->GetChara(mMoveCharaID);
-		mTargetChara = bcm->GetChara(mTargetCharaID);
+		for (size_t i = 0; i < mTargetCharaIDs.size(); ++i)
+		{
+			mTargetCharas.push_back(bcm->GetChara(mTargetCharaIDs[i]));
+		}
 
 		StateInit();
 		// break;
@@ -55,27 +58,59 @@ void ProductionUseItem::StateInit()
 	mMoveChara->SetMotion(SkinnedMesh::USE_ITEM, false);
 
 	// 使用アイテム取得
-	const ItemData::ItemParam* param = mMoveChara->GetInventory()->GetItemParam(mMoveChara->GetCommand()->GetItemIndex());
+	const UseItemData::Param* param = mMoveChara->GetCommand()->GetItemParam();
 
 	// 効果量計算(m~Amountに代入される) 
 	switch (param->rate)
 	{
-	case ItemData::VALUE:  CalcAmountValue(param); break;
-	case ItemData::PERCENT: CalcAmountPercent(param); break;
+	case UseItemData::VALUE:   CalcAmountValue(param); break;
+	case UseItemData::PERCENT: CalcAmountPercent(param); break;
 	}
 
-	// ダメージアイテムのhpvalueはマイナスになってるからヒールで回復、ダメージ両方できる
-	if (mHPAmount < 0) mHPAmount = DamageCalculator::CalcItemDamage(mHPAmount, mTargetChara->GetStatus());
-	mTargetChara->GetStatus()->HealHP(mHPAmount);
-	mTargetChara->GetStatus()->HealMP(mMPAmount);
-	mMoveChara->GetInventory()->Sub(mMoveChara->GetCommand()->GetItemIndex());
+	for (size_t i = 0; i < mTargetCharas.size(); ++i)
+	{
+		switch (param->base->type)
+		{
+		case ItemData::DAMAGE:
+			mHPAmount = DamageCalculator::CalcItemDamage(mHPAmount, mTargetCharas[i]->GetStatus());
+
+			mTargetCharas[i]->GetStatus()->SubHP(mHPAmount);
+			mTargetCharas[i]->GetStatus()->SubMP(mMPAmount);
+			mSound = Sound::BOMB;
+			break;
+
+		case ItemData::HEAL:
+			mTargetCharas[i]->GetStatus()->AddHP(mHPAmount);
+			mTargetCharas[i]->GetStatus()->AddMP(mMPAmount);
+			mSound = Sound::HEAL;
+			break;
+		}
+	}
+
 
 	// エフェクト決定
-	if (mHPAmount < 0) mEffectSlot = TurnManager::ITEM_DAMAGE_EFFECT_SLOT;
-	else if (mMPAmount > 0) mEffectSlot = TurnManager::MAGIC_POTION_EFFECT_SLOT;
-	else if (mHPAmount > 0) mEffectSlot = TurnManager::HEAL_POTION_EFFECT_SLOT;
+	switch (param->base->type)
+	{
+	case ItemData::DAMAGE:
+		mEffectSlot = TurnManager::ITEM_DAMAGE_EFFECT_SLOT; 
+		mFontRGB = DAMAGE_RGB;
+		break;
+	case ItemData::HEAL: 
+		if (mHPAmount > 0)
+		{
+			mEffectSlot = TurnManager::HEAL_POTION_EFFECT_SLOT;
+			mFontRGB = HEAL_HP_RGB;
+		}
+		else if (mMPAmount > 0)
+		{
+			mEffectSlot = TurnManager::MAGIC_POTION_EFFECT_SLOT;
+			mFontRGB = HEAL_MP_RGB;
+		}
+		break;
+	}
 
-
+	// アイテムを減らす
+	mMoveChara->GetInventory()->Sub(param->base->id);
 	++mState;
 }
 
@@ -85,54 +120,53 @@ void ProductionUseItem::StateUseItemWait()
 	if (mMoveChara->IsMotionFinished())
 	{
 		// エフェクト再生
-		Vector3 effectPos = mTargetChara->GetPos();
-		mEffectInstHandle = Singleton<EffectManager>().GetInstance().Play(mEffectSlot, effectPos);
-		++mState;
+		for (size_t i = 0; i < mTargetCharas.size(); ++i)
+		{
+			Vector3 effectPos = mTargetCharas[i]->GetPos();
+			mEffectInstHandles.push_back(Singleton<EffectManager>().GetInstance().Play(mEffectSlot, effectPos, 0, 1.0f, 2.0f));
+			AUDIO.SoundPlay((int)mSound);
+			++mState;
+		}
 	}
 }
 
 void ProductionUseItem::StateWaitEffect()
 {
-	bool isPlay = Singleton<EffectManager>().GetInstance().IsPlay(mEffectInstHandle);
+	std::vector<bool> isPlay;
+	isPlay.resize(mTargetCharas.size());
+	for (size_t i = 0; i < mTargetCharas.size(); ++i)
+	{
+		isPlay[i] = Singleton<EffectManager>().GetInstance().IsPlay(mEffectInstHandles[i]);
+	}
 
-	// エフェクトの再生がおわったら 
-	if (!isPlay)
+	// 終了していないエフェクトがあれば処理しない
+	if(std::find(isPlay.begin(), isPlay.end(), false) == isPlay.end()) return; 
+
+	for (size_t i = 0; i < mTargetCharas.size(); ++i)
 	{
 		// 死んでたら死亡エフェクト
-		if (mTargetChara->GetStatus()->IsDead())
+		if (mTargetCharas[i]->GetStatus()->IsDead())
 		{
 			// Existをfalseにして、エフェクトを再生する
-			mTargetChara->SetExist(false); // 見えなくする
-			Vector3 effectPos(mTargetChara->GetPos().x, mTargetChara->GetPos().y + mTargetChara->GetLocalAABB().max.y * 0.5f, mTargetChara->GetPos().z);
+			mTargetCharas[i]->SetExist(false); // 見えなくする
+			Vector3 effectPos(mTargetCharas[i]->GetPos().x, mTargetCharas[i]->GetPos().y + mTargetCharas[i]->GetLocalAABB().max.y * 0.5f, mTargetCharas[i]->GetPos().z);
 			Singleton<EffectManager>().GetInstance().Play(TurnManager::DEATH_EFFECT_SLOT, effectPos);// えっふぇくと
 		}
 
-		// HPの文字セット
-		int addNum = 0;
+		// ダメージ、回復の文字セット
 		const float ADDJUST_Y = 0.1f;
-		if (mHPAmount > 0)
+		const int AMOUNT_NUM = 2;
+		const int amounts[AMOUNT_NUM] = { mHPAmount, mMPAmount };
+		for (int k = 0; k < AMOUNT_NUM; ++k)
 		{
-			Vector3 pos(mTargetChara->GetPos().x, mTargetChara->GetAABB().max.y - ADDJUST_Y * addNum, mTargetChara->GetPos().z);
-			mProductionValue.Add(mHPAmount, pos, HEAL_HP_RGB);
-			++addNum;
-		}
-		else if (mHPAmount < 0)
-		{
-			Vector3 pos(mTargetChara->GetPos().x, mTargetChara->GetAABB().max.y - ADDJUST_Y * addNum, mTargetChara->GetPos().z);
-			mProductionValue.Add(-mHPAmount, pos, DAMAGE_RGB); // -を描画させないため-mHPAmountにしてる
-			++addNum;
-		}
-
-		// MPの文字セット
-		if (mMPAmount > 0)
-		{
-			Vector3 pos(mTargetChara->GetPos().x, mTargetChara->GetAABB().max.y - ADDJUST_Y * addNum, mTargetChara->GetPos().z);
-			mProductionValue.Add(mHPAmount, pos, DAMAGE_RGB);
-			++addNum;
+			Vector3 pos(mTargetCharas[i]->GetPos().x, mTargetCharas[i]->GetAABB().max.y - ADDJUST_Y * k, mTargetCharas[i]->GetPos().z);
+			if(amounts[k] > 0) mProductionValue.Add(amounts[k], pos, mFontRGB);
 		}
 
 		++mState;
 	}
+
+
 }
 
 void ProductionUseItem::StateWait()
@@ -149,17 +183,17 @@ void ProductionUseItem::StateWait()
 	}
 }
 
-void ProductionUseItem::CalcAmountValue(const ItemData::ItemParam* param)
+void ProductionUseItem::CalcAmountValue(const UseItemData::Param* param)
 {
 	mHPAmount = param->hpValue;
 	mMPAmount = param->mpValue;
 }
 
-void ProductionUseItem::CalcAmountPercent(const ItemData::ItemParam* param)
+void ProductionUseItem::CalcAmountPercent(const UseItemData::Param* param)
 {
 	// hpValueは%なので、100で割る
 	const float MAX_PERCENT = 100.0f;
-	mHPAmount = (int)(mMoveChara->GetStatus()->maxHP * (param->hpValue / MAX_PERCENT));
-	mMPAmount = (int)(mMoveChara->GetStatus()->maxMP * (param->mpValue / MAX_PERCENT));
+	mHPAmount = (int)(mMoveChara->GetStatus()->GetMaxHP() * (param->hpValue / MAX_PERCENT));
+	mMPAmount = (int)(mMoveChara->GetStatus()->GetMaxMP() * (param->mpValue / MAX_PERCENT));
 }
 

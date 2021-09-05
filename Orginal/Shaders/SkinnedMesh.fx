@@ -58,13 +58,13 @@ float4 PSMain(PSInput input) : SV_TARGET
 		M[0] = TT;
 		M[1] = BB;
 		M[2] = NN;
-		N = mul(N, M); // NormalMapを補正
+		N = mul(N, M); // 法線を補正
 	}
 
 	// ライティング
 	float3 L = normalize(LightDir).xyz;
 	float I = -dot(N, L); // Intensity
-	float3 LColor = saturate(I + 0.0);
+	float3 LColor = saturate(max(I, 0.35));
 	color.rgb *= LColor;
 
 	//color.rgb = N;
@@ -132,7 +132,7 @@ float4 PSMain(PSInput input) : SV_TARGET
 		// 最大深度傾斜を求める
 		float maxDepthSlope = max(abs(ddx(input.shadowParam.z)), abs(ddy(input.shadowParam.z)));
 
-		float bias			  = 0.00065; // 固定バイアス
+		float bias			  = 0.00035; // 固定バイアス
 		float slopeScaledBias = 0.001; // 深度傾斜
 		float depthBiasClamp  = 0.1;  // バイアスクランプ値
 		float shadowBias = bias + slopeScaledBias * maxDepthSlope;
@@ -141,7 +141,6 @@ float4 PSMain(PSInput input) : SV_TARGET
 		float minShadowColor = 0.5;
 		color.rgb *= GetVSMFactor(shadowUV, input.shadowParam.z - shadowBias, minShadowColor);
 	}
-
 
 	return color;
 }

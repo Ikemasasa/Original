@@ -8,6 +8,16 @@
 
 struct Status
 {
+	friend class StatusData;
+
+public:
+	struct BuffData
+	{
+		float rate = 1.0f;
+		int turn = 0;
+	};
+
+private:
 	std::wstring name; // 名前
 	int id;			  // ID
 	int hp;			  // HP
@@ -18,39 +28,96 @@ struct Status
 	int vit;		  // 基礎防御力
 	int agi;		  // 素早さ
 
+	bool guardFlag;
+
 	// 装備品
 	Equipment equipments;
+
+	// バフデバフ量
+	BuffData buffAtk;
+	BuffData buffDef;
+	BuffData debuffAtk;
+	BuffData debuffDef;
+
+public:	
+
+	// 簡易チェック
+	bool IsDead() const { return hp <= 0; }
+	bool IsFullHP() const { return hp == maxHP; }
+	bool IsFullMP() const { return mp == maxMP; }
+
+	// ゲッター
+	std::wstring GetName() const { return name; }
+	//int GetID() const { return id; }
+	int GetID()    const { return id; }
+	int GetHP()    const { return hp; }
+	int GetMaxHP() const { return maxHP; }
+	int GetMP()    const { return mp; }
+	int GetMaxMP() const { return maxMP; }
+
+	int GetStr() const { return str; }
+	int GetVit() const { return vit; }
+	int GetAgi() const { return agi; }
 
 	int GetAtk() const;
 	int GetDef() const;
 	int GetSpd() const;
 
-	bool IsDead() const { return hp <= 0; }
-	bool IsFullHP() const { return hp == maxHP; }
-	bool IsFullMP() const { return mp == maxMP; }
+	float GetBuffAtkRate() const { return buffAtk.rate; }
+	float GetBuffDefRate() const { return buffDef.rate; }
+	float GetDebuffAtkRate() const { return debuffAtk.rate; }
+	float GetDebuffDefRate() const { return debuffDef.rate; }
 
-	void HealHP(const int healValue) { hp = Math::Min(hp + healValue, maxHP); }
-	void HurtHP(const int hurtValue) { hp = Math::Clamp(hp - hurtValue, 0, maxHP); }
-	void HealMP(const int healValue) { mp = Math::Min(mp + healValue, maxMP); }
-	void HurtMP(const int hurtValue) { mp = Math::Clamp(mp - hurtValue, 0, maxMP); }
+	Equipment* GetEquipments() { return &equipments; }
+
+	// セッター
+	void SetHP(const int value) { hp = Math::Clamp(value, 0, maxHP); }
+	void SubHP(const int value) { hp = Math::Max(0, hp - value);     }
+	void AddHP(const int value) { hp = Math::Min(maxHP, hp + value); }
+
+	void SetMP(const int value) { mp = Math::Clamp(value, 0, maxMP); }
+	void SubMP(const int value) { mp = Math::Max(0, mp - value);     }
+	void AddMP(const int value) { mp = Math::Min(maxMP, mp + value); }
+
+	void SetBuffAtkRate(const float rate, const int turn);
+	void SetBuffDefRate(const float rate, const int turn);
+	void SetDebuffAtkRate(const float rate, const int turn);
+	void SetDebuffDefRate(const float rate, const int turn);
+	void SetGuardFlag(const bool flag) { guardFlag = flag; }
+	void AdvanceBuffTurn();
+	void ResetBuff();
+
 };
 
 class StatusData
 {
-	std::vector<Status> mPLStatus;
-	std::vector<Status> mEnmStatus;
+	friend class DataBase;
 
-	void LoadPLStatus();
-	void LoadEnmStatus();
-
-public:
+	// 実態作成禁止
 	StatusData();
 	~StatusData();
 
-	void Initialize();
-	Status GetPLStatus(size_t id) const;
-	Status GetEnmStatus(size_t id) const;
+public:
+	enum EnemyType
+	{
+		MOB,
+		BOSS,
 
-	void SetPLStatus(size_t charaID, const Status& status);
-	//void SetPLStatus(const std::wstring& name, const Status& status);
+		NONE
+	};
+
+private:
+	static std::vector<Status> mPLStatus;
+
+private:
+	static void LoadPLStatus();
+	static void Initialize();
+	static void Release();
+
+public:
+	static Status GetPLStatus(size_t id);
+	static Status GetEnmStatus(size_t id);
+	static EnemyType GetEnmType(size_t id);
+
+	static void SetPLStatus(size_t charaID, const Status& status);
 };

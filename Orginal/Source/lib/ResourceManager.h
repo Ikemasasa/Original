@@ -20,6 +20,7 @@ class ResourceManager
 
             if (bForce)
             {
+                refNum = 0;
                 srv->Release();
                 srv = nullptr;
             }

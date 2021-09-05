@@ -13,7 +13,7 @@ void ProductionEscape::Update(const BattleCharacterManager* bcm)
 {
 	switch (mState)
 	{
-	case INIT:
+	case INIT:		
 		if (Fade::GetInstance().Set(Fade::SPEED_SLOW))
 		{
 			mMoveChara = bcm->GetMoveChara();

@@ -1,4 +1,5 @@
 #include "Audio.h"
+
 #include "DirectXTK/Inc/SoundCommon.h"
 #include "DirectXTK/Inc/WAVFileReader.h"
 
@@ -28,17 +29,22 @@ Audio::~Audio()
 
 void Audio::Initialize()
 {
-	// TODO : ‰¼
 	LoadMusic((int)Music::TITLE, L"Data/Audio/Music/title.wav");
 	LoadMusic((int)Music::FIELD_REMAINS, L"Data/Audio/Music/field.wav");
 	LoadMusic((int)Music::BATTLE, L"Data/Audio/Music/battle.wav");
+	LoadMusic((int)Music::BOSS_BATTLE, L"Data/Audio/Music/boss_battle.wav");
 	LoadMusic((int)Music::RESULT, L"Data/Audio/Music/result.wav");
+	LoadMusic((int)Music::BOSS_RESULT, L"Data/Audio/Music/boss_result.wav");
 
 	LoadSound((int)Sound::SELECT, L"Data/Audio/Sound/select.wav");
 	LoadSound((int)Sound::SELECT_LONG, L"Data/Audio/Sound/select_long.wav");
 	LoadSound((int)Sound::CANCEL, L"Data/Audio/Sound/cancel.wav");
 	LoadSound((int)Sound::CURSOR_MOVE, L"Data/Audio/Sound/cursor_move.wav");
+	LoadSound((int)Sound::EQUIP, L"Data/Audio/Sound/equip.wav");
 	LoadSound((int)Sound::HEAL, L"Data/Audio/Sound/heal.wav");
+	LoadSound((int)Sound::BUFF, L"Data/Audio/Sound/buff.wav");
+	LoadSound((int)Sound::DEBUFF, L"Data/Audio/Sound/debuff.wav");
+	LoadSound((int)Sound::BOMB, L"Data/Audio/Sound/bomb.wav");
 }
 
 void Audio::LoadMusic(int slot, const wchar_t* waveFilename, float volume)
@@ -126,4 +132,10 @@ void Audio::SoundPlay(int slot)
 
 	mSoundInst[slot]->Play(false); // ƒ‹[ƒv‚µ‚È‚¢
 	mSoundInst[slot]->SetVolume(mMusicVolume[slot]);
+}
+
+void Audio::SoundStop(int slot)
+{
+	if (!mSoundInst[slot]) return;
+	mSoundInst[slot]->Stop();
 }

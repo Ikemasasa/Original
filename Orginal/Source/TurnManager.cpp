@@ -3,11 +3,17 @@
 #include <random>
 #include <numeric>
 
+#include "lib/Random.h"
+
 #include "BattleCharacterManager.h"
+#include "BattleState.h"
 #include "CommandBase.h"
+#include "DropData.h"
 #include "EffectManager.h"
 #include "ProductionAttack.h"
 #include "ProductionEscape.h"
+#include "ProductionGuard.h"
+#include "ProductionSkill.h"
 #include "ProductionUseItem.h"
 #include "Singleton.h"
 
@@ -16,18 +22,30 @@ void TurnManager::Initialize(const std::vector<std::shared_ptr<BattleCharacter>>
 	SortOrder(battleCharaArray);
 
 	// エフェクト読み込み
-	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/Death/Death.efk", DEATH_EFFECT_SLOT);
-	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/HealPotion/heal_potion.efk", HEAL_POTION_EFFECT_SLOT);
-	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/HealPotion/magic_potion.efk", MAGIC_POTION_EFFECT_SLOT);
-	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/Explosion/explosion.efk", ITEM_DAMAGE_EFFECT_SLOT);
+	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/death.efk"		, DEATH_EFFECT_SLOT);
+	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/heal_potion.efk"  , HEAL_POTION_EFFECT_SLOT);
+	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/magic_potion.efk" , MAGIC_POTION_EFFECT_SLOT);
+	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/explosion.efk"    , ITEM_DAMAGE_EFFECT_SLOT);
+	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/buff.efk"		    , BUFF_EFFECT_SLOT);
+	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/debuff.efk"		, DEBUFF_EFFECT_SLOT);
+
+	mIsBeginnig = true;
 }
 
 void TurnManager::Update(const BattleCharacterManager* bcm)
 {
+	// リザルトならreturn
+	if (BattleState::GetInstance().CheckState(BattleState::State::RESULT))
+	{
+		mIsTurnFinished = false;
+		return;
+	}
+
 	// コマンド選択中
 	if (!mProduction)
 	{
 		mIsTurnFinished = false;
+		GetMoveChara()->SetMotion(SkinnedMesh::IDLE);
 
 		// BattleCharaManagerのupdateでコマンドが決まったら
 		if (GetMoveChara()->GetCommand()->IsBehaviourEnable())
@@ -46,9 +64,14 @@ void TurnManager::Update(const BattleCharacterManager* bcm)
 			// behaviour を noneにする
 			GetMoveChara()->GetCommand()->BehaviourFinished();
 
-			// mOrderを整理する
-			mOrder.pop(); // 今回のmoveCharaは削除
-			OrganizeOrder(bcm->GetBCharacters());
+			// ターン終了時バフのターン数を減らす
+			mOrder.front()->GetStatus()->AdvanceBuffTurn();
+
+			// mOrderを進める
+			AdvanceOrder(bcm->GetBCharacters());
+
+			// ガードしてる場合は解除する
+			GetMoveChara()->GetStatus()->SetGuardFlag(false);
 
 			// 演出情報削除
 			mProduction.reset();
@@ -68,11 +91,6 @@ void TurnManager::Render()
 	}
 }
 
-void TurnManager::ToResult()
-{
-	mIsResult = true;
-}
-
 void TurnManager::SortOrder(const std::vector<std::shared_ptr<BattleCharacter>>& battleCharaArray)
 {
 	// minからmaxまでの値をランダムに並べた配列を作るyatu
@@ -84,7 +102,7 @@ void TurnManager::SortOrder(const std::vector<std::shared_ptr<BattleCharacter>>&
 		std::random_device rnd;
 		std::mt19937 mt(rnd());
 
-		// 0~DISTの値を生成して、シャッフルする
+		// min~maxの値を生成して、シャッフルする
 		std::vector<int> ret(DIST);
 		std::iota(ret.begin(), ret.end(), min);
 		std::shuffle(ret.begin(), ret.end(), mt);
@@ -92,16 +110,19 @@ void TurnManager::SortOrder(const std::vector<std::shared_ptr<BattleCharacter>>&
 		return ret;
 	};
 
-	std::map<int, std::vector<BattleCharacter*>> agiOrder;
+	std::map<int, std::vector<BattleCharacter*>> spdOrder;
 
 	// マップのキーは昇順にソートされてる
+	const int WIDTH = 5; // スピードの乱数の幅+-
 	for (auto& chara : battleCharaArray)
 	{
-		agiOrder[chara->GetStatus()->agi].push_back(chara.get());
+		int spd = chara->GetStatus()->GetSpd();
+		spd = Math::Max(0, Random::RandomRange(spd - WIDTH, spd + WIDTH));
+		spdOrder[spd].push_back(chara.get());
 	}
 
 	// 降順に代入したいからリバースイテレータ
-	for (auto it = agiOrder.rbegin(); it != agiOrder.rend(); ++it)
+	for (auto it = spdOrder.rbegin(); it != spdOrder.rend(); ++it)
 	{
 		// 2個以上ならその中からランダムで決める
 		if (it->second.size() >= 2)
@@ -124,30 +145,34 @@ void TurnManager::BeginProduction()
 	CommandBase::Behaviour behaviour = GetMoveChara()->GetCommand()->GetBehaviour();
 	switch (behaviour)
 	{
-	case CommandBase::Behaviour::ATTACK:   mProduction = std::make_unique<ProductionAttack>(); break;
 	case CommandBase::Behaviour::USE_ITEM: mProduction = std::make_unique<ProductionUseItem>(); break;
-	case CommandBase::Behaviour::ESCAPE:   mProduction = std::make_unique<ProductionEscape>(); break;
+	case CommandBase::Behaviour::GUARD:    mProduction = std::make_unique<ProductionGuard>();   break;
+	case CommandBase::Behaviour::ATTACK:   mProduction = std::make_unique<ProductionAttack>();  break;
+	case CommandBase::Behaviour::SKILL:    mProduction = std::make_unique<ProductionSkill>();  break;
+	case CommandBase::Behaviour::ESCAPE:   mProduction = std::make_unique<ProductionEscape>();  break;
 	}
 
 	mProduction->Initialize();
 
 	int moveCharaID = GetMoveChara()->GetObjID();
-	int targetCharaID = GetMoveChara()->GetCommand()->GetTargetObjID();
-	mProduction->Begin(moveCharaID, targetCharaID);
+	std::vector<int> targetCharaIDs = GetMoveChara()->GetCommand()->GetTargetObjIDs();
+	mProduction->Begin(moveCharaID, targetCharaIDs);
 }
 
-void TurnManager::OrganizeOrder(const std::vector<std::shared_ptr<BattleCharacter>>& battleCharaArray)
+void TurnManager::AdvanceOrder(const std::vector<std::shared_ptr<BattleCharacter>>& battleCharaArray)
 {
+	mOrder.pop();
+
 	// mOrderを整理する
 	while (true)
 	{
-		// mOrderが空ならまた順番を作る
 		if (mOrder.empty())
 		{
 			SortOrder(battleCharaArray);
 		}
+		
 
-		// 順番が来たアクタが倒されていたら
+		// 順番が来たキャラが倒されていたら
 		if (mOrder.front()->GetStatus()->IsDead())
 		{
 			mOrder.pop();

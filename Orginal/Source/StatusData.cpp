@@ -1,10 +1,14 @@
 #include "StatusData.h"
 
-#include <fstream>
-#include <sstream>
-
-#include "DataBase.h"
 #include "lib/ConvertString.h"
+
+#include "CSVLoader.h"
+#include "DataBase.h"
+#include "DamageCalculator.h"
+
+// static メンバ
+std::vector<Status> StatusData::mPLStatus;
+
 
 //---------------------------------------------
 // Status
@@ -14,8 +18,10 @@ int Status::GetAtk() const
 	int atk = 0;
 	const EquipmentData::Param* param = equipments.GetParam(EquipmentData::WEAPON);
 	if (param) atk = param->atk;
+	atk = (str + atk) * buffAtk.rate; // バフ計算
+	atk -= (str + atk) * (1.0f - debuffAtk.rate); // デバフ計算
 
-	return 	str + atk;
+	return atk;
 }
 
 int Status::GetDef() const
@@ -23,8 +29,12 @@ int Status::GetDef() const
 	int def = 0;
 	const EquipmentData::Param* param = equipments.GetParam(EquipmentData::ARMOR);
 	if (param) def = param->def;
+	def = (vit + def) * buffDef.rate;// バフ計算
+	def -= (vit + def) * (1.0f - debuffDef.rate); // デバフ計算
 
-	return 	vit + def;
+	if (guardFlag) def *= DamageCalculator::GUARD_BUFF_RATE;
+
+	return def;
 }
 
 int Status::GetSpd() const
@@ -33,144 +43,194 @@ int Status::GetSpd() const
 	return agi;
 }
 
+void Status::SetBuffAtkRate(const float rate, const int turn)
+{
+	buffAtk.rate = Math::Max(buffAtk.rate, rate);
+	buffAtk.turn = Math::Max(buffAtk.turn, turn);
+}
+
+void Status::SetBuffDefRate(const float rate, const int turn)
+{
+	buffDef.rate = Math::Max(buffDef.rate, rate);
+	buffDef.turn = Math::Max(buffDef.turn, turn);
+}
+
+void Status::SetDebuffAtkRate(const float rate, const int turn)
+{
+	debuffAtk.rate = Math::Min(debuffAtk.rate, rate);
+	debuffAtk.turn = Math::Max(debuffAtk.turn, turn);
+}
+
+void Status::SetDebuffDefRate(const float rate, const int turn)
+{
+	debuffDef.rate = Math::Min(debuffDef.rate, rate);
+	debuffDef.turn = Math::Max(debuffDef.turn, turn);
+}
+
+void Status::AdvanceBuffTurn()
+{
+	// 攻撃バフ
+	buffAtk.turn = Math::Max(0, buffAtk.turn - 1);
+	if (buffAtk.turn <= 0) buffAtk.rate = 1.0f;
+
+	// 防御バフ
+	buffDef.turn = Math::Max(0, buffDef.turn - 1);
+	if (buffDef.turn <= 0) buffDef.rate = 1.0f;
+
+	// 攻撃デバフ
+	debuffAtk.turn = Math::Max(0, debuffAtk.turn - 1);
+	if (debuffAtk.turn <= 0) debuffAtk.rate = 1.0f;
+
+	// 防御デバフ
+	debuffDef.turn = Math::Max(0, debuffDef.turn - 1);
+	if (debuffDef.turn <= 0) debuffDef.rate = 1.0f;
+}
+
+void Status::ResetBuff()
+{
+	buffAtk.rate = 1.0f;
+	buffAtk.turn = 0;
+	buffDef.rate = 1.0f;
+	buffDef.turn = 0;
+
+	debuffAtk.rate = 1.0f;
+	debuffAtk.turn = 0;
+	debuffDef.rate = 1.0f;
+	debuffDef.turn = 0;
+
+	guardFlag = false;
+}
+
 //---------------------------------------------
 // StatusData
 //---------------------------------------------
 StatusData::StatusData()
 {
 	mPLStatus.clear();
-	mEnmStatus.clear();
 
 	LoadPLStatus();
-	LoadEnmStatus();
 }
 
 StatusData::~StatusData()
 {
 	mPLStatus.clear();
-	mEnmStatus.clear();
 }
 
 void StatusData::LoadPLStatus()
 {
 	const char* filename = "Data/DataBase/PLStatus.csv";
 
-	std::ifstream fin;
-	fin.open(filename);
-	if (!fin.is_open()) return;
+	CSVLoader loader;
+	loader.Open(filename);
 
-	std::string line;  // 1行取得用
-	const char delim = ','; // 区切り文字
-	while (std::getline(fin, line)) // 一行読み込み
+	std::vector<std::string> allLine;
+	loader.GetAllLine(&allLine);
+
+	for (const auto& line : allLine)
 	{
-		std::istringstream istr(line);
-		std::string chunk; // コンマ区切りの内容取得用
+		std::vector<std::string> chunks;
+		loader.GetChunks(line, &chunks);
 
-		std::vector<std::string> data;
-		while (std::getline(istr, chunk, delim)) // 区切りごとに取得
+		if (chunks.size() > 0)
 		{
-			if (chunk.empty()) continue;   // 空白なら continue
-			if (chunk[0] == '#') continue; // 最初の文字が#ならcontinue
-
-			data.emplace_back(chunk);
-		}
-
-		if (data.size() > 0)
-		{
-			Status s = {};
 			int index = 0;
-			s.name = ConvertString::ConvertToWstirng(data[index++]);
-			s.id = std::stoi(data[index++]);
-			s.hp = std::stoi(data[index++]);
-			s.maxHP = s.hp;
-			s.mp = std::stoi(data[index++]);
-			s.maxMP = s.mp;
-			s.str = std::stoi(data[index++]);
-			s.vit = std::stoi(data[index++]);
-			s.agi = std::stoi(data[index++]);
+			Status status;
+			status.name = ConvertString::ConvertToWstirng(chunks[index++]);
+			status.id = std::stoi(chunks[index++]);
+			status.hp = std::stoi(chunks[index++]);
+			status.maxHP = status.hp;
+			status.mp = std::stoi(chunks[index++]);
+			status.maxMP = status.mp;
+			status.str = std::stoi(chunks[index++]);
+			status.vit = std::stoi(chunks[index++]);
+			status.agi = std::stoi(chunks[index++]);
+			status.ResetBuff();
 
-			mPLStatus.emplace_back(s);
+			mPLStatus.emplace_back(status);
 		}
 	}
 
-	fin.close();
+	loader.Close();
 }
 
-void StatusData::LoadEnmStatus()
+Status StatusData::GetEnmStatus(size_t id)
+{
+	const char* filename = "Data/DataBase/EnmStatus.csv";
+	
+	CSVLoader loader;
+	loader.Open(filename);
+
+	std::vector<std::string> allLine;
+	loader.GetAllLine(&allLine);
+
+	// 目的のラインを取得する
+	const int LINE_INDEX = id - DataBase::ENM_ID_START;
+
+	std::vector<std::string> chunks;
+	loader.GetChunks(allLine[LINE_INDEX], &chunks);
+	Status ret = {};
+	if (chunks.size() > 0)
+	{
+		int index = 0;
+		ret.name = ConvertString::ConvertToWstirng(chunks[index++]);
+		ret.id = std::stoi(chunks[index++]);
+		index += 1; // エネミータイプを無視する
+		ret.hp = std::stoi(chunks[index++]);
+		ret.maxHP = ret.hp;
+		ret.mp = std::stoi(chunks[index++]);
+		ret.maxMP = ret.mp;
+		ret.str = std::stoi(chunks[index++]);
+		ret.vit = std::stoi(chunks[index++]);
+		ret.agi = std::stoi(chunks[index++]);
+		ret.ResetBuff();
+	}
+
+
+	loader.Close();
+
+	return ret;
+}
+
+StatusData::EnemyType StatusData::GetEnmType(size_t id) 
 {
 	const char* filename = "Data/DataBase/EnmStatus.csv";
 
-	std::ifstream fin;
-	fin.open(filename);
-	if (!fin.is_open()) return;
+	CSVLoader loader;
+	loader.Open(filename);
 
-	std::string line;  // 1行取得用
-	const char delim = ','; // 区切り文字
-	while (std::getline(fin, line)) // 一行読み込み
-	{
-		std::istringstream istr(line);
-		std::string chunk; // コンマ区切りの内容取得用
+	std::vector<std::string> allLine;
+	loader.GetAllLine(&allLine);
 
-		std::vector<std::string> data; // 区切りの保存用
-		while (std::getline(istr, chunk, delim)) // 区切りごとに取得
-		{
-			if (chunk.empty()) continue;   // 空白なら continue
-			if (chunk[0] == '#') continue; // 最初の文字が#ならcontinue
+	// 目的のラインを取得する
+	const int LINE_INDEX = id - DataBase::ENM_ID_START;
 
-			data.emplace_back(chunk);
-		}
+	std::vector<std::string> chunks;
+	loader.GetChunks(allLine[LINE_INDEX], &chunks);
 
-		if (data.size() > 0)
-		{
-			Status s = {};
-			int index = 0;
-			s.name = ConvertString::ConvertToWstirng(data[index++]);
-			s.id = std::stoi(data[index++]);
-			s.hp = std::stoi(data[index++]);
-			s.maxHP = s.hp;
-			s.mp = std::stoi(data[index++]);
-			s.maxMP = s.mp;
-			s.str = std::stoi(data[index++]);
-			s.vit = std::stoi(data[index++]);
-			s.agi = std::stoi(data[index++]);
+	// タイプを取得
+	const int TYPE_INDEX = 2;
+	EnemyType ret = (EnemyType)std::stoi(chunks[TYPE_INDEX]);
 
-			mEnmStatus.emplace_back(s);
-		}
-	}
-
-	fin.close();
+	return ret;
 }
-
 
 void StatusData::Initialize()
 {
 	LoadPLStatus();
-	LoadEnmStatus();
 }
 
-Status StatusData::GetPLStatus(size_t id) const
+void StatusData::Release()
+{
+	mPLStatus.clear();
+}
+
+Status StatusData::GetPLStatus(size_t id) 
 {
 	return mPLStatus[id - DataBase::PL_ID_START];
-}
-
-Status StatusData::GetEnmStatus(size_t id) const
-{
-	return mEnmStatus[id - DataBase::ENM_ID_START];
 }
 
 void StatusData::SetPLStatus(size_t charaID, const Status& status)
 {
 	mPLStatus[charaID - DataBase::PL_ID_START] = status;
 }
-
-//void StatusData::SetPLStatus(const std::wstring& name, const Status& status)
-//{
-//	size_t num = mPLStatus.size();
-//	for (size_t i = 0; i < num; ++i)
-//	{
-//		if (wcscmp(mPLStatus[i].name.c_str(), name.c_str()) != 0) continue;
-//		
-//		mPLStatus[i] = status;
-//	}
-//}
 

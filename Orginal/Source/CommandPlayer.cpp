@@ -1,18 +1,18 @@
 #include "CommandPlayer.h"
 
-#include "BattleCharacterManager.h"
-#include "BattleState.h"
-#include "CameraManager.h"
-#include "CommandBehaviour.h"
-#include "CommandItem.h"
-
+#include "lib/Audio.h"
 #include "lib/Input.h"
 #include "lib/Math.h"
 #include "lib/Sprite.h"
 
+#include "BattleCharacterManager.h"
+#include "BattleState.h"
+#include "CameraManager.h"
+#include "DecideBehaviour.h"
+
 CommandPlayer::CommandPlayer() : CommandBase()
 {
-	mCommand.push(std::make_unique<CommandBehaviour>());
+	mCommand.push(std::make_unique<DecideBehaviour>());
 }
 
 CommandPlayer::~CommandPlayer()
@@ -35,11 +35,18 @@ void CommandPlayer::Update(const BattleCharacterManager* bcm)
 	IDecideCommand* nextCommand = mCommand.top()->GetNextCommandState();
 	if (nextCommand)
 	{
+		nextCommand->Initialize(bcm);
 		mCommand.emplace(nextCommand);
 	}
 
+	int oldIndex = mCommand.top()->GetSelectIndex();
 	mCommand.top()->Update(bcm, this);
-	if (IsBehaviourEnable()) // 1行上のupdateでコマンドが決まったら
+	int currentIndex = mCommand.top()->GetSelectIndex();
+
+	// 効果音をならす
+	if (oldIndex != currentIndex) AUDIO.SoundPlay((int)Sound::CURSOR_MOVE);
+
+	if (IsBehaviourEnable()) // コマンドが決まったら
 	{
 		// コマンドをリセットする(CommandBehaviourだけにする)
 		size_t popNum = mCommand.size() - 1; // CommandBehaviourだけ残したいから size - 1
@@ -52,4 +59,10 @@ void CommandPlayer::Render() const
 	if (IsBehaviourEnable()) return;
 
 	mCommand.top()->Render();
+}
+
+void CommandPlayer::BehaviourFinished()
+{
+	mCommand.top()->ResetParam();
+	CommandBase::BehaviourFinished();
 }

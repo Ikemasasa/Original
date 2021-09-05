@@ -24,6 +24,7 @@ public:
 	CameraBase();
 	virtual ~CameraBase() = default;
 
+	virtual void Initialize(const Character* target);
 	virtual void Update(const Character* target) {};
 
 	DirectX::XMFLOAT4X4& SetOrthographicMatrix(float w, float h, float znear, float zfar);			//	•½s“Š‰es—ñİ’èŠÖ”

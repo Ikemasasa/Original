@@ -22,6 +22,7 @@ void SingletonFinalizer::Finalize()
 	for (int i = mFinalizerNum - 1; i >= 0; --i)
 	{
 		(*mFinalizers[i])();
+		mFinalizers[i] = nullptr;
 	}
 	mFinalizerNum = 0;
 }

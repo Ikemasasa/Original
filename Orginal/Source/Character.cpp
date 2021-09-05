@@ -16,7 +16,7 @@ Character::Character(int charaID, Type type)
 	// カプセルのサイズ決定
 	const Vector3& min = mMesh->mAABB.min;
 	const Vector3& max = mMesh->mAABB.max;
-	float radius = (max.z - min.z) * 0.5f;
+	float radius = (max.z - min.z);// 直径にしてる(そっちの方がぽいから)
 	float x = min.x + ((max.x - min.x) * 0.5f);
 	float z = min.z + ((max.z - min.z) * 0.5f);
 	Vector3 cTop(x, max.y - radius, z);
@@ -46,7 +46,6 @@ Character::Character(const Character* org)
 void Character::UpdateWorld()
 {
 	// 各種更新の後に呼び出す
-
 	// モーションがあるならskinning
 	if (mMesh->GetMotion() != SkinnedMesh::DEFAULT)
 	{
@@ -64,6 +63,7 @@ void Character::UpdateWorld()
 		// 現フレームのワールド行列を代入
 		DirectX::XMStoreFloat4x4(&mWorld, world);
 	}
+
 }
 
 void Character::Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir)
@@ -108,7 +108,7 @@ void Character::CorrectionAngle()
 	}
 	else
 	{
-		const float ANGLE_ADJUST = 0.2f;
+		const float ANGLE_ADJUST = 0.3f;
 		if (cross < 0) mAngle.y -= ANGLE_ADJUST;
 		else mAngle.y += ANGLE_ADJUST;
 	}

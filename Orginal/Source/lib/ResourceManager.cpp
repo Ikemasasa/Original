@@ -12,6 +12,7 @@ ShaderManager ResourceManager::mShaderManager;
 void ResourceManager::Release()
 {
     for (auto& srv : mSRVs) srv.Release(true);
+    mSRVs.clear();
     mShaderManager.ReleaseAll();
 }
 
@@ -19,7 +20,7 @@ HRESULT ResourceManager::LoadShaderResource(ID3D11Device * device, const wchar_t
 {
     int no = -1;
     ResourceShaderResourceViews* find = nullptr;
-    Microsoft::WRL::ComPtr<ID3D11Resource> resource;
+    ID3D11Resource* resource = nullptr;
 
     // すでに読み込みしているかチェック
     for (auto& srv : mSRVs)
@@ -28,13 +29,13 @@ HRESULT ResourceManager::LoadShaderResource(ID3D11Device * device, const wchar_t
 
         // あった
         find = &srv;
-        find->srv->GetResource(resource.GetAddressOf());
+        find->srv->GetResource(&resource);
         break;
     }
 
     HRESULT hr = S_OK;
 
-    Microsoft::WRL::ComPtr<ID3D11Texture2D> tex2D;
+    ID3D11Texture2D* tex2D = nullptr;
     if (!find) // なかった
     {
         ResourceShaderResourceViews push;
@@ -42,7 +43,7 @@ HRESULT ResourceManager::LoadShaderResource(ID3D11Device * device, const wchar_t
         hr = DirectX::CreateWICTextureFromFile(device, filename, &resource, &push.srv);
         if (FAILED(hr))
         {
-            hr = CreateDummyTexture(device, tex2D.GetAddressOf(), outDesc, &push.srv);
+            hr = CreateDummyTexture(device, &tex2D, outDesc, &push.srv);
             if (FAILED(hr)) return hr;
         }
 
@@ -52,10 +53,14 @@ HRESULT ResourceManager::LoadShaderResource(ID3D11Device * device, const wchar_t
         find = &mSRVs.back();
     }
 
-    if(!tex2D) resource->QueryInterface(tex2D.GetAddressOf());
+    if(!tex2D) resource->QueryInterface(&tex2D);
     *outSRV = find->srv;
     tex2D->GetDesc(outDesc);
     find->refNum++;
+
+    if(tex2D)tex2D->Release();
+    if(resource)resource->Release();
+
     return hr;
 }
 

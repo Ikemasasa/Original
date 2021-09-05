@@ -11,6 +11,23 @@ const Vector3 Vector3::ONE  = Vector3(1, 1, 1);
 const Vector4 Vector4::ZERO = Vector4(0, 0, 0, 0);
 const Vector4 Vector4::ONE  = Vector4(1, 1, 1, 1);
 
+//---------------------------------------------------
+// Vector3
+//---------------------------------------------------
+float Vector3::Dot(const Vector3& v0, const Vector3& v1)
+{
+	return v0.x * v1.x + v0.y * v1.y + v0.z * v1.z;
+}
+
+Vector3 Vector3::Cross(const Vector3& v0, const Vector3& v1)
+{
+	Vector3 cross;
+	cross.x = v0.y * v1.z - v0.z * v1.y;
+	cross.y = v0.z * v1.x - v0.x * v1.z;
+	cross.z = v0.x * v1.y - v0.y * v1.x;
+	return cross;
+}
+
 Vector3 Vector3::Lerp(const Vector3& v1, const Vector3& v2, float t)
 {
 	t = Math::Clamp01(t);
@@ -20,6 +37,22 @@ Vector3 Vector3::Lerp(const Vector3& v1, const Vector3& v2, float t)
 	ret.y = v1.y + t * (v2.y - v1.y);
 	ret.z = v1.z + t * (v2.z - v1.z);
 	return ret;
+}
+
+void Vector3::Transform(const Vector3& v, const Matrix& m)
+{
+	this->x = v.x * m._11 + v.y * m._21 + v.z * m._31 + m._41;
+	this->y = v.x * m._12 + v.y * m._22 + v.z * m._32 + m._42;
+	this->z = v.x * m._13 + v.y * m._23 + v.z * m._33 + m._43;
+}
+
+void Vector3::TransformCoord(const Vector3& v, const Matrix& m)
+{
+	float w = v.x * m._14 + v.y * m._24 + v.z * m._34 + m._44;
+
+	this->x = (v.x * m._11 + v.y * m._21 + v.z * m._31 + m._41) / w;
+	this->y = (v.x * m._12 + v.y * m._22 + v.z * m._32 + m._42) / w;
+	this->z = (v.x * m._13 + v.y * m._23 + v.z * m._33 + m._43) / w;
 }
 
 Vector2 Vector3::WorldToScreen(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj) const
@@ -51,6 +84,11 @@ Vector2 Vector3::WorldToScreen(const DirectX::XMFLOAT4X4& view, const DirectX::X
 	return ret;
 }
 
+
+
+//---------------------------------------------------
+// Matrix
+//---------------------------------------------------
 void Matrix::Identity()
 {
 	_11 = 1; _12 = 0; _13 = 0; _14 = 0;

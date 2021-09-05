@@ -4,75 +4,48 @@
 #include "lib/Sprite.h"
 #include "lib/Input.h"
 
+#include "CharacterHealth.h"
+#include "Define.h"
 #include "Fade.h"
+#include "Player.h"
+#include "PlayerManager.h"
 #include "SceneManager.h"
-
-MenuSelect::MenuSelect()
-{
-    mSelectBar = std::make_unique<Sprite>(L"Data/Image/Menu/plate_select.png");
-    mBar = std::make_unique<Sprite>(L"Data/Image/Menu/str_plate.png");
-}
-
-bool MenuSelect::Add(Sprite* plate, const wchar_t* str)
-{
-    Data data;
-    data.plate = plate;
-    wcscpy_s(data.str, STR_MAX, str);
-    data.pos.x = PLATE_OFFSET_X;
-    data.pos.y = PLATE_FIRST_OFFSET_Y + (PLATE_OFFSET_Y * mDatas.size()) + (plate->GetSize().y * mDatas.size());
-    data.moveX = MOVE_MAX;
-
-
-    mDatas.emplace_back(data);
-    return true;
-}
-
-void MenuSelect::BeginAnimation()
-{
-    const float MOVE_ADD = 2.0f;
-    const float NEXT_MOVE = MOVE_MAX - MOVE_MAX / 5.0f; // 次が動き出す値
-
-    for (int i = 0; i < SELECT_NUM; ++i)
-    {
-        bool isAnim = false;
-
-        if (i == 0) isAnim = true;
-        else
-        {
-            if (mDatas[i - 1].moveX > NEXT_MOVE) isAnim = true;
-        }
-
-        if(isAnim) mDatas[i].moveX = Math::Min(mDatas[i].moveX + MOVE_ADD, 0.0f);
-    }
-
-}
+#include "StatusData.h"
 
 void MenuSelect::Initialize(const PlayerManager* plm)
 {
-    const int FONT_SIZE = 64;
-    const int FONT_WEIGHT = 64;
-    mFont.Initialize(FONT_SIZE, FONT_WEIGHT);
+    mStrBoard = std::make_unique<Sprite>(L"Data/Image/Menu/str_board.png");
+    mStrSelect = std::make_unique<Sprite>(L"Data/Image/Menu/str_select.png");
 
+    mCharacterHealth = std::make_unique<CharacterHealth>();
+    mCharacterHealth->Initialize(Vector2(HEALTH_BOARD_POS_X, BOARD_POS_Y));
+
+    mFont.Initialize();
+    
+    // 開始演出登録
+    for (int i = 0; i < SELECT_NUM; ++i)
     {
-        std::wstring str[SELECT_NUM] =
-        {
-            L"アイテム",
-            L"装備品",
-            L"ステータス"
-        };
-
-        for (int i = 0; i < SELECT_NUM; ++i)
-        {
-            mFont.Add(str[i].c_str());
-            Add(mBar.get(), str[i].c_str());
-        }
-
+        Data data;
+        data.pos.x = BOARD_POS_X;
+        data.pos.y = BOARD_POS_Y + ((mStrBoard->GetSize().y + BOARD_OFFSET_Y) * i);
+        data.moveX = MOVE_MAX;
+        mDatas.push_back(data);
     }
 }
 
 MenuSelect::Select MenuSelect::Update(PlayerManager* plm)
 {
     BeginAnimation();
+
+    // CharacterHealth作成
+    std::vector<Status> statusArray;
+    for (int i = 0; i < plm->GetNum(); ++i)
+    {
+        int charaID = plm->GetPlayer(i)->GetCharaID();
+        Status status = StatusData::GetPLStatus(charaID);
+        statusArray.push_back(status);
+    }
+    mCharacterHealth->Update(statusArray);
 
     // selectIndex操作
     if (Input::GetButtonTrigger(0, Input::BUTTON::UP))   mSelectIndex = (mSelectIndex + SELECT_NUM - 1) % SELECT_NUM;
@@ -82,6 +55,7 @@ MenuSelect::Select MenuSelect::Update(PlayerManager* plm)
     {
         return (Select)mSelectIndex;
     }
+
 
     // メニュー画面からフィールドに戻す
     if (Input::GetButtonTrigger(0, Input::BUTTON::B))
@@ -97,23 +71,30 @@ MenuSelect::Select MenuSelect::Update(PlayerManager* plm)
 
 void MenuSelect::Render()
 {
-    if (!mDatas.empty())
+    const wchar_t* str[SELECT_NUM] =
     {
-        const Vector2 pos(mDatas[mSelectIndex].pos.x + mDatas[mSelectIndex].moveX + mSelectBar->GetSize().x / 2.0f, mDatas[mSelectIndex].pos.y);
-        const Vector2 scale(1.25f, 1.0f);
-        const Vector2 center(mSelectBar->GetSize().x / 2.0f, 0.0f);
-        const Vector4 color(0.5f, 0.8f, 0.95f, 0.8f);
-        mSelectBar->Render(pos, scale, Vector2::ZERO, mSelectBar->GetSize(), center, 0.0f, color);
+        L"アイテム",
+        L"装備品",
+        L"ステータス"
+    };
+
+    // ボードを描画(ついでにフォントもセット
+    const Vector2 scale(Vector2::ONE);
+    const Vector2 texPos(Vector2::ZERO);
+    for (size_t i = 0; i < mDatas.size(); ++i)
+    {
+        const Vector2 pos(mDatas[i].pos.x + mDatas[i].moveX, mDatas[i].pos.y);
+        mStrBoard->Render(pos, scale, texPos, mStrBoard->GetSize());
+        mFont.RenderSet(str[i], pos + Vector2(STR_OFFSET_X, STR_OFFSET_Y), Vector2::ZERO, Define::FONT_COLOR);
+
+        // 選択画像を描画
+        if (mSelectIndex == i)
+        {
+            mStrSelect->Render(pos, scale, texPos, mStrSelect->GetSize());
+        }
     }
 
-    int i = 0;
-    for (auto& data : mDatas)
-    {
-        const Vector2 strOffset(data.pos.x + data.moveX + STR_OFFSET_X, data.pos.y + STR_OFFSET_Y);
-        data.plate->Render(data.pos + Vector2(data.moveX, 0.0f), Vector2::ONE, Vector2::ZERO, data.plate->GetSize());
-        mFont.RenderSet(i, strOffset, Vector2::ZERO, Vector2::ONE, Vector4::ONE);
-        ++i;
-    }
+    mCharacterHealth->Render(false);
 
     mFont.Render();
 }
@@ -123,3 +104,21 @@ void MenuSelect::Release()
     mFont.Release();
 }
 
+void MenuSelect::BeginAnimation()
+{
+    const float MOVE_ADD = -2.0f;
+    const float NEXT_MOVE = MOVE_MAX - MOVE_MAX / 3.0f; // 次が動き出す値
+
+    for (int i = 0; i < SELECT_NUM; ++i)
+    {
+        bool isAnim = false;
+
+        if (i == 0) isAnim = true;
+        else
+        {
+            if (mDatas[i - 1].moveX < NEXT_MOVE) isAnim = true;
+        }
+
+        if (isAnim) mDatas[i].moveX = Math::Max(mDatas[i].moveX + MOVE_ADD, 0.0f);
+    }
+}

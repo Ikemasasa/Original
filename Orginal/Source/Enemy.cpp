@@ -6,7 +6,7 @@
 #include "Define.h"
 #include "GameManager.h"
 #include "Player.h"
-
+#include "TransformData.h"
 
 Enemy::Enemy(int charaID) : Character(charaID, Character::ENEMY)
 {
@@ -24,14 +24,10 @@ Enemy::~Enemy()
 
 void Enemy::Initialize()
 {
-	mVelocity = Vector3::ZERO;
-
-	// TODO : もっとしっかりしたやつを作ろう
-	
-	float x = Random::RandomRangef(-40.0f, 40.0f);
-	float z = Random::RandomRangef(-40.0f, 40.0f);
-	mPos = Vector3(x, 0.0f, z);
-	mScale = Vector3(0.02f, 0.02f, 0.02f);
+	TransformData::Transform transform = TransformData::GetEnmTransform(GetCharaID());
+	mPos = transform.pos;
+	mScale = transform.scale;
+	mAngle = transform.angle;
 
 	SetMotion(SkinnedMesh::IDLE);
 }
@@ -48,26 +44,17 @@ void Enemy::Update(const Vector3& playerPos)
 	// 座標補正
 	{
 		const float RAYPICK_DIST = 0.25f;
-		Vector3 outPos, outNormal;
 
-		// 移動方向(y = posだと、うまいことあたらないから、少し上にあげる)
-		Vector3 oldPos = mPos - mVelocity;
-		Vector3 sp = Vector3(oldPos.x, oldPos.y + RAYPICK_DIST, oldPos.z); // 移動前の座標
-		Vector3 ep = Vector3(mPos.x, mPos.y + RAYPICK_DIST, mPos.z);	   // 移動後の座標
-		if (-1 != CollisionTerrain::MoveCheck(sp, ep, &outPos))
+		// 移動方向
+		Vector3 outVelocity;
+		if (CollisionTerrain::MoveCheck(mPos + Vector3(0, RAYPICK_DIST, 0), mVelocity, GetCapsule().radius, &outVelocity))
 		{
-			mPos.x = outPos.x;
-			mPos.z = outPos.z;
+			mVelocity = outVelocity;
 		}
+		mPos += mVelocity;
 
 		// 下方向
-		sp = Vector3(mPos.x, mPos.y + RAYPICK_DIST, mPos.z);
-		ep = Vector3(mPos.x, mPos.y - RAYPICK_DIST, mPos.z);
-		float len;
-		if (-1 != CollisionTerrain::RayPick(sp, ep, &outPos, &outNormal, &len))
-		{
-			mPos.y = outPos.y;
-		}
+		mPos.y = CollisionTerrain::GetHeight(mPos, RAYPICK_DIST);
 	}
 
 	UpdateWorld();
@@ -85,8 +72,6 @@ void Enemy::Move(const Vector3& playerPos)
 	case WALK: StateWalk(); break;
 	case CHASE: StateChase(playerPos); break;
 	}
-
-	mPos += mVelocity;
 }
 
 void Enemy::StateWait()
@@ -97,7 +82,7 @@ void Enemy::StateWait()
 	{
 		// 歩きに移行
 		mTimer = 0.0f;
-		mMoveAngle = Random::RandomRangef(-Define::PI, Define::PI);
+		mAngle.y = Random::RandomRangef(-Define::PI, Define::PI);
 		mState = WALK;
 	}
 	else
@@ -120,8 +105,8 @@ void Enemy::StateWalk()
 	else
 	{
 		// mMoveAngleの方向に移動
-		mVelocity.x = sinf(mMoveAngle) * WALK_SPEED;
-		mVelocity.z = cosf(mMoveAngle) * WALK_SPEED;
+		mVelocity.x = sinf(mAngle.y) * WALK_SPEED;
+		mVelocity.z = cosf(mAngle.y) * WALK_SPEED;
 
 		// 向き補正
 		CorrectionAngle();

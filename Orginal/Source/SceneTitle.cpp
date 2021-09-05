@@ -10,25 +10,7 @@
 
 SceneTitle::SceneTitle()
 {
-	const wchar_t* addLogoStr = L"R P G";
 
-	// + 1ÇÕPRESS~ÇÃÇΩÇﬂ
-	const int SELECT_STR_NUM = MAX + 1;
-	const wchar_t* addSelectstr[SELECT_STR_NUM] =
-	{
-		L"GAME START",
-		L"EXIT",
-		L"PRESS A BUTTON",
-	};
-
-	mFontLogo.Initialize(LOGO_FONT_SIZE, LOGO_FONT_WEIGHT);
-	mFontLogo.Add(addLogoStr);
-
-	mFontSelectStr.Initialize(SELECT_FONT_SIZE, SELECT_FONT_WEIGHT);
-	for (int i = 0; i < SELECT_STR_NUM; ++i) mFontSelectStr.Add(addSelectstr[i]);
-
-	mBG = std::make_unique<Sprite>(L"Data/Image/title_bg.png");
-	mArrow = std::make_unique<Sprite>(L"Data/Image/arrow.png");
 }
 
 SceneTitle::~SceneTitle()
@@ -41,40 +23,54 @@ void SceneTitle::Initialize()
 
 	mIsPressAButton = false;
 	mSelectIndex = 0;
+
+	const wchar_t* addLogoStr = L"R P G";
+
+	mFont.Initialize(FONT_SIZE, FONT_WEIGHT);
+	mBG = std::make_unique<Sprite>(L"Data/Image/title_bg.png");
+	mArrow = std::make_unique<Sprite>(L"Data/Image/arrow.png");
 }
 
 void SceneTitle::Update()
 {
-	// ÉçÉS
-	const int logoIndex = 0;
-	float strWidth = mFontLogo.GetWidth(logoIndex);
-	Vector2 pos(Define::SCREEN_WIDTH * 0.5f, Define::SCREEN_HEIGHT - Define::SCREEN_HEIGHT * 0.85f);
-	Vector2 center(strWidth * 0.5f, 0.5f);
-	mFontLogo.RenderSet(logoIndex, pos, center);
 
+	// ÉçÉS
+	const wchar_t* logoStr = L"R P G";
+	float strWidth = mFont.GetWidth(logoStr);
+	Vector2 pos(Define::SCREEN_WIDTH * 0.5f, Define::SCREEN_HEIGHT - Define::SCREEN_HEIGHT * 0.85f);
+	Vector2 center(0.5f, 0.0f);
+	mFont.RenderSet(logoStr, pos, center);
+
+
+	// ëIëÇ∑ÇÈï∂éöóÒ
 	if (!mIsPressAButton)
 	{
-		const int PRESS_A_KEY_INDEX = 2;
-		float strWidth = mFontSelectStr.GetWidth(PRESS_A_KEY_INDEX);
+		const wchar_t* pressAButton = L"PRESS A BUTTON";
 		Vector2 pos(Define::SCREEN_WIDTH * 0.5f, Define::SCREEN_HEIGHT * 0.60f);
-		Vector2 center(strWidth * 0.5f, 0.5f);
-		mFontSelectStr.RenderSet(PRESS_A_KEY_INDEX, pos, center);
+		Vector2 center(0.5f, 0.5f);
+		mFont.RenderSet(pressAButton, pos, center);
 
 		if (Input::GetButtonTrigger(0, Input::A)) mIsPressAButton = true;
 	}
 	else
 	{
-		// GAME_START(1) ~ EXIT(2)Ç…ó}Ç¶ÇÈ
+		const wchar_t* SelectStr[MAX] =
+		{
+			L"GAME START",
+			L"EXIT",
+		};
+
+		// GAME_START(0) ~ EXIT(1)Ç…ó}Ç¶ÇÈ
 		if (Input::GetButtonTrigger(0, Input::UP))   mSelectIndex = (mSelectIndex + MAX - 1) % MAX;
 		if (Input::GetButtonTrigger(0, Input::DOWN)) mSelectIndex = (mSelectIndex + 1) % MAX;
 
 		// ëIëÇ∑ÇÈï∂éöï`âÊ
-		for (int i = GAME_START; i < MAX; ++i)
+		for (int i = 0; i < MAX; ++i)
 		{
-			float strWidth = mFontSelectStr.GetWidth(i);
-			Vector2 pos(Define::SCREEN_WIDTH * 0.5f, Define::SCREEN_HEIGHT * 0.5f + SELECT_FONT_SIZE * i);
-			Vector2 center(strWidth * 0.5f, 0.0f);
-			mFontSelectStr.RenderSet(i, pos, center);
+			float strWidth = mFont.GetWidth(SelectStr[i]);
+			Vector2 pos(Define::SCREEN_WIDTH * 0.5f, Define::SCREEN_HEIGHT * 0.5f + FONT_SIZE * i);
+			Vector2 center(0.5f, 0.0f);
+			mFont.RenderSet(SelectStr[i], pos, center);
 		}
 
 		if (Input::GetButtonTrigger(0, Input::A)) Fade::GetInstance().Set(Fade::SPEED_SLOW);
@@ -94,21 +90,18 @@ void SceneTitle::Update()
 void SceneTitle::Render()
 {
 	mBG->Render(Vector2::ZERO, Vector2::ONE, Vector2::ZERO, mBG->GetSize());
-
-	mFontLogo.Render();
-	mFontSelectStr.Render();
+	mFont.Render();
 
 	if (mIsPressAButton)
 	{
-		Vector2 pos(Define::SCREEN_WIDTH * 0.3f, Define::SCREEN_HEIGHT * 0.5f + SELECT_FONT_SIZE * mSelectIndex);
+		Vector2 pos(Define::SCREEN_WIDTH * 0.3f, Define::SCREEN_HEIGHT * 0.5f + FONT_SIZE * mSelectIndex);
 		mArrow->Render(pos, Vector2::ONE, Vector2::ZERO, mArrow->GetSize());
 	}
 }
 
 void SceneTitle::Release()
 {
-	mFontLogo.Release();
-	mFontSelectStr.Release();
+	mFont.Release();
 
 	AUDIO.MusicStop((int)Music::TITLE);
 }

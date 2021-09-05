@@ -3,14 +3,12 @@
 #include "lib/Input.h"
 
 #include "CommandPlayer.h"
-#include "DataBase.h"
 #include "Player.h"
-#include "Singleton.h"
 
-PlayerBattle::PlayerBattle(Player* player) : BattleCharacter(player, Singleton<DataBase>().GetInstance().GetStatusData()->GetPLStatus(player->GetCharaID()))
+PlayerBattle::PlayerBattle(Player* player) : BattleCharacter(player, StatusData::GetPLStatus(player->GetCharaID()))
 {
 	mCommand = std::make_unique<CommandPlayer>();
-	mInventory = player->GetInventory();
+	mInventory = *player->GetInventory();
 }
 
 void PlayerBattle::Initialize()

@@ -23,8 +23,8 @@ void Skybox::Initialize(const wchar_t* filename)
 
 void Skybox::Release()
 {
-	mShader->UnLoad();
-	mTexture->UnLoad();
+	if(mShader) mShader->UnLoad();
+	if(mTexture) mTexture->UnLoad();
 }
 
 void Skybox::SetEyePos(Vector3 eye)

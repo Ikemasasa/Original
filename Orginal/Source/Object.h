@@ -29,14 +29,12 @@ public:
 	void Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir);
 	void Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir);
 
-	//レイピック
+	// レイピック
 	int RayPickSRT(
-		const DirectX::XMFLOAT3& sp,
-		const DirectX::XMFLOAT3& ep,
-		DirectX::XMFLOAT3* outPos,
-		DirectX::XMFLOAT3* outNormal,
-		float* outLen);
-	
+		const Vector3& sp,
+		const Vector3& velocity,
+		Vector3* outPos,
+		Vector3* outNormal);
 
 	//ゲッター
 	Vector3 GetPos() const { return mPos; }

@@ -6,59 +6,58 @@
 #include "lib/Math.h"
 #include "lib/Sprite.h"
 
+#include "Define.h"
 #include "Item.h"
-
 
 void ItemSelect::Initialize()
 {
 	mSelectIndex = 0;
-	mOldSelectIndex = -1;
 
-	mBoard = std::make_unique<Sprite>(L"Data/Image/board.png");
-	mSelectFrame = std::make_unique<Sprite>(L"Data/Image/select_frame.png");
-	mInfoBoard = std::make_unique<Sprite>(L"Data/Image/item_info_board.png");
+	mItemBoard = std::make_unique<Sprite>(L"Data/Image/Menu/item_board.png");
+	mSelectFrame = std::make_unique<Sprite>(L"Data/Image/Menu/item_board_select.png");
+	mInfoBoard = std::make_unique<Sprite>(L"Data/Image/Menu/item_info_board.png");
 }
 
-int ItemSelect::Update(const Item* inventory)
+void ItemSelect::Update(const Item* inventory)
 {
 	// SelectIndex操作
+	mInventory = inventory;
+	int inventorySize = mInventory->GetItemNum();
+	int oldSelectIndex = mSelectIndex;
+
+	// カーソル計算
+	const int INDEX_MAX = inventorySize - 1;
+	if (Input::GetButtonTrigger(0, Input::BUTTON::RIGHT)) ++mSelectIndex;
+	if (Input::GetButtonTrigger(0, Input::BUTTON::LEFT))  --mSelectIndex;
+	if (mSelectIndex >= inventorySize) mSelectIndex = 0;
+	if (mSelectIndex < 0) mSelectIndex = INDEX_MAX;
+
+	if (Input::GetButtonTrigger(0, Input::BUTTON::UP))    mSelectIndex -= HORIZONTAL_NUM;
+	if (Input::GetButtonTrigger(0, Input::BUTTON::DOWN))  mSelectIndex += HORIZONTAL_NUM;
+	if (mSelectIndex >= inventorySize)
 	{
-		mInventory = inventory;
-		int inventorySize = mInventory->GetItemNum();
-
-		if (Input::GetButtonTrigger(0, Input::BUTTON::RIGHT)) ++mSelectIndex;
-		if (Input::GetButtonTrigger(0, Input::BUTTON::LEFT))  --mSelectIndex;
-		if (mSelectIndex >= inventorySize) mSelectIndex -= inventorySize;
-		if (mSelectIndex < 0) mSelectIndex += inventorySize;
-
-		if (Input::GetButtonTrigger(0, Input::BUTTON::UP))    mSelectIndex -= HORIZONTAL_NUM;
-		if (Input::GetButtonTrigger(0, Input::BUTTON::DOWN))  mSelectIndex += HORIZONTAL_NUM;
-		if (mSelectIndex >= inventorySize) mSelectIndex -= inventorySize + 1;
-		if (mSelectIndex < 0) mSelectIndex += inventorySize + 1;
-		mSelectIndex = Math::Clamp(mSelectIndex, 0, inventorySize - 1); // 帳尻あわんかったからclampしてる
-
-		// アイテム情報更新
-		UpdateInfo();
-
-		if (mOldSelectIndex != mSelectIndex) AUDIO.SoundPlay((int)Sound::CURSOR_MOVE);
-		mOldSelectIndex = mSelectIndex;
+		int current = mSelectIndex / HORIZONTAL_NUM;
+		int max = INDEX_MAX / HORIZONTAL_NUM;
+		if (current == max) mSelectIndex = INDEX_MAX;
+		else mSelectIndex = mSelectIndex % HORIZONTAL_NUM;
 	}
+	if (mSelectIndex < 0) mSelectIndex = Math::Min((INDEX_MAX) / HORIZONTAL_NUM * HORIZONTAL_NUM + (mSelectIndex + HORIZONTAL_NUM), INDEX_MAX);
 
 
+	// アイテム情報更新
+	UpdateInfo();
 
-	// アイテム選択
-	if (Input::GetButtonTrigger(0, Input::BUTTON::A))
-	{
-		return mSelectIndex;
-	}
-
-	return -1;
+	// サウンド
+	if (oldSelectIndex != mSelectIndex) AUDIO.SoundPlay((int)Sound::CURSOR_MOVE);
 }
 
 void ItemSelect::Render(const Vector2& boardOffset)
 {
+	if (mSelectIndex >= mInventory->GetItemNum()) mSelectIndex = mInventory->GetItemNum() - 1;
+
 	// ボード描画
-	mBoard->Render(boardOffset, Vector2::ONE, Vector2::ZERO, mBoard->GetSize());
+	mItemBoard->Render(boardOffset, Vector2::ONE, Vector2::ZERO, mItemBoard->GetSize());
+
 
 
 	// アイテムアイコン描画
@@ -70,17 +69,20 @@ void ItemSelect::Render(const Vector2& boardOffset)
 		const Vector2 size(ICON_SIZE, ICON_SIZE);
 
 		int itemNum = mInventory->GetItemNum();
-		for (int i = 0; i < itemNum; ++i)
+		if (itemNum > 0)
 		{
-			float x = i % HORIZONTAL_NUM * ICON_SCALE_SIZE + offset.x;
-			float y = i / HORIZONTAL_NUM * ICON_SCALE_SIZE + offset.y;
-			Vector2 pos(x, y);
-			mInventory->GetItemParam(i)->icon->Render(pos, scale, Vector2::ZERO, size);
-		}
+			for (int i = 0; i < itemNum; ++i)
+			{
+				float x = i % HORIZONTAL_NUM * ICON_SCALE_SIZE + offset.x;
+				float y = i / HORIZONTAL_NUM * ICON_SCALE_SIZE + offset.y;
+				Vector2 pos(x, y);
+				mInventory->GetItemParam(i)->icon->Render(pos, scale, Vector2::ZERO, size);
+			}
 
-		// 選択のフレーム画像を描画
-		Vector2 pos(mSelectIndex % HORIZONTAL_NUM * ICON_SCALE_SIZE + offset.x, mSelectIndex / HORIZONTAL_NUM * ICON_SCALE_SIZE + offset.y);
-		mSelectFrame->Render(pos, scale, Vector2::ZERO, size);
+			// 選択のフレーム画像を描画
+			Vector2 pos(mSelectIndex % HORIZONTAL_NUM * ICON_SCALE_SIZE + offset.x, mSelectIndex / HORIZONTAL_NUM * ICON_SCALE_SIZE + offset.y);
+			mSelectFrame->Render(pos, scale, Vector2::ZERO, size);
+		}
 	}
 
 	// アイテム情報描画
@@ -96,7 +98,8 @@ void ItemSelect::Render(const Vector2& boardOffset)
 		const Vector2 iconPos(infoBoardPos.x + INFO_ICON_OFFSET_X, infoBoardPos.y + INFO_ICON_OFFSET_Y);
 		const Vector2 iconScale(INFO_ICON_SCALE, INFO_ICON_SCALE);
 		const Vector2 iconSize(ICON_SIZE, ICON_SIZE);
-		mInventory->GetItemParam(mSelectIndex)->icon->Render(iconPos, iconScale, texPos, iconSize);
+		const ItemData::BaseData* base = mInventory->GetItemParam(mSelectIndex);
+		if (base) base->icon->Render(iconPos, iconScale, texPos, iconSize);
 
 		// 説明
 		RenderSetInfo(infoBoardPos);
@@ -105,35 +108,24 @@ void ItemSelect::Render(const Vector2& boardOffset)
 
 }
 
-
 void ItemSelect::UpdateInfo()
 {
 	// インフォ更新
+	// 前回のアイテム情報を削除
+	mInfo.clear();
 
-	// インデックスが更新されたら
-	if (mOldSelectIndex != mSelectIndex)
+	const ItemData::BaseData* base = mInventory->GetItemParam(mSelectIndex);
+	if (!base)
 	{
-		// 前回のアイテム情報を削除
-		mInfo.clear();
-
-		const ItemData::ItemParam* param = mInventory->GetItemParam(mSelectIndex);
-		std::string range;
-
-		// 名前
-		mInfo.push_back(param->name.c_str());
-
-		// hp valuew
-		if (param->hpValue > 0) mInfo.push_back(L"HPを回復する");
-		if (param->hpValue < 0) mInfo.push_back(L"敵にダメージを与える");
-
-		// mpvalue
-		if (param->mpValue > 0) mInfo.push_back(L"MPを回復する");
-
-		// バフ系
-		if (param->atkValue > 0) mInfo.push_back(L"攻撃力を高める");
-		if (param->defValue > 0) mInfo.push_back(L"守備力を高める");
+		mInfo.push_back(L"アイテムを持ってません");
+		return;
 	}
 
+	// 名前
+	mInfo.push_back(base->name.c_str());
+
+	// 情報
+	mInfo.push_back(base->info);
 }
 
 void ItemSelect::RenderSetInfo(const Vector2& infoBoardPos)
@@ -141,11 +133,8 @@ void ItemSelect::RenderSetInfo(const Vector2& infoBoardPos)
 	Vector2 pos;// あとでボードの座標を足す(相対座標
 	Vector2 center(0.0f, 0.0f);
 	Vector2 scale(1.0f, 1.0f);
-	Vector4 color(0.5f, 0.2f, 0.0f, 1.0f); // 適当に決めてる
 	
 	const float NAME_OFFSET_Y = 28;
-	const float INFO_OFFSET_Y = 256.0f;
-	const float INFO_Y_ADD = 46;
 	for (size_t i = 0; i < mInfo.size(); ++i)
 	{
 		// アイテム名か、アイテムの情報かで分ける
@@ -153,18 +142,43 @@ void ItemSelect::RenderSetInfo(const Vector2& infoBoardPos)
 		{
 			// 名前
 			pos = infoBoardPos + Vector2(mInfoBoard->GetSize().x / 2.0f, NAME_OFFSET_Y);
-			center = Vector2(mFont.GetWidth(mInfo[i].c_str()) / 2.0f, 0.0f);
-			mFont.RenderSet(mInfo[i].c_str(), pos, center, scale, color);
+			center = Vector2(0.5f, 0.0f);
+			mFont.RenderSet(mInfo[i].c_str(), pos, center, Define::FONT_COLOR);
 		}
 		else
 		{
 			// 情報
-			pos = infoBoardPos + Vector2(mInfoBoard->GetSize().x / 2.0f, INFO_OFFSET_Y + INFO_Y_ADD * (i - 1)); // nameは含めないから-1
-			center = Vector2(mFont.GetWidth(mInfo[i].c_str()) / 2.0f, 0.0f);
-			mFont.RenderSet(mInfo[i].c_str(), pos, center, scale, color);
+
+			// 数行に分ける
+			const wchar_t* text = mInfo[i].c_str();
+			size_t size = mInfo[i].size();
+			std::wstring str[INFO_LINE_MAX];
+			int strIndex = 0;
+			for (size_t i = 0; i < size; ++i)
+			{
+				str[strIndex] += text[i];
+				if (mFont.GetWidth(str[strIndex].c_str()) >= INFO_WIDTH_MAX)
+				{
+					strIndex = Math::Min(strIndex + 1, INFO_LINE_MAX - 1);
+				}
+			}
+
+			// レンダーセット
+			pos = infoBoardPos + Vector2(INFO_TEXT_OFFSET_X, INFO_TEXT_OFFSET_Y);
+			center = Vector2(0.0f, 0.0f);
+			for (int i = 0; i < INFO_LINE_MAX; ++i)
+			{
+				pos.y += INFO_TEXT_ADD_Y * i;
+				mFont.RenderSet(str[i].c_str(), pos, center, Define::FONT_COLOR);
+			}
 		}
 	}
+}
 
-
-
+Vector2 ItemSelect::GetCursorRightUpPos() const
+{
+	const float ICON_SCALE_SIZE = ICON_SIZE * ICON_SCALE;
+	float x = ICON_OFFSET + mSelectIndex % HORIZONTAL_NUM * ICON_SCALE_SIZE + ICON_SCALE_SIZE;
+	float y = ICON_OFFSET + mSelectIndex / HORIZONTAL_NUM * ICON_SCALE_SIZE;
+	return Vector2(x, y);
 }

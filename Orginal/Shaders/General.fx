@@ -43,7 +43,7 @@ struct VSInput2D
 
 float GetVSMFactor(float2 uv, float fragDepth, float minShadowColor)
 {
-	// x：深度、y:xの2乗
+	// r：深度、g:xの2乗
 	float2 depth = ShadowMap.Sample(Sampler, uv).rg;
 
 	float variance = max(0.0, depth.y - depth.x * depth.x);

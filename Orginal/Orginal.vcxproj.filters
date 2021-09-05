@@ -1,666 +1,804 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="ソース ファイル">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="ヘッダー ファイル">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="リソース ファイル">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="lib">
+    <Filter Include="00_lib">
       <UniqueIdentifier>{24603241-7757-4a38-99c6-c667a774f39b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="lib\ソースファイル">
-      <UniqueIdentifier>{f3dc7096-5fd0-4872-bb53-927bb040d789}</UniqueIdentifier>
+    <Filter Include="02_Source">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="lib\ヘッダーファイル">
-      <UniqueIdentifier>{5c71b8c2-eeaf-4f79-becc-af486e457ad3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Scene">
-      <UniqueIdentifier>{e952b17f-4c4a-4fd0-adaf-fc1e3d966327}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Scene">
+    <Filter Include="02_Source\Scene">
       <UniqueIdentifier>{bc63fb1e-59bd-4fe3-9656-7bd0dd227b3b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Common">
-      <UniqueIdentifier>{71f21db2-2708-4b7a-8288-6db79e8bfd87}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Common">
-      <UniqueIdentifier>{c1efb00f-7112-4e01-95b5-f72278980c92}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="lib\Shader">
-      <UniqueIdentifier>{fed2d6a1-ee3b-4915-993d-fdcc4b6d2262}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Common\Camera">
-      <UniqueIdentifier>{977d39ff-9dbc-443f-bdc2-57845fa0019a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Common\Camera">
-      <UniqueIdentifier>{b52b7ba2-cf1e-4df6-b43a-57ffa81ae6a6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Scene\Battle">
-      <UniqueIdentifier>{d706a6a8-bb3c-4dd8-b83e-d61f27a727f0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Scene\Title">
-      <UniqueIdentifier>{3f7ddd05-ef49-4688-8b8a-73a0c56446cc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Scene\Field">
-      <UniqueIdentifier>{1327bd7c-e35e-4e27-975e-f429d906a23c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Scene\Battle">
+    <Filter Include="02_Source\Scene\Battle">
       <UniqueIdentifier>{55dcac0e-9e31-4ef4-89ec-41c393a50977}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Scene\Field">
-      <UniqueIdentifier>{bb26df23-fab5-4511-9ccd-22b03eec4c99}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Scene\Title">
-      <UniqueIdentifier>{1cc16655-9bf0-4f53-aac2-03586ac42bc1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="lib\Shader\ComputeShaders">
-      <UniqueIdentifier>{73987ba3-6e23-4303-9aa4-100cc9c157ec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Scene\Menu">
-      <UniqueIdentifier>{97b71ef3-2282-45f4-bc83-83b22474dca3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Scene\Menu">
-      <UniqueIdentifier>{154541bb-9f33-4e4d-a1f8-7854a0eca488}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Scene\Battle\command">
-      <UniqueIdentifier>{e98ae1f9-a9b2-4c40-80fd-3718a3b5a8d7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Scene\Battle\command">
+    <Filter Include="02_Source\Scene\Battle\command">
       <UniqueIdentifier>{85242440-ff7e-4994-9cce-9ec9b5c05204}</UniqueIdentifier>
     </Filter>
-    <Filter Include="lib\Shader\Deferred">
+    <Filter Include="02_Source\Scene\Battle\command\Decide">
+      <UniqueIdentifier>{44e8fddd-2fed-4c75-924b-8dae185d1571}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02_Source\Scene\Field">
+      <UniqueIdentifier>{bb26df23-fab5-4511-9ccd-22b03eec4c99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02_Source\Scene\Title">
+      <UniqueIdentifier>{1cc16655-9bf0-4f53-aac2-03586ac42bc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02_Source\Scene\Menu">
+      <UniqueIdentifier>{97b71ef3-2282-45f4-bc83-83b22474dca3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02_Source\Common">
+      <UniqueIdentifier>{c1efb00f-7112-4e01-95b5-f72278980c92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02_Source\Common\Camera">
+      <UniqueIdentifier>{977d39ff-9dbc-443f-bdc2-57845fa0019a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02_Source\Common\DataBase">
+      <UniqueIdentifier>{9cf7a86c-b41f-4108-a109-7158b4592e42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01_Header">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="01_Header\Scene">
+      <UniqueIdentifier>{e952b17f-4c4a-4fd0-adaf-fc1e3d966327}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01_Header\Scene\Battle">
+      <UniqueIdentifier>{d706a6a8-bb3c-4dd8-b83e-d61f27a727f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01_Header\Scene\Battle\command">
+      <UniqueIdentifier>{e98ae1f9-a9b2-4c40-80fd-3718a3b5a8d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01_Header\Scene\Battle\command\Decide">
+      <UniqueIdentifier>{5a80f3a0-7c99-4b95-80ca-4cbf537b556d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01_Header\Scene\Title">
+      <UniqueIdentifier>{3f7ddd05-ef49-4688-8b8a-73a0c56446cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01_Header\Scene\Field">
+      <UniqueIdentifier>{1327bd7c-e35e-4e27-975e-f429d906a23c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01_Header\Scene\Menu">
+      <UniqueIdentifier>{154541bb-9f33-4e4d-a1f8-7854a0eca488}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01_Header\Common">
+      <UniqueIdentifier>{71f21db2-2708-4b7a-8288-6db79e8bfd87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01_Header\Common\Camera">
+      <UniqueIdentifier>{b52b7ba2-cf1e-4df6-b43a-57ffa81ae6a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01_Header\Common\DataBase">
+      <UniqueIdentifier>{9910b773-d272-44c0-acf8-1ef84c3b3bc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02_Source\Scene\Battle\Production">
+      <UniqueIdentifier>{b7be81c2-d725-4e05-8a12-2139438013f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01_Header\Scene\Battle\Production">
+      <UniqueIdentifier>{7da41ccd-6506-4b5e-89ee-aaa83d7f9618}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_lib\00_Shader">
+      <UniqueIdentifier>{fed2d6a1-ee3b-4915-993d-fdcc4b6d2262}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_lib\00_Shader\ComputeShaders">
+      <UniqueIdentifier>{73987ba3-6e23-4303-9aa4-100cc9c157ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_lib\00_Shader\Deferred">
       <UniqueIdentifier>{0df4c3cb-c6a8-451c-bbb3-afc5e278ad1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_lib\02_LibSource">
+      <UniqueIdentifier>{f3dc7096-5fd0-4872-bb53-927bb040d789}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_lib\01_LibHeader">
+      <UniqueIdentifier>{5c71b8c2-eeaf-4f79-becc-af486e457ad3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\lib\Blend.h">
-      <Filter>lib\ヘッダーファイル</Filter>
+      <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\Framework.h">
-      <Filter>lib\ヘッダーファイル</Filter>
+      <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\GeometricPrimitive.h">
-      <Filter>lib\ヘッダーファイル</Filter>
+      <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\HighResolutionTimer.h">
-      <Filter>lib\ヘッダーファイル</Filter>
+      <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\Misc.h">
-      <Filter>lib\ヘッダーファイル</Filter>
+      <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\ProcessMessage.h">
-      <Filter>lib\ヘッダーファイル</Filter>
+      <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\Renderer2D.h">
-      <Filter>lib\ヘッダーファイル</Filter>
+      <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\Window.h">
-      <Filter>lib\ヘッダーファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Looper.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
     <ClInclude Include="Source\SceneBase.h">
-      <Filter>ヘッダー ファイル\Scene</Filter>
+      <Filter>01_Header\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Source\Fade.h">
-      <Filter>ヘッダー ファイル\Common</Filter>
+      <Filter>01_Header\Common</Filter>
     </ClInclude>
     <ClInclude Include="Source\Define.h">
-      <Filter>ヘッダー ファイル\Common</Filter>
+      <Filter>01_Header\Common</Filter>
     </ClInclude>
     <ClInclude Include="Source\CameraBase.h">
-      <Filter>ヘッダー ファイル\Common\Camera</Filter>
+      <Filter>01_Header\Common\Camera</Filter>
     </ClInclude>
     <ClInclude Include="Source\CameraTPS.h">
-      <Filter>ヘッダー ファイル\Common\Camera</Filter>
+      <Filter>01_Header\Common\Camera</Filter>
     </ClInclude>
     <ClInclude Include="Source\CameraDebug.h">
-      <Filter>ヘッダー ファイル\Common\Camera</Filter>
+      <Filter>01_Header\Common\Camera</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\Math.h">
-      <Filter>lib\ヘッダーファイル</Filter>
+      <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\Shader.h">
-      <Filter>lib\ヘッダーファイル</Filter>
+      <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\Sprite.h">
-      <Filter>lib\ヘッダーファイル</Filter>
+      <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\FontTexture.h">
-      <Filter>lib\ヘッダーファイル</Filter>
+      <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\Audio.h">
-      <Filter>lib\ヘッダーファイル</Filter>
+      <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\Font.h">
-      <Filter>lib\ヘッダーファイル</Filter>
+      <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\CollisionStructs.h">
-      <Filter>lib\ヘッダーファイル</Filter>
+      <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
     <ClInclude Include="Source\Collision.h">
-      <Filter>ヘッダー ファイル\Common</Filter>
+      <Filter>01_Header\Common</Filter>
     </ClInclude>
     <ClInclude Include="Source\MeshManager.h">
-      <Filter>ヘッダー ファイル\Common</Filter>
+      <Filter>01_Header\Common</Filter>
     </ClInclude>
     <ClInclude Include="Source\Singleton.h">
-      <Filter>ヘッダー ファイル\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DataBase.h">
-      <Filter>ヘッダー ファイル\Common</Filter>
+      <Filter>01_Header\Common</Filter>
     </ClInclude>
     <ClInclude Include="Source\SceneManager.h">
-      <Filter>ヘッダー ファイル\Scene</Filter>
+      <Filter>01_Header\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\Vector.h">
-      <Filter>lib\ヘッダーファイル</Filter>
+      <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
     <ClInclude Include="Source\CameraBattle.h">
-      <Filter>ヘッダー ファイル\Common\Camera</Filter>
+      <Filter>01_Header\Common\Camera</Filter>
     </ClInclude>
     <ClInclude Include="Source\PlayerBattle.h">
-      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+      <Filter>01_Header\Scene\Battle</Filter>
     </ClInclude>
     <ClInclude Include="Source\EnemyBattle.h">
-      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+      <Filter>01_Header\Scene\Battle</Filter>
     </ClInclude>
     <ClInclude Include="Source\SceneField.h">
-      <Filter>ヘッダー ファイル\Scene</Filter>
+      <Filter>01_Header\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Source\SceneMenu.h">
-      <Filter>ヘッダー ファイル\Scene</Filter>
+      <Filter>01_Header\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Source\SceneBattle.h">
-      <Filter>ヘッダー ファイル\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\CommandPlayer.h">
-      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+      <Filter>01_Header\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Source\Enemy.h">
-      <Filter>ヘッダー ファイル\Scene\Field</Filter>
+      <Filter>01_Header\Scene\Field</Filter>
     </ClInclude>
     <ClInclude Include="Source\Player.h">
-      <Filter>ヘッダー ファイル\Scene\Field</Filter>
+      <Filter>01_Header\Scene\Field</Filter>
     </ClInclude>
     <ClInclude Include="Source\PlayerManager.h">
-      <Filter>ヘッダー ファイル\Scene\Field</Filter>
+      <Filter>01_Header\Scene\Field</Filter>
     </ClInclude>
     <ClInclude Include="Source\EnemyManager.h">
-      <Filter>ヘッダー ファイル\Scene\Field</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\StatusData.h">
-      <Filter>ヘッダー ファイル\Common</Filter>
+      <Filter>01_Header\Scene\Field</Filter>
     </ClInclude>
     <ClInclude Include="Source\SceneTitle.h">
-      <Filter>ヘッダー ファイル\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\CommandBase.h">
-      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+      <Filter>01_Header\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Source\CharacterManager.h">
-      <Filter>ヘッダー ファイル\Scene\Field</Filter>
+      <Filter>01_Header\Scene\Field</Filter>
     </ClInclude>
     <ClInclude Include="Source\BattleCharacter.h">
-      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+      <Filter>01_Header\Scene\Battle</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\Skybox.h">
-      <Filter>ヘッダー ファイル\Common</Filter>
+      <Filter>01_Header\Common</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\ComputeShader.h">
-      <Filter>lib\ヘッダーファイル</Filter>
+      <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
     <ClInclude Include="Source\MeshDataLoader.h">
-      <Filter>ヘッダー ファイル\Common</Filter>
+      <Filter>01_Header\Common</Filter>
     </ClInclude>
     <ClInclude Include="Source\BattleCharacterManager.h">
-      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+      <Filter>01_Header\Scene\Battle</Filter>
     </ClInclude>
     <ClInclude Include="Source\EffectManager.h">
-      <Filter>ヘッダー ファイル\Common</Filter>
+      <Filter>01_Header\Common</Filter>
     </ClInclude>
     <ClInclude Include="Source\BattleState.h">
-      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+      <Filter>01_Header\Scene\Battle</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\Input.h">
-      <Filter>lib\ヘッダーファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\CommandEnemy.h">
-      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+      <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
     <ClInclude Include="Source\CameraManager.h">
-      <Filter>ヘッダー ファイル\Common\Camera</Filter>
+      <Filter>01_Header\Common\Camera</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\RenderTarget.h">
-      <Filter>lib\ヘッダーファイル</Filter>
+      <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
     <ClInclude Include="Source\ShadowMap.h">
-      <Filter>ヘッダー ファイル\Common</Filter>
+      <Filter>01_Header\Common</Filter>
     </ClInclude>
     <ClInclude Include="Source\GaussianBlur.h">
-      <Filter>ヘッダー ファイル\Common</Filter>
+      <Filter>01_Header\Common</Filter>
     </ClInclude>
     <ClInclude Include="Source\Primitive.h">
-      <Filter>ヘッダー ファイル\Common</Filter>
+      <Filter>01_Header\Common</Filter>
     </ClInclude>
     <ClInclude Include="Source\FontValue.h">
-      <Filter>ヘッダー ファイル\Common</Filter>
+      <Filter>01_Header\Common</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\ResourceManager.h">
-      <Filter>lib\ヘッダーファイル</Filter>
+      <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
     <ClInclude Include="Source\Terrain.h">
-      <Filter>ヘッダー ファイル\Scene\Field</Filter>
+      <Filter>01_Header\Scene\Field</Filter>
     </ClInclude>
     <ClInclude Include="Source\MenuSelect.h">
-      <Filter>ヘッダー ファイル\Scene\Menu</Filter>
+      <Filter>01_Header\Scene\Menu</Filter>
     </ClInclude>
     <ClInclude Include="Source\MenuManager.h">
-      <Filter>ヘッダー ファイル\Scene\Menu</Filter>
+      <Filter>01_Header\Scene\Menu</Filter>
     </ClInclude>
     <ClInclude Include="Source\MenuItem.h">
-      <Filter>ヘッダー ファイル\Scene\Menu</Filter>
+      <Filter>01_Header\Scene\Menu</Filter>
     </ClInclude>
     <ClInclude Include="Source\MenuStatus.h">
-      <Filter>ヘッダー ファイル\Scene\Menu</Filter>
+      <Filter>01_Header\Scene\Menu</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\ConvertString.h">
-      <Filter>lib\ヘッダーファイル</Filter>
+      <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
     <ClInclude Include="Source\MenuBase.h">
-      <Filter>ヘッダー ファイル\Scene\Menu</Filter>
+      <Filter>01_Header\Scene\Menu</Filter>
     </ClInclude>
     <ClInclude Include="Source\MenuCharacterSelect.h">
-      <Filter>ヘッダー ファイル\Scene\Menu</Filter>
+      <Filter>01_Header\Scene\Menu</Filter>
     </ClInclude>
     <ClInclude Include="Source\ItemSelect.h">
-      <Filter>ヘッダー ファイル\Common</Filter>
+      <Filter>01_Header\Common</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\TVector.h">
-      <Filter>lib\ヘッダーファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\CommandBehaviour.h">
-      <Filter>ヘッダー ファイル\Scene\Battle\command</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\IDecideCommand.h">
-      <Filter>ヘッダー ファイル\Scene\Battle\command</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\CommandItem.h">
-      <Filter>ヘッダー ファイル\Scene\Battle\command</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\CommandCharaSelect.h">
-      <Filter>ヘッダー ファイル\Scene\Battle\command</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ProductionValue.h">
-      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+      <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
     <ClInclude Include="Source\CollisionTerrain.h">
-      <Filter>ヘッダー ファイル\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameManager.h">
-      <Filter>ヘッダー ファイル\Common</Filter>
+      <Filter>01_Header\Common</Filter>
     </ClInclude>
     <ClInclude Include="Source\Item.h">
-      <Filter>ヘッダー ファイル\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ItemData.h">
-      <Filter>ヘッダー ファイル\Common</Filter>
+      <Filter>01_Header\Common</Filter>
     </ClInclude>
     <ClInclude Include="Source\CharacterHealth.h">
-      <Filter>ヘッダー ファイル\Scene\Menu</Filter>
+      <Filter>01_Header\Scene\Menu</Filter>
     </ClInclude>
     <ClInclude Include="Source\TurnManager.h">
-      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\IBattleProduction.h">
-      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ProductionAttack.h">
-      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+      <Filter>01_Header\Scene\Battle</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\SkinnedMesh.h">
-      <Filter>lib\ヘッダーファイル</Filter>
+      <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
     <ClInclude Include="Source\DeferredDirLight.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>01_Header</Filter>
     </ClInclude>
     <ClInclude Include="Source\Light.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>01_Header</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\ConstantBuffer.h">
-      <Filter>lib\ヘッダーファイル</Filter>
+      <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\ShaderManager.h">
-      <Filter>lib\ヘッダーファイル</Filter>
+      <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
     <ClInclude Include="Source\Particle.h">
-      <Filter>ヘッダー ファイル\Common</Filter>
+      <Filter>01_Header\Common</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\Random.h">
-      <Filter>lib\ヘッダーファイル</Filter>
+      <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
     <ClInclude Include="Source\Object.h">
-      <Filter>ヘッダー ファイル\Common</Filter>
+      <Filter>01_Header\Common</Filter>
     </ClInclude>
     <ClInclude Include="Source\Character.h">
-      <Filter>ヘッダー ファイル\Scene\Field</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\EquipmentData.h">
-      <Filter>ヘッダー ファイル\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\CommandEscape.h">
-      <Filter>ヘッダー ファイル\Scene\Battle\command</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ProductionUseItem.h">
-      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ProductionEscape.h">
-      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+      <Filter>01_Header\Scene\Field</Filter>
     </ClInclude>
     <ClInclude Include="Source\Equipment.h">
-      <Filter>ヘッダー ファイル\Common</Filter>
+      <Filter>01_Header\Common</Filter>
     </ClInclude>
     <ClInclude Include="Source\MenuEquipment.h">
-      <Filter>ヘッダー ファイル\Scene\Menu</Filter>
+      <Filter>01_Header\Scene\Menu</Filter>
     </ClInclude>
     <ClInclude Include="Source\EquipmentSelect.h">
-      <Filter>ヘッダー ファイル\Scene\Menu</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\EquipmentInventory.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>01_Header\Scene\Menu</Filter>
     </ClInclude>
     <ClInclude Include="Source\DamageCalculator.h">
-      <Filter>ヘッダー ファイル\Scene\Battle</Filter>
+      <Filter>01_Header\Scene\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DropItemShower.h">
+      <Filter>01_Header\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BossEnemy.h">
+      <Filter>01_Header\Scene\Field</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameManager.h">
+      <Filter>01_Header\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BossEnemyBattle.h">
+      <Filter>01_Header\Scene\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CommandBase.h">
+      <Filter>01_Header\Scene\Battle\command</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CommandEnemy.h">
+      <Filter>01_Header\Scene\Battle\command</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CommandPlayer.h">
+      <Filter>01_Header\Scene\Battle\command</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CommandBossEnemy.h">
+      <Filter>01_Header\Scene\Battle\command</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SkillSelect.h">
+      <Filter>01_Header\Scene\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DecideEscape.h">
+      <Filter>01_Header\Scene\Battle\command\Decide</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DecideBehaviour.h">
+      <Filter>01_Header\Scene\Battle\command\Decide</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DecideItem.h">
+      <Filter>01_Header\Scene\Battle\command\Decide</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\IDecideCommand.h">
+      <Filter>01_Header\Scene\Battle\command\Decide</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DecideTargetChara.h">
+      <Filter>01_Header\Scene\Battle\command\Decide</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DecideSkill.h">
+      <Filter>01_Header\Scene\Battle\command\Decide</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TimeStamp.h">
+      <Filter>01_Header\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DataBase.h">
+      <Filter>01_Header\Common\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DropData.h">
+      <Filter>01_Header\Common\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SkillData.h">
+      <Filter>01_Header\Common\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StatusData.h">
+      <Filter>01_Header\Common\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ItemData.h">
+      <Filter>01_Header\Common\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TransformData.h">
+      <Filter>01_Header\Common\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CSVLoader.h">
+      <Filter>01_Header\Common\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EquipmentInventory.h">
+      <Filter>01_Header\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Looper.h">
+      <Filter>01_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\IBattleProduction.h">
+      <Filter>01_Header\Scene\Battle\Production</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ProductionAttack.h">
+      <Filter>01_Header\Scene\Battle\Production</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ProductionEscape.h">
+      <Filter>01_Header\Scene\Battle\Production</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ProductionGuard.h">
+      <Filter>01_Header\Scene\Battle\Production</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ProductionSkill.h">
+      <Filter>01_Header\Scene\Battle\Production</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ProductionUseItem.h">
+      <Filter>01_Header\Scene\Battle\Production</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ProductionValue.h">
+      <Filter>01_Header\Scene\Battle\Production</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SelectOptions.h">
+      <Filter>01_Header\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DecideGuard.h">
+      <Filter>01_Header\Scene\Battle\command\Decide</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\IFieldUseItemEffect.h">
+      <Filter>01_Header\Common\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\NPC.h">
+      <Filter>01_Header\Scene\Field</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\NPCTextData.h">
+      <Filter>01_Header\Common\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\NPCManager.h">
+      <Filter>01_Header\Scene\Field</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\NPCTalk.h">
+      <Filter>01_Header\Scene\Field</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\lib\Blend.cpp">
-      <Filter>lib\ソースファイル</Filter>
+      <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\Framework.cpp">
-      <Filter>lib\ソースファイル</Filter>
+      <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\GeometricPrimitive.cpp">
-      <Filter>lib\ソースファイル</Filter>
+      <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\ProcessMessage.cpp">
-      <Filter>lib\ソースファイル</Filter>
+      <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\Renderer2D.cpp">
-      <Filter>lib\ソースファイル</Filter>
+      <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\Window.cpp">
-      <Filter>lib\ソースファイル</Filter>
+      <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
     <ClCompile Include="Source\Fade.cpp">
-      <Filter>ソース ファイル\Common</Filter>
+      <Filter>02_Source\Common</Filter>
     </ClCompile>
     <ClCompile Include="Source\Main.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>02_Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\CameraBase.cpp">
-      <Filter>ソース ファイル\Common\Camera</Filter>
+      <Filter>02_Source\Common\Camera</Filter>
     </ClCompile>
     <ClCompile Include="Source\CameraTPS.cpp">
-      <Filter>ソース ファイル\Common\Camera</Filter>
+      <Filter>02_Source\Common\Camera</Filter>
     </ClCompile>
     <ClCompile Include="Source\CameraDebug.cpp">
-      <Filter>ソース ファイル\Common\Camera</Filter>
+      <Filter>02_Source\Common\Camera</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\Math.cpp">
-      <Filter>lib\ソースファイル</Filter>
+      <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\Shader.cpp">
-      <Filter>lib\ソースファイル</Filter>
+      <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\Sprite.cpp">
-      <Filter>lib\ソースファイル</Filter>
+      <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\FontTexture.cpp">
-      <Filter>lib\ソースファイル</Filter>
+      <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\Audio.cpp">
-      <Filter>lib\ソースファイル</Filter>
+      <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\Font.cpp">
-      <Filter>lib\ソースファイル</Filter>
+      <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\HighResolutionTimer.cpp">
-      <Filter>lib\ソースファイル</Filter>
+      <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
     <ClCompile Include="Source\Collision.cpp">
-      <Filter>ソース ファイル\Common</Filter>
+      <Filter>02_Source\Common</Filter>
     </ClCompile>
     <ClCompile Include="Source\MeshManager.cpp">
-      <Filter>ソース ファイル\Common</Filter>
+      <Filter>02_Source\Common</Filter>
     </ClCompile>
     <ClCompile Include="Source\Singleton.cpp">
-      <Filter>ソース ファイル\Common</Filter>
+      <Filter>02_Source\Common</Filter>
     </ClCompile>
     <ClCompile Include="Source\SceneManager.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
+      <Filter>02_Source\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\Vector.cpp">
-      <Filter>lib\ソースファイル</Filter>
+      <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
     <ClCompile Include="Source\CameraBattle.cpp">
-      <Filter>ソース ファイル\Common\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DataBase.cpp">
-      <Filter>ソース ファイル\Common</Filter>
+      <Filter>02_Source\Common\Camera</Filter>
     </ClCompile>
     <ClCompile Include="Source\EnemyBattle.cpp">
-      <Filter>ソース ファイル\Scene\Battle</Filter>
+      <Filter>02_Source\Scene\Battle</Filter>
     </ClCompile>
     <ClCompile Include="Source\Enemy.cpp">
-      <Filter>ソース ファイル\Scene\Field</Filter>
+      <Filter>02_Source\Scene\Field</Filter>
     </ClCompile>
     <ClCompile Include="Source\Player.cpp">
-      <Filter>ソース ファイル\Scene\Field</Filter>
+      <Filter>02_Source\Scene\Field</Filter>
     </ClCompile>
     <ClCompile Include="Source\PlayerBattle.cpp">
-      <Filter>ソース ファイル\Scene\Battle</Filter>
+      <Filter>02_Source\Scene\Battle</Filter>
     </ClCompile>
     <ClCompile Include="Source\SceneField.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
+      <Filter>02_Source\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Source\SceneBattle.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
+      <Filter>02_Source\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Source\EnemyManager.cpp">
-      <Filter>ソース ファイル\Scene\Field</Filter>
+      <Filter>02_Source\Scene\Field</Filter>
     </ClCompile>
     <ClCompile Include="Source\BattleCharacterManager.cpp">
-      <Filter>ソース ファイル\Scene\Battle</Filter>
+      <Filter>02_Source\Scene\Battle</Filter>
     </ClCompile>
     <ClCompile Include="Source\CharacterManager.cpp">
-      <Filter>ソース ファイル\Scene\Field</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\CommandPlayer.cpp">
-      <Filter>ソース ファイル\Scene\Battle</Filter>
+      <Filter>02_Source\Scene\Field</Filter>
     </ClCompile>
     <ClCompile Include="Source\PlayerManager.cpp">
-      <Filter>ソース ファイル\Scene\Field</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\StatusData.cpp">
-      <Filter>ソース ファイル\Common</Filter>
+      <Filter>02_Source\Scene\Field</Filter>
     </ClCompile>
     <ClCompile Include="Source\SceneTitle.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
+      <Filter>02_Source\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Source\SceneMenu.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
+      <Filter>02_Source\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Source\BattleCharacter.cpp">
-      <Filter>ソース ファイル\Scene\Battle</Filter>
+      <Filter>02_Source\Scene\Battle</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\Skybox.cpp">
-      <Filter>ソース ファイル\Common</Filter>
+      <Filter>02_Source\Common</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\ComputeShader.cpp">
-      <Filter>lib\ソースファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\MeshDataLoader.cpp">
-      <Filter>ソース ファイル\Common</Filter>
+      <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\Input.cpp">
-      <Filter>lib\ソースファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\CommandEnemy.cpp">
-      <Filter>ソース ファイル\Scene\Battle</Filter>
+      <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
     <ClCompile Include="Source\Terrain.cpp">
-      <Filter>ソース ファイル\Scene\Field</Filter>
+      <Filter>02_Source\Scene\Field</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\RenderTarget.cpp">
-      <Filter>lib\ソースファイル</Filter>
+      <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
     <ClCompile Include="Source\ShadowMap.cpp">
-      <Filter>ソース ファイル\Common</Filter>
+      <Filter>02_Source\Common</Filter>
     </ClCompile>
     <ClCompile Include="Source\CollisionTerrain.cpp">
-      <Filter>ソース ファイル\Common</Filter>
+      <Filter>02_Source\Common</Filter>
     </ClCompile>
     <ClCompile Include="Source\CameraManager.cpp">
-      <Filter>ソース ファイル\Common\Camera</Filter>
+      <Filter>02_Source\Common\Camera</Filter>
     </ClCompile>
     <ClCompile Include="Source\FontValue.cpp">
-      <Filter>ソース ファイル\Common</Filter>
+      <Filter>02_Source\Common</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\ResourceManager.cpp">
-      <Filter>lib\ソースファイル</Filter>
+      <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
     <ClCompile Include="Source\MenuSelect.cpp">
-      <Filter>ソース ファイル\Scene\Menu</Filter>
+      <Filter>02_Source\Scene\Menu</Filter>
     </ClCompile>
     <ClCompile Include="Source\MenuManager.cpp">
-      <Filter>ソース ファイル\Scene\Menu</Filter>
+      <Filter>02_Source\Scene\Menu</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\ConvertString.cpp">
-      <Filter>lib\ソースファイル</Filter>
+      <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
     <ClCompile Include="Source\MenuItem.cpp">
-      <Filter>ソース ファイル\Scene\Menu</Filter>
+      <Filter>02_Source\Scene\Menu</Filter>
     </ClCompile>
     <ClCompile Include="Source\MenuStatus.cpp">
-      <Filter>ソース ファイル\Scene\Menu</Filter>
+      <Filter>02_Source\Scene\Menu</Filter>
     </ClCompile>
     <ClCompile Include="Source\MenuCharacterSelect.cpp">
-      <Filter>ソース ファイル\Scene\Menu</Filter>
+      <Filter>02_Source\Scene\Menu</Filter>
     </ClCompile>
     <ClCompile Include="Source\ItemSelect.cpp">
-      <Filter>ソース ファイル\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\CommandBehaviour.cpp">
-      <Filter>ソース ファイル\Scene\Battle\command</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\CommandItem.cpp">
-      <Filter>ソース ファイル\Scene\Battle\command</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\CommandCharaSelect.cpp">
-      <Filter>ソース ファイル\Scene\Battle\command</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ProductionValue.cpp">
-      <Filter>ソース ファイル\Scene\Battle</Filter>
+      <Filter>02_Source\Common</Filter>
     </ClCompile>
     <ClCompile Include="Source\EffectManager.cpp">
-      <Filter>ソース ファイル\Common</Filter>
+      <Filter>02_Source\Common</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameManager.cpp">
-      <Filter>ソース ファイル\Common</Filter>
+      <Filter>02_Source\Common</Filter>
     </ClCompile>
     <ClCompile Include="Source\Item.cpp">
-      <Filter>ソース ファイル\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ItemData.cpp">
-      <Filter>ソース ファイル\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Looper.cpp">
-      <Filter>ソース ファイル\Common</Filter>
+      <Filter>02_Source\Common</Filter>
     </ClCompile>
     <ClCompile Include="Source\Primitive.cpp">
-      <Filter>ソース ファイル\Common</Filter>
+      <Filter>02_Source\Common</Filter>
     </ClCompile>
     <ClCompile Include="Source\CharacterHealth.cpp">
-      <Filter>ソース ファイル\Scene\Menu</Filter>
+      <Filter>02_Source\Scene\Menu</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\SkinnedMesh.cpp">
-      <Filter>lib\ソースファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ProductionAttack.cpp">
-      <Filter>ソース ファイル\Scene\Battle</Filter>
+      <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
     <ClCompile Include="Source\TurnManager.cpp">
-      <Filter>ソース ファイル\Scene\Battle</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\IBattleProduction.cpp">
-      <Filter>ソース ファイル\Scene\Battle</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ProductionUseItem.cpp">
-      <Filter>ソース ファイル\Scene\Battle</Filter>
+      <Filter>02_Source\Scene\Battle</Filter>
     </ClCompile>
     <ClCompile Include="Source\CommandBase.cpp">
-      <Filter>ソース ファイル\Scene\Battle\command</Filter>
+      <Filter>02_Source\Scene\Battle\command</Filter>
     </ClCompile>
     <ClCompile Include="Source\SceneBase.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Light.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GaussianBlur.cpp">
-      <Filter>ソース ファイル\Scene\Battle</Filter>
+      <Filter>02_Source\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\ConstantBuffer.cpp">
-      <Filter>lib\ソースファイル</Filter>
+      <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\ShaderManager.cpp">
-      <Filter>lib\ソースファイル</Filter>
+      <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
     <ClCompile Include="Source\Particle.cpp">
-      <Filter>ソース ファイル\Common</Filter>
+      <Filter>02_Source\Common</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\Random.cpp">
-      <Filter>lib\ソースファイル</Filter>
+      <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
     <ClCompile Include="Source\Object.cpp">
-      <Filter>ソース ファイル\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Character.cpp">
-      <Filter>ソース ファイル\Scene\Field</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\EquipmentData.cpp">
-      <Filter>ソース ファイル\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\CommandEscape.cpp">
-      <Filter>ソース ファイル\Scene\Battle\command</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ProductionEscape.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Equipment.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>02_Source\Common</Filter>
     </ClCompile>
     <ClCompile Include="Source\MenuEquipment.cpp">
-      <Filter>ソース ファイル\Scene\Menu</Filter>
+      <Filter>02_Source\Scene\Menu</Filter>
     </ClCompile>
-    <ClCompile Include="Source\EquipmentSelect.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Source\BossEnemy.cpp">
+      <Filter>02_Source\Scene\Field</Filter>
     </ClCompile>
-    <ClCompile Include="Source\EquipmentInventory.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Source\DropItemShower.cpp">
+      <Filter>02_Source\Scene\Battle</Filter>
     </ClCompile>
     <ClCompile Include="Source\DamageCalculator.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>02_Source\Scene\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Equipment.cpp">
+      <Filter>02_Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EquipmentInventory.cpp">
+      <Filter>02_Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EquipmentSelect.cpp">
+      <Filter>02_Source\Scene\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Light.cpp">
+      <Filter>02_Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BossEnemyBattle.cpp">
+      <Filter>02_Source\Scene\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CommandEnemy.cpp">
+      <Filter>02_Source\Scene\Battle\command</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CommandPlayer.cpp">
+      <Filter>02_Source\Scene\Battle\command</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CommandBossEnemy.cpp">
+      <Filter>02_Source\Scene\Battle\command</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DecideBehaviour.cpp">
+      <Filter>02_Source\Scene\Battle\command\Decide</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DecideTargetChara.cpp">
+      <Filter>02_Source\Scene\Battle\command\Decide</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DecideEscape.cpp">
+      <Filter>02_Source\Scene\Battle\command\Decide</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DecideItem.cpp">
+      <Filter>02_Source\Scene\Battle\command\Decide</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DecideSkill.cpp">
+      <Filter>02_Source\Scene\Battle\command\Decide</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\IDecideCommand.cpp">
+      <Filter>02_Source\Scene\Battle\command\Decide</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\TimeStamp.cpp">
+      <Filter>02_Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DropData.cpp">
+      <Filter>02_Source\Common\DataBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DataBase.cpp">
+      <Filter>02_Source\Common\DataBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ItemData.cpp">
+      <Filter>02_Source\Common\DataBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\StatusData.cpp">
+      <Filter>02_Source\Common\DataBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SkillData.cpp">
+      <Filter>02_Source\Common\DataBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\TransformData.cpp">
+      <Filter>02_Source\Common\DataBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SkillSelect.cpp">
+      <Filter>02_Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Define.cpp">
+      <Filter>02_Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ProductionAttack.cpp">
+      <Filter>02_Source\Scene\Battle\Production</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ProductionEscape.cpp">
+      <Filter>02_Source\Scene\Battle\Production</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ProductionGuard.cpp">
+      <Filter>02_Source\Scene\Battle\Production</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ProductionSkill.cpp">
+      <Filter>02_Source\Scene\Battle\Production</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ProductionUseItem.cpp">
+      <Filter>02_Source\Scene\Battle\Production</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ProductionValue.cpp">
+      <Filter>02_Source\Scene\Battle\Production</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\IBattleProduction.cpp">
+      <Filter>02_Source\Scene\Battle\Production</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GaussianBlur.cpp">
+      <Filter>02_Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Looper.cpp">
+      <Filter>02_Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CSVLoader.cpp">
+      <Filter>02_Source\Common\DataBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SelectOptions.cpp">
+      <Filter>02_Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DecideGuard.cpp">
+      <Filter>02_Source\Scene\Battle\command\Decide</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MeshDataLoader.cpp">
+      <Filter>02_Source\Common\DataBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\IFieldUseItemEffect.cpp">
+      <Filter>02_Source\Common\DataBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\NPC.cpp">
+      <Filter>02_Source\Scene\Field</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Character.cpp">
+      <Filter>02_Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\NPCTextData.cpp">
+      <Filter>02_Source\Common\DataBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\NPCManager.cpp">
+      <Filter>02_Source\Scene\Field</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\NPCTalk.cpp">
+      <Filter>02_Source\Scene\Field</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -673,46 +811,46 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\General.fx">
-      <Filter>lib\Shader</Filter>
+      <Filter>00_lib\00_Shader</Filter>
     </None>
     <None Include="Shaders\Character.fx">
-      <Filter>lib\Shader</Filter>
+      <Filter>00_lib\00_Shader</Filter>
     </None>
     <None Include="Shaders\GeometricPrimitive.fx">
-      <Filter>lib\Shader</Filter>
+      <Filter>00_lib\00_Shader</Filter>
     </None>
     <None Include="Shaders\PostEffect.fx">
-      <Filter>lib\Shader</Filter>
+      <Filter>00_lib\00_Shader</Filter>
     </None>
     <None Include="Shaders\Renderer2D.fx">
-      <Filter>lib\Shader</Filter>
+      <Filter>00_lib\00_Shader</Filter>
     </None>
     <None Include="Shaders\ShadowMap.fx">
-      <Filter>lib\Shader</Filter>
+      <Filter>00_lib\00_Shader</Filter>
     </None>
     <None Include="Shaders\SkinnedMesh.fx">
-      <Filter>lib\Shader</Filter>
+      <Filter>00_lib\00_Shader</Filter>
     </None>
     <None Include="Shaders\SkyBox.fx">
-      <Filter>lib\Shader</Filter>
+      <Filter>00_lib\00_Shader</Filter>
     </None>
     <None Include="Shaders\ComputeShaders\Skinning.fx">
-      <Filter>lib\Shader\ComputeShaders</Filter>
+      <Filter>00_lib\00_Shader\ComputeShaders</Filter>
     </None>
     <None Include="Shaders\GeneralDeferred.fx">
-      <Filter>lib\Shader\Deferred</Filter>
+      <Filter>00_lib\00_Shader\Deferred</Filter>
     </None>
     <None Include="Shaders\DeferredDirLight.fx">
-      <Filter>lib\Shader\Deferred</Filter>
+      <Filter>00_lib\00_Shader\Deferred</Filter>
     </None>
     <None Include="Shaders\GBuffer.fx">
-      <Filter>lib\Shader\Deferred</Filter>
+      <Filter>00_lib\00_Shader\Deferred</Filter>
     </None>
     <None Include="Shaders\GaussianBlur.fx">
-      <Filter>lib\Shader</Filter>
+      <Filter>00_lib\00_Shader</Filter>
     </None>
     <None Include="Shaders\PointSprite.fx">
-      <Filter>lib\Shader</Filter>
+      <Filter>00_lib\00_Shader</Filter>
     </None>
   </ItemGroup>
 </Project>

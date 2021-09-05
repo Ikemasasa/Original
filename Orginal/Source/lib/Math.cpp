@@ -4,12 +4,12 @@ bool Math::IsSharpAngle(const Vector3& p1, const Vector3& p2, const Vector3& p3)
 {
 	const Vector3 vec1 = p1 - p2;
 	const Vector3 vec2 = p3 - p2;
-	return vec1.Dot(vec2) >= 0.0f;
+	return Vector3::Dot(vec1, vec2) >= 0.0f;
 }
 
 bool Math::IsParallel(const Vector3& v1, const Vector3& v2)
 {
-	Vector3 cross = v1.Cross(v2);
+	Vector3 cross = Vector3::Cross(v1, v2);
 	float d = cross.LengthSq();
 
 	return (-_OX_EPSILON_ < d && d < _OX_EPSILON_);	// åÎç∑îÕàÕì‡Ç»ÇÁïΩçsÇ∆îªíË
@@ -21,7 +21,7 @@ float Math::CalcPointLineDist(const Vector3& p, const Line& line, Vector3& h, fl
 	t = 0.0f;
 	if (lengthSqV > 0.0f)
 	{
-		t = line.v.Dot(Vector3(p - line.p)) / lengthSqV;
+		t = Vector3::Dot(line.v, Vector3(p- line.p)) / lengthSqV;
 	}
 
 	h = line.GetPoint(t);
@@ -79,13 +79,13 @@ float Math::CalcLineLineDist(const Line& line1, const Line& line2, Vector3& p1, 
 	}
 
 	// 2íºê¸ÇÕÇÀÇ∂ÇÍä÷åW
-	float DV1V2 = line1.v.Dot(line2.v);
+	float DV1V2 = Vector3::Dot(line1.v, line2.v);
 	float DV1V1 = line1.v.LengthSq();
 	float DV2V2 = line2.v.LengthSq();
 	Vector3 P21P11 = line1.p - line2.p;
-	t1 = (DV1V2 * line2.v.Dot(P21P11) - DV2V2 * line1.v.Dot(P21P11)) / (DV1V1 * DV2V2 - DV1V2 * DV1V2);
+	t1 = (DV1V2 * Vector3::Dot(line2.v, P21P11) - DV2V2 * Vector3::Dot(line1.v, P21P11)) / (DV1V1 * DV2V2 - DV1V2 * DV1V2);
 	p1 = line1.GetPoint(t1);
-	t2 = line2.v.Dot(p1 - line2.p) / DV2V2;
+	t2 = Vector3::Dot(line2.v, (p1 - line2.p)) / DV2V2;
 	p2 = line2.GetPoint(t2);
 
 	return Vector3(p2 - p1).Length();

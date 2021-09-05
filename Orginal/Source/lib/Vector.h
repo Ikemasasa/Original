@@ -2,6 +2,8 @@
 #include <Windows.h>
 #include <directXmath.h>
 
+class Matrix;
+
 class Vector2 : public DirectX::XMFLOAT2
 {
 public:
@@ -80,6 +82,9 @@ public:
 	inline BOOL operator == (const Vector3& r) const { return x == r.x && y == r.y && z == r.z; }
 	inline BOOL operator != (const Vector3& r) const { return x != r.x || y != r.y || z != r.z; }
 
+	//inline Vector3 operator +(const Vector3& r) const { return Vector3(x + r.x, y + r.y, z + r.z); }
+	//inline Vector3 operator -(const Vector3& r) const { return Vector3(x - r.x, y - r.y, z - r.z); }
+
 	inline Vector3 operator +(const float r)  const { return Vector3(x + r, y + r, z + r); }
 	inline Vector3 operator -(const float r)  const { return Vector3(x - r, y - r, z - r); }
 	inline Vector3 operator *(const float r)  const { return Vector3(x * r, y * r, z * r); }
@@ -88,15 +93,14 @@ public:
 	inline void operator +=(const Vector3& r) { x += r.x, y += r.y, z += r.z; }
 	inline void operator -=(const Vector3& r) { x -= r.x, y -= r.y, z -= r.z; }
 
+	inline void operator /=(const float r) { x /= r, y /= r, z /= r; }
 	inline void operator *=(const float r) { x *= r, y *= r, z *= r; }
 
+	static float Dot(const Vector3& v0, const Vector3& v1);
+	static Vector3 Cross(const Vector3& v0, const Vector3& v1);
 	static Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
-
-	// ベクトルの内積
-	float Dot(const Vector3& In) const { return x * In.x + y * In.y + z * In.z; }
-
-	// ベクトルの外積
-	Vector3 Cross(const Vector3& In) const { return Vector3(y * In.z - z * In.y, z * In.x - x * In.z, x * In.y - y * In.x); }
+	void Transform(const Vector3& v, const Matrix& m);
+	void TransformCoord(const Vector3& v, const Matrix& m);
 
 	//代入
 	Vector3& operator=(const DirectX::XMVECTOR & other) 
@@ -113,14 +117,8 @@ public:
 	}
 
 	//長さ
-	float Length() const 
-	{
-		return (static_cast<Vector3>(DirectX::XMVector3Length(DirectX::XMVECTOR(*this)))).x;
-	}
-	float LengthSq() const
-	{
-		return (static_cast<Vector3>(DirectX::XMVector3LengthSq(DirectX::XMVECTOR(*this)))).x;
-	}
+	float Length() const { return sqrtf(x * x + y * y + z * z); }
+	float LengthSq() const { return x * x + y * y + z * z; }
 
 	//正規化
 	void Normalize() { *this = DirectX::XMVector3Normalize(DirectX::XMVECTOR(*this)); }
@@ -141,6 +139,10 @@ public:
 	Vector4(float x, float y, float z, float w)
 	{
 		this->x = x; this->y = y; this->z = z; this->w = w;
+	}
+	Vector4(const Vector3& rgb, float a)
+	{
+		this->x = rgb.x; this->y = rgb.y; this->z = rgb.z; this->w = a;
 	}
 	Vector4(const DirectX::XMVECTOR& other) : XMFLOAT4() {
 		DirectX::XMVECTOR temp = other;
@@ -191,19 +193,14 @@ public:
 		float m[16];
 	};
 
-	float* Data() { return m; }
-
-	void Identity();
+private:
 	void Multiply(const Matrix& mat1, const Matrix& mat2);
 	void Multiply(float val);
+
+public:
+	float* Data() { return m; }
+	void Identity();
 	void Inverse();
-
-
-	Matrix& operator *=(const Matrix& mat)
-	{
-		Multiply(*this, mat);
-		return *this;
-	}
 
 	Matrix operator *(const Matrix& mat) const
 	{
@@ -230,5 +227,11 @@ public:
 			m.m[i] = this->m[i] * val;
 		}
 		return m;
+	}
+
+	Matrix& operator *=(const Matrix& mat)
+	{
+		Multiply(*this, mat);
+		return *this;
 	}
 };

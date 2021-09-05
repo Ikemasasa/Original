@@ -503,8 +503,8 @@ HRESULT GeometricCapsule::SetVertexBuffer(ID3D11Device* device)
 	//--  カプセル座標の単位ベクトルを作成する  --//
 	Vector3 uz = mCenterTop - mCenterBottom; // uz : P2からP1へ向かう向きのベクトル
 	uz.Normalize();
-	Vector3 uy = uz.Cross(sliceVector);	     // uy : vzとvと直角なベクトル
-	Vector3 ux = uz.Cross(uy);				 // vx : vzとvyと直角なベクトル
+	Vector3 uy = Vector3::Cross(uz, sliceVector);	     // uy : vzとvと直角なベクトル
+	Vector3 ux = Vector3::Cross(uz, uy);				 // vx : vzとvyと直角なベクトル
 
 	// ベクトルの大きさをワールド座標でのradiusにする
 	ux.Normalize();

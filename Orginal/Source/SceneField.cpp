@@ -21,16 +21,13 @@
 
 SceneField::SceneField()
 {
-	mRamp.Load(L"Data/Image/Ramp.png");
-	mRamp.Set(15);
+	mRamp = std::make_unique<Sprite>(L"Data/Image/Ramp.png");
+	mRamp->Set(15);
 
 	CreatePostEffectShader();
 
 	mSceneTarget.Initialize();
 	mShadowMap.Initialize();
-
-	Singleton<DataBase>().GetInstance();
-	Singleton<CameraManager>().GetInstance().Push(std::make_shared<CameraTPS>());
 
 	mCharaManager = std::make_unique<CharacterManager>();
 	mSkybox		  = std::make_unique<Skybox>();
@@ -46,9 +43,6 @@ SceneField::~SceneField()
 
 void SceneField::Initialize()
 {
-	// BGM 再生開始
-	AUDIO.MusicPlay((int)Music::FIELD_REMAINS);
-
 	// ライト設定
 	{
 		Vector4 lightDir(0.5f, -0.5f, -1.0f, 1.0f);
@@ -62,9 +56,16 @@ void SceneField::Initialize()
 		mLight.SetConstBuffer(1);
 	}
 
+	DataBase::Initialize();
 	mSkybox->Initialize(L"Data/Image/sky.png");
 	mTerrain->Initialize();
 	mCharaManager->Initialize();
+
+	Singleton<CameraManager>().GetInstance().Push(std::make_shared<CameraTPS>());
+	Singleton<CameraManager>().GetInstance().Initialize(mCharaManager->GetMovePlayer());
+	
+	// BGM 再生開始
+	AUDIO.MusicPlay((int)Music::FIELD_REMAINS);
 }
 
 void SceneField::Update()
@@ -103,6 +104,10 @@ void SceneField::Release()
 {
 	AUDIO.MusicStop((int)Music::FIELD_REMAINS);
 
+	Singleton<CameraManager>().GetInstance().Pop();
+
+	DataBase::Release();
 	mSkybox->Release();
-	mPostEffect->UnLoad();
+	mRamp->UnLoad();
+	mPostEffect->UnLoad();  
 }

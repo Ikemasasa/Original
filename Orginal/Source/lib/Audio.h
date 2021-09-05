@@ -1,15 +1,14 @@
 #pragma once
 #include "DirectXTK/Inc/Audio.h"
 
-// そのうちopenalに変えよう
-// 後、music, soundは別クラスにした方がいいかもしれない 
-
 enum class Music
 {
     TITLE,
     FIELD_REMAINS,
     BATTLE,
+    BOSS_BATTLE,
     RESULT,
+    BOSS_RESULT,
     NUM
 };
 
@@ -19,7 +18,11 @@ enum class Sound
     SELECT_LONG,
     CANCEL,
     CURSOR_MOVE,
+    EQUIP,
     HEAL,
+    BUFF,
+    DEBUFF,
+    BOMB,
     NUM
 };
 
@@ -60,7 +63,8 @@ public:
     void MusicResume(int slot); // 再開
     void MusicSetVolume(int slot, float volume); //音量設定
 
-    void SoundPlay(int slot); 
+    void SoundPlay(int slot);
+    void SoundStop(int slot);
 
     static Audio& GetInstance()
     {

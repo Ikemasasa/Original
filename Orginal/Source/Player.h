@@ -18,4 +18,5 @@ public:
 	void Update();
 
 	Item* GetInventory() { return &mInventory; }
+	void SetInventory(const Item* inventory) { mInventory = *inventory; }
 };

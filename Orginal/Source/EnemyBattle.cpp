@@ -1,12 +1,13 @@
 #include "EnemyBattle.h"
 
+#include <memory>
+
 #include "CommandEnemy.h"
+#include "Define.h"
 #include "Enemy.h"
-#include "DataBase.h"
-#include "Singleton.h"
 #include "StatusData.h"
 
-EnemyBattle::EnemyBattle(const Enemy* enemy) : BattleCharacter(enemy, Singleton<DataBase>().GetInstance().GetStatusData()->GetEnmStatus(enemy->GetCharaID()))
+EnemyBattle::EnemyBattle(const Enemy* enemy) : BattleCharacter(enemy, StatusData::GetEnmStatus(enemy->GetCharaID()))
 {
 	mCommand = std::make_unique<CommandEnemy>();// 後でコマンドエネミーにする
 }
@@ -14,5 +15,5 @@ EnemyBattle::EnemyBattle(const Enemy* enemy) : BattleCharacter(enemy, Singleton<
 void EnemyBattle::Initialize()
 {
 	SetMotion(SkinnedMesh::IDLE);
-	SetAngle(Vector3(0.0f, DirectX::XMConvertToRadians(180.0f), 0.0f));
+	SetAngle(Vector3(0.0f, Define::PI, 0.0f));
 }

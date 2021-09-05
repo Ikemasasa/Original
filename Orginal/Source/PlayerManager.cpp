@@ -2,13 +2,11 @@
 
 #include "lib/Input.h"
 
-#include "DataBase.h"
 #include "Fade.h"
 #include "GameManager.h"
 #include "Player.h"
 #include "SceneManager.h"
 #include "SceneMenu.h"
-#include "Singleton.h"
 #include "ItemData.h"
 
 PlayerManager::PlayerManager()
@@ -29,8 +27,8 @@ void PlayerManager::Create(int charaID)
 
 void PlayerManager::Initialize()
 {
-	mEquipmentInventory.Push(EquipmentData::BEGINNERS_SWORD);
-	mEquipmentInventory.Push(EquipmentData::BEGINNERS_ARMOR);
+	mEquipmentInventory.Push(ItemData::BEGINNERS_SWORD);
+	mEquipmentInventory.Push(ItemData::BEGINNERS_ARMOR);
 
 	for (int i = DataBase::PL_ID_START; i < PL_ID_MAX; ++i)
 	{
@@ -39,10 +37,9 @@ void PlayerManager::Initialize()
 	}
 
 	mMovePlayer = mPlayers.begin()->get(); // 一番最初の要素
-	mMovePlayer->Initialize();
 }
 
-void PlayerManager::Update()
+void PlayerManager::Update(const bool isTalking)
 {
 	// メニュー画面への遷移
 	if (Input::GetButtonTrigger(0, Input::BUTTON::Y))
@@ -53,7 +50,13 @@ void PlayerManager::Update()
 		}
 	}
 
-	mMovePlayer->Update();
+	// 会話中ならモーションのみ更新
+	if (isTalking)
+	{
+		mMovePlayer->SetMotion(SkinnedMesh::IDLE);
+		mMovePlayer->UpdateWorld();
+	}
+	else mMovePlayer->Update();
 
 	// 無敵時間の調整
 	if (mIsInvincible)

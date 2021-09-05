@@ -12,16 +12,16 @@ class Sprite;
 class EquipmentSelect
 {
 	static const int HORIZONTAL_NUM = 5; // アイコン横列の数
-	static const int VERTICAL_NUM = 6;   // アイコン縦列の数
+	static const int STATUS_NUM = 6;   // アイコン縦列の数
 	static const int PARAM_NUM = 3;
 
-	static constexpr float ICON_OFFSET = 19.0f; // ボードの左上からアイコン描画位置までの距離(XY両方)
+	static constexpr float ICON_OFFSET = 10.0f; // ボードの左上からアイコン描画位置までの距離(XY両方)
 	static constexpr float ICON_SIZE = 256.0f;
 	static constexpr float ICON_SCALE = 0.25f;
 
 	static constexpr float INFO_BOARD_OFFSET_X = 400.0f;
 	static constexpr float INFO_ICON_OFFSET_X = 114.0f;
-	static constexpr float INFO_ICON_OFFSET_Y = 76.0f; // このオフセットとかはまじでGIMPとかで見てやってる、サイズ考えてアセット作るの大変だね
+	static constexpr float INFO_ICON_OFFSET_Y = 76.0f;
 	static constexpr float INFO_ICON_SCALE = 0.5f;
 
 	std::unique_ptr<Sprite> mBoard;
@@ -29,7 +29,6 @@ class EquipmentSelect
 	std::unique_ptr<Sprite> mInfoBoard;
 	std::unique_ptr<Sprite> mEquipmentMark;
 	int mSelectIndex = 0;
-	int mOldSelectIndex = 0;
 	std::vector<EquipmentInventory::Data> mEquipmentsData;
 
 	Font mFont;
@@ -43,4 +42,6 @@ public:
 	void Initialize();
 	int Update(const std::vector<EquipmentInventory::Data>& equipmentsData);
 	void Render(const Vector2& boardPos);
+
+	void ClearData();
 };

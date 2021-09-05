@@ -4,7 +4,6 @@
 #include "BattleCharacter.h"
 
 class Player;
-class Item;
 
 class PlayerBattle : public BattleCharacter
 {
@@ -15,7 +14,4 @@ public:
 	~PlayerBattle() = default;
 
 	void Initialize() override;
-
-
-	Item* GetInventory() const { return mInventory; }
 };

@@ -1,5 +1,8 @@
 #pragma once
 
+#include "lib/Audio.h"
+#include "lib/Input.h"
+
 class PlayerManager;
 
 class MenuBase

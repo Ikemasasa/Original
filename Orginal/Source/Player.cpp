@@ -2,17 +2,16 @@
 
 #include <directxmath.h>
 
+#include "lib/Input.h"
+#include "lib/Math.h"
+
 #include "CameraManager.h"
 #include "CollisionTerrain.h"
 #include "Define.h"
-#include "DataBase.h"
 #include "GameManager.h"
 #include "ItemData.h"
-#include "Singleton.h"
 #include "StatusData.h"
-
-#include "lib/Input.h"
-#include "lib/Math.h"
+#include "TransformData.h"
 
 Player::Player(int charaID) : Character(charaID, Character::PLAYER)
 {
@@ -24,9 +23,9 @@ Player::Player(int charaID) : Character(charaID, Character::PLAYER)
 	// とりあえずアイテムを何個か渡す
 	for (int i = 0; i < 2; ++i)
 	{
-		mInventory.Add(Singleton<DataBase>().GetInstance().GetItemData()->GetItemParam(ItemData::PORTION));
-		mInventory.Add(Singleton<DataBase>().GetInstance().GetItemData()->GetItemParam(ItemData::MAGIC_PORTION));
-		mInventory.Add(Singleton<DataBase>().GetInstance().GetItemData()->GetItemParam(ItemData::BOMB));
+		mInventory.Add(ItemData::PORTION);
+		mInventory.Add(ItemData::MAGIC_PORTION);
+		mInventory.Add(ItemData::BOMB);
 	}
 
 	mMass = MASS;
@@ -34,8 +33,11 @@ Player::Player(int charaID) : Character(charaID, Character::PLAYER)
 
 void Player::Initialize()
 {
-	mPos   = Vector3(10.0f, 0.0f, 10.0f);
-	mScale = Vector3(0.02f, 0.02f, 0.02f);
+	TransformData::Transform transform = TransformData::GetPLTransform(GetCharaID());
+	mPos   = transform.pos;
+	mScale = transform.scale;
+	mAngle = transform.angle;
+
 	SetMotion(SkinnedMesh::IDLE);
 }
 
@@ -56,34 +58,23 @@ void Player::Update()
 		mVelocity  = cFrontVector * axisY;
 		mVelocity += cRightVector * axisX;
 		mVelocity *= MOVE_SPEED;
-		mPos += mVelocity;
-
 		// 向き補正
 		CorrectionAngle();
-
 		// 座標補正
 		{
-			const float RAYPICK_DIST = 0.25f;
-			Vector3 outPos, outNormal;
+			const float RAYPICK_DIST = 0.5f;
 
-			// 移動方向(y = posだと、うまいことあたらないから、少し上にあげる)
-			Vector3 oldPos = mPos - mVelocity;
-			Vector3 sp = Vector3(oldPos.x, oldPos.y + RAYPICK_DIST, oldPos.z); // 移動前の座標
-			Vector3 ep = Vector3(mPos.x, mPos.y + RAYPICK_DIST, mPos.z);	   // 移動後の座標
-			if (-1 != CollisionTerrain::MoveCheck(sp, ep, &outPos))
+			// 移動方向
+			Vector3 outVelocity;
+			if (CollisionTerrain::MoveCheck(mPos + Vector3(0, RAYPICK_DIST, 0), mVelocity, GetCapsule().radius, &outVelocity))
 			{
-				mPos.x = outPos.x;
-				mPos.z = outPos.z;
+				mVelocity = outVelocity;
 			}
+			mPos += mVelocity;
+
 
 			// 下方向
-			sp = Vector3(mPos.x, mPos.y + RAYPICK_DIST, mPos.z);
-			ep = Vector3(mPos.x, mPos.y - RAYPICK_DIST, mPos.z);
-			float len;
-			if (-1 != CollisionTerrain::RayPick(sp, ep, &outPos, &outNormal, &len))
-			{
-				mPos.y = outPos.y;
-			}
+			mPos.y = CollisionTerrain::GetHeight(mPos, RAYPICK_DIST);
 		}
 
 		SetMotion(SkinnedMesh::RUN);

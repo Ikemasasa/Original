@@ -2,7 +2,6 @@
 #include <d3d11.h>
 #include <wrl.h>
 
-#define SAFE_DELETE(x) if(x){ delete (x); (x) = nullptr; }
 #define FRAMEWORK Framework::GetInstance()
 
 class Framework

@@ -57,8 +57,11 @@ class Singleton final
 
 	static void Create()
 	{
-		mInstance = new T;
-		SingletonFinalizer::AddFilalizer(&Singleton<T>::Destroy);
+		if (!mInstance)
+		{
+			mInstance = new T;
+			SingletonFinalizer::AddFilalizer(&Singleton<T>::Destroy);
+		}
 	}
 	static void Destroy()
 	{
@@ -69,8 +72,9 @@ class Singleton final
 public:
 	static T& GetInstance()
 	{
-		std::call_once(mInitFlag, Create);
-		_ASSERT(mInstance);
+		if (!mInstance) Create();
+		//std::call_once(mInitFlag, Create);
+		//_ASSERT(mInstance);
 
 		return *mInstance;
 	}

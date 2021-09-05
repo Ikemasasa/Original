@@ -1,10 +1,6 @@
 #include "Terrain.h"
 
 #include "CollisionTerrain.h"
-#include "Define.h"
-
-#include "lib/GeometricPrimitive.h"
-
 
 Terrain::Terrain(int charaID) : Object(charaID)
 {

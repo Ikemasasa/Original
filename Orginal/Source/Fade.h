@@ -1,8 +1,7 @@
 #pragma once
 #include <memory>
-#include "lib/Sprite.h"
 
-// class Sprite
+class Sprite;
 
 class Fade
 { 

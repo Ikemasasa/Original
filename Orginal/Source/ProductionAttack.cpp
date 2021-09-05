@@ -10,11 +10,12 @@
 #include "GameManager.h"
 #include "Singleton.h"
 #include "StatusData.h"
-
+#include "TurnManager.h"
 
 void ProductionAttack::Initialize()
 {
 	mProductionValue.Initialize();
+	mAmounts.clear();
 }
 
 void ProductionAttack::Update(const BattleCharacterManager* bcm)
@@ -25,12 +26,18 @@ void ProductionAttack::Update(const BattleCharacterManager* bcm)
 	{
 		// moveChara, targetChara代入
 		mMoveChara = bcm->GetChara(mMoveCharaID);
-		mTargetChara = bcm->GetChara(mTargetCharaID);
+		for (size_t i = 0; i < mTargetCharaIDs.size(); ++i)
+		{
+			mTargetCharas.push_back(bcm->GetChara(mTargetCharaIDs[i]));
+		}
 
 		// ダメージ計算
-		int damage = DamageCalculator::CalcAttackDamage(mMoveChara->GetStatus(), mTargetChara->GetStatus());
-		mTargetChara->GetStatus()->HurtHP(damage);
-		mAmount = damage;
+		for (size_t i = 0; i < mTargetCharas.size(); ++i)
+		{
+			int damage = DamageCalculator::CalcAttackDamage(mMoveChara->GetStatus(), mTargetCharas[i]->GetStatus());
+			mTargetCharas[i]->GetStatus()->SubHP(damage);
+			mAmounts.push_back(damage);
+		}
 	}
 		// 演出初期設定
 		StateInit();
@@ -70,14 +77,22 @@ void ProductionAttack::StateInit()
 	mOrgPos = mMoveChara->GetPos();
 
 	// TargetChara から MoveChara のベクトルを作って、行き先を決める(mDestinationPos)
-	Vector3 targetToOrg = mOrgPos - mTargetChara->GetPos();
-	targetToOrg.Normalize();
+	// ターゲットの平均をとる
+	Vector3 targetPos = {};
+	for (size_t i = 0; i < mTargetCharas.size(); ++i)
+	{
+		targetPos += mTargetCharas[i]->GetPos();
+	}
+	targetPos /= static_cast<float>(mTargetCharas.size());
+	Vector3 orgToTarget = targetPos - mOrgPos;
+	Vector3 N = orgToTarget.GetNormalize();
 
-	const float ADJUST_DIST_MUL = 4;
-	mDestinationPos = mTargetChara->GetPos() + targetToOrg * mTargetChara->GetCapsule().radius * ADJUST_DIST_MUL;
+	const float ADJUST_MUL = 3;
+	orgToTarget += -(N * mMoveChara->GetCapsule().radius * ADJUST_MUL);
+	mDestinationPos = mOrgPos + orgToTarget;
 
 	// 行く方向に向く
-	mMoveChara->CorrectionAngle(-targetToOrg);
+	mMoveChara->CorrectionAngle(N);
 
 	++mState; // ステートを次に進める
 }
@@ -106,17 +121,20 @@ void ProductionAttack::StateWaitAttack()
 	// モーションが終わったら
 	if (mMoveChara->IsMotionFinished())
 	{
-		if (mTargetChara->GetStatus()->IsDead())
+		for (size_t i = 0; i < mTargetCharas.size(); ++i)
 		{
-			// Existをfalseにして、エフェクトを再生する
-			mTargetChara->SetExist(false); // 見えなくする
-			Vector3 effectPos(mTargetChara->GetPos().x, mTargetChara->GetPos().y + mTargetChara->GetLocalAABB().max.y * 0.5f, mTargetChara->GetPos().z);
-			Singleton<EffectManager>().GetInstance().Play(TurnManager::DEATH_EFFECT_SLOT, effectPos);// えっふぇくと
+			if (mTargetCharas[i]->GetStatus()->IsDead())
+			{
+				// Existをfalseにして、エフェクトを再生する
+				mTargetCharas[i]->SetExist(false); // 見えなくする
+				Vector3 effectPos(mTargetCharas[i]->GetPos().x, mTargetCharas[i]->GetPos().y + mTargetCharas[i]->GetLocalAABB().max.y * 0.5f, mTargetCharas[i]->GetPos().z);
+				Singleton<EffectManager>().GetInstance().Play(TurnManager::DEATH_EFFECT_SLOT, effectPos);// えっふぇくと
+			}
+
+			Vector3 damagePos(mTargetCharas[i]->GetPos().x, mTargetCharas[i]->GetAABB().max.y, mTargetCharas[i]->GetPos().z);
+			mProductionValue.Add(mAmounts[i], damagePos, DAMAGE_RGB);
 		}
-
-		Vector3 damagePos(mTargetChara->GetPos().x, mTargetChara->GetAABB().max.y, mTargetChara->GetPos().z);
-		mProductionValue.Add(mAmount, damagePos, DAMAGE_RGB);
-
+		
 		// 元居た方向に向く
 		mMoveChara->SetAngleY(mMoveChara->GetAngle().y + Define::PI); // 向きを反転
 		++mState;

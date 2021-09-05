@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 
-#include "FontValue.h"
+#include "lib/Font.h"
 
 class ProductionValue
 {
@@ -19,7 +19,7 @@ class ProductionValue
 	};
 	std::vector<ValueData> mValueData;
 
-	FontValue mFontValue;
+	Font mFont;
 
 public:
 	ProductionValue();
@@ -31,5 +31,5 @@ public:
 	void Update();
 	void Render();
 
-	int GetFontSize() const { return mFontValue.GetFontSize(); }
+	int GetFontSize() const { return mFont.GetFontSize(); }
 };

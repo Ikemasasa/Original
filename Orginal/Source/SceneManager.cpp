@@ -14,7 +14,6 @@ void SceneManager::Update()
 		if(!mIsStack) Release();
 		
 		mRunScene.emplace(mNextScene.release());
-		mNextScene.reset();
 		mRunScene.top()->Initialize();
 	}
 	if (mIsPopCurScene)
@@ -61,3 +60,4 @@ void SceneManager::PopCurrentScene()
 {
 	mIsPopCurScene = true;
 }
+
