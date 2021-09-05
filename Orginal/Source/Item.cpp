@@ -1,7 +1,10 @@
 #include "Item.h"
 
-void Item::Add(ItemData::ItemParam param)
+void Item::Add(const int itemID)
 {
+	ItemData::BaseData param = *ItemData::GetBaseData(itemID);
+	if (param.type == ItemData::ItemType::EQUIPMENT) return; // 装備品は別インベントリ
+
 	// 挿入場所を探す
 	auto insertIterator = mItems.begin();
 	for (auto it = mItems.begin(); it != mItems.end(); ++it)
@@ -26,4 +29,12 @@ void Item::Sub(const int itemID)
 			break;
 		}
 	}
+}
+
+const ItemData::BaseData* Item::GetItemParam(const int index) const
+{
+	// リストがからならnull
+	if (mItems.empty()) return nullptr;
+
+	return &(*std::next(mItems.begin(), index));
 }

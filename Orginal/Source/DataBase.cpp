@@ -1,21 +1,19 @@
 #include "DataBase.h"
 
 #include "DropData.h"
-#include "EquipmentData.h"
 #include "ItemData.h"
 #include "StatusData.h"
 #include "SkillData.h"
 
-DataBase::DataBase()
+void DataBase::Initialize()
 {
-	mStatusData	   = std::make_unique<StatusData>();
-	mItemData	   = std::make_unique<ItemData>();
-	mEquipmentData = std::make_unique<EquipmentData>();
-	mDropData      = std::make_unique<DropData>();
-	mSkillData     = std::make_unique<SkillData>();
+	// 各種データの初期化関数を呼ぶ
+	ItemData::Initialize();
+	StatusData::Initialize();
 }
 
-DataBase::~DataBase()
+void DataBase::Release()
 {
-
+	StatusData::Release();
+	ItemData::Release();
 }

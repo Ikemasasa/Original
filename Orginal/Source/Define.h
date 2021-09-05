@@ -23,4 +23,5 @@ struct Define final
 
 	static const Vector4 FONT_COLOR;
 	static const Vector4 FONT_BUFF_COLOR;
+	static const Vector4 FONT_DEBUFF_COLOR;
 };

@@ -15,7 +15,7 @@ protected:
 	static const int SHADOWMAP_TEXTURE_SLOT = 14;
 	static Light mLight;
 
-	Sprite mRamp;
+	std::unique_ptr<Sprite> mRamp;
 	ShadowMap mShadowMap;
 	std::unique_ptr<Shader> mPostEffect;
 	RenderTarget mSceneTarget;

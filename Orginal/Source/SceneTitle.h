@@ -6,11 +6,8 @@
 
 class SceneTitle : public SceneBase
 {
-	static const int LOGO_FONT_SIZE   = 128;
-	static const int LOGO_FONT_WEIGHT = 128;
-
-	static const int SELECT_FONT_SIZE = 64;
-	static const int SELECT_FONT_WEIGHT = 64;
+	static const int FONT_SIZE = 64;
+	static const int FONT_WEIGHT = 64;
 
 	enum SelectCmd
 	{
@@ -19,8 +16,7 @@ class SceneTitle : public SceneBase
 		MAX,
 	};
 
-	Font mFontLogo;
-	Font mFontSelectStr;
+	Font mFont;
 	std::unique_ptr<Sprite> mBG;
 	std::unique_ptr<Sprite> mArrow;
 

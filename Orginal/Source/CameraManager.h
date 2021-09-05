@@ -20,8 +20,9 @@ public:
 	~CameraManager() = default;
 
 	void Push(const std::shared_ptr<CameraBase>& camera) { mMainCamera.push(camera); };
-	void Pop() { mMainCamera.pop(); }
+	void Pop() { if(!mMainCamera.empty()) mMainCamera.pop(); }
 
+	void Initialize(const Character* target);
 	void Update(const Character* target);
 
 

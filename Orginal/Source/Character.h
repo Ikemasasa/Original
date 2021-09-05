@@ -16,6 +16,7 @@ public:
 		NONE = -1,
 		PLAYER,
 		ENEMY,
+		NPC,
 
 		MAX
 	};

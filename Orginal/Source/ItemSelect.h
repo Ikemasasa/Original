@@ -20,11 +20,15 @@ private:
 		
 	static constexpr float INFO_BOARD_OFFSET_X = 512.0f;
 	static constexpr float INFO_ICON_OFFSET_X = 114.0f;
-	static constexpr float INFO_ICON_OFFSET_Y = 76.0f; // このオフセットとかはまじでGIMPとかで見てやってる、サイズ考えてアセット作るの大変だね
+	static constexpr float INFO_ICON_OFFSET_Y = 76.0f; 
 	static constexpr float INFO_ICON_SCALE = 0.5f;
+	static constexpr float INFO_TEXT_OFFSET_X = 25;
+	static constexpr float INFO_TEXT_OFFSET_Y = 255;
+	static constexpr float INFO_TEXT_ADD_Y = 45;
+	static constexpr float INFO_WIDTH_MAX = 300;
+	static const int INFO_LINE_MAX = 3;
 
 	int mSelectIndex;
-	int mOldSelectIndex;
 	const Item* mInventory = nullptr;
 	std::unique_ptr<Sprite> mItemBoard;
 	std::unique_ptr<Sprite> mSelectFrame;
@@ -45,4 +49,5 @@ public:
 	void Render(const Vector2& boardOffset);
 
 	int GetIndex() const { return mSelectIndex; }
+	Vector2 GetCursorRightUpPos() const; // ボードの位置を含まない(0, 0)基準
 };

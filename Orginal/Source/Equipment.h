@@ -1,13 +1,13 @@
 #pragma once
 #include <vector>
 
-#include "EquipmentData.h"
+#include "ItemData.h"
 
 class Character;
 
 class Equipment
 {
-	std::vector<const EquipmentData::Param*> mEquipments;
+	std::vector<EquipmentData::Param> mEquipments;
 
 public:
 	bool Equip(const Character* equipChara, int id);

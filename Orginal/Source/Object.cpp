@@ -17,7 +17,6 @@ Object::Object(const Object* obj)
 	mID = obj->mID;
 
 	mScale = obj->mScale;
-	
 }
 
 void Object::UpdateWorld()

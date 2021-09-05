@@ -1,5 +1,5 @@
 #pragma once
-#include "EquipmentData.h"
+#include "ItemData.h"
 
 class Character;
 
@@ -14,7 +14,7 @@ public:
 
 private:
 
-	std::vector<Data> mEquipmentsData[EquipmentData::TYPE_MAX];
+	std::vector<Data> mEquipmentsData[EquipmentData::TYPE_NUM];
 
 public:
 	EquipmentInventory();

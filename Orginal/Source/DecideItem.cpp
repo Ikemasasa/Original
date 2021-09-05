@@ -24,18 +24,26 @@ void DecideItem::Update(const BattleCharacterManager* bcm, CommandBase* cmdBase)
 	// アイテム選択したら
 	if (Input::GetButtonTrigger(0, Input::BUTTON::A))
 	{
-		// アイテム情報取得
-		const ItemData::ItemParam* param = moveChara->GetInventory()->GetItemParam(mItemSelect.GetIndex());
-		cmdBase->SetItemParam(param);
+		// アイテム基本情報を取得
+		const ItemData::BaseData* base = moveChara->GetInventory()->GetItemParam(mItemSelect.GetIndex());
 
-		// 次のコマンドを決める
-		Character::Type charaType = Character::NONE;
-		switch (param->target)
+		// 回復、ダメージアイテムなら
+		if (base->type == ItemData::HEAL || base->type == ItemData::DAMAGE)
 		{
-		case ItemData::Target::PARTY: charaType = Character::PLAYER; break;
-		case ItemData::Target::ENEMY: charaType = Character::ENEMY;  break;
+			// 使用アイテム情報を取得
+			UseItemData::Param param = UseItemData::GetParam(base->id);
+			cmdBase->SetItemParam(&param);
+
+			// 次のコマンドを決める
+			Character::Type charaType = Character::NONE;
+			switch (param.target)
+			{
+			case UseItemData::Target::PARTY: charaType = Character::PLAYER; break;
+			case UseItemData::Target::ENEMY: charaType = Character::ENEMY;  break;
+			}
+			mNextCommand = std::make_unique<DecideTargetChara>(charaType);
+
 		}
-		mNextCommand = std::make_unique<DecideTargetChara>(charaType);
 	}
 
 	// CommandBehaviourに戻る

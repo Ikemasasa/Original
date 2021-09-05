@@ -3,18 +3,15 @@
 #include "lib/Audio.h"
 #include "lib/Input.h"
 
-#include "DataBase.h"
 #include "Define.h"
 #include "Player.h"
 #include "PlayerManager.h"
-#include "Singleton.h"
 #include "StatusData.h"
 
 void MenuCharacterSelect::Initialize(const PlayerManager* plm)
 {
 	mBoard = std::make_unique<Sprite>(L"Data/Image/Menu/character_board.png");
 	mFont.Initialize();
-	mCharacterNum = 0;
 	mSelectIndex = 0;
 
 
@@ -22,21 +19,20 @@ void MenuCharacterSelect::Initialize(const PlayerManager* plm)
 	for (size_t i = 0; i < plm->GetNum(); ++i)
 	{
 		const int LEN = 2;
-		wchar_t name[LEN] = {};
 
 		int charaID = plm->GetPlayer(i)->GetCharaID();
-		name[0] = Singleton<DataBase>().GetInstance().GetStatusData()->GetPLStatus(charaID).GetName()[0];
-
-		mFont.Add(name);
-		++mCharacterNum;
+		wchar_t first = StatusData::GetPLStatus(charaID).GetName()[0];
+		mPlayerNameFirst.push_back(first);
 	}
 }
 
 void MenuCharacterSelect::Update()
 {
 	mOldSelectIndex = mSelectIndex;
-	if (Input::GetButtonTrigger(0, Input::BUTTON::RB)) mSelectIndex = (mSelectIndex + 1) % mCharacterNum;
-	if (Input::GetButtonTrigger(0, Input::BUTTON::LB)) mSelectIndex = (mSelectIndex + (mCharacterNum - 1)) % mCharacterNum;
+
+	int max = mPlayerNameFirst.size();
+	if (Input::GetButtonTrigger(0, Input::BUTTON::RB)) mSelectIndex = (mSelectIndex + 1) % max;
+	if (Input::GetButtonTrigger(0, Input::BUTTON::LB)) mSelectIndex = (mSelectIndex + (max - 1)) % max;
 
 	if (mOldSelectIndex != mSelectIndex) AUDIO.SoundPlay((int)Sound::CURSOR_MOVE);
 }
@@ -48,7 +44,7 @@ void MenuCharacterSelect::Render(Vector2 leftBottom)
 	Vector2 size(mBoard->GetSize());
 	Vector2 center(0.0f, size.y); // leftBottomを受け取るため y = size.y;
 	float angle = 0.0f;
-	for (int i = 0; i < mCharacterNum; ++i)
+	for (int i = 0; i < mPlayerNameFirst.size(); ++i)
 	{
 		Vector2 pos(leftBottom.x + size.x * i, leftBottom.y);
 		Vector3 boardRGB = Vector3::ONE;
@@ -62,9 +58,11 @@ void MenuCharacterSelect::Render(Vector2 leftBottom)
 		// プレートを描画
 		mBoard->Render(pos, scale, texPos, size, center, angle, Vector4(boardRGB, 1.0f));
 
-		// フォントを描画
-		Vector2 namePos(pos.x + FONT_OFFSET_X, pos.y - FONT_OFFSET_Y); // プレートのposが左下中心だから y - offset
-		mFont.RenderSet(i, namePos, Vector2::ZERO, Vector4(fontRGB, 1.0f));
+		// フォントをセット
+		float x = pos.x + FONT_OFFSET_X + ((mFont.GetFontSize() - mFont.GetWidth(mPlayerNameFirst[i])) / 2.0f);
+		float y = pos.y - FONT_OFFSET_Y;
+		Vector2 namePos(x, y); // プレートのposが左下中心だから y - offset
+		mFont.RenderSet(mPlayerNameFirst[i], namePos, Vector2::ZERO, Vector4(fontRGB, 1.0f));
 	}
 
 	mFont.Render();

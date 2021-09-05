@@ -22,6 +22,23 @@ Framework::~Framework()
 {
     ResourceManager::Release();
     Blend::Release();
+
+    mDeviceContext->ClearState();
+    mDeviceContext->Flush();
+
+#if _DEBUG
+    // 残ってるcomオブジェクトを出力ウィンドウに表示する
+    // これを読んだ時点でのやつなので、frameworkのcomptrや、staticメンバ変数とかは表示される(0831現在はDeviceのrefcountが16)
+    ID3D11Debug* debug;
+    // 作成
+    mDevice->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&debug));
+    // 詳細表示
+    debug->ReportLiveDeviceObjects(D3D11_RLDO_SUMMARY);
+    debug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
+    debug->Release();
+#endif
+
+
 }
 
 HRESULT Framework::CreateDeviceAndSwapChain(HWND hwnd)

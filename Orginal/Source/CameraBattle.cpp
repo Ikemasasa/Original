@@ -70,29 +70,19 @@ void CameraBattle::Update(const Character* target)
 		CommandSelect();
 		break;
 
+	case BattleState::State::PARTY_SELECT:
 	case BattleState::State::ENEMY_SELECT:
 	case BattleState::State::PLAYER_ATTACK:
 	case BattleState::State::ENEMY_ATTACK:
 	{
 		const float POS_Y_DIST = 7.5f;
-		const float POS_Z_DIST = 7.5f;
+		const float POS_Z_DIST = 12.5f;
 		mPos = Vector3(target->GetPos().x, POS_Y_DIST, BattleCharacterManager::PLAYER_POS_Z - POS_Z_DIST);
 		
 		float targetX = (BattleCharacterManager::POS_MIN_X + BattleCharacterManager::POS_MAX_X) / 2.0f;
 		float targetZ = BattleCharacterManager::ENEMY_POS_Z;
 		mTarget = Vector3(targetX, 0.0f, targetZ);
 
-	}
-		break;
-	case BattleState::State::PARTY_SELECT:
-	{
-		const float POS_Y_DIST = 8.0f;
-		mPos = Vector3(0.0f, POS_Y_DIST, BattleCharacterManager::ENEMY_POS_Z);
-
-		float targetX = (BattleCharacterManager::POS_MIN_X + BattleCharacterManager::POS_MAX_X) / 2.0f;
-		float targetY = (target->GetLocalAABB().max.y - target->GetLocalAABB().min.y) / 2.0f;
-		float targetZ = BattleCharacterManager::PLAYER_POS_Z;
-		mTarget = Vector3(targetX, targetY, targetZ);
 	}
 		break;
 	}

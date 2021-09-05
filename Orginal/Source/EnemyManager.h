@@ -32,7 +32,7 @@ public:
 	std::list<std::unique_ptr<Enemy>>::iterator Destroy(int objID);
 
 	void Initialize();
-	void Update();
+	void Update(const bool isTalking);
 	void Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj, const DirectX::XMFLOAT4& lightDir);
 	void Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj, const DirectX::XMFLOAT4& lightDir);
 

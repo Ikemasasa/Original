@@ -7,12 +7,12 @@
 
 class Item
 {
-	std::list<ItemData::ItemParam> mItems;
+	std::list<ItemData::BaseData> mItems;
 
 public:
-	void Add(ItemData::ItemParam param);
+	void Add(const int itemID);
 	void Sub(const int itemID);
 
 	int GetItemNum() const { return static_cast<int>(mItems.size()); }
-	const ItemData::ItemParam* GetItemParam(const int index) const { return &(*std::next(mItems.begin(), index)); }
+	const ItemData::BaseData* GetItemParam(const int index) const;
 };

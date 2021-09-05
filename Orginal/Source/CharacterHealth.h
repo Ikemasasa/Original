@@ -21,6 +21,7 @@ class CharacterHealth
 	static constexpr float ARROW_SIZE_Y = 256.0f;
 	static constexpr float ARROW_SCALE = 0.125f;
 	static constexpr float ARROW_SCALESIZE_X = ARROW_SIZE_X * ICON_SCALE;
+	static constexpr float ARROW_SCALESIZE_Y = ARROW_SIZE_Y * ICON_SCALE;
 	static constexpr float ARROW_TEXPOS_X = 768.0f;
 
 	// 文字の位置
@@ -35,8 +36,8 @@ class CharacterHealth
 
 	struct BuffData
 	{
-		int buffIndex = 0;
-		Vector2 pos;
+		int buffIndex = 0; // どのバフを指すか(具体的に、0:攻撃 1:防御)
+		Vector2 pos;//アイコン描画位置
 	};
 
 private:
@@ -48,6 +49,7 @@ private:
 	FontValue mFontValue;
 	Vector2 mBoardLeftTop;
 	std::vector<std::vector<BuffData>> mBuffData;
+	std::vector<std::vector<BuffData>> mDebuffData;
 	int mSelectIndex;
 	int mBoardNum;
 
@@ -60,5 +62,10 @@ public:
 	void Render(bool isSelectRender = false, bool isFontClear = true);
 	void Release();
 
+	// ゲッタ
 	int GetSelectIndex() const { return mSelectIndex; }
+	Vector2 GetBoardSize() const;
+
+	// セッタ
+	void SetLeftTopPos(const Vector2& leftTop) { mBoardLeftTop = leftTop; }
 };

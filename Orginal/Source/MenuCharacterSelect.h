@@ -8,14 +8,13 @@ class Sprite;
 
 class MenuCharacterSelect
 {
-	static constexpr float FONT_OFFSET_X = 5;
-	static constexpr float FONT_OFFSET_Y = 32; // フォントサイズ
+	static constexpr float FONT_OFFSET_X = 2;
+	static constexpr float FONT_OFFSET_Y = 32; // フォントサイズ / 2
 
 	std::unique_ptr<Sprite> mBoard;
-	int mCharacterNum = 0;
 	int mSelectIndex = 0;
 	int mOldSelectIndex = 0;
-
+	std::vector<wchar_t> mPlayerNameFirst;
 	Font mFont;
 
 public:

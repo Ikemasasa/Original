@@ -8,8 +8,9 @@
 
 class MenuStatus : public MenuBase
 {
-	static constexpr float PLATE_X = 512.0f;
-	static constexpr float PLATE_Y = 128.0f;
+	static constexpr float BOARD_X = 512.0f;
+	static constexpr float BOARD_Y = 128.0f;
+	static constexpr float CHARA_BOARD_OFFSET_X = 10.0f;
 
 	static constexpr float NAME_OFFSET_Y = 10.0f;
 	static constexpr float STATUS_OFFSET_X = 20.0f;

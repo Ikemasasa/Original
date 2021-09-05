@@ -28,12 +28,16 @@ private:
 	int vit;		  // Šî‘b–hŒä—Í
 	int agi;		  // ‘f‘‚³
 
+	bool guardFlag;
+
 	// ‘•”õ•i
 	Equipment equipments;
 
 	// ƒoƒtƒfƒoƒt—Ê
 	BuffData buffAtk;
 	BuffData buffDef;
+	BuffData debuffAtk;
+	BuffData debuffDef;
 
 public:	
 
@@ -61,6 +65,8 @@ public:
 
 	float GetBuffAtkRate() const { return buffAtk.rate; }
 	float GetBuffDefRate() const { return buffDef.rate; }
+	float GetDebuffAtkRate() const { return debuffAtk.rate; }
+	float GetDebuffDefRate() const { return debuffDef.rate; }
 
 	Equipment* GetEquipments() { return &equipments; }
 
@@ -75,17 +81,21 @@ public:
 
 	void SetBuffAtkRate(const float rate, const int turn);
 	void SetBuffDefRate(const float rate, const int turn);
+	void SetDebuffAtkRate(const float rate, const int turn);
+	void SetDebuffDefRate(const float rate, const int turn);
+	void SetGuardFlag(const bool flag) { guardFlag = flag; }
 	void AdvanceBuffTurn();
 	void ResetBuff();
+
 };
 
 class StatusData
 {
-	std::vector<Status> mPLStatus;
-	std::vector<Status> mEnmStatus;
+	friend class DataBase;
 
-	void LoadPLStatus();
-	void LoadEnmStatus();
+	// À‘Ôì¬‹Ö~
+	StatusData();
+	~StatusData();
 
 public:
 	enum EnemyType
@@ -96,15 +106,18 @@ public:
 		NONE
 	};
 
+private:
+	static std::vector<Status> mPLStatus;
+
+private:
+	static void LoadPLStatus();
+	static void Initialize();
+	static void Release();
+
 public:
-	StatusData();
-	~StatusData();
+	static Status GetPLStatus(size_t id);
+	static Status GetEnmStatus(size_t id);
+	static EnemyType GetEnmType(size_t id);
 
-	void Initialize();
-	Status GetPLStatus(size_t id) const;
-	Status GetEnmStatus(size_t id) const;
-	EnemyType GetEnmType(size_t id) const;
-
-
-	void SetPLStatus(size_t charaID, const Status& status);
+	static void SetPLStatus(size_t charaID, const Status& status);
 };

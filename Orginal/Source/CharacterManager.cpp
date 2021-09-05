@@ -1,12 +1,15 @@
 #include "CharacterManager.h"
 
 #include "lib/Audio.h"
+#include "lib/Input.h"
 
 #include "Collision.h"
 #include "CollisionTerrain.h"
 #include "Enemy.h"
 #include "EnemyManager.h"
 #include "Fade.h"
+#include "NPC.h"
+#include "NPCManager.h"
 #include "Player.h"
 #include "PlayerManager.h"
 #include "SceneManager.h"
@@ -17,31 +20,79 @@ CharacterManager::CharacterManager()
 {
 	mPlayerManager = std::make_unique<PlayerManager>();
 	mEnemyManager = std::make_unique<EnemyManager>();
+	mNPCManager = std::make_unique<NPCManager>();
+	mNPCTalk = std::make_unique<NPCTalk>();
 }
 
 void CharacterManager::Initialize()
 {
 	mPlayerManager->Initialize();
 	mEnemyManager->Initialize();
+	mNPCManager->Initialize();
+	mNPCTalk->Initialize();
 }
 
 void CharacterManager::Update()
 {
-	mPlayerManager->Update();
+	mPlayerManager->Update(mNPCTalk->IsTalking());
 
 	mEnemyManager->SetPlayerPos(mPlayerManager->GetMovePlayer()->GetPos());
-	mEnemyManager->Update();
+	mEnemyManager->Update(mNPCTalk->IsTalking());
+	
+	mNPCManager->SetPlayerPos(mPlayerManager->GetMovePlayer()->GetPos());
+	mNPCManager->Update();
 
+	// 当たり判定
+	CollideNPC();
+	CollideEnemy();
 
-	// 追々8分木とかしてみたい
+	// 会話情報更新
+	TalkCheck();
+	mNPCTalk->Update();
+}
+
+void CharacterManager::Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir)
+{
+	mPlayerManager->Render(view, projection, lightDir);
+	mEnemyManager->Render(view, projection, lightDir);
+	mNPCManager->Render(view, projection, lightDir);
+	mNPCTalk->Render();
+}
+
+void CharacterManager::Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir)
+{
+	mPlayerManager->Render(shader, view, projection, lightDir);
+	mEnemyManager->Render(shader, view, projection, lightDir);
+	mNPCManager->Render(shader, view, projection, lightDir);
+}
+
+void CharacterManager::CollideNPC()
+{
+	// 当たり判定
 	Player* player = mPlayerManager->GetMovePlayer();
+	CAPSULE plCapsule = player->GetCapsule();
+	Vector3 plFront(sinf(player->GetAngle().y), 0.0f, cosf(player->GetAngle().y));
+	for (int i = 0; i < mNPCManager->GetNum(); ++i)
+	{
+		NPC* npc = mNPCManager->GetNPC(i);
+		if (Collision::ColCapsules(npc->GetCapsule(), plCapsule))
+		{
+			CollideObject(player, npc);
+		}
+	}
+}
+
+void CharacterManager::CollideEnemy()
+{
+	Player* player = mPlayerManager->GetMovePlayer();
+	CAPSULE plCapsule = player->GetCapsule();
 	for (int i = 0; i < mEnemyManager->GetNum(); ++i)
 	{
 		Enemy* enemy = mEnemyManager->GetEnemy(i);
-		if (Collision::ColCapsules(enemy->GetCapsule(), player->GetCapsule()))
+		if (Collision::ColCapsules(enemy->GetCapsule(), plCapsule))
 		{
 			// 無敵時間じゃなければ
-			if (!mPlayerManager->IsInvincible()) 
+			if (!mPlayerManager->IsInvincible())
 			{
 				// 戻ってきた時用に無敵をonにする
 				mPlayerManager->EnableInvincible();
@@ -60,16 +111,34 @@ void CharacterManager::Update()
 	}
 }
 
-void CharacterManager::Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir)
+void CharacterManager::TalkCheck()
 {
-	mPlayerManager->Render(view, projection, lightDir);
-	mEnemyManager->Render(view, projection, lightDir);
-}
+	// すでに会話中ならreturn
+	if (mNPCTalk->IsTalking()) return;
 
-void CharacterManager::Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir)
-{
-	mPlayerManager->Render(shader, view, projection, lightDir);
-	mEnemyManager->Render(shader, view, projection, lightDir);
+	// NPCとの会話のチェック
+	Player* player = mPlayerManager->GetMovePlayer();
+	Vector3 plFront(sinf(player->GetAngle().y), 0.0f, cosf(player->GetAngle().y));
+	for (size_t i = 0; i < mNPCManager->GetNum(); ++i)
+	{
+		NPC* npc = mNPCManager->GetNPC(i);
+
+		// 距離チェック
+		Vector3 dist = npc->GetPos() - player->GetPos();
+		if (dist.LengthSq() <= pow(NPCManager::TALK_DIST, 2))
+		{
+			// 会話するかチェック
+			if (Input::GetButtonTrigger(0, Input::BUTTON::A))
+			{
+				// 向きチェック
+				float dot = Vector3::Dot(plFront, dist.GetNormalize());
+				if (dot >= NPCManager::TALK_DOT)
+				{
+					mNPCTalk->Set(npc, player->GetPos());
+				}
+			}
+		}
+	}
 }
 
 void CharacterManager::Collide(Character* a, Character* b)
@@ -98,4 +167,16 @@ void CharacterManager::Collide(Character* a, Character* b)
 	a->SetPos(a->GetPos() - v * (totalSize - dist) * rateA);
 	b->SetPos(b->GetPos() + v * (totalSize - dist) * rateB);
 
+}
+
+void CharacterManager::CollideObject(Character* move, Character* object)
+{
+	// mass 関係なしに動く方と動かない方
+
+	float totalSize = move->GetCapsule().radius + object->GetCapsule().radius;
+	Vector3 v = move->GetPos() - object->GetPos();
+	v.y = 0.0f; // 高さ無視
+	float dist = v.Length();
+
+	move->SetPos(move->GetPos() + v * (totalSize - dist));
 }

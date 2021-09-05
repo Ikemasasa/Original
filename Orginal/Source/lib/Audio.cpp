@@ -40,7 +40,11 @@ void Audio::Initialize()
 	LoadSound((int)Sound::SELECT_LONG, L"Data/Audio/Sound/select_long.wav");
 	LoadSound((int)Sound::CANCEL, L"Data/Audio/Sound/cancel.wav");
 	LoadSound((int)Sound::CURSOR_MOVE, L"Data/Audio/Sound/cursor_move.wav");
+	LoadSound((int)Sound::EQUIP, L"Data/Audio/Sound/equip.wav");
 	LoadSound((int)Sound::HEAL, L"Data/Audio/Sound/heal.wav");
+	LoadSound((int)Sound::BUFF, L"Data/Audio/Sound/buff.wav");
+	LoadSound((int)Sound::DEBUFF, L"Data/Audio/Sound/debuff.wav");
+	LoadSound((int)Sound::BOMB, L"Data/Audio/Sound/bomb.wav");
 }
 
 void Audio::LoadMusic(int slot, const wchar_t* waveFilename, float volume)

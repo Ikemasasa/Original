@@ -3,10 +3,9 @@
 #include "CommandBossEnemy.h"
 #include "Define.h"
 #include "Enemy.h"
-#include "Singleton.h"
 #include "StatusData.h"
 
-BossEnemyBattle::BossEnemyBattle(const Enemy* enemy) : BattleCharacter(enemy, Singleton<DataBase>().GetInstance().GetStatusData()->GetEnmStatus(enemy->GetCharaID()))
+BossEnemyBattle::BossEnemyBattle(const Enemy* enemy) : BattleCharacter(enemy, StatusData::GetEnmStatus(enemy->GetCharaID()))
 {
 	mCommand = std::make_unique<CommandBossEnemy>();
 }

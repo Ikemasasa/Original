@@ -4,6 +4,10 @@
 
 class SkillData
 {
+	// é¿ë‘çÏê¨ã÷é~
+	SkillData() = default;
+	~SkillData() = default;
+
 public:
 	enum Type      { BUFF, DEBUFF };
 	enum Target    { NONE, PARTY, ENEMY };
@@ -26,5 +30,5 @@ public:
 	};
 
 public:
-	std::vector<SkillParam> GetAllSkill(const int charaID);
+	static std::vector<SkillParam> GetAllSkill(const int charaID);
 };

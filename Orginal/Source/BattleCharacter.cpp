@@ -17,7 +17,6 @@ void BattleCharacter::Update(const BattleCharacterManager* bcm)
 		mCommand->Update(bcm);
 	}
 
-
 	UpdateWorld();
 }
 

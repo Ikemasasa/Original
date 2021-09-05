@@ -4,6 +4,8 @@
 
 void ConstantBuffer::Create(UINT byteWidth)
 {
+	if (mConstBuffer) return;
+
 	// 定数バッファ
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));

@@ -1,7 +1,6 @@
 #include "ShaderManager.h"
 
 #include <d3dcompiler.h>
-
 #include <d3d11shader.h>
 
 #include "Framework.h"
@@ -257,6 +256,10 @@ void ShaderManager::ReleaseAll()
     for (auto& ps : mPixelShaders)    ps.Release(true);
     for (auto& gs : mGeometryShaders) gs.Release(true);
     for (auto& cs : mComputeShaders)  cs.Release(true);
+    mVertexShaders.clear();
+    mPixelShaders.clear();
+    mGeometryShaders.clear();
+    mComputeShaders.clear();
 }
 
 void ShaderManager::ReleaseVertexShader(ID3D11VertexShader* vertexShader, ID3D11InputLayout* inputLayout)
@@ -294,7 +297,6 @@ void ShaderManager::ReleasePixelShader(ID3D11PixelShader* pShader)
             // ÉäÉXÉgÇ©ÇÁè¡Ç∑
             mPixelShaders.erase(it);
         }
-
         break;
     }
 

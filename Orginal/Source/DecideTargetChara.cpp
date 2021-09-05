@@ -21,6 +21,7 @@ DecideTargetChara::DecideTargetChara(Character::Type characterType)
 void DecideTargetChara::Initialize(const BattleCharacterManager* bcm)
 {
 	mArrow = std::make_unique<Sprite>(L"Data/Image/Battle/arrow.png");
+	mCharacterHealth.Initialize(Vector2::ZERO); // 仮でゼロを渡してる
 }
 
 void DecideTargetChara::Update(const BattleCharacterManager* bcm, CommandBase* cmdBase)
@@ -32,12 +33,18 @@ void DecideTargetChara::Update(const BattleCharacterManager* bcm, CommandBase* c
 	if (mCharaType == Character::PLAYER)     BattleState::GetInstance().SetState(BattleState::State::PARTY_SELECT);
 	else if (mCharaType == Character::ENEMY) BattleState::GetInstance().SetState(BattleState::State::ENEMY_SELECT);
 
-	// 生きてる同じタイプのアクターから選択する
+	// 生きてるキャラから選択する
 	const std::vector<int>& ids = bcm->GetAliveObjIDs(mCharaType);
 	int num = static_cast<int>(ids.size());
 	if (Input::GetButtonTrigger(0, Input::BUTTON::RIGHT)) mSelectIndex = (mSelectIndex + num - 1) % num; 
 	if (Input::GetButtonTrigger(0, Input::BUTTON::LEFT))  mSelectIndex = (mSelectIndex + 1) % num;
 	mTargetChara = bcm->GetChara(ids[mSelectIndex]); // Renderでつかうから ここで代入
+
+	// CharacterHealth更新
+	std::vector<Status> status;
+	status.push_back(*mTargetChara->GetStatus());
+	mCharacterHealth.Update(status);
+	
 
 	// キャラ選択したら
 	if (Input::GetButtonTrigger(0, Input::BUTTON::A))
@@ -45,7 +52,7 @@ void DecideTargetChara::Update(const BattleCharacterManager* bcm, CommandBase* c
 		cmdBase->AddTargetObjID(ids[mSelectIndex]);
 		
 		// スキル、アイテムが登録されているかチェック
-		if		(cmdBase->GetItemParam()) SetBehaviourUseItem(cmdBase);
+		if		(cmdBase->IsUseItem()) SetBehaviourUseItem(cmdBase);
 		else if (cmdBase->IsUseSkill())   SetBehaviourUseSkill(cmdBase);
 		else							  SetBehaviourAttack(cmdBase);
 	}
@@ -69,6 +76,12 @@ void DecideTargetChara::Render()
 	Vector2 size(mArrow->GetSize());
 	Vector2 center(size.x / 2.0f, size.y);
 	mArrow->Render(screen, scale, texPos, size, center);
+
+	// CharacterHealthのボードの位置更新
+	Vector2 boardSize = mCharacterHealth.GetBoardSize();
+	Vector2 boardPos(screen.x - (boardSize.x / 2.0f), screen.y - boardSize.y - (size.y * scale.y));
+	mCharacterHealth.SetLeftTopPos(boardPos);
+	mCharacterHealth.Render();
 }
 
 void DecideTargetChara::SetBehaviourAttack(CommandBase* cmdBase)
@@ -80,12 +93,12 @@ void DecideTargetChara::SetBehaviourUseItem(CommandBase* cmdBase)
 {
 	// 使用アイテムが回復アイテムなら HP、MPが最大かチェック
 	bool isUseable = true;
-	const ItemData::ItemParam* itemParam = cmdBase->GetItemParam();
-	if (itemParam->effect == ItemData::HEAL)
+	const UseItemData::Param* itemParam = cmdBase->GetItemParam();
+	if (itemParam->base->type == ItemData::HEAL)
 	{
 		//HP回復でHPがマックス, MP回復でMPがマックス なら使用不可
 		if (itemParam->hpValue > 0 && mTargetChara->GetStatus()->IsFullHP()) isUseable = false;
-		else if (itemParam->mpValue > 0 && mTargetChara->GetStatus()->IsFullMP()) isUseable = false;
+		if (itemParam->mpValue > 0 && mTargetChara->GetStatus()->IsFullMP()) isUseable = false;
 	}
 
 	if (isUseable) cmdBase->SetBehaviour(CommandBase::Behaviour::USE_ITEM);

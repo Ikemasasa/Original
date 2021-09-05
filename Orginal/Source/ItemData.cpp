@@ -1,69 +1,166 @@
 #include "ItemData.h"
 
-#include <fstream>
-#include <sstream>
+#include <string>
 
 #include "lib/ConvertString.h"
 #include "lib/Sprite.h"
 
-ItemData::ItemData()
-{
-	mItems.clear();
+#include "CSVLoader.h"
+#include "PlayerManager.h"
 
+std::vector<ItemData::BaseData> ItemData::mItems;
+
+void ItemData::Initialize()
+{
 	LoadItemData();
 }
 
-ItemData::~ItemData()
+void ItemData::Release()
 {
 	mItems.clear();
+}
+
+const ItemData::BaseData* ItemData::GetBaseData(const size_t id)
+{
+	ItemData::BaseData* ret = nullptr;
+
+	for (auto& basedata : mItems)
+	{
+		if (basedata.id == id)
+		{
+			ret = &basedata;
+			break;
+		}
+	}
+
+	return ret;
 }
 
 void ItemData::LoadItemData()
 {
-	const char* filename = "Data/Database/ItemData.csv";
+	const char* filename = "Data/Database/ItemBase.csv";
 	std::string iconPath = "Data/Image/ItemIcon/";
 
-	std::ifstream fin;
-	fin.open(filename);
-	if (!fin.is_open()) return;
+	CSVLoader loader;
+	loader.Open(filename);
 
-	std::string line;  // 1行取得用
-	const char delim = ','; // 区切り文字
-	while (std::getline(fin, line)) // 一行読み込み
+	std::vector<std::string> allLine;
+	loader.GetAllLine(&allLine);
+
+	for (const auto& line : allLine)
 	{
-		std::istringstream istr(line);
-		std::string chunk; // コンマ区切りの内容取得用
+		std::vector<std::string> chunks;
+		loader.GetChunks(line, &chunks);
 
-		std::vector<std::string> data;
-
-		while (std::getline(istr, chunk, delim))
+		if (chunks.size() > 0)
 		{
-			if (chunk.empty()) continue;   // 空白なら continue
-			if (chunk[0] == '#') continue; // 最初の文字が#ならcontinue
-
-			data.emplace_back(chunk);
-		}
-
-		if (data.size() > 0)
-		{
-			ItemParam item = {};
 			int index = 0;
-			item.name = ConvertString::ConvertToWstirng(data[index++]);
-			item.id = std::stoi(data[index++]);
-			item.icon = std::make_shared<Sprite>(ConvertString::ConvertToWstirng(iconPath + data[index++]).c_str());
-			item.effect = (Effect)std::stoi(data[index++]);
-			item.target = (Target)std::stoi(data[index++]);
-			item.range = (Range)std::stoi(data[index++]);
-			item.rate = (Rate)std::stoi(data[index++]);
-			item.hpValue = std::stoi(data[index++]);
-			item.mpValue = std::stoi(data[index++]);
-			item.atkValue = std::stoi(data[index++]);
-			item.defValue = std::stoi(data[index++]);
-			item.info = data[index++];
+			BaseData base;
+			base.name = ConvertString::ConvertToWstirng(chunks[index++]);
+			base.id = std::stoi(chunks[index++]);
+			base.type = (ItemType)std::stoi(chunks[index++]);
+			base.icon = std::make_shared<Sprite>(ConvertString::ConvertToWstirng(iconPath + chunks[index++]).c_str());
+			base.info = ConvertString::ConvertToWstirng(chunks[index++]);
 
-			mItems.push_back(item);
+			mItems.emplace_back(base);
 		}
 	}
 
-	fin.close();
+	loader.Close();
 }
+
+//--------------------------------------------------------------
+// UseItemData
+//--------------------------------------------------------------
+const UseItemData::Param UseItemData::GetParam(const size_t id)
+{
+	// ベースデータ取得
+	const ItemData::BaseData* base = ItemData::GetBaseData(id);
+
+	const char* filename = nullptr;
+	if (base->type == ItemData::HEAL)   filename = "Data/DataBase/HealItemData.csv"; 
+	if (base->type == ItemData::DAMAGE) filename = "Data/DataBase/DamageItemData.csv";
+
+	CSVLoader loader;
+	loader.Open(filename);
+
+	std::vector<std::string> allLine;
+	loader.GetAllLine(&allLine);
+
+
+	// 目的の行を取得
+	int lineIndex = 0;
+	if (base->type == ItemData::HEAL)   lineIndex = id - DataBase::HEAL_ITEM_ID_START;
+	if (base->type == ItemData::DAMAGE) lineIndex = id - DataBase::DAMAGE_ITEM_ID_START;
+	std::vector<std::string> chunks;
+	loader.GetChunks(allLine[lineIndex], &chunks);
+	
+	Param ret = {};
+	if (chunks.size() > 0)
+	{
+		int index = 2; // アイテム名、アイテムIDを無視する
+		ret.base = base;
+		ret.target = (Target)std::stoi(chunks[index++]);
+		ret.range = (Range)std::stoi(chunks[index++]);
+		ret.rate = (Rate)std::stoi(chunks[index++]);
+		ret.hpValue = std::stoi(chunks[index++]);
+		ret.mpValue = std::stoi(chunks[index++]);
+	}
+
+	return ret;
+}
+
+//--------------------------------------------------------------
+// EquipmentData
+//--------------------------------------------------------------
+const FieldUseItemData::Param FieldUseItemData::GetParam(const size_t id)
+{
+	Param param;
+	param.base = ItemData::GetBaseData(id);
+	switch (id)
+	{
+	case ItemData::SUBDUE_PROOF: param.effect = std::make_shared<SubDueProofEffect>(); break;
+	}
+
+	return param;
+}
+
+//--------------------------------------------------------------
+// EquipmentData
+//--------------------------------------------------------------
+const EquipmentData::Param EquipmentData::GetParam(const size_t id)
+{
+	const char* filename = "Data/DataBase/EquipmentData.csv";
+
+	CSVLoader loader;
+	loader.Open(filename);
+
+	std::vector<std::string> allLine;
+	loader.GetAllLine(&allLine);
+
+	// 目的の行を取得
+	const int LINE_INDEX = id - DataBase::EQUIPMENT_ID_START;
+	std::vector<std::string> chunks;
+	loader.GetChunks(allLine[LINE_INDEX], &chunks);
+
+	Param ret = {};
+	if (chunks.size() > 0)
+	{
+		int index = 2; // アイテム名、アイテムIDを無視する
+		ret.base = ItemData::GetBaseData(id);
+		ret.type	 = (Type)std::stoi(chunks[index++]);
+		ret.atk		 = std::stoi(chunks[index++]);
+		ret.def		 = std::stoi(chunks[index++]);
+		ret.spd		 = std::stoi(chunks[index++]);
+		
+		for (int i = index; i < chunks.size(); ++i)
+		{
+			bool equipable = false;
+			if (chunks[i] == "o") equipable = true;
+			ret.equipable.push_back(equipable);
+		}
+	}
+
+	return ret;
+}
+

@@ -1,22 +1,16 @@
 #pragma once
 #include <memory>
 
-#include "lib/Font.h"
-#include "lib/Sprite.h"
-
 #include "Define.h"
 #include "IDecideCommand.h"
+#include "SelectOptions.h"
 
 class DecideEscape : public IDecideCommand
 {
-	static constexpr float BOARD_POS_X = Define::SCREEN_WIDTH / 2.0f;
-	static constexpr float BOARD_POS_Y = Define::SCREEN_HEIGHT / 2.0f;
+	static constexpr float BOARD_POS_X = 200.0f;
+	static constexpr float BOARD_POS_Y = 220.0f;
 
-	static constexpr float FIRST_OFFSET_Y = 12.0f;
-	static constexpr float ADD_OFFSET_Y = 32.0f;
-
-	std::unique_ptr<Sprite> mBoard;
-	Font mFont;
+	SelectOptions mSelectOptions;
 
 public:
 	DecideEscape() = default;

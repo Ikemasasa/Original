@@ -7,10 +7,11 @@
 #include "BattleCharacterManager.h"
 #include "BattleState.h"
 #include "CommandBase.h"
-#include "DecideTargetChara.h"
 #include "DecideEscape.h"
+#include "DecideGuard.h"
 #include "DecideItem.h"
 #include "DecideSkill.h"
+#include "DecideTargetChara.h"
 
 DecideBehaviour::DecideBehaviour()
 {
@@ -58,7 +59,7 @@ void DecideBehaviour::Update(const BattleCharacterManager* bcm, CommandBase* cmd
 	{
 		if (mCommandIndex.y == 0) mNextCommand = std::make_unique<DecideItem>();
 		else if (mCommandIndex.y == 2) mNextCommand = std::make_unique<DecideEscape>();
-		else if (mCommandIndex.x == 0) cmdBase->SetBehaviour(CommandBase::Behaviour::GUARD);
+		else if (mCommandIndex.x == 0) mNextCommand = std::make_unique<DecideGuard>();
 		else if (mCommandIndex.x == 1) mNextCommand = std::make_unique<DecideTargetChara>(Character::Type::ENEMY);
 		else if (mCommandIndex.x == 2) mNextCommand = std::make_unique<DecideSkill>();
 	}
@@ -104,7 +105,7 @@ void DecideBehaviour::Render()
 			mIcons->Render(selectPos, scale, Vector2(ICON_SELECT_X, 0.0f), size);
 			
 			float fontOffsetY = 3.0f;
-			Vector2 center(mFont.GetWidth(commandName[i]) / 2.0f, 0.0f);
+			Vector2 center(0.5f, 0.0f);
 			mFont.RenderSet(commandName[i], nameBoardPos + Vector2(mCommandNameBoard->GetSize().x / 2.0f * scale.x, fontOffsetY), center, Define::FONT_COLOR);
 		}
 

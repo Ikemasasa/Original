@@ -1,43 +1,40 @@
 #include "Equipment.h"
 
 #include "Character.h"
-#include "DataBase.h"
-#include "EquipmentData.h"
-#include "Singleton.h"
 
 bool Equipment::Equip(const Character* equipChara, int id)
 {
-	const EquipmentData::Param* p = Singleton<DataBase>().GetInstance().GetEquipmentData()->GetParam(id);
+	const EquipmentData::Param param = EquipmentData::GetParam(id);
 
 	// 装備できるかチェック
-	bool equipable = p->equipable[equipChara->GetCharaID() - DataBase::PL_ID_START];
+	bool equipable = param.equipable[equipChara->GetCharaID() - DataBase::PL_ID_START];
 	if (!equipable) return false;
 
 
-	// まだ装備品がないなら
+	// まだ装備品がないなら装備する
 	if (mEquipments.empty())
 	{
-		mEquipments.push_back(p);
+		mEquipments.push_back(param);
 	}
-	else // あれば
+	else 
 	{
-		// 同タイプのものがないかチェック
+		// 装備品があれば、同タイプのものがないかチェック
 		bool find = false;
-		for (auto& param : mEquipments)
+		for (auto& equipment : mEquipments)
 		{
 			// あれば差し替える
-			if (param->type == p->type)
+			if (equipment.type == param.type)
 			{
-				param = p;
+				equipment = param;
 				find = true;
 				break;
 			}
 		}
-		
+
 		// もし同タイプのものがない場合は、そのまま装備する
 		if (!find)
 		{
-			mEquipments.push_back(p);
+			mEquipments.push_back(param);
 		}
 	}
 
@@ -49,7 +46,7 @@ void Equipment::UnEquip(int id)
 	// 同じIDのものを探して、ベクターから削除
 	for (auto it = mEquipments.begin(); it != mEquipments.end(); ++it)
 	{
-		if ((*it)->id == id)
+		if ((*it).base->id == id)
 		{
 			mEquipments.erase(it);
 			break;
@@ -63,7 +60,7 @@ void Equipment::UnEquip(EquipmentData::Type type)
 	// 同じIDのものを探して、ベクターから削除
 	for (auto it = mEquipments.begin(); it != mEquipments.end(); ++it)
 	{
-		if ((*it)->type == type)
+		if (it->base->type == type)
 		{
 			mEquipments.erase(it);
 			break;
@@ -76,9 +73,9 @@ const EquipmentData::Param* Equipment::GetParam(const EquipmentData::Type type) 
 	const EquipmentData::Param* ret = nullptr;
 	for (auto& param : mEquipments)
 	{
-		if (param->type == type)
+		if (param.type == type)
 		{
-			ret = param;
+			ret = &param;
 			break;
 		}
 	}

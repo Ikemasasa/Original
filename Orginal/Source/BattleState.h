@@ -30,4 +30,6 @@ public:
 
 	void SetState(State state) { mState = state; };
 	State GetState() const { return mState; }
+	bool CheckState(State state) { return mState == state; }
+
 };

@@ -14,10 +14,8 @@ BossEnemy::~BossEnemy()
 
 void BossEnemy::Initialize()
 {
-	SetScale(Vector3(0.025f, 0.025f, 0.025f));
-	SetPos(Vector3(-110.0f, 10.0f, 0.0f));
-	SetAngleY(Define::PI / 2.0f);
-	SetMotion(SkinnedMesh::IDLE);
+	Enemy::Initialize();
+	mMass = MASS;
 }
 
 void BossEnemy::Update(const Vector3& playerPos)

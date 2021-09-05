@@ -8,6 +8,7 @@
 #include "SkillData.h"
 #include "Singleton.h"
 #include "StatusData.h"
+#include "TurnManager.h"
 
 void ProductionSkill::Initialize()
 {
@@ -29,6 +30,18 @@ void ProductionSkill::Update(const BattleCharacterManager* bcm)
 
 		mMoveChara->SetMotion(SkinnedMesh::USE_ITEM, false);
 
+		// エフェクト決定
+		switch (mMoveChara->GetCommand()->GetSkillParam()->type)
+		{
+		case SkillData::Type::BUFF:   
+			mEffectSlot = TurnManager::BUFF_EFFECT_SLOT;
+			mSound = Sound::BUFF;
+			break;
+		case SkillData::Type::DEBUFF: 
+			mEffectSlot = TurnManager::DEBUFF_EFFECT_SLOT;
+			mSound = Sound::DEBUFF;
+			break;
+		}
 		++mState;
 		//break;
 
@@ -38,8 +51,9 @@ void ProductionSkill::Update(const BattleCharacterManager* bcm)
 			int index = 0;
 			for (auto target : mTargetCharas)
 			{
-				int handle = Singleton<EffectManager>().GetInstance().Play(TurnManager::ATK_BUFF_EFFECT_SLOT, target->GetPos(), 0, 1.0f, 2.5f);
+				int handle = Singleton<EffectManager>().GetInstance().Play(mEffectSlot, target->GetPos());
 				mEffectInstHandles[index] = handle;
+				AUDIO.SoundPlay((int)mSound);
 				++index;
 			}
 
@@ -93,7 +107,23 @@ void ProductionSkill::StateInit()
 	// バフセット
 	for (auto& target : mTargetCharas)
 	{
-		target->GetStatus()->SetBuffAtkRate(param->atkValue, param->turn);
+		int turn = param->turn;
+
+		// 自分に対してのバフデバフなら1ターン追加(バフターン経過のあれやそれで)
+		if (mMoveChara == target) turn += 1;
+
+		switch (param->type)
+		{
+		case SkillData::Type::BUFF:
+			if (param->atkValue != 0.0f) target->GetStatus()->SetBuffAtkRate(param->atkValue, turn);
+			if (param->defValue != 0.0f) target->GetStatus()->SetBuffDefRate(param->defValue, turn);
+			break;
+
+		case SkillData::Type::DEBUFF:
+			if (param->atkValue != 0.0f) target->GetStatus()->SetDebuffAtkRate(param->atkValue, turn);
+			if (param->defValue != 0.0f) target->GetStatus()->SetDebuffDefRate(param->defValue, turn);
+			break;
+		}
 	}
 }
 

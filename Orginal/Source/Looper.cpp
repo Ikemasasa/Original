@@ -5,17 +5,16 @@
 #include "lib/Framework.h"
 #include "lib/Input.h"
 
+#include "Fade.h"
 #include "GameManager.h"
 #include "SceneManager.h"
 #include "SceneTitle.h"
 #include "SceneField.h"
-#include "Fade.h"
-
+#include "Singleton.h"
 #include "TimeStamp.h"
 
 int Looper::Run(HWND hwnd)
 {
-
 	auto& f = FRAMEWORK;
 	f.Initialize(hwnd);
 
@@ -44,6 +43,7 @@ int Looper::Run(HWND hwnd)
 	
 	sm.Release();
 
+	SingletonFinalizer::Finalize();
 	Font::DisableTTF();
 
 	return 0;

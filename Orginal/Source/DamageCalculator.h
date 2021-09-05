@@ -9,7 +9,7 @@ class DamageCalculator
 	static const int WIDTH_DIV = 7;
 
 public:
-	static constexpr float DEFENCE_VIT_RATE = 1.5f;
+	static constexpr float GUARD_BUFF_RATE = 1.5f;
 
 public:
 	static int CalcAttackDamage(const Status* deal, const Status* take);

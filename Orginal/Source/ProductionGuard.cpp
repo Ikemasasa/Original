@@ -30,7 +30,7 @@ void ProductionGuard::Update(const BattleCharacterManager* bcm)
 		}
 
 		mMoveChara->SetMotion(SkinnedMesh::GUARD);
-		mMoveChara->GetStatus()->SetBuffDefRate(DamageCalculator::DEFENCE_VIT_RATE, 1);
+		mMoveChara->GetStatus()->SetGuardFlag(true);
 		// break;
 
 	case WAIT:
@@ -41,7 +41,7 @@ void ProductionGuard::Update(const BattleCharacterManager* bcm)
 		pos.y += (mMoveChara->GetLocalAABB().max.y - mMoveChara->GetLocalAABB().min.y) / 2.0f;
 		Vector2 scrPos = pos.WorldToScreen(view, proj);
 		const wchar_t* str = L"Guard";
-		mFont.RenderSet(str, scrPos, Vector2(mFont.GetWidth(str) / 2.0f, 0.0f), Define::FONT_COLOR);
+		mFont.RenderSet(str, scrPos, Vector2(0.5f, 0.0f), Define::FONT_COLOR);
 
 		// タイマーを進める
 		mTimer += GameManager::elapsedTime;

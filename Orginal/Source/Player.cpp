@@ -2,19 +2,16 @@
 
 #include <directxmath.h>
 
-#include "CameraManager.h"
-#include "CollisionTerrain.h"
-#include "Define.h"
-#include "DataBase.h"
-#include "GameManager.h"
-#include "ItemData.h"
-#include "Singleton.h"
-#include "StatusData.h"
-
 #include "lib/Input.h"
 #include "lib/Math.h"
 
-#include "TimeStamp.h"
+#include "CameraManager.h"
+#include "CollisionTerrain.h"
+#include "Define.h"
+#include "GameManager.h"
+#include "ItemData.h"
+#include "StatusData.h"
+#include "TransformData.h"
 
 Player::Player(int charaID) : Character(charaID, Character::PLAYER)
 {
@@ -26,9 +23,9 @@ Player::Player(int charaID) : Character(charaID, Character::PLAYER)
 	// ‚Æ‚è‚ ‚¦‚¸ƒAƒCƒeƒ€‚ð‰½ŒÂ‚©“n‚·
 	for (int i = 0; i < 2; ++i)
 	{
-		mInventory.Add(Singleton<DataBase>().GetInstance().GetItemData()->GetItemParam(ItemData::PORTION));
-		mInventory.Add(Singleton<DataBase>().GetInstance().GetItemData()->GetItemParam(ItemData::MAGIC_PORTION));
-		mInventory.Add(Singleton<DataBase>().GetInstance().GetItemData()->GetItemParam(ItemData::BOMB));
+		mInventory.Add(ItemData::PORTION);
+		mInventory.Add(ItemData::MAGIC_PORTION);
+		mInventory.Add(ItemData::BOMB);
 	}
 
 	mMass = MASS;
@@ -36,8 +33,11 @@ Player::Player(int charaID) : Character(charaID, Character::PLAYER)
 
 void Player::Initialize()
 {
-	mPos   = Vector3(10.0f, 0.0f, 10.0f);
-	mScale = Vector3(0.02f, 0.02f, 0.02f);
+	TransformData::Transform transform = TransformData::GetPLTransform(GetCharaID());
+	mPos   = transform.pos;
+	mScale = transform.scale;
+	mAngle = transform.angle;
+
 	SetMotion(SkinnedMesh::IDLE);
 }
 
@@ -84,7 +84,5 @@ void Player::Update()
 		SetMotion(SkinnedMesh::IDLE);
 	}
 
-	TimeStamp::Start();
 	Character::UpdateWorld();
-	TimeStamp::End();
 }

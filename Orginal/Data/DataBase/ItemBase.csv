@@ -1,0 +1,6 @@
+回復薬,40000,0,potion.png,HPを15回復する
+魔法薬,40001,0,magic_potion.png,MPを5回復する
+爆弾,45000,1,bomb.png,敵にダメージを与える
+討伐の証,50000,2,subdue_proof.png,ボスを倒した証。使用するとタイトル画面に戻る
+初心者用の剣,60000,3,beginners_sword.png,文字通り、初心者用の剣
+初心者用の鎧,60001,3,beginners_armor.png,文字通り、初心者用の鎧

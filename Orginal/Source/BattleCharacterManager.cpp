@@ -18,13 +18,10 @@
 #include "PlayerManager.h"
 #include "SceneBattle.h"
 #include "SceneManager.h"
-#include "Singleton.h"
+#include "TurnManager.h"
 
 BattleCharacterManager::BattleCharacterManager(PlayerManager* pm, Enemy* enemy)
 {
-	mPlayerManager = pm;
-	mHitEnemy = enemy;
-
 	// プレイヤー登録
 	mPlayerNum = pm->GetNum();
 	for (int i = 0; i < mPlayerNum; ++i)
@@ -39,7 +36,6 @@ BattleCharacterManager::BattleCharacterManager(PlayerManager* pm, Enemy* enemy)
 void BattleCharacterManager::Initialize()
 {
 	mCharacterHealth.Initialize(Vector2(HEALTH_BOARD_X, HEALTH_BOARD_Y));
-	mTurnManager.Initialize(mBCharacters);
 
 	for (auto& ba : mBCharacters) ba->Initialize();
 	// 座標設定
@@ -69,89 +65,35 @@ void BattleCharacterManager::Initialize()
 	}
 }
 
-void BattleCharacterManager::Update()
+void BattleCharacterManager::Update(const TurnManager* turnManager)
 {
-	if (mTurnManager.IsResult())
+	// リザルトなら
+	if (BattleState::GetInstance().CheckState(BattleState::State::RESULT))
 	{
 		// モーションの更新だけする
 		for (auto& chara : mBCharacters) chara->UpdateWorld();
-
-		// fieldに戻る
-		if (Input::GetButtonTrigger(0, Input::BUTTON::A))
-		{
-			if (Fade::GetInstance().SetSceneImage(Fade::SPEED_SLOW))
-			{
-				SceneManager::GetInstance().PopCurrentScene();
-			}
-		}
 	}
 	else
 	{
-		BattleCharacter* moveChara = mTurnManager.GetMoveChara();
-		moveChara->Update(this);
+		// 現在のターンのキャラを取得
+		mMoveChara = turnManager->GetMoveChara();
+		mMoveChara->Update(this);
 
 		// MoveChara以外もワールド, モーションの更新をする
 		for (auto& chara : mBCharacters)
 		{
-			if (moveChara == chara.get()) continue;
+			if (mMoveChara == chara.get()) continue;
 			chara->UpdateWorld();
 		}
 
 		// healthboard更新
+		std::vector<Status> statusArray;
+		for (int i = 0; i < mPlayerNum; ++i)
 		{
-			std::vector<Status> statusArray;
-			for (int i = 0; i < mPlayerNum; ++i)
-			{
-				// BCharactersは最初にプレイヤーがはいってるから 0~人数分で全員にアクセスできる
-				statusArray.push_back(*mBCharacters[i]->GetStatus());
-			}
-			mCharacterHealth.Update(statusArray);
+			// BCharactersは最初にプレイヤーがはいってるから 0~人数分で全員にアクセスできる
+			statusArray.push_back(*mBCharacters[i]->GetStatus());
 		}
-
-
-		mTurnManager.Update(this);
-
-
-
-		// 1ターンが終了したら
-		if (mTurnManager.IsTurnFinished())
-		{
-			// 死んでるアクターをチェック
-			OrganizeCharacter();
-
-			// バトル終了かチェック
-			Result result = CheckBattleFinish();
-			if (result == PLAYER_WIN) // TODO : 現状負けた時の特別な処理はない(勝っても負けても一緒)
-			{
-				BattleState::GetInstance().SetState(BattleState::State::RESULT);
-				mHitEnemy->SetExist(false);
-				
-				// リザルトに移行
-				mTurnManager.ToResult();
-
-				// 戦闘後のステータスを更新
-				for (int i = 0; i < mPlayerNum; ++i)
-				{
-					BattleCharacter* pl = mBCharacters[i].get();
-					pl->GetStatus()->ResetBuff();
-					Singleton<DataBase>().GetInstance().GetStatusData()->SetPLStatus(pl->GetCharaID(), *pl->GetStatus());
-				}
-
-				// ドロップアイテムをインベントリに加える
-				for (auto& dropID : mDropItemIDs)
-				{
-					mPlayerManager->GetEquipmentInventory()->Push(dropID);
-				}
-
-				// BGMをリザルトのやつにする
-				AUDIO.MusicStop((int)SceneBattle::music);
-				AUDIO.MusicPlay((int)SceneBattle::result);
-			}
-			else
-			{
-				// とりあえずタイトルに戻す
-			}
-		}
+		mCharacterHealth.Update(statusArray);
 	}
 
 	mDropItemShower.Update();
@@ -162,11 +104,10 @@ void BattleCharacterManager::Render(const DirectX::XMFLOAT4X4& view, const Direc
 	for (auto& ba : mBCharacters) ba->Render(view, projection, lightDir);
 
 	// リザルトじゃないならUIﾄｶを表示
-	if (!mTurnManager.IsResult())
+	if (!BattleState::GetInstance().CheckState(BattleState::State::RESULT))
 	{
-		mTurnManager.GetMoveChara()->RenderCommand();    // MoveCharaのコマンドUIを表示
+		mMoveChara->RenderCommand();    // MoveCharaのコマンドUIを表示
 		mCharacterHealth.Render(false); // キャラのHPを表示
-		mTurnManager.Render();
 	}
 
 	mDropItemShower.Render();
@@ -198,12 +139,12 @@ void BattleCharacterManager::EnemyCreateAndRegister(Enemy* enm)
 	mAliveObjIDs[mBCharacters.back()->GetType()].push_back(objID);
 }
 
-BattleCharacterManager::Result BattleCharacterManager::CheckBattleFinish()
+SceneBattle::Result BattleCharacterManager::CheckBattleFinish()
 {
 	// mAliveCharaIDsをチェックする
-	Result ret = NONE;
-	if (mAliveObjIDs[Character::ENEMY].empty())  ret = PLAYER_WIN;
-	if (mAliveObjIDs[Character::PLAYER].empty()) ret = PLAYER_LOSE;
+	SceneBattle::Result ret = SceneBattle::NONE;
+	if (mAliveObjIDs[Character::ENEMY].empty())  ret = SceneBattle::PLAYER_WIN;
+	if (mAliveObjIDs[Character::PLAYER].empty()) ret = SceneBattle::PLAYER_LOSE;
 
 	return ret;
 }
@@ -211,33 +152,52 @@ BattleCharacterManager::Result BattleCharacterManager::CheckBattleFinish()
 void BattleCharacterManager::OrganizeCharacter()
 {
 	// 体力が0になったアクタ―を整理する
-	for (auto& ba : mBCharacters)
+	std::list<int> removeCharaObjIDs;
+
+	for (auto& typeObjIDs : mAliveObjIDs)
 	{
-		// 体力が1以上ならcontinue, すでにexistがfalseなら
-		if (!ba->GetStatus()->IsDead()) continue;
-
-		// 敵ならドロップのチェックをする
-		if (ba->GetType() == Character::ENEMY)
+		for (auto& objID : typeObjIDs)
 		{
-			int dropItemID = 0;
-			Singleton<DataBase>().GetInstance().GetDropData()->DecideDropItem(ba->GetCharaID(), &dropItemID);
-			if (dropItemID != -1)
+			// キャラを取得
+			BattleCharacter* ba = mBCharacters[objID].get();
+			
+			// 生きてるならcontinue;
+			if (!ba->GetStatus()->IsDead()) continue;
+
+			// 敵ならドロップチェック
+			if (ba->GetType() == Character::ENEMY)
 			{
-				mDropItemIDs.push_back(dropItemID);
-				mDropItemShower.Add(dropItemID, ba->GetPos());
+				int dropItemID = 0;
+				DropData::DecideDropItem(ba->GetCharaID(), &dropItemID);
+				if (dropItemID != -1)
+				{
+					mDropItemIDs.push_back(dropItemID);
+					mDropItemShower.Add(dropItemID, ba->GetPos());
+				}
 			}
+
+			// 削除リストに登録
+			removeCharaObjIDs.push_back(objID);
 		}
+	}
 
-		// 0以下なら mAliveCharaIDs から消す
-		auto& ids = mAliveObjIDs[ba->GetType()];
-		for (auto it = ids.begin(); it != ids.end(); ++it)
+	// 誰も死んでないならreturn
+	if (removeCharaObjIDs.empty()) return;
+
+	// mAliveObjIDsから削除する
+	for (auto& typeObjIDs : mAliveObjIDs)
+	{
+		for (auto it = typeObjIDs.begin(); it != typeObjIDs.end();)
 		{
-			// 敵ならドロップのチェックをする
-			if (*it == ba->GetObjID())
+			if (removeCharaObjIDs.empty()) break;
+
+			// removeCharaObjIDsは昇順に入ってるから先頭から消していくだけで行ける
+			if (*it == removeCharaObjIDs.front())
 			{
-				ids.erase(it);
-				break;
+				removeCharaObjIDs.erase(removeCharaObjIDs.begin());
+				it = typeObjIDs.erase(it);
 			}
+			else ++it;
 		}
 	}
 }

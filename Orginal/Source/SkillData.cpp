@@ -1,9 +1,8 @@
 #include "SkillData.h"
 
-#include <fstream>
-#include <sstream>
-
 #include "lib/ConvertString.h"
+
+#include "CSVLoader.h"
 
 std::vector<SkillData::SkillParam> SkillData::GetAllSkill(const int charaID)
 {
@@ -11,49 +10,42 @@ std::vector<SkillData::SkillParam> SkillData::GetAllSkill(const int charaID)
 
 	std::vector<SkillData::SkillParam> ret;
 
-	std::ifstream fin;
-	fin.open(filename);
-	if (!fin.is_open()) return ret;
+	CSVLoader loader;
+	loader.Open(filename);
 
-	std::string line;  // 1行取得用
-	const char delim = ','; // 区切り文字
-	while (std::getline(fin, line)) // 一行読み込み
+	std::vector<std::string> allLine;
+	loader.GetAllLine(&allLine);
+
+	for (const auto& line : allLine)
 	{
-		std::istringstream istr(line);
-		std::string chunk; // コンマ区切りの内容取得用
+		std::vector<std::string> chunks;
+		loader.GetChunks(line, &chunks);
 
-		std::vector<std::string> data;
-		while (std::getline(istr, chunk, delim)) // 区切りごとに取得
+		const int CHARA_ID_INDEX = 3;
+		int id = std::stoi(chunks[CHARA_ID_INDEX]);
+		if (id == charaID)
 		{
-			if (chunk.empty()) continue;   // 空白なら continue
-			if (chunk[0] == '#') continue; // 最初の文字が#ならcontinue
+			int index = 0;
+			SkillParam param;
+			param.skillName = ConvertString::ConvertToWstirng(chunks[index++]);
+			param.skillID	= std::stoi(chunks[index++]);
+			index += 2; // 名前ときゃらIDを無視
+			param.useMP		= std::stoi(chunks[index++]);
+			param.turn		= std::stoi(chunks[index++]);
+			param.type		= (Type)std::stoi(chunks[index++]);
+			param.target	= (Target)std::stoi(chunks[index++]);
+			param.targetNum = (TargetNum)std::stoi(chunks[index++]);
+			param.rate		= (Rate)std::stoi(chunks[index++]);
+			param.atkValue  = std::stof(chunks[index++]);
+			param.defValue  = std::stof(chunks[index++]);
+			param.info		= ConvertString::ConvertToWstirng(chunks[index++]);
 
-			data.emplace_back(chunk);
+			ret.emplace_back(param);
 		}
-
-		if (data.size() > 0)
-		{
-			if (std::stoi(data[3]) == charaID)
-			{
-				int index = 0;
-				SkillData::SkillParam param;
-				param.skillName = ConvertString::ConvertToWstirng(data[index++]);
-				param.skillID = std::stoi(data[index++]);
-				index += 2;
-				param.useMP = std::stoi(data[index++]);
-				param.turn = std::stoi(data[index++]);
-				param.type = (Type)std::stoi(data[index++]);
-				param.target = (Target)std::stoi(data[index++]);
-				param.targetNum = (TargetNum)std::stoi(data[index++]);
-				param.rate = (Rate)std::stoi(data[index++]);
-				param.atkValue = std::stof(data[index++]);
-				param.defValue = std::stof(data[index++]);
-				param.info = ConvertString::ConvertToWstirng(data[index++]);
-
-				ret.push_back(param);
-			}
-		}
+		if (id > charaID) break; // idがcharaiDより大きくなったらbreak;
 	}
+
+	loader.Close();
 
 	return ret;
 }

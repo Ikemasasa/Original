@@ -37,7 +37,6 @@ EffectManager::EffectManager()
 
 EffectManager::~EffectManager()
 {
-
 }
 
 

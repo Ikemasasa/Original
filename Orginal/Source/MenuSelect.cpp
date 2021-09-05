@@ -5,13 +5,11 @@
 #include "lib/Input.h"
 
 #include "CharacterHealth.h"
-#include "DataBase.h"
 #include "Define.h"
 #include "Fade.h"
 #include "Player.h"
 #include "PlayerManager.h"
 #include "SceneManager.h"
-#include "Singleton.h"
 #include "StatusData.h"
 
 void MenuSelect::Initialize(const PlayerManager* plm)
@@ -23,42 +21,31 @@ void MenuSelect::Initialize(const PlayerManager* plm)
     mCharacterHealth->Initialize(Vector2(HEALTH_BOARD_POS_X, BOARD_POS_Y));
 
     mFont.Initialize();
-
-    // CharacterHealth作成
-    std::vector<Status> statusArray;
-    for (int i = 0; i < plm->GetNum(); ++i)
+    
+    // 開始演出登録
+    for (int i = 0; i < SELECT_NUM; ++i)
     {
-        int charaID = plm->GetPlayer(i)->GetCharaID();
-        Status status = Singleton<DataBase>().GetInstance().GetStatusData()->GetPLStatus(charaID);
-        statusArray.push_back(status);
-    }
-    mCharacterHealth->Update(statusArray);
-
-    // フォント作成
-    {
-        std::wstring str[SELECT_NUM] =
-        {
-            L"アイテム",
-            L"装備品",
-            L"ステータス"
-        };
-
-        for (int i = 0; i < SELECT_NUM; ++i)
-        {
-            mFont.Add(str[i].c_str());
-
-            Data data;
-            data.pos.x = BOARD_POS_X;
-            data.pos.y = BOARD_POS_Y + ((mStrBoard->GetSize().y + BOARD_OFFSET_Y) * i);
-            data.moveX = MOVE_MAX;
-            mDatas.push_back(data);
-        }
+        Data data;
+        data.pos.x = BOARD_POS_X;
+        data.pos.y = BOARD_POS_Y + ((mStrBoard->GetSize().y + BOARD_OFFSET_Y) * i);
+        data.moveX = MOVE_MAX;
+        mDatas.push_back(data);
     }
 }
 
 MenuSelect::Select MenuSelect::Update(PlayerManager* plm)
 {
     BeginAnimation();
+
+    // CharacterHealth作成
+    std::vector<Status> statusArray;
+    for (int i = 0; i < plm->GetNum(); ++i)
+    {
+        int charaID = plm->GetPlayer(i)->GetCharaID();
+        Status status = StatusData::GetPLStatus(charaID);
+        statusArray.push_back(status);
+    }
+    mCharacterHealth->Update(statusArray);
 
     // selectIndex操作
     if (Input::GetButtonTrigger(0, Input::BUTTON::UP))   mSelectIndex = (mSelectIndex + SELECT_NUM - 1) % SELECT_NUM;
@@ -84,6 +71,13 @@ MenuSelect::Select MenuSelect::Update(PlayerManager* plm)
 
 void MenuSelect::Render()
 {
+    const wchar_t* str[SELECT_NUM] =
+    {
+        L"アイテム",
+        L"装備品",
+        L"ステータス"
+    };
+
     // ボードを描画(ついでにフォントもセット
     const Vector2 scale(Vector2::ONE);
     const Vector2 texPos(Vector2::ZERO);
@@ -91,7 +85,7 @@ void MenuSelect::Render()
     {
         const Vector2 pos(mDatas[i].pos.x + mDatas[i].moveX, mDatas[i].pos.y);
         mStrBoard->Render(pos, scale, texPos, mStrBoard->GetSize());
-        mFont.RenderSet(i, pos + Vector2(STR_OFFSET_X, STR_OFFSET_Y), Vector2::ZERO, Define::FONT_COLOR);
+        mFont.RenderSet(str[i], pos + Vector2(STR_OFFSET_X, STR_OFFSET_Y), Vector2::ZERO, Define::FONT_COLOR);
 
         // 選択画像を描画
         if (mSelectIndex == i)
@@ -100,7 +94,7 @@ void MenuSelect::Render()
         }
     }
 
-    mCharacterHealth->Render(false, false);
+    mCharacterHealth->Render(false);
 
     mFont.Render();
 }

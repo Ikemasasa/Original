@@ -5,10 +5,7 @@
 #include "lib/Math.h"
 #include "lib/Sprite.h"
 
-#include "DataBase.h"
 #include "Define.h"
-#include "EquipmentData.h"
-#include "Singleton.h"
 
 void EquipmentSelect::Initialize()
 {
@@ -25,6 +22,7 @@ int EquipmentSelect::Update(const std::vector<EquipmentInventory::Data>& equipme
 		mEquipmentsData = equipmentsData;
 		int inventorySize = mEquipmentsData.size();
 
+		int oldIndex = mSelectIndex;
 		if (Input::GetButtonTrigger(0, Input::BUTTON::RIGHT)) ++mSelectIndex;
 		if (Input::GetButtonTrigger(0, Input::BUTTON::LEFT))  --mSelectIndex;
 		if (mSelectIndex >= inventorySize) mSelectIndex -= inventorySize;
@@ -36,8 +34,7 @@ int EquipmentSelect::Update(const std::vector<EquipmentInventory::Data>& equipme
 		if (mSelectIndex < 0) mSelectIndex += inventorySize + 1;
 		mSelectIndex = Math::Clamp(mSelectIndex, 0, inventorySize - 1); // 帳尻あわんかったからclampしてる
 
-		if (mOldSelectIndex != mSelectIndex) AUDIO.SoundPlay((int)Sound::CURSOR_MOVE);
-		mOldSelectIndex = mSelectIndex;
+		if (oldIndex != mSelectIndex) AUDIO.SoundPlay((int)Sound::CURSOR_MOVE);
 	}
 
 	if (Input::GetButtonTrigger(0, Input::BUTTON::A))
@@ -50,7 +47,6 @@ int EquipmentSelect::Update(const std::vector<EquipmentInventory::Data>& equipme
 
 void EquipmentSelect::Render(const Vector2& boardPos)
 {
-
 	// ボード描画
 	mBoard->Render(boardPos, Vector2::ONE, Vector2::ZERO, mBoard->GetSize());
 
@@ -70,8 +66,8 @@ void EquipmentSelect::Render(const Vector2& boardPos)
 			float y = i / HORIZONTAL_NUM * ICON_SCALE_SIZE + offset.y;
 			Vector2 pos(x, y);
 
-			const EquipmentData::Param* param = Singleton<DataBase>().GetInstance().GetEquipmentData()->GetParam(mEquipmentsData[i].equipmentID);
-			param->icon->Render(pos, scale, Vector2::ZERO, size);
+			const EquipmentData::Param param = EquipmentData::GetParam(mEquipmentsData[i].equipmentID);
+			param.base->icon->Render(pos, scale, Vector2::ZERO, size);
 
 			// 装備中の装備ならEを出す
 			if (mEquipmentsData[i].equipChara)
@@ -100,8 +96,8 @@ void EquipmentSelect::Render(const Vector2& boardPos)
 		const Vector2 iconScale(INFO_ICON_SCALE, INFO_ICON_SCALE);
 		const Vector2 iconSize(ICON_SIZE, ICON_SIZE);
 
-		const EquipmentData::Param* param = Singleton<DataBase>().GetInstance().GetEquipmentData()->GetParam(mEquipmentsData[mSelectIndex].equipmentID);
-		param->icon->Render(iconPos, iconScale, Vector2::ZERO, iconSize);
+		const EquipmentData::Param param = EquipmentData::GetParam(mEquipmentsData[mSelectIndex].equipmentID);
+		param.base->icon->Render(iconPos, iconScale, Vector2::ZERO, iconSize);
 
 		// 説明
 		RenderSetInfo(infoBoardPos);
@@ -109,6 +105,12 @@ void EquipmentSelect::Render(const Vector2& boardPos)
 	}
 
 
+}
+
+void EquipmentSelect::ClearData()
+{
+	mEquipmentsData.clear();
+	mSelectIndex = 0;
 }
 
 void EquipmentSelect::RenderSetInfo(const Vector2& infoBoardPos)
@@ -119,19 +121,19 @@ void EquipmentSelect::RenderSetInfo(const Vector2& infoBoardPos)
 	const float INFO_ADD_Y = 46;
 
 	// 装備品データ取得
-	const EquipmentData::Param* param = Singleton<DataBase>().GetInstance().GetEquipmentData()->GetParam(mEquipmentsData[mSelectIndex].equipmentID);
+	const EquipmentData::Param param = EquipmentData::GetParam(mEquipmentsData[mSelectIndex].equipmentID);
 
 	// 名前
 	Vector2 namePos = infoBoardPos + Vector2(mInfoBoard->GetSize().x / 2.0f, NAME_OFFSET_Y);
-	Vector2 nameCenter(mFont.GetWidth(param->name.c_str()) / 2.0f, 0.0f);
-	mFont.RenderSet(param->name.c_str(), namePos, nameCenter, Define::FONT_COLOR);
+	Vector2 nameCenter(0.5f, 0.0f);
+	mFont.RenderSet(param.base->name.c_str(), namePos, nameCenter, Define::FONT_COLOR);
 
 	// パラメーター
 	std::wstring str[PARAM_NUM] =
 	{
-		L"攻撃力：" + std::to_wstring(param->atk),
-		L"防御力：" + std::to_wstring(param->def),
-		L"素早さ：" + std::to_wstring(param->spd)
+		L"攻撃力：" + std::to_wstring(param.atk),
+		L"防御力：" + std::to_wstring(param.def),
+		L"素早さ：" + std::to_wstring(param.spd)
 	};
 
 	Vector2 pos;

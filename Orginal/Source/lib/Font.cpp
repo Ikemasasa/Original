@@ -13,6 +13,7 @@ void Font::Initialize(int fontSize, int fontWeight)
 {
 	mFontSize = fontSize;
 	mFontWeight = fontWeight;
+	mFonts.clear();
 }
 
 void Font::Release()
@@ -42,64 +43,74 @@ void Font::DisableTTF()
 	}
 }
 
-bool Font::RenderSet(const wchar_t* str, const Vector2& pos, const Vector2& center, const Vector4& color)
+
+bool Font::RenderSet(wchar_t word, const Vector2& pos, const Vector2& centerRate, const Vector4& color)
 {
-	RenderData data;
+	Add(word);
 
-	for (size_t i = 0; i < mFonts.size(); ++i)
-	{
-		if (wcscmp(mFonts[i].str, str) != 0) continue;
+	RenderData rd;
+	rd.str = word;
+	rd.scrPos = pos;
+	rd.centerRate = centerRate;
+	rd.color = color;
+	mRenderData.emplace_back(rd);
 
-		data.fontIndex = i;
-		data.scrPos = pos;
-		data.center = center;
-		data.color = color;
-		mRenderData.emplace_back(data);
-		return true;
-	}
-
-	// なかったらつくる
-	if (Add(str))
-	{
-		data.fontIndex = mFonts.size() - 1;
-		data.scrPos = pos;
-		data.center = center;
-		data.color = color;
-		mRenderData.emplace_back(data);
-		return true;
-	}
-
-	return false;
-}
-
-bool Font::RenderSet(const int index, const Vector2& pos, const Vector2& center, const Vector4& color)
-{
-	if (mFonts.size() < static_cast<size_t>(index)) return false;
-
-	RenderData data;
-
-	data.fontIndex = index;
-	data.scrPos = pos;
-	data.center = center;
-	data.color = color;
-	mRenderData.emplace_back(data);
 	return true;
 }
 
-void Font::ClearRenderSet()
+bool Font::RenderSet(const wchar_t* str, const Vector2& pos, const Vector2& centerRate, const Vector4& color)
 {
-	mRenderData.clear();
+	Add(str);
+
+	RenderData rd;
+	rd.str = str;
+	rd.scrPos = pos;
+	rd.centerRate = centerRate;
+	rd.color = color;
+
+	mRenderData.emplace_back(rd);
+	return true;
+}
+
+bool Font::RenderSetValue(const int value, const Vector2& pos, const Vector2& centerRate, const Vector4& color)
+{
+	std::wstring valueStr = std::to_wstring(value);
+	Add(valueStr.c_str());
+
+	RenderData rd;
+	rd.str = valueStr.c_str();
+	rd.scrPos = pos;
+	rd.centerRate = centerRate;
+	rd.color = color;
+	mRenderData.emplace_back(rd);
+
+	return true;
+}
+
+bool Font::RenderSetValue(const float value, const Vector2& pos, const Vector2& centerRate, const Vector4& color)
+{
+	std::wstring valueStr = std::to_wstring(value);
+	Add(valueStr.c_str());
+
+	RenderData rd;
+	rd.str = valueStr.c_str();
+	rd.scrPos = pos;
+	rd.centerRate = centerRate;
+	rd.color = color;
+	mRenderData.emplace_back(rd);
+
+	return true;
 }
 
 void Font::Render(bool isRenderClear)
 {
-	Vector2 pos = {};
-	Vector2 scale = {};
-	Vector2 texPos = { 0.0f, 0.0f };
-	Vector2 size = {};
-	Vector2 center = {};
-	float angle = 0;
-	Vector4 color = {};
+	Vector2 pos;
+	Vector2 scale(Vector2::ONE);
+	Vector2 texPos(Vector2::ZERO);
+	Vector2 center;
+	Vector2 centerRate;
+	float angle = 0.0f;
+	Vector4 color;
 
 	auto ClampColor = [&color]()
 	{
@@ -109,109 +120,118 @@ void Font::Render(bool isRenderClear)
 		color.w = Math::Clamp01(color.w);
 	};
 
-	for (auto& data : mRenderData)
+	for (const auto& rd : mRenderData)
 	{
-		const FontData& font = mFonts[data.fontIndex];
-		scale = Vector2::ONE;
-		center = data.center;
-		color = data.color;
+		pos = rd.scrPos;
+		center = Vector2::ZERO;
+		centerRate = rd.centerRate;
+		color = rd.color;
+		ClampColor();
 
-		size_t num = font.textures.size();
-		for (size_t i = 0; i < num; ++i)
+		if(centerRate.x != 0.0f) center.x = GetWidth(rd.str.c_str()) * centerRate.x;
+		for (size_t i = 0; i < rd.str.size(); ++i)
 		{
-			pos = data.scrPos + font.pos[i];
-			size = font.size[i];
+			const FontData& fd = mFonts[rd.str[i]];
+			pos.x += fd.leftTop.x;
+			pos.y = rd.scrPos.y + fd.leftTop.y;
+			Renderer2D::GetInstance().Render(fd.tex.GetSRV(), pos, scale, texPos, fd.size, center, angle, color);
 
-			Renderer2D::GetInstance().Render(font.textures[i].GetSRV(), pos, scale, texPos, size, center, angle, color);
+			pos.x += fd.width - fd.leftTop.x;
 		}
 	}
 
-	if(isRenderClear) mRenderData.clear();
+	if (isRenderClear) mRenderData.clear();
 }
 
 bool Font::Add(const wchar_t* str)
 {
-	size_t size = mFonts.size();
-	mFonts.resize(size + 1);
-	FontData& data = mFonts.back();
-
-	wcscpy_s(data.str, STR_MAX, str);
-	
 	int len = wcslen(str);
-	data.textures.resize(len);
-	data.pos.resize(len);
-	data.size.resize(len);
-
-	GLYPHMETRICS gm;
-	TEXTMETRIC tm;
-	float offsetX = 0.0f;
 	for (int i = 0; i < len; ++i)
 	{
-		data.textures[i].Create(str[i], mFontName, mFontSize, mFontWeight, &gm, &tm);
+		// FontData取得
+		auto& fd = mFonts[str[i]];
 
-		// 座標計算
-		data.pos[i].x = static_cast<float>(offsetX + gm.gmptGlyphOrigin.x);
-		data.pos[i].y = static_cast<float>(tm.tmAscent - gm.gmptGlyphOrigin.y);
-		offsetX += gm.gmCellIncX;
+		// すでにあるならcontinue
+		if (fd.tex.GetSRV()) continue;
 
-		// サイズ
-		data.size[i].x = static_cast<float>(gm.gmBlackBoxX);
-		data.size[i].y = static_cast<float>(gm.gmBlackBoxY);
+		GLYPHMETRICS gm;
+		TEXTMETRIC tm;
+
+		// テクスチャ作成
+		fd.tex.Create(str[i], mFontName, mFontSize, mFontWeight, &gm, &tm);
+
+		// 左上座標取得
+		fd.leftTop.x = gm.gmptGlyphOrigin.x;
+		fd.leftTop.y = tm.tmAscent - gm.gmptGlyphOrigin.y;
+
+		// サイズ取得
+		fd.size.x = static_cast<float>(gm.gmBlackBoxX);
+		fd.size.y = static_cast<float>(gm.gmBlackBoxY);
+
+		// 横幅取得
+		fd.width = gm.gmCellIncX;
 	}
-	data.width = offsetX;
 
 	return true;
 }
 
+bool Font::Add(wchar_t word)
+{
+	// FontData取得
+	auto& fd = mFonts[word];
+
+	// すでにあるならreturn
+	if (fd.tex.GetSRV()) return true;
+
+	GLYPHMETRICS gm;
+	TEXTMETRIC tm;
+
+	// テクスチャ作成
+	fd.tex.Create(word, mFontName, mFontSize, mFontWeight, &gm, &tm);
+
+	// 左上座標取得
+	fd.leftTop.x = gm.gmptGlyphOrigin.x;
+	fd.leftTop.y = tm.tmAscent - gm.gmptGlyphOrigin.y;
+
+	// サイズ取得
+	fd.size.x = static_cast<float>(gm.gmBlackBoxX);
+	fd.size.y = static_cast<float>(gm.gmBlackBoxY);
+
+	// 横幅取得
+	fd.width = gm.gmCellIncX;
+}
+
 bool Font::Remove(const wchar_t* str)
 {
-	for (auto it = mFonts.begin(); it != mFonts.end(); ++it)
+	int len = wcslen(str);
+	for (int i = 0; i < len; ++i)
 	{
-		if (wcscmp(it->str, str) != 0) continue;
-
-		mFonts.erase(it);
-		return true;
+		// ないならcontinue
+		if (!mFonts[str[i]].tex.GetSRV()) continue;
+		
+		// 削除
+		mFonts.erase(str[i]);
 	}
 
-	return false;
+	return true;
 }
 
-bool Font::Find(const wchar_t* str)
+float Font::GetWidth(const WCHAR* str)
 {
-	for(auto& font : mFonts)
-	{
-		if (wcscmp(font.str, str) != 0) continue;
+	Add(str);
 
-		return true;
+	float ret = 0.0f;
+	int len = wcslen(str);
+	for (int i = 0; i < len; ++i)
+	{
+		ret += mFonts[str[i]].width;
 	}
 
-	return false;
+	return ret;
 }
 
-float Font::GetWidth(const WCHAR* str) 
-{	
-	// 同じ文字列があるかチェック
-	size_t fontIndex = -1;
-	for (size_t i = 0; i < mFonts.size(); ++i)
-	{
-		if (wcscmp(mFonts[i].str, str) != 0) continue;
-
-		//あった
-		fontIndex = i;
-		break;
-	}
-
-	// 見つからなかったら作る
-	if (fontIndex == -1)
-	{
-		if(Add(str))
-			fontIndex = mFonts.size() - 1;
-	}
-
-	return GetWidth(fontIndex);
-}
-
-float Font::GetWidth(const UINT index) const
+float Font::GetWidth(wchar_t word)
 {
-	return mFonts[index].width;
+	Add(word);
+	return mFonts[word].width;
 }

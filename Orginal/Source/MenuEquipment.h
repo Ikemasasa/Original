@@ -23,7 +23,6 @@ class MenuEquipment : public MenuBase
 	std::unique_ptr<Sprite> mTypeBoard;
 	std::unique_ptr<Sprite> mTypeSelect;
 
-	Font mNameFont;
 	Font mFont;
 	bool mIsDecideType;
 	int mOldSelectIndex;

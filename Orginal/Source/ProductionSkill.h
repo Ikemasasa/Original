@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
 
+#include "lib/Audio.h"
+
 #include "IBattleProduction.h"
 #include "SkillData.h"
 
@@ -19,6 +21,8 @@ class ProductionSkill : public IBattleProduction
 	int mState = INIT;
 	float mTimer = 0.0f;
 	std::vector<int> mEffectInstHandles;
+	int mEffectSlot;
+	Sound mSound;
 
 	void StateInit();
 

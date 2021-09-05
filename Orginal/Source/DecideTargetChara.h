@@ -2,6 +2,7 @@
 #include "IDecideCommand.h"
 
 #include "Character.h"
+#include "CharacterHealth.h"
 
 class BattleCharacter;
 class BattleCharacterManager;
@@ -16,6 +17,7 @@ class DecideTargetChara : public IDecideCommand
 
 	BattleCharacter* mTargetChara;
 	Character::Type mCharaType;
+	CharacterHealth mCharacterHealth;
 
 	void SetBehaviourAttack(CommandBase* cmdBase);
 	void SetBehaviourUseItem(CommandBase* cmdBase);

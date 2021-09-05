@@ -28,6 +28,7 @@ void CharacterHealth::Update(const std::vector<Status>& statusArray)
 	
 	// バフデータ数更新
 	mBuffData.resize(mBoardNum);
+	mDebuffData.resize(mBoardNum);
 
 	if (Input::GetButtonTrigger(0, Input::BUTTON::UP))   mSelectIndex = (mSelectIndex + (mBoardNum - 1)) % mBoardNum;
 	if (Input::GetButtonTrigger(0, Input::BUTTON::DOWN)) mSelectIndex = (mSelectIndex + 1) % mBoardNum;
@@ -41,24 +42,36 @@ void CharacterHealth::Update(const std::vector<Status>& statusArray)
 		Vector2 center = {};
 
 		// 名前
-		width = mFont.GetWidth(statusArray[i].GetName().c_str());
 		pos = Vector2(mBoardLeftTop.x + mHealthBoard->GetSize().x * 0.5f, mBoardLeftTop.y + NAME_OFFSET_Y + boardY);
-		center = Vector2(width * 0.5f, 0.0f);
+		center = Vector2(0.5f, 0.0f);
 		mFont.RenderSet(statusArray[i].GetName().c_str(), pos, center, Define::FONT_COLOR);
 
 		// バフアイコン
-		pos.x -= width * 0.5f + (ICON_SCALESIZE + ARROW_SCALESIZE_X);
-		float rates[2] = { statusArray[i].GetBuffAtkRate(), statusArray[i].GetBuffDefRate() };
+		pos.x -= mFont.GetWidth(statusArray[i].GetName().c_str()) * 0.5f + (ICON_SCALESIZE + ARROW_SCALESIZE_X);
+		float buffRates[2] = { statusArray[i].GetBuffAtkRate(), statusArray[i].GetBuffDefRate() };
+		float DebuffRates[2] = { statusArray[i].GetDebuffAtkRate(), statusArray[i].GetDebuffDefRate() };
 
 		for (int k = 0; k < 2; ++k)
 		{
 			// バフがかかってるなら
-			if (rates[k] > 1.0f)
+			if (buffRates[k] > 1.0f)
 			{
 				BuffData data;
 				data.buffIndex = k;
 				data.pos = pos;
 				mBuffData[i].push_back(data);
+
+				// 座標を更新
+				pos.x -= (ICON_SCALESIZE + ARROW_SCALESIZE_X);
+			}
+
+			// デバフがかかっているなら
+			if (DebuffRates[k] < 1.0f)
+			{
+				BuffData data;
+				data.buffIndex = k;
+				data.pos = pos;
+				mDebuffData[i].push_back(data);
 
 				// 座標を更新
 				pos.x -= (ICON_SCALESIZE + ARROW_SCALESIZE_X);
@@ -97,7 +110,6 @@ void CharacterHealth::Update(const std::vector<Status>& statusArray)
 
 void CharacterHealth::Render(bool isSelectRender, bool isFontClear)
 {
-
 	for (int i = 0; i < mBoardNum; ++i)
 	{
 		Vector2 pos(mBoardLeftTop.x, mBoardLeftTop.y + mHealthBoard->GetSize().y * i);
@@ -108,7 +120,8 @@ void CharacterHealth::Render(bool isSelectRender, bool isFontClear)
 
 		mHealthBoard->Render(pos, scale, texPos, size);
 
-		for (auto data : mBuffData[i])
+		// バフ表示
+		for (const auto& data : mBuffData[i])
 		{
 			// 矢印
 			scale  = Vector2(ARROW_SCALE, ARROW_SCALE);
@@ -122,6 +135,24 @@ void CharacterHealth::Render(bool isSelectRender, bool isFontClear)
 			texPos = Vector2(data.buffIndex * ICON_SIZE, 0.0f);
 			mBuffIcon->Render(data.pos, scale, texPos, size);
 		}
+
+		// デバフ表示
+		for (const auto& data : mDebuffData[i])
+		{
+			// 矢印
+			scale = Vector2(ARROW_SCALE, ARROW_SCALE);
+			size = Vector2(ARROW_SIZE_X, ARROW_SIZE_Y);
+			texPos = Vector2(ARROW_TEXPOS_X, 0.0f);
+			center = size / 2.0f;
+			float angle = Define::PI; // 上下反転させる
+			mBuffIcon->Render(data.pos + Vector2(ICON_SCALESIZE + ARROW_SCALESIZE_X / 2.0f, ARROW_SCALESIZE_Y / 2.0f), scale, texPos, size, center, angle, Define::FONT_DEBUFF_COLOR);
+
+			// アイコン
+			scale = Vector2(ICON_SCALE, ICON_SCALE);
+			size = Vector2(ICON_SIZE, ICON_SIZE);
+			texPos = Vector2(data.buffIndex * ICON_SIZE, 0.0f);
+			mBuffIcon->Render(data.pos, scale, texPos, size);
+		}
 	}
 
 	// 選択画像を描画
@@ -132,7 +163,11 @@ void CharacterHealth::Render(bool isSelectRender, bool isFontClear)
 	}
 
 	// フォントクリアしない = updateを1回しかしない、なのでこう
-	if(isFontClear)mBuffData.clear();
+	if (isFontClear)
+	{
+		mBuffData.clear();
+		mDebuffData.clear();
+	}
 
 	mFont.Render(isFontClear);
 	mFontValue.Render(isFontClear);
@@ -142,4 +177,9 @@ void CharacterHealth::Release()
 {
 	mFont.Release();
 	mFontValue.Release();
+}
+
+Vector2 CharacterHealth::GetBoardSize() const
+{
+	return mHealthBoard->GetSize();
 }

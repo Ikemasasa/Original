@@ -22,17 +22,25 @@ void TurnManager::Initialize(const std::vector<std::shared_ptr<BattleCharacter>>
 	SortOrder(battleCharaArray);
 
 	// エフェクト読み込み
-	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/Death/Death.efk", DEATH_EFFECT_SLOT);
-	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/HealPotion/heal_potion.efk", HEAL_POTION_EFFECT_SLOT);
-	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/MagicPotion/magic_potion.efk", MAGIC_POTION_EFFECT_SLOT);
-	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/Explosion/explosion.efk", ITEM_DAMAGE_EFFECT_SLOT);
-	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/AtkBuff/atk_buff.efk", ATK_BUFF_EFFECT_SLOT);
+	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/death.efk"		, DEATH_EFFECT_SLOT);
+	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/heal_potion.efk"  , HEAL_POTION_EFFECT_SLOT);
+	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/magic_potion.efk" , MAGIC_POTION_EFFECT_SLOT);
+	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/explosion.efk"    , ITEM_DAMAGE_EFFECT_SLOT);
+	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/buff.efk"		    , BUFF_EFFECT_SLOT);
+	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/debuff.efk"		, DEBUFF_EFFECT_SLOT);
 
 	mIsBeginnig = true;
 }
 
 void TurnManager::Update(const BattleCharacterManager* bcm)
 {
+	// リザルトならreturn
+	if (BattleState::GetInstance().CheckState(BattleState::State::RESULT))
+	{
+		mIsTurnFinished = false;
+		return;
+	}
+
 	// コマンド選択中
 	if (!mProduction)
 	{
@@ -56,12 +64,14 @@ void TurnManager::Update(const BattleCharacterManager* bcm)
 			// behaviour を noneにする
 			GetMoveChara()->GetCommand()->BehaviourFinished();
 
-			// mOrderを整理する
-			mOrder.pop(); // 今回のmoveCharaは削除
-			OrganizeOrder(bcm->GetBCharacters());
-
-			// ターン開始時バフのターン数を減らす
+			// ターン終了時バフのターン数を減らす
 			mOrder.front()->GetStatus()->AdvanceBuffTurn();
+
+			// mOrderを進める
+			AdvanceOrder(bcm->GetBCharacters());
+
+			// ガードしてる場合は解除する
+			GetMoveChara()->GetStatus()->SetGuardFlag(false);
 
 			// 演出情報削除
 			mProduction.reset();
@@ -79,11 +89,6 @@ void TurnManager::Render()
 	{
 		mProduction->Render(); // 攻撃のダメージ(amount)とかを表示
 	}
-}
-
-void TurnManager::ToResult()
-{
-	mIsResult = true;
 }
 
 void TurnManager::SortOrder(const std::vector<std::shared_ptr<BattleCharacter>>& battleCharaArray)
@@ -154,18 +159,20 @@ void TurnManager::BeginProduction()
 	mProduction->Begin(moveCharaID, targetCharaIDs);
 }
 
-void TurnManager::OrganizeOrder(const std::vector<std::shared_ptr<BattleCharacter>>& battleCharaArray)
+void TurnManager::AdvanceOrder(const std::vector<std::shared_ptr<BattleCharacter>>& battleCharaArray)
 {
+	mOrder.pop();
+
 	// mOrderを整理する
 	while (true)
 	{
-		// mOrderが空ならまた順番を作る
 		if (mOrder.empty())
 		{
 			SortOrder(battleCharaArray);
 		}
+		
 
-		// 順番が来たアクタが倒されていたら
+		// 順番が来たキャラが倒されていたら
 		if (mOrder.front()->GetStatus()->IsDead())
 		{
 			mOrder.pop();

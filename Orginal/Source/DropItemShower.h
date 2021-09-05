@@ -9,9 +9,10 @@ class Sprite;
 
 class DropItemShower
 {
-	static constexpr float VELOCITY_Y = 1.0f;
-	static constexpr float ALPHA_ADD = 0.025f;
-	static constexpr float ALPHA_TURN_VALUE = 1.8f;
+	static constexpr float VELOCITY_Y = 0.5f;
+	static constexpr float ALPHA_ADD = 0.1f;
+
+	static constexpr float DISP_SEC = 5.0f;
 
 	static constexpr float STR_OFFSET_Y = 5.0f;
 
@@ -20,7 +21,9 @@ class DropItemShower
 		int itemID;
 		Vector2 pos;
 		float alpha;
-		bool alphaTurn;
+		float alphaAdd;
+		float dispTimer;
+		bool fade;
 	};
 
 	std::list<Data> mDropItemDatas;

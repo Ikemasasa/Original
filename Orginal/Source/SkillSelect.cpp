@@ -5,9 +5,7 @@
 #include "lib/Math.h"
 #include "lib/Sprite.h"
 
-#include "DataBase.h"
 #include "Define.h"
-#include "Singleton.h"
 
 void SkillSelect::Initialize(const int charaID, const Vector2& leftTop)
 {
@@ -15,7 +13,7 @@ void SkillSelect::Initialize(const int charaID, const Vector2& leftTop)
 	mSkillSelect = std::make_unique<Sprite>(L"Data/Image/Menu/skill_select.png");
 
 	// •Û‘¶‚·‚é
-	mParams = Singleton<DataBase>().GetInstance().GetSkillData()->GetAllSkill(charaID);
+	mParams = SkillData::GetAllSkill(charaID);
 	mSkillIndex = 0;
 	mBoardPos = leftTop;
 

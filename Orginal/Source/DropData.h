@@ -3,6 +3,10 @@
 
 class DropData
 {
+	// 実態作成禁止
+	DropData() = default;
+	~DropData() = default;
+
 	struct DropItemData
 	{
 		int itemID = -1;
@@ -15,12 +19,10 @@ class DropData
 		std::vector<DropItemData> dropItemData;
 	};
 	
-	void GetDropData(const int enemyID, DropEnemyData* outDropEnemy);
+	static void GetDropData(const int enemyID, DropEnemyData* outDropEnemy);
 public:
-	DropData() = default;
-	~DropData() = default;
 
 	// @param enemyID : 敵のID
 	// @param outDropItemID : 出力、ドロップするアイテムのID(-1ならドロップなし)
-	void DecideDropItem(int enemyID, int* outDropItemID);
+	static void DecideDropItem(int enemyID, int* outDropItemID);
 };

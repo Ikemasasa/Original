@@ -6,7 +6,7 @@
 #include "Define.h"
 #include "GameManager.h"
 #include "Player.h"
-
+#include "TransformData.h"
 
 Enemy::Enemy(int charaID) : Character(charaID, Character::ENEMY)
 {
@@ -24,12 +24,10 @@ Enemy::~Enemy()
 
 void Enemy::Initialize()
 {
-	mVelocity = Vector3::ZERO;
-
-	float x = Random::RandomRangef(-30.0f, 30.0f);
-	float z = Random::RandomRangef(-30.0f, 30.0f);
-	mPos = Vector3(x, 0.0f, z);
-	mScale = Vector3(0.02f, 0.02f, 0.02f);
+	TransformData::Transform transform = TransformData::GetEnmTransform(GetCharaID());
+	mPos = transform.pos;
+	mScale = transform.scale;
+	mAngle = transform.angle;
 
 	SetMotion(SkinnedMesh::IDLE);
 }
@@ -84,7 +82,7 @@ void Enemy::StateWait()
 	{
 		// ï‡Ç´Ç…à⁄çs
 		mTimer = 0.0f;
-		mMoveAngle = Random::RandomRangef(-Define::PI, Define::PI);
+		mAngle.y = Random::RandomRangef(-Define::PI, Define::PI);
 		mState = WALK;
 	}
 	else
@@ -107,8 +105,8 @@ void Enemy::StateWalk()
 	else
 	{
 		// mMoveAngleÇÃï˚å¸Ç…à⁄ìÆ
-		mVelocity.x = sinf(mMoveAngle) * WALK_SPEED;
-		mVelocity.z = cosf(mMoveAngle) * WALK_SPEED;
+		mVelocity.x = sinf(mAngle.y) * WALK_SPEED;
+		mVelocity.z = cosf(mAngle.y) * WALK_SPEED;
 
 		// å¸Ç´ï‚ê≥
 		CorrectionAngle();

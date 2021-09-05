@@ -5,6 +5,8 @@ class BattleCharacterManager;
 
 class CommandBossEnemy : public CommandBase
 {
+	static constexpr float ATTACK_LOWHP_CHARA_PERCENT = 75.0f;
+
 	enum class State
 	{
 		TARGET_ONE,
@@ -15,8 +17,9 @@ class CommandBossEnemy : public CommandBase
 
 	State mState = State::TARGET_ONE;
 
-	// lowHPのキャラのCharaIDを返す
-	std::vector<int> SearchLowHPChara(const size_t num, const BattleCharacterManager* bcm);
+	// lowHPのプレイヤーのCharaIDを返す
+	std::vector<int> SearchLowHPPlayer(const size_t num, const BattleCharacterManager* bcm);
+	std::vector<int> GetRandomPlayerObjIDs(const size_t num, const BattleCharacterManager* bcm);
 public:
 	CommandBossEnemy();
 	~CommandBossEnemy();

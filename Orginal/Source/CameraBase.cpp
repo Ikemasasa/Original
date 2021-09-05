@@ -7,9 +7,10 @@
 
 CameraBase::CameraBase()
 {
-    mTarget = Vector3(0.0f, 0.0f, 0.0f);
-    mPos = mTarget + Vector3(.0f, 4.0f, -15.0f);
-    mAngle = Vector3(0.0f, 0.0f, 0.0f);
+    mTarget = Vector3::ZERO;
+    mPos = Vector3(0, 5, 15);
+    mAngle = Vector3::ZERO;
+
     mFrontVector = Vector3::ZERO;
     mRightVector = Vector3::ZERO;
     mDistFromTargetY = 0.0f;
@@ -17,6 +18,23 @@ CameraBase::CameraBase()
     constexpr float	fov = DirectX::XMConvertToRadians(45.0f);
     float	aspect = Define::SCREEN_WIDTH / Define::SCREEN_HEIGHT;
     SetPerspectiveMatrix(fov, aspect, 0.1f, 1000.0f);
+    UpdateView();
+}
+
+void CameraBase::Initialize(const Character* target)
+{
+    mTarget = target->GetPos();
+    
+    // target‚ÌŒã‚ë‚ÉA‚­‚æ‚¤‚É
+    float angle = target->GetAngle().y;
+    Vector3 behind(-sinf(angle), 0.0f, -cosf(angle));
+    mPos = mTarget + behind;
+
+    mAngle.y = target->GetAngle().y - Define::PI;
+
+    mFrontVector = Vector3::ZERO;
+    mRightVector = Vector3::ZERO;
+    mDistFromTargetY = 6.5f;
     UpdateView();
 }
 

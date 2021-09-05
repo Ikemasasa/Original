@@ -55,7 +55,7 @@ private:
         }
     };
 
-    std::list<ResourceVertexShader>                  mVertexShaders;
+    std::list<ResourceVertexShader>                 mVertexShaders;
     std::list<ResourceShader<ID3D11PixelShader>>    mPixelShaders;
     std::list<ResourceShader<ID3D11GeometryShader>> mGeometryShaders;
     std::list<ResourceShader<ID3D11ComputeShader>>  mComputeShaders;

@@ -2,11 +2,9 @@
 
 #include "lib/Input.h"
 
-#include "DataBase.h"
 #include "Define.h"
 #include "Player.h"
 #include "PlayerManager.h"
-#include "Singleton.h"
 #include "StatusData.h"
 
 void MenuStatus::Initialize(const PlayerManager* plm)
@@ -22,14 +20,11 @@ MenuBase::Select MenuStatus::Update(PlayerManager* plm)
     // 前の画面に戻す
     if (Input::GetButtonTrigger(0, Input::BUTTON::B)) return BACK;
 
-    // 決定音を鳴らさない
-    AUDIO.SoundStop((int)Sound::SELECT);
-
     mCharacterSelect.Update();
 
     const int playerIndex = mCharacterSelect.GetIndex();
     int charaID = plm->GetPlayer(playerIndex)->GetCharaID();
-    const Status status = Singleton<DataBase>().GetInstance().GetStatusData()->GetPLStatus(charaID);
+    const Status status = StatusData::GetPLStatus(charaID);
     std::vector<int> curValue; // 現在のステータス
     std::vector<int> maxValue; // 最大のステータス
     curValue.emplace_back(status.GetHP());
@@ -59,14 +54,13 @@ MenuBase::Select MenuStatus::Update(PlayerManager* plm)
         // かなりごり押し、ほかにいい方法あれば変える
         if (i == NAME)
         {
-            width = mFont.GetWidth(status.GetName().c_str());
-            pos = Vector2(PLATE_X + mStatusPlate->GetSize().x * 0.5f, PLATE_Y + NAME_OFFSET_Y);
-            center = Vector2(width * 0.5f, 0.0f);
+            pos = Vector2(BOARD_X + mStatusPlate->GetSize().x * 0.5f, BOARD_Y + NAME_OFFSET_Y);
+            center = Vector2(0.5f, 0.0f);
             mFont.RenderSet(status.GetName().c_str(), pos, center, Define::FONT_COLOR);
         }
         else if (i == HP || i == MP)
         {
-            pos = Vector2(PLATE_X + STATUS_OFFSET_X, PLATE_Y + STATUS_OFFSET_Y + STATUS_ADD_Y * (i - 1));
+            pos = Vector2(BOARD_X + STATUS_OFFSET_X, BOARD_Y + STATUS_OFFSET_Y + STATUS_ADD_Y * (i - 1));
 
             // ステータス名
             mFont.RenderSet(statusName[statusIndex], pos, Vector2::ZERO, Define::FONT_COLOR);
@@ -85,7 +79,7 @@ MenuBase::Select MenuStatus::Update(PlayerManager* plm)
         }
         else
         {
-            pos = Vector2(PLATE_X + STATUS_OFFSET_X, PLATE_Y + STATUS_OFFSET_Y + STATUS_ADD_Y * (i - 1));
+            pos = Vector2(BOARD_X + STATUS_OFFSET_X, BOARD_Y + STATUS_OFFSET_Y + STATUS_ADD_Y * (i - 1));
             
             // ステータス名
             mFont.RenderSet(statusName[statusIndex], pos, Vector2::ZERO, Define::FONT_COLOR);
@@ -103,12 +97,12 @@ void MenuStatus::Render()
 {
     // 画像系描画
     {
-        Vector2 pos(PLATE_X, PLATE_Y);
+        Vector2 pos(BOARD_X, BOARD_Y);
         Vector2 scale(1.0f, 1.0f);
         Vector2 texPos(0.0f, 0.0f);
         Vector2 size(mStatusPlate->GetSize());
         mStatusPlate->Render(pos, scale, texPos, size);
-        mCharacterSelect.Render(pos);
+        mCharacterSelect.Render(pos + Vector2(CHARA_BOARD_OFFSET_X, 0.0f));
     }
 
     // フォント描画

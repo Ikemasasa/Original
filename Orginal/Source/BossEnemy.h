@@ -3,6 +3,8 @@
 
 class BossEnemy : public Enemy
 {
+	static constexpr float MASS = 1000.0f;
+
 public:
 	BossEnemy(int charaID);
 	~BossEnemy();

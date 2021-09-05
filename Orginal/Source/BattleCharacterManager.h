@@ -7,24 +7,17 @@
 #include "BattleCharacter.h"
 #include "CharacterHealth.h"
 #include "DropItemShower.h"
-#include "TurnManager.h"
+#include "SceneBattle.h"
 
 class Enemy;
 class Player;
 class PlayerManager;
+class TurnManager;
 
 // ターン進行の部分を後々別にしたい
 
 class BattleCharacterManager
 {
-	enum Result
-	{
-		NONE,
-		PLAYER_WIN,
-		PLAYER_LOSE,
-	};
-
-
 	static constexpr float HEALTH_BOARD_X = 900.0f;
 	static constexpr float HEALTH_BOARD_Y = 0.0f;
 
@@ -43,17 +36,11 @@ private:
 	std::vector<std::shared_ptr<BattleCharacter>> mBCharacters;
 	std::vector<int> mAliveObjIDs[BATTLECHARA_KIND];
 	std::vector<int> mDropItemIDs;
+	BattleCharacter* mMoveChara = nullptr;
 	int mPlayerNum;
 
 	CharacterHealth mCharacterHealth;
-	TurnManager mTurnManager;
 	DropItemShower mDropItemShower;
-
-	Enemy* mHitEnemy = nullptr; // fieldで当たった敵
-	PlayerManager* mPlayerManager;
-
-	Result CheckBattleFinish();
-	void OrganizeCharacter();
 
 	void PlayerCreateAndRegister(Player* pl);
 	void EnemyCreateAndRegister(Enemy* enm);
@@ -62,13 +49,18 @@ public:
 	~BattleCharacterManager() = default;
 
 	void Initialize();
-	void Update();
+	void Update(const TurnManager* turnManager);
 	void Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir);
 	void Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir);
 
+	// その他関数
+	void OrganizeCharacter();				 // 体力が0になったキャラをmAliveObjIDsから消す
+	SceneBattle::Result CheckBattleFinish(); // mAliveObjIDsから、バトル終了の判定をする
+
 	// ゲッター
-	BattleCharacter* GetMoveChara() const { return mTurnManager.GetMoveChara(); }
+	BattleCharacter* GetMoveChara() const { return mMoveChara; }
 	const std::vector<int>& GetAliveObjIDs(Character::Type kind) const { return mAliveObjIDs[kind]; }
 	BattleCharacter* GetChara(int objectID) const { return mBCharacters[objectID].get(); }
 	const std::vector<std::shared_ptr<BattleCharacter>>& GetBCharacters() const { return mBCharacters; }
+	const std::vector<int>& GetDropItemIDs() const { return mDropItemIDs; }
 };

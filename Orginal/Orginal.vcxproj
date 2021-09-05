@@ -165,6 +165,8 @@
     <ClInclude Include="Source\CollisionTerrain.h" />
     <ClInclude Include="Source\CommandBase.h" />
     <ClInclude Include="Source\CommandBossEnemy.h" />
+    <ClInclude Include="Source\CSVLoader.h" />
+    <ClInclude Include="Source\DecideGuard.h" />
     <ClInclude Include="Source\DecideTargetChara.h" />
     <ClInclude Include="Source\CommandEnemy.h" />
     <ClInclude Include="Source\DecideEscape.h" />
@@ -181,7 +183,6 @@
     <ClInclude Include="Source\EnemyBattle.h" />
     <ClInclude Include="Source\EnemyManager.h" />
     <ClInclude Include="Source\Equipment.h" />
-    <ClInclude Include="Source\EquipmentData.h" />
     <ClInclude Include="Source\EquipmentInventory.h" />
     <ClInclude Include="Source\EquipmentSelect.h" />
     <ClInclude Include="Source\FontValue.h" />
@@ -189,6 +190,7 @@
     <ClInclude Include="Source\GaussianBlur.h" />
     <ClInclude Include="Source\IBattleProduction.h" />
     <ClInclude Include="Source\IDecideCommand.h" />
+    <ClInclude Include="Source\IFieldUseItemEffect.h" />
     <ClInclude Include="Source\Item.h" />
     <ClInclude Include="Source\ItemData.h" />
     <ClInclude Include="Source\ItemSelect.h" />
@@ -219,6 +221,10 @@
     <ClInclude Include="Source\MenuStatus.h" />
     <ClInclude Include="Source\MeshManager.h" />
     <ClInclude Include="Source\MeshDataLoader.h" />
+    <ClInclude Include="Source\NPC.h" />
+    <ClInclude Include="Source\NPCManager.h" />
+    <ClInclude Include="Source\NPCTalk.h" />
+    <ClInclude Include="Source\NPCTextData.h" />
     <ClInclude Include="Source\Object.h" />
     <ClInclude Include="Source\Particle.h" />
     <ClInclude Include="Source\Primitive.h" />
@@ -255,6 +261,7 @@
     <ClInclude Include="Source\SceneMenu.h" />
     <ClInclude Include="Source\SceneTitle.h" />
     <ClInclude Include="Source\DecideBehaviour.h" />
+    <ClInclude Include="Source\SelectOptions.h" />
     <ClInclude Include="Source\ShadowMap.h" />
     <ClInclude Include="Source\Singleton.h" />
     <ClInclude Include="Source\SkillData.h" />
@@ -262,6 +269,7 @@
     <ClInclude Include="Source\StatusData.h" />
     <ClInclude Include="Source\Terrain.h" />
     <ClInclude Include="Source\TimeStamp.h" />
+    <ClInclude Include="Source\TransformData.h" />
     <ClInclude Include="Source\TurnManager.h" />
   </ItemGroup>
   <ItemGroup>
@@ -280,6 +288,8 @@
     <ClCompile Include="Source\CollisionTerrain.cpp" />
     <ClCompile Include="Source\CommandBase.cpp" />
     <ClCompile Include="Source\CommandBossEnemy.cpp" />
+    <ClCompile Include="Source\CSVLoader.cpp" />
+    <ClCompile Include="Source\DecideGuard.cpp" />
     <ClCompile Include="Source\DecideTargetChara.cpp" />
     <ClCompile Include="Source\CommandEnemy.cpp" />
     <ClCompile Include="Source\DecideEscape.cpp" />
@@ -296,7 +306,6 @@
     <ClCompile Include="Source\EnemyBattle.cpp" />
     <ClCompile Include="Source\EnemyManager.cpp" />
     <ClCompile Include="Source\Equipment.cpp" />
-    <ClCompile Include="Source\EquipmentData.cpp" />
     <ClCompile Include="Source\EquipmentInventory.cpp" />
     <ClCompile Include="Source\EquipmentSelect.cpp" />
     <ClCompile Include="Source\Fade.cpp" />
@@ -305,6 +314,7 @@
     <ClCompile Include="Source\GaussianBlur.cpp" />
     <ClCompile Include="Source\IBattleProduction.cpp" />
     <ClCompile Include="Source\IDecideCommand.cpp" />
+    <ClCompile Include="Source\IFieldUseItemEffect.cpp" />
     <ClCompile Include="Source\Item.cpp" />
     <ClCompile Include="Source\ItemData.cpp" />
     <ClCompile Include="Source\ItemSelect.cpp" />
@@ -344,6 +354,10 @@
     <ClCompile Include="Source\MenuStatus.cpp" />
     <ClCompile Include="Source\MeshManager.cpp" />
     <ClCompile Include="Source\MeshDataLoader.cpp" />
+    <ClCompile Include="Source\NPC.cpp" />
+    <ClCompile Include="Source\NPCManager.cpp" />
+    <ClCompile Include="Source\NPCTalk.cpp" />
+    <ClCompile Include="Source\NPCTextData.cpp" />
     <ClCompile Include="Source\Object.cpp" />
     <ClCompile Include="Source\Particle.cpp" />
     <ClCompile Include="Source\Primitive.cpp" />
@@ -363,6 +377,7 @@
     <ClCompile Include="Source\SceneMenu.cpp" />
     <ClCompile Include="Source\SceneTitle.cpp" />
     <ClCompile Include="Source\DecideBehaviour.cpp" />
+    <ClCompile Include="Source\SelectOptions.cpp" />
     <ClCompile Include="Source\ShadowMap.cpp" />
     <ClCompile Include="Source\Singleton.cpp" />
     <ClCompile Include="Source\SkillData.cpp" />
@@ -370,6 +385,7 @@
     <ClCompile Include="Source\StatusData.cpp" />
     <ClCompile Include="Source\Terrain.cpp" />
     <ClCompile Include="Source\TimeStamp.cpp" />
+    <ClCompile Include="Source\TransformData.cpp" />
     <ClCompile Include="Source\TurnManager.cpp" />
   </ItemGroup>
   <ItemGroup>

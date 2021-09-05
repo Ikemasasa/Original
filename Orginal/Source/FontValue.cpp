@@ -30,27 +30,6 @@ void FontValue::Initialize(int fontSize, int fontWeight)
 	}
 }
 
-void FontValue::RenderSet(const int value, const Vector3& pos, const Vector2& center, const Vector4& color)
-{
-	std::wstring valueStr = std::to_wstring(value);
-	const int digitNum = valueStr.size(); // åÖêî
-	const float width = mFont.GetWidth(valueStr.c_str());
-	const float widthPerWord = width / digitNum;
-
-	// pos
-	Vector2 scrPos;
-	{
-		scrPos = pos.WorldToScreen(Singleton<CameraManager>().GetInstance().GetView(), Singleton<CameraManager>().GetInstance().GetProj());
-	}
-
-	for (int i = 0; i < digitNum; ++i)
-	{
-		std::wstring val;
-		val = valueStr[i];
-		mFont.RenderSet(val.c_str(), Vector2(scrPos.x + widthPerWord * i, scrPos.y), center, color);
-	}
-}
-
 void FontValue::RenderSet(const int value, const Vector2& pos, const Vector2& center, const Vector4& color)
 {
 	std::wstring valueStr = std::to_wstring(value);

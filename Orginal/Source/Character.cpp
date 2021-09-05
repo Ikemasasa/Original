@@ -108,7 +108,7 @@ void Character::CorrectionAngle()
 	}
 	else
 	{
-		const float ANGLE_ADJUST = 0.2f;
+		const float ANGLE_ADJUST = 0.3f;
 		if (cross < 0) mAngle.y -= ANGLE_ADJUST;
 		else mAngle.y += ANGLE_ADJUST;
 	}

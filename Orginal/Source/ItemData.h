@@ -4,51 +4,111 @@
 #include <vector>
 
 #include "DataBase.h"
+#include "IFieldUseItemEffect.h"
 
 class Sprite;
 
 class ItemData
 {
-public:
+	friend class DataBase;
 
-	// itemのエクセルのreferenceと合わせること
+private: // 実態作成禁止
+	ItemData() = default;
+	~ItemData() = default;
+
+public:
 	enum ID
 	{
-		PORTION = DataBase::ITEM_ID_START,
+		PORTION = DataBase::HEAL_ITEM_ID_START,
 		MAGIC_PORTION,
-		BOMB,
+
+		BOMB = DataBase::DAMAGE_ITEM_ID_START,
+
+		SUBDUE_PROOF = DataBase::FIELD_USE_ITEM_ID_START,
+
+		BEGINNERS_SWORD = DataBase::EQUIPMENT_ID_START,
+		BEGINNERS_ARMOR,
 	};
 
-	enum Effect { HEAL,   DAMAGE, BUFF, DEBUFF };
-	enum Target { PARTY,  ENEMY };
-	enum Range  { SINGLE, GROUP,  ALL, Rect };
-	enum Rate   { VALUE,  PERCENT };
+	enum ItemType { HEAL, DAMAGE, FIELD_USE, EQUIPMENT };
 
-	struct ItemParam
+	struct BaseData
 	{
-		std::wstring name; // アイテム名
-		size_t id;		  // アイテムID(いる？ いる)
+		std::wstring name;
+		size_t id;
+		ItemType type;
 		std::shared_ptr<Sprite> icon; // 画像
-		Effect effect;	  // 効果
-		Target target;	  // 対象
-		Range range;	  // 効果範囲	
-		Rate rate;		  // 効果割合
-		int hpValue;      // HP効果量
-		int mpValue;	  // MP効果量
-		int atkValue;	  // 攻撃効果量
-		int defValue;	  // 防御効果量
-		std::string info; // 説明文
+		std::wstring info;
 	};
 
 private:
-	std::vector<ItemParam> mItems;
-	size_t GetIndex(const size_t id) const { return id - (size_t)DataBase::ITEM_ID_START; }
+	static std::vector<BaseData> mItems;
+	static void LoadItemData();
+	static void Initialize();
+	static void Release();
 
 public:
-	ItemData();
-	~ItemData();
+	static const BaseData* GetBaseData(const size_t id);
+};
 
-	void LoadItemData();
+//--------------------------------------------------------------
+// HealItemData
+//--------------------------------------------------------------
+class UseItemData
+{
+public:
+	enum Target { PARTY,  ENEMY };
+	enum Range  { SINGLE, ALL, GROUP };
+	enum Rate   { VALUE,  PERCENT };
 
-	const ItemParam& GetItemParam(const size_t id) const { return mItems[GetIndex(id)]; }
+	struct Param
+	{
+		const ItemData::BaseData* base;
+		Target target;
+		Range range;
+		Rate rate;
+		int hpValue;
+		int mpValue;
+	};
+
+public:
+	static const Param GetParam(const size_t id);
+};
+
+//--------------------------------------------------------------
+// FieldUseItemData
+//--------------------------------------------------------------
+class FieldUseItemData
+{
+public:
+	struct Param
+	{
+		const ItemData::BaseData* base;
+		std::shared_ptr<IFieldUseItemEffect> effect;
+	};
+
+public:
+	static const Param GetParam(const size_t id);
+};
+
+//--------------------------------------------------------------
+// EquipmentData
+//--------------------------------------------------------------
+class EquipmentData
+{
+public:
+	enum Type {WEAPON, ARMOR, TYPE_NUM};
+
+	struct Param
+	{
+		const ItemData::BaseData* base;
+		Type type;
+		int atk;
+		int def;
+		int spd;
+		std::vector<bool> equipable;
+	};
+
+public:
+	static const Param GetParam(const size_t id);
 };

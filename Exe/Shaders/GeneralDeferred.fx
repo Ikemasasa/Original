@@ -29,7 +29,6 @@ struct PSInput
 {
 	float4 pos   : SV_POSITION;
 	float2 tex   : TEXCOORD0;
-	float4 color : COLOR;
 };
 
 // VS(汎用)
@@ -39,7 +38,6 @@ PSInput VSMain(VSInput input)
 
 	output.pos = float4(input.pos, 1);
 	output.tex = input.tex;
-	output.color = input.color;
 	return output;
 }
 

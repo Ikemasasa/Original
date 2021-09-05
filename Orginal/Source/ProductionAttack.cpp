@@ -10,7 +10,7 @@
 #include "GameManager.h"
 #include "Singleton.h"
 #include "StatusData.h"
-
+#include "TurnManager.h"
 
 void ProductionAttack::Initialize()
 {

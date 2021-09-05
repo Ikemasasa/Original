@@ -2,11 +2,10 @@
 
 #include "lib/Shader.h"
 
-#include "Enemy.h"
 #include "BossEnemy.h"
-#include "DataBase.h"
+#include "Enemy.h"
+#include "GameManager.h"
 #include "StatusData.h"
-#include "Singleton.h"
 
 EnemyManager::EnemyManager()
 {
@@ -20,7 +19,7 @@ EnemyManager::~EnemyManager()
 
 void EnemyManager::Create(int charaID)
 {
-	StatusData::EnemyType type = Singleton<DataBase>().GetInstance().GetStatusData()->GetEnmType(charaID);
+	StatusData::EnemyType type = StatusData::GetEnmType(charaID);
 	switch (type)
 	{
 	case StatusData::MOB:  mEnemies.push_back(std::make_unique<Enemy>(charaID)); break;
@@ -71,15 +70,19 @@ void EnemyManager::Initialize()
 	for (auto& enm : mEnemies) enm->Initialize();
 }
 
-void EnemyManager::Update()
+void EnemyManager::Update(const bool isTalking)
 {
 	for (auto it = mEnemies.begin(); it != mEnemies.end();)
 	{
 		auto& enm = *it;
 
-		enm->Update(mPlayerPos);
+		// 会話中ならモーションの更新だけする
+		if (isTalking) enm->UpdateWorld();
+		else		   enm->Update(mPlayerPos);
+
 		if (enm->GetExist() == false)
 		{
+			if (enm->GetEnmType() == StatusData::EnemyType::BOSS) GameManager::bossSubdueFlag = true;
 			it = Destroy(enm->GetObjID());
 		}
 		else

@@ -7,7 +7,7 @@
 #include "GameManager.h"
 #include "Item.h"
 #include "Singleton.h"
-
+#include "TurnManager.h"
 
 void ProductionUseItem::Initialize()
 {
@@ -58,42 +58,44 @@ void ProductionUseItem::StateInit()
 	mMoveChara->SetMotion(SkinnedMesh::USE_ITEM, false);
 
 	// 使用アイテム取得
-	const ItemData::ItemParam* param = mMoveChara->GetCommand()->GetItemParam();
+	const UseItemData::Param* param = mMoveChara->GetCommand()->GetItemParam();
 
 	// 効果量計算(m~Amountに代入される) 
 	switch (param->rate)
 	{
-	case ItemData::VALUE:  CalcAmountValue(param); break;
-	case ItemData::PERCENT: CalcAmountPercent(param); break;
+	case UseItemData::VALUE:   CalcAmountValue(param); break;
+	case UseItemData::PERCENT: CalcAmountPercent(param); break;
 	}
 
 	for (size_t i = 0; i < mTargetCharas.size(); ++i)
 	{
-		switch (param->effect)
+		switch (param->base->type)
 		{
-		case ItemData::Effect::DAMAGE:
+		case ItemData::DAMAGE:
 			mHPAmount = DamageCalculator::CalcItemDamage(mHPAmount, mTargetCharas[i]->GetStatus());
 
 			mTargetCharas[i]->GetStatus()->SubHP(mHPAmount);
 			mTargetCharas[i]->GetStatus()->SubMP(mMPAmount);
+			mSound = Sound::BOMB;
 			break;
 
-		case ItemData::Effect::HEAL:
+		case ItemData::HEAL:
 			mTargetCharas[i]->GetStatus()->AddHP(mHPAmount);
 			mTargetCharas[i]->GetStatus()->AddMP(mMPAmount);
+			mSound = Sound::HEAL;
 			break;
 		}
 	}
 
 
 	// エフェクト決定
-	switch (param->effect)
+	switch (param->base->type)
 	{
-	case ItemData::Effect::DAMAGE:
+	case ItemData::DAMAGE:
 		mEffectSlot = TurnManager::ITEM_DAMAGE_EFFECT_SLOT; 
 		mFontRGB = DAMAGE_RGB;
 		break;
-	case ItemData::Effect::HEAL: 
+	case ItemData::HEAL: 
 		if (mHPAmount > 0)
 		{
 			mEffectSlot = TurnManager::HEAL_POTION_EFFECT_SLOT;
@@ -108,7 +110,7 @@ void ProductionUseItem::StateInit()
 	}
 
 	// アイテムを減らす
-	mMoveChara->GetInventory()->Sub(param->id);
+	mMoveChara->GetInventory()->Sub(param->base->id);
 	++mState;
 }
 
@@ -122,6 +124,7 @@ void ProductionUseItem::StateUseItemWait()
 		{
 			Vector3 effectPos = mTargetCharas[i]->GetPos();
 			mEffectInstHandles.push_back(Singleton<EffectManager>().GetInstance().Play(mEffectSlot, effectPos, 0, 1.0f, 2.0f));
+			AUDIO.SoundPlay((int)mSound);
 			++mState;
 		}
 	}
@@ -180,13 +183,13 @@ void ProductionUseItem::StateWait()
 	}
 }
 
-void ProductionUseItem::CalcAmountValue(const ItemData::ItemParam* param)
+void ProductionUseItem::CalcAmountValue(const UseItemData::Param* param)
 {
 	mHPAmount = param->hpValue;
 	mMPAmount = param->mpValue;
 }
 
-void ProductionUseItem::CalcAmountPercent(const ItemData::ItemParam* param)
+void ProductionUseItem::CalcAmountPercent(const UseItemData::Param* param)
 {
 	// hpValueは%なので、100で割る
 	const float MAX_PERCENT = 100.0f;

@@ -18,7 +18,11 @@ enum class Sound
     SELECT_LONG,
     CANCEL,
     CURSOR_MOVE,
+    EQUIP,
     HEAL,
+    BUFF,
+    DEBUFF,
+    BOMB,
     NUM
 };
 
