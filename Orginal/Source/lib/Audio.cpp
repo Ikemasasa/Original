@@ -40,6 +40,8 @@ void Audio::Initialize()
 	LoadSound((int)Sound::SELECT_LONG, L"Data/Audio/Sound/select_long.wav");
 	LoadSound((int)Sound::CANCEL, L"Data/Audio/Sound/cancel.wav");
 	LoadSound((int)Sound::CURSOR_MOVE, L"Data/Audio/Sound/cursor_move.wav");
+	LoadSound((int)Sound::MENU_OPEN, L"Data/Audio/Sound/menu_open.wav");
+	LoadSound((int)Sound::MENU_CLOSE, L"Data/Audio/Sound/menu_close.wav");
 	LoadSound((int)Sound::EQUIP, L"Data/Audio/Sound/equip.wav");
 	LoadSound((int)Sound::HEAL, L"Data/Audio/Sound/heal.wav");
 	LoadSound((int)Sound::BUFF, L"Data/Audio/Sound/buff.wav");
