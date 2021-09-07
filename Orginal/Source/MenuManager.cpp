@@ -12,7 +12,7 @@
 
 MenuManager::MenuManager()
 {
-	mBG = std::make_unique<Sprite>(L"Data/Image/Menu/Menu_BG.png");
+	mBG = std::make_unique<Sprite>(L"Data/Image/Menu/menu_bg.png");
 }
 
 void MenuManager::Initialize(const PlayerManager* plm)

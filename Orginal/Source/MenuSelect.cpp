@@ -62,6 +62,8 @@ MenuSelect::Select MenuSelect::Update(PlayerManager* plm)
     {
         if (Fade::GetInstance().SetSceneImage(Fade::SPEED_FAST))
         {
+            AUDIO.SoundStop((int)Sound::CANCEL);
+            AUDIO.SoundPlay((int)Sound::MENU_CLOSE);
             SceneManager::GetInstance().PopCurrentScene();
         }
     }

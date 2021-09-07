@@ -6,8 +6,10 @@
 
 class SceneTitle : public SceneBase
 {
-	static const int FONT_SIZE = 64;
-	static const int FONT_WEIGHT = 64;
+	static const int FONT_LOGO_SIZE = 128;
+	static const int FONT_LOGO_WEIGHT = 64;
+
+	static constexpr float STR_OFFSET = 5;
 
 	enum SelectCmd
 	{
@@ -17,11 +19,14 @@ class SceneTitle : public SceneBase
 	};
 
 	Font mFont;
+	Font mFontLogo;
 	std::unique_ptr<Sprite> mBG;
-	std::unique_ptr<Sprite> mArrow;
+	std::unique_ptr<Sprite> mBoard;
+	std::unique_ptr<Sprite> mBoardSelect;
 
 	int mSelectIndex = 0;
 	bool mIsPressAButton = false;
+	float mSinAngle = 0.0f;
 
 public:
 	SceneTitle();

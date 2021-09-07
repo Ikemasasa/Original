@@ -18,6 +18,8 @@ enum class Sound
     SELECT_LONG,
     CANCEL,
     CURSOR_MOVE,
+    MENU_OPEN,
+    MENU_CLOSE,
     EQUIP,
     HEAL,
     BUFF,
