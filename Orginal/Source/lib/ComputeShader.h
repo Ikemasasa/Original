@@ -31,5 +31,6 @@ public:
 
 	void Run(UINT x, UINT y, UINT z);
 
+
 	Microsoft::WRL::ComPtr<ID3D11Buffer> GetRWBuffer() { return mRWBuf; }
 };
