@@ -48,7 +48,7 @@ public:
 
 	bool Initialize(HWND hwnd);
 	void Clear();
-	void ScreenFlip() { mSwapChain->Present(0, 0);} // バックバッファをフロントバッファに持ってくる
+	void ScreenFlip();
 	void GenerateScrshot(const wchar_t* filename);
 	void SetRenderTarget();
 	void ResetParam();

@@ -314,6 +314,11 @@ void Framework::Clear()
     ResetParam();
 }
 
+void Framework::ScreenFlip()
+{
+    mSwapChain->Present(0, 0);
+}
+
 void Framework::GenerateScrshot(const wchar_t* filename)
 {
     Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer;
