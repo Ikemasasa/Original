@@ -53,7 +53,7 @@ void ProductionSkill::Update(const BattleCharacterManager* bcm)
 			{
 				int handle = Singleton<EffectManager>().GetInstance().Play(mEffectSlot, target->GetPos());
 				mEffectInstHandles[index] = handle;
-				AUDIO.SoundPlay((int)mSound);
+				Audio::SoundPlay((int)mSound);
 				++index;
 			}
 

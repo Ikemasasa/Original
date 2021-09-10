@@ -33,7 +33,7 @@ void NPCTalk::Update()
 	// 会話進めるかチェック
 	if (Input::GetButtonTrigger(0, Input::BUTTON::A))
 	{
-		AUDIO.SoundPlay((int)Sound::SELECT);
+		Audio::SoundPlay((int)Sound::SELECT);
 		++mTextIndex;
 		if (mTextIndex >= mTexts.size())
 		{

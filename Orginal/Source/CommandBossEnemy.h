@@ -5,7 +5,7 @@ class BattleCharacterManager;
 
 class CommandBossEnemy : public CommandBase
 {
-	static constexpr float ATTACK_LOWHP_CHARA_PERCENT = 75.0f;
+	static constexpr float ATTACK_LOWHP_CHARA_PERCENT = 30.0f;
 
 	enum class State
 	{

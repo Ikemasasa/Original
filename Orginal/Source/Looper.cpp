@@ -22,7 +22,7 @@ int Looper::Run(HWND hwnd)
 
 	Input::Initialize();
 
-	AUDIO.Initialize();
+	Audio::Initialize();
 
 	auto& sm = SceneManager::GetInstance();
 	sm.Initialize(std::make_unique<SceneTitle>());
@@ -33,6 +33,7 @@ int Looper::Run(HWND hwnd)
 		Input::Update();
 		sm.Update();
 		Fade::GetInstance().Update();
+		Audio::Update();
 
 		f.Clear();
 		sm.Render();
@@ -42,6 +43,8 @@ int Looper::Run(HWND hwnd)
 	}
 	
 	sm.Release();
+
+	Audio::Release();
 
 	SingletonFinalizer::Finalize();
 	Font::DisableTTF();

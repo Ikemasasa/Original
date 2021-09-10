@@ -25,7 +25,7 @@ void SelectOptions::Update()
 	if (Input::GetButtonTrigger(0, Input::BUTTON::DOWN)) mOptionIndex = (mOptionIndex + 1) % max;
 	if (Input::GetButtonTrigger(0, Input::BUTTON::UP))   mOptionIndex = (mOptionIndex + (max - 1)) % max;
 
-	if (old != mOptionIndex) AUDIO.SoundPlay((int)Sound::CURSOR_MOVE);
+	if (old != mOptionIndex) Audio::SoundPlay((int)Sound::CURSOR_MOVE);
 }
 
 void SelectOptions::Render(const Vector2& leftTop, bool isStrsClear)

@@ -34,7 +34,7 @@ int EquipmentSelect::Update(const std::vector<EquipmentInventory::Data>& equipme
 		if (mSelectIndex < 0) mSelectIndex += inventorySize + 1;
 		mSelectIndex = Math::Clamp(mSelectIndex, 0, inventorySize - 1); // ’ K‚ ‚í‚ñ‚©‚Á‚½‚©‚çclamp‚µ‚Ä‚é
 
-		if (oldIndex != mSelectIndex) AUDIO.SoundPlay((int)Sound::CURSOR_MOVE);
+		if (oldIndex != mSelectIndex) Audio::SoundPlay((int)Sound::CURSOR_MOVE);
 	}
 
 	if (Input::GetButtonTrigger(0, Input::BUTTON::A))

@@ -6,6 +6,7 @@
 #include "Define.h"
 #include "Fade.h"
 #include "SceneField.h"
+#include "SceneLoad.h"
 #include "SceneManager.h"
 
 SceneTitle::SceneTitle()
@@ -29,7 +30,7 @@ void SceneTitle::Initialize()
 	mIsPressAButton = false;
 	mSelectIndex = 0;
 
-	AUDIO.MusicPlay((int)Music::TITLE);
+	Audio::MusicPlay((int)Music::TITLE);
 }
 
 void SceneTitle::Update()
@@ -55,7 +56,7 @@ void SceneTitle::Update()
 		if (Input::GetButtonTrigger(0, Input::A))
 		{
 			mIsPressAButton = true;
-			AUDIO.SoundPlay((int)Sound::SELECT_LONG);
+			Audio::SoundPlay((int)Sound::SELECT_LONG);
 		}
 	}
 	else
@@ -64,18 +65,18 @@ void SceneTitle::Update()
 		int old = mSelectIndex;
 		if (Input::GetButtonTrigger(0, Input::UP))   mSelectIndex = (mSelectIndex + MAX - 1) % MAX;
 		if (Input::GetButtonTrigger(0, Input::DOWN)) mSelectIndex = (mSelectIndex + 1) % MAX;
-		if (old != mSelectIndex) AUDIO.SoundPlay((int)Sound::CURSOR_MOVE);
+		if (old != mSelectIndex) Audio::SoundPlay((int)Sound::CURSOR_MOVE);
 
 		if (Input::GetButtonTrigger(0, Input::A))
 		{
 			Fade::GetInstance().Set(Fade::SPEED_SLOW);
-			AUDIO.SoundPlay((int)Sound::SELECT);
+			Audio::SoundPlay((int)Sound::SELECT);
 		}
 		if (Fade::GetInstance().IsFadeOutEnd())
 		{
 			switch (mSelectIndex)
 			{
-			case GAME_START: SceneManager::GetInstance().SetNextScene(std::make_unique<SceneField>()); break;
+			case GAME_START: SceneManager::GetInstance().SetNextScene(std::make_unique<SceneLoad>(std::make_unique<SceneField>())); break;
 			case EXIT: SceneManager::GetInstance().PopCurrentScene(); break;
 			}
 		}
@@ -123,5 +124,5 @@ void SceneTitle::Release()
 {
 	mFont.Release();
 
-	AUDIO.MusicStop((int)Music::TITLE);
+	// AUDIO.MusicStop((int)Music::TITLE);
 }

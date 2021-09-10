@@ -124,7 +124,7 @@ void ProductionUseItem::StateUseItemWait()
 		{
 			Vector3 effectPos = mTargetCharas[i]->GetPos();
 			mEffectInstHandles.push_back(Singleton<EffectManager>().GetInstance().Play(mEffectSlot, effectPos, 0, 1.0f, 2.0f));
-			AUDIO.SoundPlay((int)mSound);
+			Audio::SoundPlay((int)mSound);
 			++mState;
 		}
 	}

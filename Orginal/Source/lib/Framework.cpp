@@ -257,6 +257,11 @@ HRESULT Framework::SetBackBuffer()
     return hr;
 }
 
+ID3D11DeviceContext* Framework::GetContext()
+{
+    return mDeviceContext.Get();
+}
+
 bool Framework::Initialize(HWND hwnd)
 {
 	HRESULT hr = S_OK;

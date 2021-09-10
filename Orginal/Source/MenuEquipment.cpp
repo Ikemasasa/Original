@@ -69,8 +69,8 @@ MenuBase::Select MenuEquipment::Update(PlayerManager* plm)
 		bool isEquip = true; // 装備中の装備を選んだ時外すよう
 		if (equipmentIndex != -1)
 		{
-			AUDIO.SoundStop((int)Sound::SELECT);
-			AUDIO.SoundPlay((int)Sound::EQUIP);
+			Audio::SoundStop((int)Sound::SELECT);
+			Audio::SoundPlay((int)Sound::EQUIP);
 
 			// すでに装備している人がいたら外す
 			const Character* equipChara = inventory[equipmentIndex].equipChara;

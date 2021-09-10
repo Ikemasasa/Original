@@ -46,7 +46,7 @@ void PlayerManager::Update(const bool isTalking)
 	{
 		if (Fade::GetInstance().SetSceneImage(Fade::SPEED_FAST))
 		{
-			AUDIO.SoundPlay((int)Sound::MENU_OPEN);
+			Audio::SoundPlay((int)Sound::MENU_OPEN);
 			SceneManager::GetInstance().SetStackScene(std::make_unique<SceneMenu>(this));
 		}
 	}

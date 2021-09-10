@@ -4,8 +4,6 @@
 #include <stack>
 #include <memory>
 
-
-
 class SceneManager
 {
 private:
@@ -23,7 +21,7 @@ public:
 	void SetStackScene(std::unique_ptr<SceneBase> nextScene);
 	void PopCurrentScene();
 
-	bool IsLoop() const { return (mRunScene.size() > 1) || !mIsPopCurScene; }
+	bool IsLoop() const { return !mRunScene.empty(); }
 
 	static SceneManager& GetInstance()
 	{
