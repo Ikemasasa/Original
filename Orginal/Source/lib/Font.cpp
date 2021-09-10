@@ -199,6 +199,8 @@ bool Font::Add(wchar_t word)
 
 	// ‰¡•æ“¾
 	fd.width = gm.gmCellIncX;
+
+	return true;
 }
 
 bool Font::Remove(const wchar_t* str)

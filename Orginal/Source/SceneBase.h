@@ -35,6 +35,9 @@ protected:
 		Vector4 eyePos;		//カメラ座標
 	};
 
+	// ロード終了フラグ
+	bool mIsLoadFinished = false;
+
 protected: // 関数
 	void CreatePostEffectShader();
 
@@ -44,7 +47,6 @@ protected: // 関数
 	void DeactivateGBuffer();
 	void SetGBufferTexture(UINT startSlot = 0);
 
-
 public:
 	SceneBase() = default;
 	virtual ~SceneBase() = default;
@@ -53,4 +55,7 @@ public:
 	virtual void Update() = 0;
 	virtual void Render() = 0;
 	virtual void Release() = 0;
+
+	bool IsLoadFinished() const { return mIsLoadFinished; }
+	void LoadFinished() { mIsLoadFinished = true; }
 };

@@ -48,7 +48,7 @@ void ItemSelect::Update(const Item* inventory)
 	UpdateInfo();
 
 	// ƒTƒEƒ“ƒh
-	if (oldSelectIndex != mSelectIndex) AUDIO.SoundPlay((int)Sound::CURSOR_MOVE);
+	if (oldSelectIndex != mSelectIndex) Audio::SoundPlay((int)Sound::CURSOR_MOVE);
 }
 
 void ItemSelect::Render(const Vector2& boardOffset)

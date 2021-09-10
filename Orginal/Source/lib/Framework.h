@@ -39,7 +39,7 @@ public:
 		return instance;
 	}
 	ID3D11Device* GetDevice() { return mDevice.Get(); }
-	ID3D11DeviceContext* GetContext() { return mDeviceContext.Get(); }
+	ID3D11DeviceContext* GetContext();
 	ID3D11RasterizerState* GetRasterizer(RasterizerSettings index) { return mRasterizer[index].Get(); }
 	ID3D11DepthStencilState* GetDepthStencilState(DepthStencilSettings index) { return mDepthStencilState[index].Get(); }
 	ID3D11SamplerState** GetSampler(SapmlerStateSettings index) { return mSamplerState[index].GetAddressOf(); }
@@ -48,7 +48,7 @@ public:
 
 	bool Initialize(HWND hwnd);
 	void Clear();
-	void ScreenFlip() { mSwapChain->Present(0, 0);} // バックバッファをフロントバッファに持ってくる
+	void ScreenFlip();
 	void GenerateScrshot(const wchar_t* filename);
 	void SetRenderTarget();
 	void ResetParam();

@@ -44,8 +44,8 @@ void DecideSkill::Update(const BattleCharacterManager* bcm, CommandBase* cb)
 			}
 			else
 			{
-				AUDIO.SoundStop((int)Sound::SELECT);
-				AUDIO.SoundPlay((int)Sound::CANCEL);
+				Audio::SoundStop((int)Sound::SELECT);
+				Audio::SoundPlay((int)Sound::CANCEL);
 			}
 
 		}

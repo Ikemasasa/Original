@@ -140,7 +140,7 @@ bool ComputeShader::CreateRWByteaddressBuffer(void* initData, UINT count, UINT e
 	uavd.Format = DXGI_FORMAT_R32_TYPELESS;
 	uavd.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
 	uavd.Buffer.FirstElement = 0;
-	uavd.Buffer.NumElements = count;
+	uavd.Buffer.NumElements = count * (elementSize / 4);
 	uavd.Buffer.Flags = D3D11_BUFFER_UAV_FLAG_RAW;
 	device->CreateUnorderedAccessView(mRWBuf.Get(), &uavd, mUAV.GetAddressOf());
 	if (FAILED(hr))return false;
@@ -197,5 +197,9 @@ void ComputeShader::Run(UINT x, UINT y, UINT z)
 	context->CSSetConstantBuffers(0, 1, mConstBuffer.GetAddressOf());
 
 	context->Dispatch(x, y, z);
+
+	// アンセット
+	ID3D11UnorderedAccessView* dummy = nullptr;
+	context->CSSetUnorderedAccessViews(0, 1, &dummy, nullptr);
 }
 

@@ -32,47 +32,48 @@ class Audio
 {
 private:
     static const int MUSIC_NUM = 32;
-    static const int SOUND_NUM = 32;
+    static const int MUSIC_INST_NUM = 2;
+    static const int MUSIC_INST_MAIN_SLOT = 0;
+    static const int MUSIC_INST_SUB_SLOT = 1;
+    static constexpr float MUSIC_VOLUME_MAX = 0.5f;
 
-    std::unique_ptr<DirectX::AudioEngine>			mAudioEngine;
+    static const int SOUND_NUM = 32;
+    static const int SOUND_INST_NUM = 32;
+
+    static const int FADE_FRAME = 15;
+
+    static std::unique_ptr<DirectX::AudioEngine>			mAudioEngine;
 
     //音楽用
-    std::unique_ptr<DirectX::SoundEffect>			mMusic[MUSIC_NUM];
-    std::shared_ptr<DirectX::SoundEffectInstance>	mMusicInst[MUSIC_NUM];
-    float											mMusicVolume[MUSIC_NUM];
+    static std::unique_ptr<DirectX::SoundEffect>			mMusic[MUSIC_NUM];
+    static std::unique_ptr<DirectX::SoundEffectInstance>	mMusicInst[MUSIC_INST_NUM];
+    static float											mMusicVolume[MUSIC_INST_NUM];
 
     // 効果音用
-    std::unique_ptr<DirectX::SoundEffect>			mSound[SOUND_NUM];
-    std::shared_ptr<DirectX::SoundEffectInstance>	mSoundInst[SOUND_NUM];
-    float											mSoundVolume[SOUND_NUM];
+    static std::unique_ptr<DirectX::SoundEffect>			mSound[SOUND_NUM];
+    static std::unique_ptr<DirectX::SoundEffectInstance>	mSoundInst[SOUND_INST_NUM];
+    static float											mSoundVolume[SOUND_INST_NUM];
+
+private:
+    static void MusicFade();
+    static void UnLoadAll();
 
 public:
-    Audio();
-    ~Audio();
+    Audio() = default;
+    ~Audio() = default;
 
-    void Initialize();
+    static void Initialize();
+    static void Update();
+    static void Release();
 
-    void LoadMusic(int slot, const wchar_t* waveFilename, float volume = 0.5f);
-    void UnLoadMusic(int slot);
+    static void LoadMusic(int slot, const wchar_t* waveFilename, float volume = 0.5f);
+    static void LoadSound(int slot, const wchar_t* waveFilename, float volume = 1.0f);
 
-    void LoadSound(int slot, const wchar_t* waveFilename, float volume = 1.0f);
-    void UnLoadSound(int slot);
+    static void MusicPlay(int slot);   // 再生
+    static void MusicStopAll();        // 全部ストップ
+    static void MusicPause();          // 一時停止
+    static void MusicResume();         // 再開
 
-    void MusicStopAll(); // 全部ストップ
-    void MusicPlay(int slot);   // 再生
-    void MusicStop(int slot);   // 停止
-    void MusicPause(int slot);  // 一時停止
-    void MusicResume(int slot); // 再開
-    void MusicSetVolume(int slot, float volume); //音量設定
-
-    void SoundPlay(int slot);
-    void SoundStop(int slot);
-
-    static Audio& GetInstance()
-    {
-        static Audio instance;
-        return instance;
-    }
+    static void SoundPlay(int slot);
+    static void SoundStop(int slot);
 };
-
-#define AUDIO (Audio::GetInstance())

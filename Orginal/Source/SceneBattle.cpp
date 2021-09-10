@@ -72,7 +72,7 @@ void SceneBattle::Initialize()
 
 	mSelectOptions->Initialize();
 
-	AUDIO.MusicPlay((int)mBattleMusic);
+	Audio::MusicPlay((int)mBattleMusic);
 }
 
 void SceneBattle::Update()
@@ -160,8 +160,8 @@ void SceneBattle::Update()
 				}
 
 				// BGMをリザルトのやつにする
-				AUDIO.MusicStop((int)mBattleMusic);
-				AUDIO.MusicPlay((int)mResultMusic);
+				//Audio::MusicStop((int)mBattleMusic);
+				Audio::MusicPlay((int)mResultMusic);
 				break;
 
 			case PLAYER_LOSE:
@@ -206,7 +206,7 @@ void SceneBattle::Release()
 	BattleState::DestroyInst();
 
 	// BGMストップ、フィールドBGM再生
-	AUDIO.MusicStop((int)mResultMusic);
-	AUDIO.MusicStop((int)mBattleMusic);
-	AUDIO.MusicPlay((int)Music::FIELD_REMAINS);
+	//Audio::MusicStop((int)mResultMusic);
+	//Audio::MusicStop((int)mBattleMusic);
+	Audio::MusicPlay((int)Music::FIELD_REMAINS);
 }

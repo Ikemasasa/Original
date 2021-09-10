@@ -456,6 +456,9 @@
     <ClInclude Include="Source\NPCTalk.h">
       <Filter>01_Header\Scene\Field</Filter>
     </ClInclude>
+    <ClInclude Include="Source\SceneLoad.h">
+      <Filter>01_Header\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\lib\Blend.cpp">
@@ -799,6 +802,9 @@
     </ClCompile>
     <ClCompile Include="Source\NPCTalk.cpp">
       <Filter>02_Source\Scene\Field</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SceneLoad.cpp">
+      <Filter>02_Source\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

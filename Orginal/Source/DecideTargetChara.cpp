@@ -102,7 +102,7 @@ void DecideTargetChara::SetBehaviourUseItem(CommandBase* cmdBase)
 	}
 
 	if (isUseable) cmdBase->SetBehaviour(CommandBase::Behaviour::USE_ITEM);
-	else AUDIO.SoundPlay((int)Sound::CANCEL);// 使えないならキャンセル音
+	else Audio::SoundPlay((int)Sound::CANCEL);// 使えないならキャンセル音
 }
 
 void DecideTargetChara::SetBehaviourUseSkill(CommandBase* cmdBase)

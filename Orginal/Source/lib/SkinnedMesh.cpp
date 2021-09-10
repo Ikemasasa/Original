@@ -562,33 +562,6 @@ void SkinnedMesh::Skinning()
 	}
 	
 	mSkinningShader->Run(cb.groupNumX, cb.groupNumY, cb.groupNumZ);
-
-	// 計算結果を読み込む(ここめちゃ重い)
-	{
-		ID3D11Buffer* result = nullptr;
-		mSkinningShader->CreateResultBuffer(&result);
-
-		HRESULT hr = S_OK;
-
-		D3D11_MAPPED_SUBRESOURCE ms;
-		ZeroMemory(&ms, sizeof(D3D11_MAPPED_SUBRESOURCE));
-
-		hr = context->Map(result, 0, D3D11_MAP_READ, 0, &ms);
-		if (FAILED(hr)) return;
-
-		VertexForSkinning* v = static_cast<VertexForSkinning*>(ms.pData);
-		for (int i = 0; i < mVerticesNum; ++i)
-		{
-			mVertices[i].pos    = v[i].pos;
-			mVertices[i].normal = v[i].normal;
-		}
-
-		context->Unmap(result, 0);
-
-		result->Release();
-	}
-
-	FRAMEWORK.GetContext()->UpdateSubresource(mVertexBuffer.Get(), 0, NULL, mVertices, 0, 0);
 	Animate(1.0f / 60.0f);
 }
 
@@ -823,11 +796,10 @@ void SkinnedMesh::Initialize(const char* fbxFilename)
 		mSkinningShader->CreateStructuredBuffer(mVerticesSource, mVerticesNum, sizeof(VertexForSkinning)); // 頂点ソース
 		mSkinningShader->CreateStructuredBuffer(mWeights, mVerticesNum, sizeof(Weight));				   // ウェイト
 		mSkinningShader->CreateStructuredBuffer(nullptr, mBoneNum, sizeof(Matrix));						   // ボーン行列
-		mSkinningShader->CreateRWStructuredBuffer(mVerticesNum, sizeof(VertexForSkinning));				   // 変換後頂点
-		//mSkinningShader->CreateRWByteaddressBuffer(mVertices, mVerticesNum, sizeof(Vertex));
+		mSkinningShader->CreateRWByteaddressBuffer(mVertices, mVerticesNum, sizeof(Vertex));
 		mSkinningShader->CreateConstantBuffer(sizeof(CbufferForSkinning));
 
-		//mVertexBuffer = mSkinningShader->GetRWBuffer();
+		mVertexBuffer = mSkinningShader->GetRWBuffer();
 	}
 
 

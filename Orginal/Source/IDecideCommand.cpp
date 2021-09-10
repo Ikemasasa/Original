@@ -5,6 +5,6 @@
 
 void IDecideCommand::SoundPlay()
 {
-	if (Input::GetButtonTrigger(0, Input::BUTTON::A)) AUDIO.SoundPlay((int)Sound::SELECT);
-	if (Input::GetButtonTrigger(0, Input::BUTTON::B)) AUDIO.SoundPlay((int)Sound::CANCEL);
+	if (Input::GetButtonTrigger(0, Input::BUTTON::A)) Audio::SoundPlay((int)Sound::SELECT);
+	if (Input::GetButtonTrigger(0, Input::BUTTON::B)) Audio::SoundPlay((int)Sound::CANCEL);
 }

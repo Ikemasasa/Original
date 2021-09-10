@@ -42,8 +42,8 @@ MenuBase::Select MenuItem::Update(PlayerManager* plm)
 			}
 			else
 			{
-				AUDIO.SoundStop((int)Sound::SELECT);
-				AUDIO.SoundPlay((int)Sound::CANCEL);
+				Audio::SoundStop((int)Sound::SELECT);
+				Audio::SoundPlay((int)Sound::CANCEL);
 			}
 		}
 
@@ -161,15 +161,15 @@ void MenuItem::UseHealItem(const PlayerManager* plm, const int itemID)
 		if (!plStatus.IsFullMP() && param.mpValue > 0) useable = true; // MPがmaxじゃないかつmp回復
 		if (!useable) // 使えないならreturn
 		{
-			AUDIO.SoundStop((int)Sound::SELECT);
-			AUDIO.SoundPlay((int)Sound::CANCEL);
+			Audio::SoundStop((int)Sound::SELECT);
+			Audio::SoundPlay((int)Sound::CANCEL);
 			return;
 		}
 
 		// 回復
 		plStatus.AddHP(param.hpValue);
 		plStatus.AddMP(param.mpValue);
-		AUDIO.SoundPlay((int)Sound::HEAL);
+		Audio::SoundPlay((int)Sound::HEAL);
 
 		// ステータス更新
 		StatusData::SetPLStatus(charaID, plStatus);

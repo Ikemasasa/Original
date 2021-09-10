@@ -97,7 +97,6 @@ void CharacterManager::CollideEnemy()
 				// –ß‚Á‚Ä‚«‚½Žž—p‚É–³“G‚ðon‚É‚·‚é
 				mPlayerManager->EnableInvincible();
 
-				AUDIO.MusicStop((int)Music::FIELD_REMAINS);
 				Fade::GetInstance().SetSceneImage(Fade::SPEED_SLOW);
 				SceneManager::GetInstance().SetStackScene(std::make_unique<SceneBattle>(mPlayerManager.get(), mEnemyManager->GetEnemy(i)));
 				break;
@@ -105,7 +104,8 @@ void CharacterManager::CollideEnemy()
 			else
 			{
 				// –³“GŽžŠÔ’†‚È‚ç‰Ÿ‚µ‡‚¢‚ÌŒvŽZ‚ð‚·‚é
-				Collide(player, enemy);
+				if (enemy->GetEnmType() == StatusData::EnemyType::BOSS) CollideObject(player, enemy);
+				else 													Collide(player, enemy);
 			}
 		}
 	}

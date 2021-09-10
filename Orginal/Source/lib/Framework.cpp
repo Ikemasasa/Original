@@ -257,6 +257,11 @@ HRESULT Framework::SetBackBuffer()
     return hr;
 }
 
+ID3D11DeviceContext* Framework::GetContext()
+{
+    return mDeviceContext.Get();
+}
+
 bool Framework::Initialize(HWND hwnd)
 {
 	HRESULT hr = S_OK;
@@ -312,6 +317,11 @@ void Framework::Clear()
 
     // 各種デフォルトを設定
     ResetParam();
+}
+
+void Framework::ScreenFlip()
+{
+    mSwapChain->Present(0, 0);
 }
 
 void Framework::GenerateScrshot(const wchar_t* filename)

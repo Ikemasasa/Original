@@ -26,8 +26,8 @@ void MenuManager::Initialize(const PlayerManager* plm)
 void MenuManager::Update(PlayerManager* plm)
 {
 	// 効果音
-	if (Input::GetButtonTrigger(0, Input::BUTTON::A)) AUDIO.SoundPlay((int)Sound::SELECT);
-	if (Input::GetButtonTrigger(0, Input::BUTTON::B)) AUDIO.SoundPlay((int)Sound::CANCEL);
+	if (Input::GetButtonTrigger(0, Input::BUTTON::A)) Audio::SoundPlay((int)Sound::SELECT);
+	if (Input::GetButtonTrigger(0, Input::BUTTON::B)) Audio::SoundPlay((int)Sound::CANCEL);
 
 	// ステートによって次のメニューを決める
 	switch (mNextState)
@@ -52,7 +52,7 @@ void MenuManager::Update(PlayerManager* plm)
 	}
 	mNextState = mMenuStack.top()->Update(plm);
 
-	if (oldSelectIndex != mMenuStack.top()->mSelectIndex) AUDIO.SoundPlay((int)Sound::CURSOR_MOVE);
+	if (oldSelectIndex != mMenuStack.top()->mSelectIndex) Audio::SoundPlay((int)Sound::CURSOR_MOVE);
 }
 
 void MenuManager::Render()

@@ -1,5 +1,7 @@
 #include "SceneManager.h"
+
 #include "SceneBase.h"
+#include "SceneLoad.h"
 
 void SceneManager::Initialize(std::unique_ptr<SceneBase> scene)
 {
@@ -9,25 +11,30 @@ void SceneManager::Initialize(std::unique_ptr<SceneBase> scene)
 
 void SceneManager::Update()
 {
-	if (mNextScene.get())
-	{
-		if(!mIsStack) Release();
-		
-		mRunScene.emplace(mNextScene.release());
-		mRunScene.top()->Initialize();
-	}
 	if (mIsPopCurScene)
 	{
 		mRunScene.top()->Release();
 		mRunScene.pop();
 		mIsPopCurScene = false;
 	}
+	if (mNextScene.get())
+	{
+		if(!mIsStack) Release();
+		
+		mRunScene.emplace(mNextScene.release());
+		if (!mRunScene.top()->IsLoadFinished())
+		{
+			mRunScene.top()->Initialize();
+		}
+	}
 
+	if (mRunScene.empty()) return;
 	mRunScene.top()->Update();
 }
 
 void SceneManager::Render()
 {
+	if (mRunScene.empty()) return;
 	mRunScene.top()->Render();
 }
 
@@ -44,14 +51,14 @@ void SceneManager::Release()
 
 void SceneManager::SetNextScene(std::unique_ptr<SceneBase> nextScene)
 {
-	if (mNextScene.get()) return;
+	if (mNextScene) return;
 	mNextScene.reset(nextScene.release());
 	mIsStack = false;
 }
 
 void SceneManager::SetStackScene(std::unique_ptr<SceneBase> nextScene)
 {
-	if (mNextScene.get()) return;
+	if (mNextScene) return;
 	mNextScene.reset(nextScene.release());
 	mIsStack = true;
 }

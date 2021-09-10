@@ -12,6 +12,7 @@
 #include "DataBase.h"
 #include "Define.h"
 #include "EffectManager.h"
+#include "GameManager.h"
 #include "Light.h"
 #include "Player.h"
 #include "SceneManager.h"
@@ -32,7 +33,8 @@ SceneField::SceneField()
 	mCharaManager = std::make_unique<CharacterManager>();
 	mSkybox		  = std::make_unique<Skybox>();
 
-	mTerrain = std::make_unique<Terrain>(DataBase::TERRAIN_ID_START);
+	// フラグリセット
+	GameManager::bossSubdueFlag = false;
 }
 
 SceneField::~SceneField()
@@ -52,10 +54,10 @@ void SceneField::Initialize()
 		mLight.SetLightColor(lightColor);
 
 		mLight.CreateConstBuffer();
-		mLight.UpdateConstBuffer();
-		mLight.SetConstBuffer(1);
 	}
 
+	mTerrain = std::make_unique<Terrain>(DataBase::TERRAIN_ID_START);
+	
 	DataBase::Initialize();
 	mSkybox->Initialize(L"Data/Image/sky.png");
 	mTerrain->Initialize();
@@ -63,13 +65,17 @@ void SceneField::Initialize()
 
 	Singleton<CameraManager>().GetInstance().Push(std::make_shared<CameraTPS>());
 	Singleton<CameraManager>().GetInstance().Initialize(mCharaManager->GetMovePlayer());
-	
+
+	mIsLoadFinished = true;
+
+
 	// BGM 再生開始
-	AUDIO.MusicPlay((int)Music::FIELD_REMAINS);
+	Audio::MusicPlay((int)Music::FIELD_REMAINS);
 }
 
 void SceneField::Update()
 {
+
 	mCharaManager->Update();
 	Singleton<CameraManager>().GetInstance().Update(mCharaManager->GetMovePlayer());
 
@@ -83,6 +89,9 @@ void SceneField::Render()
 	DirectX::XMFLOAT4X4 view = Singleton<CameraManager>().GetInstance().GetView();
 	DirectX::XMFLOAT4X4 proj = Singleton<CameraManager>().GetInstance().GetProj();
 	DirectX::XMFLOAT4 lightDir = mLight.GetLightDir();
+
+	mLight.UpdateConstBuffer();
+	mLight.SetConstBuffer(1);
 
 	// シャドウマップ
 	mShadowMap.Activate(lightDir, SHADOWMAP_TEXTURE_SLOT);
@@ -102,7 +111,7 @@ void SceneField::Render()
 
 void SceneField::Release()
 {
-	AUDIO.MusicStop((int)Music::FIELD_REMAINS);
+	// Audio::MusicStop((int)Music::FIELD_REMAINS);
 
 	Singleton<CameraManager>().GetInstance().Pop();
 
