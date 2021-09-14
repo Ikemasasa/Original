@@ -26,8 +26,10 @@ void NPCTextData::GetTextData(const int charaID, std::vector<TextData>* outData,
 		int id = std::stoi(chunks[CHARA_ID_INDEX]);
 		if (id == charaID)
 		{
+			int index = 0;
 			TextData data;
-			int index = 2; // キャラ名、キャラIDを飛ばす
+			data.name = ConvertString::ConvertToWstirng(chunks[index++]);
+			index++; // キャラIDを飛ばす
 			data.times = std::stoi(chunks[index++]);
 			readLineNum = std::stoi(chunks[index++]);
 			data.flag = (bool)std::stoi(chunks[index++]);

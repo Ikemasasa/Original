@@ -71,3 +71,8 @@ std::vector<std::wstring> NPC::GetTexts()
 	// ˆê‰‘‚¢‚Ä‚¨‚­
 	return std::vector<std::wstring>();
 }
+
+std::wstring NPC::GetName()
+{	
+	return mTextData[0].name;
+}

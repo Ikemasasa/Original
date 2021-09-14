@@ -75,7 +75,6 @@ void SceneField::Initialize()
 
 void SceneField::Update()
 {
-
 	mCharaManager->Update();
 	Singleton<CameraManager>().GetInstance().Update(mCharaManager->GetMovePlayer());
 

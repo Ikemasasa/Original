@@ -11,6 +11,7 @@ class NPCTextData
 public:
 	struct TextData
 	{
+		std::wstring name;
 		int times;
 		bool flag;
 		std::vector<std::wstring> texts;
