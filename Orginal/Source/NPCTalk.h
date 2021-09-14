@@ -12,11 +12,15 @@ class Sprite;
 
 class NPCTalk
 {
-	static constexpr float TEXT_POS_X = 40.0f;
-	static constexpr float TEXT_POS_Y = 44.0f;
-	static constexpr float TEXT_ADD_Y = 33.0f;
-	static constexpr float TEXT_MAX_WIDTH = 670.0f;
-	static const int LINE_MAX = 3;
+	static const Vector3 NAME_RGB;
+	static const Vector3 TEXT_RGB;
+	static constexpr float NAME_OFFSET_Y = 5.0f;
+	static constexpr float TEXT_POS_X = 271.0f;
+	static constexpr float TEXT_POS_Y = 42.0f;
+	static constexpr float TEXT_ADD_Y = 32.0f;
+	static constexpr float TEXT_MAX_WIDTH = 738.0f;
+	static const int LINE_MAX = 4;
+	static const int DISP_FRAME = 2; // 2ÉtÉåÅ[ÉÄÇ…1ï∂éöÇ∏Ç¬ï`âÊ
 
 	std::unique_ptr<Sprite> mTextBoard;
 	std::vector<std::wstring> mTexts;
@@ -24,7 +28,10 @@ class NPCTalk
 	Font mFont;
 	Vector3 mPlayerPos;
 	int mTextIndex;
+	int mTextDispNum;
+	int mTimer;
 	bool mOldTalkingFlag = false;
+
 
 	void UnSet();
 public:
