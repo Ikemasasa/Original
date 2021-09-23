@@ -34,9 +34,9 @@ public:
 	~ShadowMap();
 
 	void Initialize();
-	void Activate(const DirectX::XMFLOAT4& lightDir, int textureSlot);
-	void Deactivate(int textureSlot);
+	void Activate(const Vector4& lightDir);
+	void Deactivate();
+	void SetTexture(UINT textureSlot);
 	Shader* GetShader()const { return mShader.get(); }
-
 };
 

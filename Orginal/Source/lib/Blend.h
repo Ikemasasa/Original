@@ -24,6 +24,7 @@ public:
 
 private:
     static ID3D11BlendState* mBlendState[MODE_MAX];
+    static BLEND_MODE mMode;
 
 public:
     Blend() = default;
@@ -32,5 +33,5 @@ public:
     static void Release();
 
     static void Set(BLEND_MODE mode = NONE);
-
+    static BLEND_MODE GetMode() { return mMode; }
 };

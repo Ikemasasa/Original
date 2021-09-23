@@ -4,42 +4,49 @@
 #include "lib/Shader.h"
 #include "lib/Sprite.h"
 
-void GaussianBlur::Initialize(const Vector2& targetSize, float blurStlength)
+GaussianBlur::GaussianBlur() = default;
+GaussianBlur::~GaussianBlur() = default;
+
+void GaussianBlur::Initialize(const Vector2& targetSize, DXGI_FORMAT format, float blurStlength, float offset)
 {
-	// シェーダ
+	// ターゲット作成
+	mSize = targetSize;
+	mHorizontalBlur.Initialize(mSize.x, mSize.y, format);
+	mVerticalBlur.Initialize(mSize.x, mSize.y, format);
+
+	// シェーダ作成
 	mHorizontalShader = std::make_unique<Shader>();
 	mHorizontalShader->Load2D(L"Shaders/GaussianBlur.fx", "VSMain", "PSHorizontal");
-	
+
 	mVerticalShader = std::make_unique<Shader>();
 	mVerticalShader->Load2D(L"Shaders/GaussianBlur.fx", "VSMain", "PSVertical");
 
-	// ターゲット作成
-	mSize = targetSize;
-	mHorizontalBlur.Initialize(mSize.x, mSize.y);
-	mVerticalBlur.Initialize(mSize.x, mSize.y);
-
 	// 定数バッファ作成
-	D3D11_BUFFER_DESC bd;
-	ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
-	bd.ByteWidth = sizeof(CBuffer);
-	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	HRESULT hr = FRAMEWORK.GetDevice()->CreateBuffer(&bd, NULL, mConstBuffer.GetAddressOf());
-	if (FAILED(hr)) return;
+	mConstBuffer.Create(sizeof(CBuffer));
 
 	// ブラーの強さ
 	mBlurStlength = blurStlength;
 
-	// ウェイト作成
-	UpdateWeights();
+	// オフセット
+	mTexcelOffset = offset;
+
+	// ウェイトアップデートフラグ
+	mWeightUpdated = false;
+
 }
 
 void GaussianBlur::Blur(const RenderTarget* orgSprite)
 {
 	ID3D11DeviceContext* context = FRAMEWORK.GetContext();
 
+	if (!mWeightUpdated)
+	{
+		// ウェイト作成
+		UpdateWeights();
+	}
+
 	// cbセット
-	context->PSSetConstantBuffers(0, 1, mConstBuffer.GetAddressOf());
+	mConstBuffer.Set(0);
 
 	// いまのレンダーターゲットを取得
 	ID3D11RenderTargetView* rtv = nullptr;
@@ -56,30 +63,38 @@ void GaussianBlur::Blur(const RenderTarget* orgSprite)
 	mHorizontalBlur.Render(mVerticalShader.get());
 	mVerticalBlur.Deactivate();
 
-	// ブラーをかけた画像を描画
-	// レンダーターゲット
+	// レンダーターゲットを戻す
 	context->OMSetRenderTargets(1, &rtv, dsv);
-	// ビューポート設定
-	D3D11_VIEWPORT viewport;
-	viewport.Width = mSize.x;
-	viewport.Height = mSize.y;
-	viewport.MinDepth = 0.0f;
-	viewport.MaxDepth = 1.0f;
-	viewport.TopLeftX = 0;
-	viewport.TopLeftY = 0;
-	context->RSSetViewports(1, &viewport);
-
-	mVerticalBlur.Render(nullptr);
 	
 	// 解放
 	if (rtv)rtv->Release();
 	if (dsv)dsv->Release();
 }
 
+void GaussianBlur::Render(bool viewportOverwrite)
+{
+	if (viewportOverwrite)
+	{
+		// 両ブラー適用後のVerticalBlurを描画する
+		// ビューポート設定
+
+		//D3D11_VIEWPORT viewport;
+		//viewport.Width = mSize.x;
+		//viewport.Height = mSize.y;
+		//viewport.MinDepth = 0.0f;
+		//viewport.MaxDepth = 1.0f;
+		//viewport.TopLeftX = 0;
+		//viewport.TopLeftY = 0;
+		//FRAMEWORK.GetContext()->RSSetViewports(1, &viewport);
+	}
+
+	mVerticalBlur.Render(nullptr);
+}
+
 void GaussianBlur::SetBlurStlength(float stlength)
 {
 	mBlurStlength = stlength;
-	UpdateWeights();
+	mWeightUpdated = false;
 }
 
 void GaussianBlur::UpdateWeights()
@@ -88,8 +103,8 @@ void GaussianBlur::UpdateWeights()
 	float d = mBlurStlength * mBlurStlength * 0.01f;
 
 	CBuffer cb = {};
-	cb.offset.x = OFFSET / mSize.x;
-	cb.offset.y = OFFSET / mSize.y;
+	cb.offset.x = mTexcelOffset / mSize.x;
+	cb.offset.y = mTexcelOffset / mSize.y;
 	for (int i = 0; i < SAMPLING_COUNT; i++)
 	{
 		// Offset position
@@ -106,6 +121,9 @@ void GaussianBlur::UpdateWeights()
 
 
 	// cb更新
-	FRAMEWORK.GetContext()->UpdateSubresource(mConstBuffer.Get(), 0, nullptr, &cb, 0, 0);
+	mConstBuffer.Update(&cb);
+	mWeightUpdated = true;
 }
+
+
 

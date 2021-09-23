@@ -2,6 +2,7 @@
 #include <memory>
 #include <wrl.h>
 
+#include "lib/ConstantBuffer.h"
 #include "lib/RenderTarget.h"
 #include "lib/Vector.h"
 
@@ -11,33 +12,36 @@ class Shader;
 class GaussianBlur
 {
 	static const int SAMPLING_COUNT = 10;
-	static const int OFFSET = 1;
 
 	struct CBuffer
 	{
 		float weight[SAMPLING_COUNT];
 		Vector2 offset;
 	};
-	Microsoft::WRL::ComPtr<ID3D11Buffer> mConstBuffer;
+	ConstantBuffer mConstBuffer;
 
 	std::unique_ptr<Shader> mHorizontalShader;
 	std::unique_ptr<Shader> mVerticalShader;
 	RenderTarget mHorizontalBlur;
 	RenderTarget mVerticalBlur;
 
-	Vector2 mSize;
+	Vector2 mSize = {};
 	float mBlurStlength = 0.0f;
+	float mTexcelOffset = 1;
+	bool mWeightUpdated = false;
 
 private:
 	void UpdateWeights();
 
 public:
-	GaussianBlur() = default;
-	~GaussianBlur() = default;
+	GaussianBlur();
+	~GaussianBlur();
 
-	void Initialize(const Vector2& targetSize = Vector2::ZERO, float blurStlength = 100.0f);
+	void Initialize(const Vector2& targetSize = Vector2::ZERO, DXGI_FORMAT format = DXGI_FORMAT_R16G16B16A16_FLOAT, float blurStlength = 100.0f, float offset = 1);
 	void Blur(const RenderTarget* orgSprite);
-	void Blur(const Sprite* sprite, const Vector2& pos, const Vector2& scale);
+	void Render(bool viewportOverwrite = false);
 
 	void SetBlurStlength(float stlength);
+
+	RenderTarget* GetBlurTarget() { return &mVerticalBlur; };
 };

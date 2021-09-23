@@ -44,7 +44,7 @@ void MenuCharacterSelect::Render(Vector2 leftBottom)
 	Vector2 size(mBoard->GetSize());
 	Vector2 center(0.0f, size.y); // leftBottom‚ðŽó‚¯Žæ‚é‚½‚ß y = size.y;
 	float angle = 0.0f;
-	for (int i = 0; i < mPlayerNameFirst.size(); ++i)
+	for (size_t i = 0; i < mPlayerNameFirst.size(); ++i)
 	{
 		Vector2 pos(leftBottom.x + size.x * i, leftBottom.y);
 		Vector3 boardRGB = Vector3::ONE;

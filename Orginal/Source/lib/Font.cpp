@@ -44,7 +44,7 @@ void Font::DisableTTF()
 }
 
 
-bool Font::RenderSet(wchar_t word, const Vector2& pos, const Vector2& centerRate, const Vector4& color)
+bool Font::RenderSet(const wchar_t word, const Vector2& pos, const Vector2& centerRate, const Vector4& color)
 {
 	Add(word);
 

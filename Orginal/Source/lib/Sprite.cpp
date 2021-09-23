@@ -4,6 +4,11 @@
 #include "ResourceManager.h"
 #include "Renderer2D.h"
 
+Sprite::Sprite()
+{
+
+}
+
 Sprite::Sprite(const wchar_t* filename)
 {
 	ResourceManager::LoadShaderResource(FRAMEWORK.GetDevice(), filename, &mSRV, &mDesc);

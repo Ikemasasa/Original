@@ -2,10 +2,12 @@
 // テクスチャ / サンプラー 
 Texture2D Diffuse : register(t0);
 Texture2D Normal : register(t1);
+Texture2D Environment : register(t13);
 Texture2D ShadowMap : register(t14);
 Texture2D Ramp : register(t15);
 
-SamplerState Sampler : register(s0);
+SamplerState Sampler	 : register(s0);
+SamplerState SamplerWrap : register(s1);
 
 
 // 定数バッファ
@@ -17,10 +19,15 @@ cbuffer CONSTANT_BUFFER : register(b0)
 	float4 MaterialColor;
 };
 
-cbuffer CBShadow : register(b1)
+cbuffer CBShadow : register(b5)
 {
 	matrix ShadowVP; // シャドウマップ用のView Projection
 };
+
+cbuffer CB2 : register(b2)
+{
+	float4 EyePos;
+}
 
 // データフォーマット
 struct VSInput

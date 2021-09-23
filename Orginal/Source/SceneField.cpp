@@ -11,6 +11,7 @@
 #include "CameraManager.h"
 #include "DataBase.h"
 #include "Define.h"
+#include "Enemy.h"
 #include "EffectManager.h"
 #include "GameManager.h"
 #include "Light.h"
@@ -22,19 +23,10 @@
 
 SceneField::SceneField()
 {
-	mRamp = std::make_unique<Sprite>(L"Data/Image/Ramp.png");
-	mRamp->Set(15);
-
-	CreatePostEffectShader();
-
-	mSceneTarget.Initialize();
-	mShadowMap.Initialize();
+	CreateBaseAll();
 
 	mCharaManager = std::make_unique<CharacterManager>();
-	mSkybox		  = std::make_unique<Skybox>();
-
-	// フラグリセット
-	GameManager::bossSubdueFlag = false;
+	mSkybox = std::make_unique<Skybox>();
 }
 
 SceneField::~SceneField()
@@ -45,12 +37,14 @@ SceneField::~SceneField()
 
 void SceneField::Initialize()
 {
+	InitializeBaseAll();
+
 	// ライト設定
 	{
-		Vector4 lightDir(0.5f, -0.5f, -1.0f, 1.0f);
+		Vector4 lightDir(-1.0f, -0.4f, 1.0f, 1.0f);
 		mLight.SetLightDir(lightDir);
 
-		Vector4 lightColor(1, 1, 1, 1);
+		Vector4 lightColor(0.8f, 0.8f, 0.8f, 1);
 		mLight.SetLightColor(lightColor);
 
 		mLight.CreateConstBuffer();
@@ -59,12 +53,15 @@ void SceneField::Initialize()
 	mTerrain = std::make_unique<Terrain>(DataBase::TERRAIN_ID_START);
 	
 	DataBase::Initialize();
-	mSkybox->Initialize(L"Data/Image/sky.png");
+	mSkybox->Initialize(L"Data/Image/environment.hdr");
 	mTerrain->Initialize();
 	mCharaManager->Initialize();
 
 	Singleton<CameraManager>().GetInstance().Push(std::make_shared<CameraTPS>());
 	Singleton<CameraManager>().GetInstance().Initialize(mCharaManager->GetMovePlayer());
+
+	// フラグリセット
+	GameManager::bossSubdueFlag = false;
 
 	mIsLoadFinished = true;
 
@@ -85,37 +82,82 @@ void SceneField::Update()
 
 void SceneField::Render()
 {
-	DirectX::XMFLOAT4X4 view = Singleton<CameraManager>().GetInstance().GetView();
-	DirectX::XMFLOAT4X4 proj = Singleton<CameraManager>().GetInstance().GetProj();
-	DirectX::XMFLOAT4 lightDir = mLight.GetLightDir();
+	Matrix view = Singleton<CameraManager>().GetInstance().GetView();
+	Matrix proj = Singleton<CameraManager>().GetInstance().GetProj();
+	Vector4 lightDir = mLight.GetLightDir();
 
-	mLight.UpdateConstBuffer();
-	mLight.SetConstBuffer(1);
+	// シャドウマップに書き込み
+	const Shader* shader = mShadowMap->GetShader();
+	mShadowMap->Activate(lightDir);
+	mTerrain->Render(shader, view, proj, lightDir);
+	mCharaManager->Render(shader, view, proj, lightDir);
+	mShadowMap->Deactivate();
 
-	// シャドウマップ
-	mShadowMap.Activate(lightDir, SHADOWMAP_TEXTURE_SLOT);
-	mTerrain->Render(mShadowMap.GetShader(), view, proj, lightDir);
-	mCharaManager->Render(mShadowMap.GetShader(), view, proj, lightDir);
-	mShadowMap.Deactivate(SHADOWMAP_TEXTURE_SLOT);
-
-	// シーンターゲットに書き込み
-	mSceneTarget.Activate();
+	// GBufferに書き込み
+	shader = mDeferredRenderer->GetGBufferShader();
+	mDeferredRenderer->ActivateGBuffer();
 	mSkybox->Render(view, proj);
-	mTerrain->Render(view, proj, lightDir);
-	mCharaManager->Render(view, proj, lightDir);
-	mSceneTarget.Deactivate();
+	mTerrain->Render(shader, view, proj, lightDir);
+	mCharaManager->Render(shader, view, proj, lightDir);
+	mDeferredRenderer->DeactivateGBuffer();
 
-	mSceneTarget.Render(mPostEffect.get());
+	// テクスチャセット(GBuffer, 環境, 影
+	mDeferredRenderer->SetGBufferTexture();
+	mSkybox->SetEnvTexture(Define::ENVIRONMENT_TEXTURE_SLOT);
+	mShadowMap->SetTexture(Define::SHADOWMAP_TEXTURE_SLOT);
+	
+	// ディファードのライト用意(後々外部から入力したい
+	//// ライトクリア
+	mDeferredRenderer->ClearLight();
+	//// DirLight
+	std::vector<DeferredRenderer::DirLight> dirLights;
+	DeferredRenderer::DirLight dirLight;
+	dirLight.dir = lightDir;
+	dirLight.color = mLight.GetLightColor();
+	dirLights.push_back(dirLight);
+	mDeferredRenderer->SetDirLight(dirLights);
+
+	//// PointLight
+	std::vector<DeferredRenderer::PointLight> pointLights;
+	DeferredRenderer::PointLight pointLight;
+	pointLight.color = Vector4(0.95f, 0.75f, 0.55f, 1.0f);
+	size_t num = mCharaManager->GetEnemyManager()->GetNum();
+	for (size_t i = 0; i < num; ++i)
+	{
+		const Enemy* enm = mCharaManager->GetEnemyManager()->GetEnemy(i);
+
+		// 座標、レンジ算出
+		const float ADJUST_DIV = 1.5f;
+		const AABB aabb = enm->GetLocalAABB();
+		float range = (aabb.max.y - aabb.min.y) / ADJUST_DIV;
+		pointLight.pos = Vector4(enm->GetPos(), range);
+		pointLight.pos.y += aabb.max.y / ADJUST_DIV;
+		pointLights.push_back(pointLight);
+	}
+	mDeferredRenderer->SetPointLight(pointLights);
+
+	Vector4 eyePos = Vector4(Singleton<CameraManager>().GetInstance().GetPos(), 1.0f);
+	mDeferredRenderer->SetCBPerFrame(eyePos);
+
+	// ディファードレンダリング
+	//// シーンターゲットに書き込み
+	mSceneTarget->Activate();
+	mDeferredRenderer->Render();
+	// ブルーム作成、適用
+	mBloom->Execute(mSceneTarget.get());
+	mCharaManager->RenderUI();
+	mSceneTarget->Deactivate();
+
+	// バックバッファに結果を描画
+	mSceneTarget->Render(mPostEffect.get());
 }
 
 void SceneField::Release()
 {
-	// Audio::MusicStop((int)Music::FIELD_REMAINS);
-
 	Singleton<CameraManager>().GetInstance().Pop();
 
 	DataBase::Release();
 	mSkybox->Release();
 	mRamp->UnLoad();
-	mPostEffect->UnLoad();  
+	mPostEffect->UnLoad();
 }

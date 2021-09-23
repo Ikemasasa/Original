@@ -92,12 +92,12 @@ void EnemyManager::Update(const bool isTalking)
 	}
 }
 
-void EnemyManager::Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj, const DirectX::XMFLOAT4& lightDir)
+void EnemyManager::Render(const Matrix& view, const Matrix& proj, const Vector4& lightDir)
 {
 	for (auto& enm : mEnemies) enm->Render(view, proj, lightDir);
 }
 
-void EnemyManager::Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj, const DirectX::XMFLOAT4& lightDir)
+void EnemyManager::Render(const Shader* shader, const Matrix& view, const Matrix& proj, const Vector4& lightDir)
 {
 	for (auto& enm : mEnemies) enm->Render(shader, view, proj, lightDir);
 }

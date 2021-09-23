@@ -2,9 +2,9 @@
 #include <memory>
 
 #include "lib/CollisionStructs.h"
-#include "lib/Vector.h"
-
+#include "lib/Matrix.h"
 #include "lib/SkinnedMesh.h"
+#include "lib/Vector.h"
 
 class GeometricPrimitive;
 
@@ -24,7 +24,7 @@ public:
 private:
 	std::shared_ptr<SkinnedMesh> mMesh = nullptr;
 	std::shared_ptr<GeometricPrimitive> mHit = nullptr;
-	DirectX::XMFLOAT4X4 mWorld = { 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 };
+	Matrix mWorld = { 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 };
 	int mObjID = -1; // インスタンスに割り当てられるID(各Managerで0スタートで増えていく)
 	int mCharaID = -1; // キャラクターそのものに割り当てられているID(スタートは種類によって変わる、DataBase参照)
 	CAPSULE mCapsuleParam;
@@ -44,8 +44,8 @@ public:
 	virtual ~Character() = default;
 
 	void UpdateWorld();
-	void Render(const DirectX::XMFLOAT4X4 & view, const DirectX::XMFLOAT4X4 & projection, const DirectX::XMFLOAT4 & lightDir);
-	void Render(const Shader * shader, const DirectX::XMFLOAT4X4 & view, const DirectX::XMFLOAT4X4 & projection, const DirectX::XMFLOAT4 & lightDir);
+	void Render(const Matrix& view, const Matrix& proj, const Vector4& lightDir);
+	void Render(const Shader * shader, const Matrix& view, const Matrix& proj, const Vector4& lightDir);
 
 	void CorrectionAngle();	// mVelocity方向に向く
 	void CorrectionAngle(const Vector3& dirN); // dirN方向に向く

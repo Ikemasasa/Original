@@ -21,7 +21,7 @@ private:
 	std::unique_ptr<PlayerManager> mPlayerManager;
 	std::unique_ptr<EnemyManager> mEnemyManager;
 	std::unique_ptr<NPCManager> mNPCManager;
-	std::unique_ptr <NPCTalk> mNPCTalk;
+	std::unique_ptr<NPCTalk> mNPCTalk;
 
 	void Collide(Character* a, Character* b);
 	void CollideObject(Character* move, Character* object); 
@@ -31,12 +31,14 @@ public:
 
 	void Initialize();
 	void Update();
-	void Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir);
-	void Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir);
+	void Render(const Matrix& view, const Matrix& proj, const Vector4& lightDir);
+	void Render(const Shader* shader, const Matrix& view, const Matrix& proj, const Vector4& lightDir);
+	void RenderUI();
 
 	void CollideNPC();
 	void CollideEnemy();
 	void TalkCheck();
 
 	Player* GetMovePlayer() const { return mPlayerManager->GetMovePlayer(); }
+	EnemyManager* GetEnemyManager() const { return mEnemyManager.get(); }
 };

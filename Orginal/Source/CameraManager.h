@@ -27,8 +27,8 @@ public:
 
 
 	// ƒQƒbƒ^[
-	DirectX::XMFLOAT4X4 GetView() const { return mMainCamera.top().get()->GetViewMatrix(); }
-	DirectX::XMFLOAT4X4 GetProj() const { return mMainCamera.top().get()->GetProjectionMatrix(); }
+	Matrix GetView() const { return mMainCamera.top().get()->GetViewMatrix(); }
+	Matrix GetProj() const { return mMainCamera.top().get()->GetProjectionMatrix(); }
 	Vector3 GetPos() const { return mMainCamera.top().get()->GetPos(); }
 	Vector3 GetAngle() const { return mMainCamera.top().get()->GetAngle(); }
 	Vector3 GetFrontVector() const { return mMainCamera.top().get()->GetFrontVector(); }

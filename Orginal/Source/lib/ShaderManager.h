@@ -72,8 +72,8 @@ public:
     bool LoadComputeShader(LPCWSTR filename, LPCSTR func, ID3D11ComputeShader** outCS, LPCSTR shadermodel);
 
     void ReleaseAll();
-    void ReleaseVertexShader(ID3D11VertexShader* vertexShader, ID3D11InputLayout* inputLayout);
-    void ReleasePixelShader(ID3D11PixelShader* pShader);
-    void ReleaseGeometryShader(ID3D11GeometryShader* pShader);
-    void ReleaseComputeShader(ID3D11ComputeShader* pShader);
+    void ReleaseVertexShader(ID3D11VertexShader** vertexShader, ID3D11InputLayout** inputLayout);
+    void ReleasePixelShader(ID3D11PixelShader** pShader);
+    void ReleaseGeometryShader(ID3D11GeometryShader** pShader);
+    void ReleaseComputeShader(ID3D11ComputeShader** pShader);
 };

@@ -2,6 +2,7 @@
 #include "Framework.h"
 
 #include "Math.h"
+#include "Matrix.h"
 
 // staticメンバ変数
 const Vector2 Vector2::ZERO = Vector2(0, 0);
@@ -10,6 +11,45 @@ const Vector3 Vector3::ZERO = Vector3(0, 0, 0);
 const Vector3 Vector3::ONE  = Vector3(1, 1, 1);
 const Vector4 Vector4::ZERO = Vector4(0, 0, 0, 0);
 const Vector4 Vector4::ONE  = Vector4(1, 1, 1, 1);
+
+//---------------------------------------------------
+// Vector2
+//---------------------------------------------------
+float Vector2::Dot(const Vector2& v0, const Vector2& v1)
+{
+	return v0.x * v1.x + v0.y * v1.y;
+}
+
+float Vector2::Cross(const Vector2& v0, const Vector2& v1)
+{
+	return v0.x * v1.y - v0.y * v1.x;
+}
+
+float Vector2::Length() const
+{
+	return sqrtf(x * x + y * y);
+}
+
+float Vector2::LengthSq() const
+{
+	return x * x + y * y;
+}
+
+void Vector2::Normalize()
+{
+	float len = sqrtf(x * x + y * y);
+	x /= len;
+	y /= len;
+}
+
+Vector2 Vector2::GetNormalize() const
+{
+	float len = sqrtf(x * x + y * y);
+	Vector2 normalize;
+	normalize.x = x / len;
+	normalize.y = y / len;
+	return normalize;
+}
 
 //---------------------------------------------------
 // Vector3
@@ -39,123 +79,78 @@ Vector3 Vector3::Lerp(const Vector3& v1, const Vector3& v2, float t)
 	return ret;
 }
 
-void Vector3::Transform(const Vector3& v, const Matrix& m)
+Vector3 Vector3::Transform(const Vector3& v, const Matrix& m)
 {
-	this->x = v.x * m._11 + v.y * m._21 + v.z * m._31 + m._41;
-	this->y = v.x * m._12 + v.y * m._22 + v.z * m._32 + m._42;
-	this->z = v.x * m._13 + v.y * m._23 + v.z * m._33 + m._43;
+	Vector3 ret;
+	ret.x = v.x * m._11 + v.y * m._21 + v.z * m._31 + m._41;
+	ret.y = v.x * m._12 + v.y * m._22 + v.z * m._32 + m._42;
+	ret.z = v.x * m._13 + v.y * m._23 + v.z * m._33 + m._43;
+	return ret;
 }
 
-void Vector3::TransformCoord(const Vector3& v, const Matrix& m)
+Vector3 Vector3::TransformCoord(const Vector3& v, const Matrix& m)
 {
+	Vector3 ret;
 	float w = v.x * m._14 + v.y * m._24 + v.z * m._34 + m._44;
+	ret.x = (v.x * m._11 + v.y * m._21 + v.z * m._31 + m._41) / w;
+	ret.y = (v.x * m._12 + v.y * m._22 + v.z * m._32 + m._42) / w;
+	ret.z = (v.x * m._13 + v.y * m._23 + v.z * m._33 + m._43) / w;
 
-	this->x = (v.x * m._11 + v.y * m._21 + v.z * m._31 + m._41) / w;
-	this->y = (v.x * m._12 + v.y * m._22 + v.z * m._32 + m._42) / w;
-	this->z = (v.x * m._13 + v.y * m._23 + v.z * m._33 + m._43) / w;
+	return ret;
 }
 
-Vector2 Vector3::WorldToScreen(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj) const
+float Vector3::Length() const
 {
-	DirectX::XMVECTOR pos = DirectX::XMVectorSet( x, y, z, 1.0f );
+	return sqrtf(x * x + y * y + z * z);
+}
 
-	DirectX::XMMATRIX matView = DirectX::XMLoadFloat4x4(&view);
-	DirectX::XMMATRIX matProj = DirectX::XMLoadFloat4x4(&proj);
+float Vector3::LengthSq() const
+{
+	return x * x + y * y + z * z;
+}
 
-	// ビュー変換
-	pos = DirectX::XMVector3TransformCoord(pos, matView);
+void Vector3::Normalize()
+{
+	float len = sqrtf(x * x + y * y + z * z);
+	x /= len;
+	y /= len;
+	z /= len;
+}
 
-	// プロジェクション変換
-	pos = DirectX::XMVector3TransformCoord(pos, matProj);
+Vector3 Vector3::GetNormalize() const
+{
+	float len = sqrtf(x * x + y * y + z * z);
+	Vector3 normalize;
+	normalize.x = x / len;
+	normalize.y = y / len;
+	normalize.z = z / len;
+	return normalize;
+}
 
-	// w で割る(同時座標を考慮
-	pos = DirectX::XMVectorDivide(pos, DirectX::XMVectorSet(pos.m128_f32[3], pos.m128_f32[3], pos.m128_f32[3], pos.m128_f32[3])); 
+Vector2 Vector3::WorldToScreen(const Matrix& view, const Matrix& proj) const
+{
+	Vector3 pos = *this;
+	
+	// 座標変換
+	pos = Vector3::TransformCoord(pos, view);
+	pos = Vector3::TransformCoord(pos, proj);
 
+	// ビューポート取得
 	ID3D11DeviceContext* context = FRAMEWORK.GetContext();
 	D3D11_VIEWPORT vp;
 	UINT numViewport = 1;
 	context->RSGetViewports(&numViewport, &vp);
 
-	// スクリーン変換
-	Vector2 ret;
-	ret.x = (pos.m128_f32[0] + 1.0f) / 2.0f * vp.Width;
-	ret.y = (pos.m128_f32[1] - 1.0f) / 2.0f * -1.0f * vp.Height;
+	// ビューポート行列作成
+	float w = vp.Width * 0.5f;
+	float h = vp.Height * 0.5f;
+	Matrix viewport;
+	viewport._11 = w; viewport._12 = 0;  viewport._13 = 0; viewport._14 = 0;
+	viewport._21 = 0; viewport._22 = -h; viewport._23 = 0; viewport._24 = 0;
+	viewport._31 = 0; viewport._32 = 0;  viewport._33 = 1; viewport._34 = 0;
+	viewport._41 = w; viewport._42 = h;  viewport._43 = 0; viewport._44 = 1;
 
-	return ret;
+	// スクリーン座標変換
+	pos = Vector3::TransformCoord(pos, viewport);
+	return Vector2(pos.x, pos.y);
 }
-
-
-
-//---------------------------------------------------
-// Matrix
-//---------------------------------------------------
-void Matrix::Identity()
-{
-	_11 = 1; _12 = 0; _13 = 0; _14 = 0;
-	_21 = 0; _22 = 1; _23 = 0; _24 = 0;
-	_31 = 0; _32 = 0; _33 = 1; _34 = 0;
-	_41 = 0; _42 = 0; _43 = 0; _44 = 1;
-}
-
-void Matrix::Multiply(const Matrix& mat1, const Matrix& mat2)
-{
-	_11 = mat1._11 * mat2._11 + mat1._12 * mat2._21 + mat1._13 * mat2._31 + mat1._14 * mat2._41;
-	_12 = mat1._11 * mat2._12 + mat1._12 * mat2._22 + mat1._13 * mat2._32 + mat1._14 * mat2._42;
-	_13 = mat1._11 * mat2._13 + mat1._12 * mat2._23 + mat1._13 * mat2._33 + mat1._14 * mat2._43;
-	_14 = mat1._11 * mat2._14 + mat1._12 * mat2._24 + mat1._13 * mat2._34 + mat1._14 * mat2._44;
-
-	_21 = mat1._21 * mat2._11 + mat1._22 * mat2._21 + mat1._23 * mat2._31 + mat1._24 * mat2._41;
-	_22 = mat1._21 * mat2._12 + mat1._22 * mat2._22 + mat1._23 * mat2._32 + mat1._24 * mat2._42;
-	_23 = mat1._21 * mat2._13 + mat1._22 * mat2._23 + mat1._23 * mat2._33 + mat1._24 * mat2._43;
-	_24 = mat1._21 * mat2._14 + mat1._22 * mat2._24 + mat1._23 * mat2._34 + mat1._24 * mat2._44;
-
-	_31 = mat1._31 * mat2._11 + mat1._32 * mat2._21 + mat1._33 * mat2._31 + mat1._34 * mat2._41;
-	_32 = mat1._31 * mat2._12 + mat1._32 * mat2._22 + mat1._33 * mat2._32 + mat1._34 * mat2._42;
-	_33 = mat1._31 * mat2._13 + mat1._32 * mat2._23 + mat1._33 * mat2._33 + mat1._34 * mat2._43;
-	_34 = mat1._31 * mat2._14 + mat1._32 * mat2._24 + mat1._33 * mat2._34 + mat1._34 * mat2._44;
-
-	_41 = mat1._41 * mat2._11 + mat1._42 * mat2._21 + mat1._43 * mat2._31 + mat1._44 * mat2._41;
-	_42 = mat1._41 * mat2._12 + mat1._42 * mat2._22 + mat1._43 * mat2._32 + mat1._44 * mat2._42;
-	_43 = mat1._41 * mat2._13 + mat1._42 * mat2._23 + mat1._43 * mat2._33 + mat1._44 * mat2._43;
-	_44 = mat1._41 * mat2._14 + mat1._42 * mat2._24 + mat1._43 * mat2._34 + mat1._44 * mat2._44;
-}
-
-void Matrix::Multiply(float val)
-{
-	_11 *= val; _12 *= val; _13 *= val; _14 *= val;
-	_21 *= val; _22 *= val; _23 *= val; _24 *= val;
-	_31 *= val; _32 *= val; _33 *= val; _34 *= val;
-	_41 *= val; _42 *= val; _43 *= val; _44 *= val;
-}
-
-void Matrix::Inverse()
-{
-	Matrix m;
-	m._11 = _22 * (_33 * _44 - _34 * _43) + _23 * (_34 * _42 - _32 * _44) + _24 * (_32 * _43 - _33 * _42);
-	m._12 = _32 * (_43 * _14 - _44 * _13) + _33 * (_44 * _12 - _42 * _14) + _34 * (_42 * _13 - _43 * _12);
-	m._13 = _42 * (_13 * _24 - _14 * _23) + _43 * (_14 * _22 - _12 * _24) + _44 * (_12 * _23 - _13 * _22);
-	m._14 = _12 * (_23 * _34 - _24 * _33) + _13 * (_24 * _32 - _22 * _34) + _14 * (_22 * _33 - _23 * _32);
-
-	m._21 = _23 * (_34 * _41 - _31 * _44) + _24 * (_31 * _43 - _33 * _41) + _21 * (_33 * _44 - _34 * _43);
-	m._22 = _33 * (_44 * _11 - _41 * _14) + _34 * (_41 * _13 - _43 * _11) + _31 * (_43 * _14 - _44 * _13);
-	m._23 = _43 * (_14 * _21 - _11 * _24) + _44 * (_11 * _23 - _13 * _21) + _41 * (_13 * _24 - _14 * _23);
-	m._24 = _13 * (_24 * _31 - _21 * _34) + _14 * (_21 * _33 - _23 * _31) + _11 * (_23 * _34 - _24 * _33);
-
-	m._31 = _24 * (_31 * _42 - _32 * _41) + _21 * (_32 * _44 - _34 * _42) + _22 * (_34 * _41 - _31 * _44);
-	m._32 = _34 * (_41 * _12 - _42 * _11) + _31 * (_42 * _14 - _44 * _12) + _32 * (_44 * _11 - _41 * _14);
-	m._33 = _44 * (_11 * _22 - _12 * _21) + _41 * (_12 * _24 - _14 * _22) + _42 * (_14 * _21 - _11 * _24);
-	m._34 = _14 * (_21 * _32 - _22 * _31) + _11 * (_22 * _34 - _24 * _32) + _12 * (_24 * _31 - _21 * _34);
-
-	m._41 = _21 * (_32 * _43 - _33 * _42) + _22 * (_33 * _41 - _31 * _43) + _23 * (_31 * _42 - _32 * _41);
-	m._42 = _31 * (_42 * _13 - _43 * _12) + _32 * (_43 * _11 - _41 * _13) + _33 * (_41 * _12 - _42 * _11);
-	m._43 = _41 * (_12 * _23 - _13 * _22) + _42 * (_13 * _21 - _11 * _23) + _43 * (_11 * _22 - _12 * _21);
-	m._44 = _11 * (_22 * _33 - _23 * _32) + _12 * (_23 * _31 - _21 * _33) + _13 * (_21 * _32 - _22 * _31);
-
-	float det = 1.0f / (_11 * m._11 + _21 * m._12 + _31 * m._13 + _41 * m._14);
-
-	_11 = m._11 * det;	_12 = m._12 * det;	_13 = m._13 * det;	_14 = m._14 * det;
-	_21 = m._21 * det;	_22 = m._22 * det;	_23 = m._23 * det;	_24 = m._24 * det;
-	_31 = m._31 * det;	_32 = m._32 * det;	_33 = m._33 * det;	_34 = m._34 * det;
-	_41 = m._41 * det;	_42 = m._42 * det;	_43 = m._43 * det;	_44 = m._44 * det;
-}
-

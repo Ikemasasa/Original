@@ -47,18 +47,14 @@ float4 PSMain(PSInput input) : SV_TARGET
 	float3 N = Normal.Sample(Sampler, input.tex).xyz;
 	N = N * 2.0 - 1.0;
 	N = normalize(N);
+
 	// ３軸（前、右、上）を行列化
-	float3 NN = normalize(input.normal);
-	float3 TT = normalize(input.tangent);
-	float3 BB = normalize(input.binormal);
-	float3x3 M;
-	M[0] = TT;
-	M[1] = BB;
-	M[2] = NN;
-	//// NormalMapを補正
-	N = mul(N, M);
-	//color.rgb = input.normal;
-	//return color;
+	// NormalMapを補正
+	float3x3 mat;
+	mat[0] = normalize(input.normal);
+	mat[1] = normalize(input.tangent);
+	mat[2] = normalize(input.binormal);
+	N = mul(N, mat);
 
 	//	ライティング
 	float3 L = normalize(LightDir).xyz;
@@ -69,16 +65,25 @@ float4 PSMain(PSInput input) : SV_TARGET
 	color.rgb *= LColor;
 
 	//// 影
-	//float2 shadowUV = input.shadowParam.xy;
-	//// Screen to UV
-	//shadowUV.y = -shadowUV.y;
-	//shadowUV = shadowUV * 0.5 + 0.5;
-	//
-	//float d = ShadowMap.Sample(Sampler, shadowUV).r; // 光に一番近い距離(g, b でも一緒)
-	//if (d + 0.003 < input.shadowParam.z)
-	//{
-	//	color.rgb *= 0.7;
-	//}
+	{
+		float2 shadowUV = input.shadowParam.xy;
+		// shadowParam(-1 ~ 1)をUV座標(0 ~ 1)に変換
+		shadowUV.y = -shadowUV.y;
+		shadowUV = shadowUV * 0.5 + 0.5;
+
+		// 最大深度傾斜を求める
+		float maxDepthSlope = max(abs(ddx(input.shadowParam.z)), abs(ddy(input.shadowParam.z)));
+
+		float bias = 0.00035; // 固定バイアス
+		float slopeScaledBias = 0.001; // 深度傾斜
+		float depthBiasClamp = 0.1;  // バイアスクランプ値
+		float shadowBias = bias + slopeScaledBias * maxDepthSlope;
+		shadowBias = min(shadowBias, depthBiasClamp);
+
+		float minShadowColor = 0.5;
+		color.rgb *= GetVSMFactor(shadowUV, input.shadowParam.z - shadowBias, minShadowColor);
+
+	}
 
 	//color.rgb = input.normal;
 	return color;

@@ -3,6 +3,7 @@
 
 // staticÉÅÉìÉoïœêî
 ID3D11BlendState* Blend::mBlendState[Blend::MODE_MAX] = {};
+Blend::BLEND_MODE Blend::mMode = Blend::NONE;
 
 HRESULT Blend::Init(ID3D11Device * device)
 {
@@ -45,7 +46,6 @@ HRESULT Blend::Init(ID3D11Device * device)
             blendDesc.RenderTarget[0].SrcBlendAlpha  = D3D11_BLEND_ZERO;
             blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
             blendDesc.RenderTarget[0].BlendOpAlpha   = D3D11_BLEND_OP_ADD;
-
             break;
 
         case PMA:
@@ -80,7 +80,9 @@ void Blend::Release()
 
 void Blend::Set(BLEND_MODE mode)
 {
+    if (mode == mMode) return;
     if (mode < NONE || mode >= MODE_MAX) return;
 
-    FRAMEWORK.GetContext()->OMSetBlendState(mBlendState[mode], nullptr, 0xffffffff);
+    mMode = mode;
+    FRAMEWORK.GetContext()->OMSetBlendState(mBlendState[mMode], nullptr, 0xffffffff);
 }

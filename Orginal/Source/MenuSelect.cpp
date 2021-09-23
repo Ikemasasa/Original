@@ -39,7 +39,7 @@ MenuSelect::Select MenuSelect::Update(PlayerManager* plm)
 
     // CharacterHealthì¬
     std::vector<Status> statusArray;
-    for (int i = 0; i < plm->GetNum(); ++i)
+    for (size_t i = 0; i < plm->GetNum(); ++i)
     {
         int charaID = plm->GetPlayer(i)->GetCharaID();
         Status status = StatusData::GetPLStatus(charaID);

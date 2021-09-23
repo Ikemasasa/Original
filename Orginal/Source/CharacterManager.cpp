@@ -51,19 +51,24 @@ void CharacterManager::Update()
 	mNPCTalk->Update();
 }
 
-void CharacterManager::Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir)
+void CharacterManager::Render(const Matrix& view, const Matrix& proj, const Vector4& lightDir)
 {
-	mPlayerManager->Render(view, projection, lightDir);
-	mEnemyManager->Render(view, projection, lightDir);
-	mNPCManager->Render(view, projection, lightDir);
-	mNPCTalk->Render();
+	mPlayerManager->Render(view, proj, lightDir);
+	mEnemyManager->Render(view, proj, lightDir);
+	mNPCManager->Render(view, proj, lightDir);
 }
 
-void CharacterManager::Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir)
+void CharacterManager::Render(const Shader* shader, const Matrix& view, const Matrix& proj, const Vector4& lightDir)
 {
-	mPlayerManager->Render(shader, view, projection, lightDir);
-	mEnemyManager->Render(shader, view, projection, lightDir);
-	mNPCManager->Render(shader, view, projection, lightDir);
+	mPlayerManager->Render(shader, view, proj, lightDir);
+	mEnemyManager->Render(shader, view, proj, lightDir);
+	mNPCManager->Render(shader, view, proj, lightDir);
+}
+
+void CharacterManager::RenderUI()
+{
+	mNPCManager->RenderUI();
+	mNPCTalk->Render();
 }
 
 void CharacterManager::CollideNPC()
@@ -72,7 +77,7 @@ void CharacterManager::CollideNPC()
 	Player* player = mPlayerManager->GetMovePlayer();
 	CAPSULE plCapsule = player->GetCapsule();
 	Vector3 plFront(sinf(player->GetAngle().y), 0.0f, cosf(player->GetAngle().y));
-	for (int i = 0; i < mNPCManager->GetNum(); ++i)
+	for (size_t i = 0; i < mNPCManager->GetNum(); ++i)
 	{
 		NPC* npc = mNPCManager->GetNPC(i);
 		if (Collision::ColCapsules(npc->GetCapsule(), plCapsule))

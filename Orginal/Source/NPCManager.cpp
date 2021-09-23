@@ -22,12 +22,23 @@ void NPCManager::Update()
 	for (auto& npc : mNPCs) npc->Update();
 }
 
-void NPCManager::Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj, const DirectX::XMFLOAT4& lightDir)
+void NPCManager::Render(const Matrix& view, const Matrix& proj, const Vector4& lightDir)
 {
 	for (auto& npc : mNPCs)
 	{
 		npc->Render(view, proj, lightDir);
+	}
+}
 
+void NPCManager::Render(const Shader* shader, const Matrix& view, const Matrix& proj, const Vector4& lightDir)
+{
+	for (auto& npc : mNPCs) npc->Render(shader, view, proj, lightDir);
+}
+
+void NPCManager::RenderUI()
+{
+	for (auto& npc : mNPCs)
+	{
 		Vector3 dist = mPlayerPos - npc->GetPos();
 		if (dist.LengthSq() < (ICON_RENDER_DIST * ICON_RENDER_DIST))
 		{
@@ -43,11 +54,6 @@ void NPCManager::Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4
 			mTalkIcon->Render(pos, Vector2(scale, scale), Vector2::ZERO, mTalkIcon->GetSize(), center);
 		}
 	}
-}
-
-void NPCManager::Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj, const DirectX::XMFLOAT4& lightDir)
-{
-	for (auto& npc : mNPCs) npc->Render(shader, view, proj, lightDir);
 }
 
 void NPCManager::Release()

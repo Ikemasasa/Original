@@ -16,15 +16,12 @@ void RenderTarget::Initialize(float width, float height, DXGI_FORMAT format)
 		height = Window::GetInstance().GetHeight();
 	}
 
-	// サイズ保存
-	mSize = Vector2(width, height);
-
 	{
 		// レンダーターゲット設定
 		D3D11_TEXTURE2D_DESC td;
 		ZeroMemory(&td, sizeof(D3D11_TEXTURE2D_DESC));
-		td.Width = static_cast<UINT>(mSize.x);
-		td.Height = static_cast<UINT>(mSize.y);
+		td.Width = static_cast<UINT>(width);
+		td.Height = static_cast<UINT>(height);
 		td.MipLevels = 1;
 		td.ArraySize = 1;
 		td.Format = format;
@@ -37,7 +34,7 @@ void RenderTarget::Initialize(float width, float height, DXGI_FORMAT format)
 		// テクスチャ生成
 		HRESULT hr = device->CreateTexture2D(&td, NULL, mRTTexture.GetAddressOf());
 		if (FAILED(hr)) return;
-		
+
 		//	レンダーターゲットビュー
 		D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
 		ZeroMemory(&rtvDesc, sizeof(D3D11_RENDER_TARGET_VIEW_DESC));
@@ -60,8 +57,8 @@ void RenderTarget::Initialize(float width, float height, DXGI_FORMAT format)
 		// 深度ステンシル設定
 		D3D11_TEXTURE2D_DESC td;
 		ZeroMemory(&td, sizeof(D3D11_TEXTURE2D_DESC));
-		td.Width = static_cast<UINT>(mSize.x);
-		td.Height = static_cast<UINT>(mSize.y);
+		td.Width = static_cast<UINT>(width);
+		td.Height = static_cast<UINT>(height);
 		td.MipLevels = 1;
 		td.ArraySize = 1;
 		td.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -89,17 +86,21 @@ void RenderTarget::Initialize(float width, float height, DXGI_FORMAT format)
 	}
 }
 
-void RenderTarget::Activate(UINT textureSlot)
+void RenderTarget::Activate()
 {
 	ID3D11DeviceContext* context = FRAMEWORK.GetContext();
 
 	// ダミーSRVをセット(エラー対策)
-	ID3D11ShaderResourceView* dummy = nullptr;
-	context->PSSetShaderResources(textureSlot, 1, &dummy);
+	if (mTextureSlot != -1)
+	{
+		ID3D11ShaderResourceView* dummy = nullptr;
+		context->PSSetShaderResources(mTextureSlot, 1, &dummy);
+		mTextureSlot = -1;
+	}
 
 
 	// レンダーターゲットビュー設定
-	float clearColor[4] = { 0,0,0,0 };
+	float clearColor[4] = { 0, 0, 0, 1 };
 	if (mRTV.Get()) context->ClearRenderTargetView(mRTV.Get(), clearColor);
 	if (mDSV.Get()) context->ClearDepthStencilView(mDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
@@ -117,10 +118,14 @@ void RenderTarget::Activate(UINT textureSlot)
 	}
 
 
+	// ターゲットサイズ取得
+	D3D11_TEXTURE2D_DESC desc = {};
+	mRTTexture->GetDesc(&desc);
+
 	// ビューポート設定
 	D3D11_VIEWPORT viewport;
-	viewport.Width = mSize.x;
-	viewport.Height = mSize.y;
+	viewport.Width = desc.Width;
+	viewport.Height = desc.Height;
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
 	viewport.TopLeftX = 0;
@@ -128,10 +133,9 @@ void RenderTarget::Activate(UINT textureSlot)
 	context->RSSetViewports(1, &viewport);
 }
 
-void RenderTarget::Deactivate(UINT textureSlot)
+void RenderTarget::Deactivate()
 {
 	FRAMEWORK.SetRenderTarget();
-	FRAMEWORK.GetContext()->PSSetShaderResources(textureSlot, 1, mSRV.GetAddressOf());
 }
 
 void RenderTarget::Render(Shader* shader) const
@@ -139,15 +143,19 @@ void RenderTarget::Render(Shader* shader) const
 	ID3D11DeviceContext* context = FRAMEWORK.GetContext();
 
 	{
+		// ターゲットサイズ取得
+		D3D11_TEXTURE2D_DESC desc = {};
+		mRTTexture->GetDesc(&desc);
+
 		// 描画
 		UINT num = 1;
 		D3D11_VIEWPORT vp;
 		context->RSGetViewports(&num, &vp);
-		
+
 		Vector2 pos(0.0f, 0.0f);
-		Vector2 scale(1.0f, 1.0f);
+		Vector2 scale(vp.Width / desc.Width, vp.Height / desc.Height);
 		Vector2 texPos(0.0f, 0.0f);
-		Vector2 size(vp.Width, vp.Height);
+		Vector2 size(desc.Width, desc.Height);
 
 		if(shader) Renderer2D::GetInstance().Render(mSRV.Get(), shader, pos, scale, texPos, size);
 		else	   Renderer2D::GetInstance().Render(mSRV.Get(), pos, scale, texPos, size);
@@ -156,7 +164,8 @@ void RenderTarget::Render(Shader* shader) const
 
 void RenderTarget::SetTexture(UINT slot)
 {
-	FRAMEWORK.GetContext()->PSSetShaderResources(slot, 1, mSRV.GetAddressOf());
+	mTextureSlot = slot;
+	FRAMEWORK.GetContext()->PSSetShaderResources(mTextureSlot, 1, mSRV.GetAddressOf());
 }
 
 void RenderTarget::CreateDSV(float width, float height, DXGI_FORMAT format)
@@ -202,7 +211,18 @@ void RenderTarget::CreateDSV(float width, float height, DXGI_FORMAT format)
 		srvd.Texture2D.MipLevels = 1;
 		device->CreateShaderResourceView(mDepth.Get(), &srvd, mSRV.GetAddressOf());
 	}
+}
 
+void RenderTarget::CreateDSResourceView()
+{
+	D3D11_TEXTURE2D_DESC desc = {};
+	mDepth->GetDesc(&desc);
 
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
+	ZeroMemory(&srvd, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
+	srvd.Format = desc.Format;
+	srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srvd.Texture2D.MipLevels = 1;
+	FRAMEWORK.GetDevice()->CreateShaderResourceView(mDepth.Get(), &srvd, mDSResourceView.GetAddressOf());
 }
 

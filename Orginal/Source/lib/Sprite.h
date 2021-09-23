@@ -10,8 +10,12 @@ class Sprite
 	ID3D11ShaderResourceView* mSRV						    = nullptr;
 	D3D11_TEXTURE2D_DESC mDesc = {};
 
+
+private:
+
+
 public:
-	Sprite() = default;
+	Sprite();
 	Sprite(const wchar_t* filename);
 	~Sprite();
 

@@ -18,7 +18,7 @@ public:
 	static constexpr float TALK_DOT = 0.8f;
 
 private:
-	static constexpr float ICON_RENDER_DIST = 30.0f;
+	static constexpr float ICON_RENDER_DIST = 18.0f;
 	static constexpr float ICON_SCALE = 0.125f;
 
 
@@ -32,8 +32,9 @@ public:
 
 	void Initialize();
 	void Update();
-	void Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj, const DirectX::XMFLOAT4& lightDir);
-	void Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj, const DirectX::XMFLOAT4& lightDir);
+	void Render(const Matrix& view, const Matrix& projection, const Vector4& lightDir);
+	void Render(const Shader* shader, const Matrix& view, const Matrix& projection, const Vector4& lightDir);
+	void RenderUI();
 	void Release();
 
 	void Create(const int charaID);

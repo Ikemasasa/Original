@@ -23,17 +23,16 @@ void ShadowMap::Initialize()
 	// バッファ作成
 	mShadowMap.Initialize(SHADOWMAP_X, SHADOWMAP_Y, DXGI_FORMAT_R16G16_FLOAT);
 	mVarianceShadowMap.Initialize(SHADOWMAP_X, SHADOWMAP_Y, DXGI_FORMAT_R16G16_FLOAT);
-	//mShadowMap.CreateDSV(SHADOWMAP_X, SHADOWMAP_Y, DXGI_FORMAT_R24G8_TYPELESS);
 
-	mGaussianBlur.Initialize(Vector2(SHADOWMAP_X, SHADOWMAP_Y), BLUR_STRENGTH);
+	mGaussianBlur.Initialize(Vector2(SHADOWMAP_X, SHADOWMAP_Y), DXGI_FORMAT_R16G16_FLOAT, BLUR_STRENGTH);
 
 	mTarget = Vector3::ZERO;
 }
 
-void ShadowMap::Activate(const DirectX::XMFLOAT4& lightDir, int textureSlot)
+void ShadowMap::Activate(const Vector4& lightDir)
 {
 	// レンダーターゲット有効化
-	mShadowMap.Activate(textureSlot);
+	mShadowMap.Activate();
 
 
 	ID3D11DeviceContext* context = FRAMEWORK.GetContext();
@@ -65,18 +64,26 @@ void ShadowMap::Activate(const DirectX::XMFLOAT4& lightDir, int textureSlot)
 		mConstBuffer.Update(&cb);
 
 		// セット
-		mConstBuffer.Set(1);
+		mConstBuffer.Set(5);
 	}
 }
 
-void ShadowMap::Deactivate(int textureSlot)
+void ShadowMap::Deactivate()
 {
 	// シャドウマップをもとにVSMを作る
 	
 	// VSMにシャドウマップにブラーをかけたものをレンダーする
 	mShadowMap.Deactivate();
+	mShadowMap.SetTexture(0);
+	mGaussianBlur.Blur(&mShadowMap);
 
 	mVarianceShadowMap.Activate();
-	mGaussianBlur.Blur(&mShadowMap);
-	mVarianceShadowMap.Deactivate(textureSlot);
+	mGaussianBlur.Render();
+	mVarianceShadowMap.Deactivate();
 }
+
+void ShadowMap::SetTexture(UINT textureSlot)
+{
+	mVarianceShadowMap.SetTexture(textureSlot);
+}
+

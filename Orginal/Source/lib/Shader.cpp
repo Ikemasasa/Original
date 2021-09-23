@@ -21,8 +21,8 @@ bool Shader::Load(LPCWSTR filename, LPCSTR VSFunc, LPCSTR PSFunc, D3D11_INPUT_EL
 		numElements = elementDescNum;
 	}
 
-	LPCSTR vsShaderModel = "vs_4_0";
-	LPCSTR psShaderModel = "ps_4_0";
+	LPCSTR vsShaderModel = "vs_5_0";
+	LPCSTR psShaderModel = "ps_5_0";
 
 	bool check = false;
 	check = ResourceManager::mShaderManager.LoadVertexShader(filename, VSFunc, layout, numElements, &mVertexShader, &mVertexLayout, vsShaderModel);
@@ -45,8 +45,8 @@ bool Shader::Load2D(LPCWSTR filename, LPCSTR VSFunc, LPCSTR PSFunc)
 	};
 	UINT numElements = ARRAYSIZE(layout);
 
-	LPCSTR vsShaderModel = "vs_4_0";
-	LPCSTR psShaderModel = "ps_4_0";
+	LPCSTR vsShaderModel = "vs_5_0";
+	LPCSTR psShaderModel = "ps_5_0";
 
 	bool check = false;
 	check = ResourceManager::mShaderManager.LoadVertexShader(filename, VSFunc, layout, numElements, &mVertexShader, &mVertexLayout, vsShaderModel);
@@ -60,15 +60,15 @@ bool Shader::Load2D(LPCWSTR filename, LPCSTR VSFunc, LPCSTR PSFunc)
 
 bool Shader::LoadGS(LPCWSTR filename, LPCSTR GSFunc)
 {
-	LPCSTR shadermodel = "gs_4_0";
+	LPCSTR shadermodel = "gs_5_0";
 	return ResourceManager::mShaderManager.LoadGeometryShader(filename, GSFunc, &mGeometryShader, shadermodel);
 }
 
 void Shader::UnLoad()
 {
-	ResourceManager::mShaderManager.ReleaseVertexShader(mVertexShader, mVertexLayout);
-	ResourceManager::mShaderManager.ReleasePixelShader(mPixelShader);
-	ResourceManager::mShaderManager.ReleaseGeometryShader(mGeometryShader);
+	ResourceManager::mShaderManager.ReleaseVertexShader(&mVertexShader, &mVertexLayout);
+	ResourceManager::mShaderManager.ReleasePixelShader(&mPixelShader);
+	ResourceManager::mShaderManager.ReleaseGeometryShader(&mGeometryShader);
 }
 
 void Shader::Activate() const

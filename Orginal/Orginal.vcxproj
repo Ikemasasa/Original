@@ -99,8 +99,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)Source\lib\DirectXTK\lib\Debug;$(ProjectDir)Source\lib\FBX SDK\lib\x86\debug;$(ProjectDir)Source\Effekseer/lib/Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d11.lib;d3dCompiler.lib;dxgi.lib;DirectXTK.lib;libfbxsdk-md.lib;winmm.lib;Effekseerd.lib;EffekseerRendererDX11d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)Source\lib\DirectXTK\lib\Debug;$(ProjectDir)Source\lib\FBX SDK\lib\x86\debug;$(ProjectDir)Source\Effekseer/lib/Debug;$(ProjectDir)Source\lib\DirectXTex\Lib\x86\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d11.lib;d3dCompiler.lib;dxgi.lib;DirectXTK.lib;libfbxsdk-md.lib;winmm.lib;Effekseerd.lib;EffekseerRendererDX11d.lib;DirectXTexD.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -119,8 +119,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)Source\lib\DirectXTK\lib\Release;$(ProjectDir)Source\lib\FBX SDK\lib\x86\release;$(ProjectDir)Source\Effekseer\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;DirectXTK.lib;libfbxsdk-md.lib;Effekseer.lib;EffekseerRendererDX11.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)Source\lib\DirectXTK\lib\Release;$(ProjectDir)Source\lib\FBX SDK\lib\x86\release;$(ProjectDir)Source\Effekseer\lib\Release;$(ProjectDir)Source\lib\DirectXTex\Lib\x86\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;DirectXTK.lib;libfbxsdk-md.lib;Effekseer.lib;EffekseerRendererDX11.lib;DirectXTex.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -152,6 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Bloom.h" />
     <ClInclude Include="Source\BossEnemy.h" />
     <ClInclude Include="Source\BossEnemyBattle.h" />
     <ClInclude Include="Source\Character.h" />
@@ -175,7 +176,7 @@
     <ClInclude Include="Source\DecideSkill.h" />
     <ClInclude Include="Source\DamageCalculator.h" />
     <ClInclude Include="Source\DataBase.h" />
-    <ClInclude Include="Source\DeferredDirLight.h" />
+    <ClInclude Include="Source\DeferredRenderer.h" />
     <ClInclude Include="Source\DropData.h" />
     <ClInclude Include="Source\DropItemShower.h" />
     <ClInclude Include="Source\EffectManager.h" />
@@ -188,6 +189,7 @@
     <ClInclude Include="Source\FontValue.h" />
     <ClInclude Include="Source\GameManager.h" />
     <ClInclude Include="Source\GaussianBlur.h" />
+    <ClInclude Include="Source\GBuffer.h" />
     <ClInclude Include="Source\IBattleProduction.h" />
     <ClInclude Include="Source\IDecideCommand.h" />
     <ClInclude Include="Source\IFieldUseItemEffect.h" />
@@ -200,6 +202,7 @@
     <ClInclude Include="Source\lib\ConvertString.h" />
     <ClInclude Include="Source\lib\Audio.h" />
     <ClInclude Include="Source\lib\FontTexture.h" />
+    <ClInclude Include="Source\lib\Matrix.h" />
     <ClInclude Include="Source\lib\Random.h" />
     <ClInclude Include="Source\lib\RenderTarget.h" />
     <ClInclude Include="Source\lib\ResourceManager.h" />
@@ -274,6 +277,7 @@
     <ClInclude Include="Source\TurnManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Bloom.cpp" />
     <ClCompile Include="Source\BossEnemy.cpp" />
     <ClCompile Include="Source\BossEnemyBattle.cpp" />
     <ClCompile Include="Source\CharacterManager.cpp" />
@@ -299,6 +303,7 @@
     <ClCompile Include="Source\DecideSkill.cpp" />
     <ClCompile Include="Source\DamageCalculator.cpp" />
     <ClCompile Include="Source\DataBase.cpp" />
+    <ClCompile Include="Source\DeferredRenderer.cpp" />
     <ClCompile Include="Source\Define.cpp" />
     <ClCompile Include="Source\DropData.cpp" />
     <ClCompile Include="Source\DropItemShower.cpp" />
@@ -313,6 +318,7 @@
     <ClCompile Include="Source\FontValue.cpp" />
     <ClCompile Include="Source\GameManager.cpp" />
     <ClCompile Include="Source\GaussianBlur.cpp" />
+    <ClCompile Include="Source\GBuffer.cpp" />
     <ClCompile Include="Source\IBattleProduction.cpp" />
     <ClCompile Include="Source\IDecideCommand.cpp" />
     <ClCompile Include="Source\IFieldUseItemEffect.cpp" />
@@ -329,6 +335,7 @@
     <ClCompile Include="Source\lib\GeometricPrimitive.cpp" />
     <ClCompile Include="Source\lib\HighResolutionTimer.cpp" />
     <ClCompile Include="Source\lib\Math.cpp" />
+    <ClCompile Include="Source\lib\Matrix.cpp" />
     <ClCompile Include="Source\lib\ProcessMessage.cpp" />
     <ClCompile Include="Source\lib\Random.cpp" />
     <ClCompile Include="Source\lib\RenderTarget.cpp" />
@@ -452,6 +459,26 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\PointSprite.fx">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\DeferredPointLight.fx">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\FXAA.hlsl">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\Bloom.fx">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\DeferredSpotLight.fx">
       <FileType>Document</FileType>
     </None>
   </ItemGroup>

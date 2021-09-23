@@ -1,13 +1,14 @@
 #pragma once
-#include <DirectXMath.h>
 #include <vector>
 
 #include "EquipmentInventory.h"
 #include "Item.h"
 
 class CameraBase;
+class Matrix;
 class Player;
 class Shader;
+class Vector4;
 
 class PlayerManager
 {
@@ -40,8 +41,8 @@ public:
 
 	void Initialize();
 	void Update(const bool isTalking);
-	void Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj, const DirectX::XMFLOAT4& lightDir);
-	void Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj, const DirectX::XMFLOAT4& lightDir);
+	void Render(const Matrix& view, const Matrix& proj, const Vector4& lightDir);
+	void Render(const Shader* shader, const Matrix& view, const Matrix& proj, const Vector4& lightDir);
 
 	// ÉQÉbÉ^Å[
 	Player* GetMovePlayer() const { return mMovePlayer; }

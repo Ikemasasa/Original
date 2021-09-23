@@ -201,10 +201,7 @@ void SkinnedMesh::LoadFBX(ID3D11Device* device, const char* filename)
 				for (int i = 0; i < num; ++i)
 				{
 					auto& vertex = mVertices[i + mVerticesNum];
-					DirectX::XMVECTOR binormal = DirectX::XMVector3Cross(DirectX::XMLoadFloat3(&vertex.normal), DirectX::XMLoadFloat3(&vertex.tangent));
-					binormal = DirectX::XMVector3Normalize(binormal);
-
-					DirectX::XMStoreFloat3(&vertex.binormal, binormal);
+					vertex.binormal = Vector3::Cross(vertex.normal, vertex.tangent);
 				}
 			}
 
@@ -839,7 +836,7 @@ void SkinnedMesh::Initialize(const char* fbxFilename)
 	if (FAILED(hr)) return;
 }
 
-void SkinnedMesh::Render(const DirectX::XMFLOAT4X4& wvp, const DirectX::XMFLOAT4X4& world, const DirectX::XMFLOAT4& lightDirection, float elapsedTime, float alpha)
+void SkinnedMesh::Render(const Matrix& wvp, const Matrix& world, const Vector4& lightDir, float elapsedTime, float alpha)
 {
 	const auto& context = FRAMEWORK.GetContext();
 	UINT stride = sizeof(Vertex);
@@ -859,9 +856,9 @@ void SkinnedMesh::Render(const DirectX::XMFLOAT4X4& wvp, const DirectX::XMFLOAT4
 		}
 
 		Cbuffer cb;
-		DirectX::XMStoreFloat4x4(&cb.wvp,  DirectX::XMLoadFloat4x4(&wvp));
-		DirectX::XMStoreFloat4x4(&cb.world, DirectX::XMLoadFloat4x4(&world));
-		cb.lightDirection = lightDirection;
+		cb.wvp = wvp;
+		cb.world = world;
+		cb.lightDir = lightDir;
 		cb.materialColor = mMaterialColors[m];
 		context->UpdateSubresource(mConstBuffer.Get(), 0, NULL, &cb, 0, 0);
 		context->VSSetConstantBuffers(0, 1, mConstBuffer.GetAddressOf());
@@ -871,9 +868,14 @@ void SkinnedMesh::Render(const DirectX::XMFLOAT4X4& wvp, const DirectX::XMFLOAT4
 		context->DrawIndexed(mMaterials[m].faceNum * 3, start, 0);
 		start += mMaterials[m].faceNum * 3;
 	}
+
+	// CSでVBを使ってるのでリセット
+	stride = 0;
+	ID3D11Buffer* dummyVB = nullptr;
+	context->IASetVertexBuffers(0, 1, &dummyVB, &stride, &offset);
 }
 
-void SkinnedMesh::Render(const Shader* shader, const DirectX::XMFLOAT4X4& wvp, const DirectX::XMFLOAT4X4& world, const DirectX::XMFLOAT4& lightDirection, float elapsedTime, float alpha)
+void SkinnedMesh::Render(const Shader* shader, const Matrix& wvp, const Matrix& world, const Vector4& lightDir, float elapsedTime, float alpha)
 {
 	const auto& context = FRAMEWORK.GetContext();
 	UINT stride = sizeof(Vertex);
@@ -891,10 +893,11 @@ void SkinnedMesh::Render(const Shader* shader, const DirectX::XMFLOAT4X4& wvp, c
 		{
 			mMaterials[m].mtlSpr[i].sprite.Set(i);
 		}
+
 		Cbuffer cb;
-		DirectX::XMStoreFloat4x4(&cb.wvp, DirectX::XMLoadFloat4x4(&wvp));
-		DirectX::XMStoreFloat4x4(&cb.world, DirectX::XMLoadFloat4x4(&world));
-		cb.lightDirection = lightDirection;
+		cb.wvp = wvp;
+		cb.world = world;
+		cb.lightDir = lightDir;
 		cb.materialColor = mMaterialColors[m];
 		context->UpdateSubresource(mConstBuffer.Get(), 0, NULL, &cb, 0, 0);
 		context->VSSetConstantBuffers(0, 1, mConstBuffer.GetAddressOf());

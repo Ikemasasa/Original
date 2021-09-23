@@ -16,8 +16,8 @@ DropItemShower::DropItemShower()
 
 void DropItemShower::Add(const int dropItemID, const Vector3& dropCharaPos)
 {
-	DirectX::XMFLOAT4X4 view = Singleton<CameraManager>().GetInstance().GetView();
-	DirectX::XMFLOAT4X4 proj = Singleton<CameraManager>().GetInstance().GetProj();
+	Matrix view = Singleton<CameraManager>().GetInstance().GetView();
+	Matrix proj = Singleton<CameraManager>().GetInstance().GetProj();
 	Vector2 pos = dropCharaPos.WorldToScreen(view, proj);
 
 	Data data = { dropItemID, pos, 0.0f , ALPHA_ADD, 0.0f, true};

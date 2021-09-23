@@ -8,6 +8,7 @@
 #include "CameraBattle.h"
 #include "CameraManager.h"
 #include "DataBase.h"
+#include "Define.h"
 #include "EffectManager.h"
 #include "Enemy.h"
 #include "Fade.h"
@@ -23,9 +24,7 @@
 SceneBattle::SceneBattle(PlayerManager* plm, Enemy* enemy)
 {
 	// SceneBaseの各種初期化
-	mShadowMap.Initialize();
-	mSceneTarget.Initialize();
-	CreatePostEffectShader();
+	CreateBaseAll();
 
 	// SceneBattleの各種初期化
 	BattleState::CreateInst();
@@ -63,9 +62,11 @@ SceneBattle::~SceneBattle()
 
 void SceneBattle::Initialize()
 {
+	InitializeBaseAll();
+
 	Singleton<CameraManager>().GetInstance().Push(std::make_shared<CameraBattle>());
 
-	mSkybox->Initialize(L"Data/Image/sky.png");
+	mSkybox->Initialize(L"Data/Image/environment.hdr");
 	mTerrain->Initialize();
 	mBattleCharacterManager->Initialize();
 	mTurnManager->Initialize(mBattleCharacterManager->GetBCharacters());
@@ -137,7 +138,7 @@ void SceneBattle::Update()
 				mHitEnemy->SetExist(false);
 
 				// 戦闘後のステータス、インベントリを更新
-				for (int i = 0; i < mPlayerManager->GetNum(); ++i)
+				for (size_t i = 0; i < mPlayerManager->GetNum(); ++i)
 				{
 					BattleCharacter* pl = mBattleCharacterManager->GetChara(i);
 					pl->GetStatus()->ResetBuff(); // バフ消去
@@ -177,27 +178,69 @@ void SceneBattle::Update()
 
 void SceneBattle::Render()
 {
-	DirectX::XMFLOAT4X4 view = Singleton<CameraManager>().GetInstance().GetView();
-	DirectX::XMFLOAT4X4 projection = Singleton<CameraManager>().GetInstance().GetProj();
-	DirectX::XMFLOAT4 lightDir = mLight.GetLightDir();
+	Matrix view = Singleton<CameraManager>().GetInstance().GetView();
+	Matrix proj = Singleton<CameraManager>().GetInstance().GetProj();
+	Vector4 lightDir = mLight.GetLightDir();
 
 	// シャドウマップ
-	mShadowMap.Activate(lightDir, SHADOWMAP_TEXTURE_SLOT);
-	mTerrain->Render(mShadowMap.GetShader(), view, projection, lightDir);
-	mBattleCharacterManager->Render(mShadowMap.GetShader(), view, projection, lightDir);
-	mShadowMap.Deactivate(SHADOWMAP_TEXTURE_SLOT);
+	const Shader* shader = mShadowMap->GetShader();
+	mShadowMap->Activate(lightDir);
+	mTerrain->Render(shader, view, proj, lightDir);
+	mBattleCharacterManager->Render(shader, view, proj, lightDir);
+	mShadowMap->Deactivate();
 
-	// シーンターゲット
-	mSceneTarget.Activate();
-	mSkybox->Render(view, projection);
-	mTerrain->Render(view, projection, lightDir);
-	mBattleCharacterManager->Render(view, projection, lightDir);
-	Singleton<EffectManager>().GetInstance().Render(view, projection);
+	// GBufferに書き込み
+	shader = mDeferredRenderer->GetGBufferShader();
+	mDeferredRenderer->ActivateGBuffer();
+	mSkybox->Render(view, proj);
+	mTerrain->Render(shader, view, proj, lightDir);
+	mBattleCharacterManager->Render(shader, view, proj, lightDir);
+	mDeferredRenderer->DeactivateGBuffer();
+
+	// テクスチャセット(Gbuffer, 環境, 影
+	mDeferredRenderer->SetGBufferTexture();
+	mSkybox->SetEnvTexture(Define::ENVIRONMENT_TEXTURE_SLOT);
+	mShadowMap->SetTexture(Define::SHADOWMAP_TEXTURE_SLOT);
+
+	// ディファードのライト用意(後々外部から入力したい
+	//// ライトクリア
+	mDeferredRenderer->ClearLight();
+	//// DirLight
+	std::vector<DeferredRenderer::DirLight> dirLights;
+	DeferredRenderer::DirLight dirLight;
+	dirLight.dir = lightDir;
+	dirLight.color = mLight.GetLightColor();
+	dirLights.push_back(dirLight);
+	mDeferredRenderer->SetDirLight(dirLights);
+
+	// SpotLight
+	std::vector<DeferredRenderer::SpotLightArgu> spotLights;
+	DeferredRenderer::SpotLightArgu sl;
+	sl.pos = Vector3(0.0f, 30.0f, 0.0f);
+	sl.target = Vector3(0.0f, 0.0f, 0.0f);
+	sl.rgb = Vector3(0.15f, 0.15f, 0.15f);
+	sl.inner = 30.0f;
+	sl.outer = 45.0f;
+	spotLights.emplace_back(sl);
+	mDeferredRenderer->SetSpotLight(spotLights);
+
+
+	Vector4 eyePos = Vector4(Singleton<CameraManager>().GetInstance().GetPos(), 1.0f);
+	mDeferredRenderer->SetCBPerFrame(eyePos);
+
+	// ディファードレンダリング
+	//// シーンターゲット
+	mSceneTarget->Activate();
+	mDeferredRenderer->Render();
+	// ブルーム作成、適用
+	mBloom->Execute(mSceneTarget.get());
+	Singleton<EffectManager>().GetInstance().Render(view, proj);
 	mTurnManager->Render();
-	mSelectOptions->Render(Vector2(OPTIONS_X, OPTIONS_Y));
-	mSceneTarget.Deactivate();
+	mBattleCharacterManager->RenderUI();
+	mSceneTarget->Deactivate();
 
-	mSceneTarget.Render(mPostEffect.get());
+	// バックバッファに結果を描画
+	mSceneTarget->Render(mPostEffect.get());
 }
 
 void SceneBattle::Release()
@@ -205,8 +248,6 @@ void SceneBattle::Release()
 	Singleton<CameraManager>().GetInstance().Pop();
 	BattleState::DestroyInst();
 
-	// BGMストップ、フィールドBGM再生
-	//Audio::MusicStop((int)mResultMusic);
-	//Audio::MusicStop((int)mBattleMusic);
+	// フィールドBGM再生
 	Audio::MusicPlay((int)Music::FIELD_REMAINS);
 }

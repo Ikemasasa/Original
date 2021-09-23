@@ -4,4 +4,5 @@
 namespace ConvertString
 {
 	std::wstring ConvertToWstirng(const std::string& str);
+	std::string ConvertToStirng(const std::wstring& str);
 }

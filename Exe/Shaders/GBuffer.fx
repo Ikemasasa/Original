@@ -57,14 +57,11 @@ PSOutput PSMain(PSInput input)
 		N = normalize(N);
 
 		// ３軸（前、右、上）を行列化
-		float3 NN = normalize(input.wNormal);
-		float3 TT = normalize(input.wTangent);
-		float3 BB = normalize(input.wBinormal);
-		float3x3 M;
-		M[0] = TT;
-		M[1] = BB;
-		M[2] = NN;
-		N = mul(N, M); // NormalMapを補正
+		float3x3 mat;
+		mat[0] = normalize(input.wTangent);
+		mat[1] = normalize(input.wBinormal);
+		mat[2] = normalize(input.wNormal);
+		N = mul(N, mat); // NormalMapを補正
 	}
 
 	PSOutput ret;

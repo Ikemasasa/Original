@@ -2,11 +2,10 @@
 
 cbuffer CBSky : register(b0)
 {
-	float4 EyePos;
+	float4 EyePosSky;
 	matrix InverseView;
 	matrix InverseProj;
 };
-
 
 struct PSInput
 {
@@ -21,6 +20,9 @@ float2 EquirectangularProjection(float3 v)
 	float2 tex;
 	tex.x = 1.0 - ((1.0 / (2 * PI)) * atan2(v.z, v.x) + 0.5);
 	tex.y = -(1.0 / PI) * atan2(v.y, length(v.xz)) + 0.5;
+
+	tex.x = saturate(tex.x);
+	tex.y = saturate(tex.y);
 	return tex;
 }
 
@@ -40,6 +42,10 @@ PSInput VSMain( VSInput2D input )
 float4 PSMain(PSInput input) : SV_TARGET0
 {
 	// 視線ベクトル算出
-	float3 E = normalize(input.worldPos.xyz - EyePos.xyz);
-	return Diffuse.Sample(Sampler, EquirectangularProjection(E));
+	float3 E = normalize(input.worldPos.xyz - EyePosSky.xyz);
+	float4 color = Diffuse.Sample(Sampler, EquirectangularProjection(E));
+	color.rgb *= 0.05;
+	color.rgb = color.rgb / (1.0 + color.rgb);
+
+	return color;
 }

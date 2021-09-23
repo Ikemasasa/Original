@@ -99,10 +99,18 @@ void BattleCharacterManager::Update(const TurnManager* turnManager)
 	mDropItemShower.Update();
 }
 
-void BattleCharacterManager::Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir)
+void BattleCharacterManager::Render(const Matrix& view, const Matrix& proj, const Vector4& lightDir)
 {
-	for (auto& ba : mBCharacters) ba->Render(view, projection, lightDir);
+	for (auto& ba : mBCharacters) ba->Render(view, proj, lightDir);
+}
 
+void BattleCharacterManager::Render(const Shader* shader, const Matrix& view, const Matrix& projection, const Vector4& lightDir)
+{
+	for (auto& ba : mBCharacters) ba->Render(shader, view, projection, lightDir);
+}
+
+void BattleCharacterManager::RenderUI()
+{
 	// ƒŠƒUƒ‹ƒg‚¶‚á‚È‚¢‚È‚çUIÄ¶‚ð•\Ž¦
 	if (!BattleState::GetInstance().CheckState(BattleState::State::RESULT))
 	{
@@ -111,11 +119,6 @@ void BattleCharacterManager::Render(const DirectX::XMFLOAT4X4& view, const Direc
 	}
 
 	mDropItemShower.Render();
-}
-
-void BattleCharacterManager::Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir)
-{
-	for (auto& ba : mBCharacters) ba->Render(shader, view, projection, lightDir);
 }
 
 void BattleCharacterManager::PlayerCreateAndRegister(Player* pl)
