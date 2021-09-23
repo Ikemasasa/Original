@@ -10,8 +10,10 @@
 
 #include "CollisionStructs.h"
 #include "ComputeShader.h"
+#include "Matrix.h"
 #include "Shader.h"
 #include "Sprite.h"
+#include "Vector.h"
 
 // いつかモーションの部分を別クラスにしたい
 
@@ -43,10 +45,10 @@ private:
 
 	struct Cbuffer
 	{
-		DirectX::XMFLOAT4X4 wvp; // ワールド・ビュー・プロジェクション合成行列
-		DirectX::XMFLOAT4X4 world;				   // ワールド変換行列
-		DirectX::XMFLOAT4 lightDirection;		   // ライト進行方向
-		DirectX::XMFLOAT4 materialColor;
+		Matrix wvp;		       // ワールド・ビュー・プロジェクション合成行列
+		Matrix world;		   // ワールド変換行列
+		Vector4 lightDir;	   // ライト方向
+		Vector4 materialColor;
 	};
 
 	struct CbufferForSkinning
@@ -59,18 +61,18 @@ private:
 
 	struct Vertex
 	{
-		DirectX::XMFLOAT3 pos = {};
-		DirectX::XMFLOAT3 normal = {};
-		DirectX::XMFLOAT2 tex = {};
-		DirectX::XMFLOAT4 color = {};
-		DirectX::XMFLOAT3 tangent = {  };
-		DirectX::XMFLOAT3 binormal = { };
+		Vector3 pos = {};
+		Vector3 normal = {};
+		Vector2 tex = {};
+		Vector4 color = {};
+		Vector3 tangent = {  };
+		Vector3 binormal = { };
 	};
 
 	struct VertexForSkinning
 	{
-		DirectX::XMFLOAT3 pos = {};
-		DirectX::XMFLOAT3 normal = {};
+		Vector3 pos = {};
+		Vector3 normal = {};
 	};
 
 	struct MaterialSprite
@@ -166,22 +168,8 @@ public:
 	SkinnedMesh(const char* fbxFilename);
 	virtual ~SkinnedMesh();
 
-	void Render(
-		const DirectX::XMFLOAT4X4& wvp, // ワールド・ビュー・プロジェクション合成行列
-		const DirectX::XMFLOAT4X4& world, // ワールド変換行列
-		const DirectX::XMFLOAT4& lightDirection,	 // ライト進行方向
-		float elapsedTime,
-		float alpha = 1.0f
-	);
-
-	void Render(
-		const Shader* shader,
-		const DirectX::XMFLOAT4X4& wvp, // ワールド・ビュー・プロジェクション合成行列
-		const DirectX::XMFLOAT4X4& world, // ワールド変換行列
-		const DirectX::XMFLOAT4& lightDirection,	 // ライト進行方向
-		float elapsedTime,
-		float alpha = 1.0f
-	);
+	void Render(const Matrix& wvp, const Matrix& world, const Vector4& lightDir, float elapsedTime, float alpha = 1.0f);
+	void Render(const Shader* shader, const Matrix& wvp, const Matrix& world, const Vector4& lightDir, float elapsedTime, float alpha = 1.0f);
 
 	int RayPick(
 		const Vector3& pos,

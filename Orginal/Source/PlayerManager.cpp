@@ -1,6 +1,8 @@
 #include "PlayerManager.h"
 
 #include "lib/Input.h"
+#include "lib/Matrix.h"
+#include "lib/Vector.h"
 
 #include "Fade.h"
 #include "GameManager.h"
@@ -73,12 +75,12 @@ void PlayerManager::Update(const bool isTalking)
 	}
 }
 
-void PlayerManager::Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj, const DirectX::XMFLOAT4& lightDir)
+void PlayerManager::Render(const Matrix& view, const Matrix& proj, const Vector4& lightDir)
 {
 	mMovePlayer->Render(view, proj, lightDir);
 }
 
-void PlayerManager::Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj, const DirectX::XMFLOAT4& lightDir)
+void PlayerManager::Render(const Shader* shader, const Matrix& view, const Matrix& proj, const Vector4& lightDir)
 {
 	mMovePlayer->Render(shader, view, proj, lightDir);
 }

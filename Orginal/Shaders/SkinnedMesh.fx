@@ -42,7 +42,6 @@ PSInput VSMain(VSInput input)
 float4 PSMain(PSInput input) : SV_TARGET
 {
 	float4 albedo = Diffuse.Sample(Sampler, input.tex) * MaterialColor;
-	float4 color = albedo;
 
 	// ノーマルマップ
 	float3 N = Normal.Sample(Sampler, input.tex).xyz;
@@ -51,21 +50,46 @@ float4 PSMain(PSInput input) : SV_TARGET
 		N = normalize(N);
 
 		// ３軸（前、右、上）を行列化
-		float3 NN = normalize(input.normal);
-		float3 TT = normalize(input.tangent);
-		float3 BB = normalize(input.binormal);
-		float3x3 M;
-		M[0] = TT;
-		M[1] = BB;
-		M[2] = NN;
-		N = mul(N, M); // 法線を補正
+		float3x3 mat;
+		mat[0] = normalize(input.tangent);;
+		mat[1] = normalize(input.binormal);
+		mat[2] = normalize(input.normal);
+		N = mul(N, mat); // 法線を補正
 	}
 
 	// ライティング
 	float3 L = normalize(LightDir).xyz;
 	float I = -dot(N, L); // Intensity
 	float3 LColor = saturate(max(I, 0.35));
-	color.rgb *= LColor;
+	LColor += float3(1.0, 0.9, 0.7) * I;
+
+	//color.rgb *= LColor;
+
+	// 環境光
+	float3 P = normalize(float3(World[3][0], World[3][1], World[3][2]));
+	float3 E = normalize(EyePos.xyz - P);
+	float3 R = normalize(reflect(E, N));
+	float2 envUV = float2(normalize(R.xz).x, R.y * 0.5 + 0.5f);
+	float roughness = 1.0;
+	float4 env = Environment.SampleLevel(Sampler, envUV, roughness * 8.0);
+
+	// トーンマップ
+	env *= 0.01;
+	env = env / (0.5 + env);
+	//color += albedo * env;
+
+	// ライティング適用（適当
+	env.rgb += LColor;
+	albedo.rgb *= LColor * 0.5 + 0.3;
+
+	// ブレンド
+	float4 color = 0;
+	float metalness = 1.0;
+	color.rgb += env.rgb * 0.1 * (1 - metalness);
+	color.rgb += albedo.rgb * 1.0 * (1 - metalness);
+	color.rgb += env.rgb * metalness * albedo.rgb;
+	color.a = 1;
+	//color.rgb += albedo.rgb * (env.rgb + 100) * (1.0 - metalic);
 
 	//color.rgb = N;
 	//return color;

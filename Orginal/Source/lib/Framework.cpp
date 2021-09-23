@@ -307,7 +307,7 @@ bool Framework::Initialize(HWND hwnd)
 void Framework::Clear()
 {
     // バックバッファをクリア
-    float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f };
+    float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
     mDeviceContext->ClearRenderTargetView(mRenderTargetView.Get(), ClearColor);
     mDeviceContext->ClearDepthStencilView(mDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL , 1.0f, 0);
     mDeviceContext->OMSetRenderTargets(1, mRenderTargetView.GetAddressOf(), mDepthStencilView.Get());
@@ -360,7 +360,8 @@ void Framework::ResetParam()
     mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     ID3D11SamplerState* ss[] = {
-        mSamplerState[SS_CLAMP].Get()
+        mSamplerState[SS_CLAMP].Get(),
+        mSamplerState[SS_WRAP].Get()
     };
-    mDeviceContext->PSSetSamplers(0, 1, ss);
+    mDeviceContext->PSSetSamplers(0, 2, ss);
 }

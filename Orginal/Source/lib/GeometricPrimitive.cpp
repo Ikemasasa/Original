@@ -110,86 +110,123 @@ void GeometricPrimitive::Render(const DirectX::XMFLOAT4X4& wvp, const DirectX::X
 
 }
 
-int GeometricPrimitive::RayCast(const DirectX::XMFLOAT3& sp, const DirectX::XMFLOAT3& ep, DirectX::XMFLOAT3* outPos, DirectX::XMFLOAT3* outNormal, float* outLen)
+int GeometricPrimitive::RayCast(const Vector3& pos, const Vector3& velocity, Vector3* outPos, Vector3* outNormal)
 {
-	int ret = -1;
-	DirectX::XMVECTOR start = DirectX::XMLoadFloat3(&sp);
-	DirectX::XMVECTOR end = DirectX::XMLoadFloat3(&ep);
-	DirectX::XMVECTOR vec = DirectX::XMVectorSubtract(end, start);
-	DirectX::XMVECTOR length = DirectX::XMVector3Length(vec);
-	DirectX::XMVECTOR dir = DirectX::XMVector3Normalize(vec);
-	float neart;
-	DirectX::XMStoreFloat(&neart, length);
+	int ret = -1; // ヒットした面番号
+	float minDist = FLT_MAX; // 一番近いヒット面までの距離
 
+	// 高速化のため
+	Vector3 vertex[3] = {};
+	Vector3 line[3] = {};
+	Vector3 normal;
+	Vector3 v0;
+	Vector3 cp;
 
-	DirectX::XMVECTOR position = {}, normal = {};
-	for (const auto& it : mFaces)
+	Vector3 work;
+	Vector3 interior;
+	size_t size = mFaces.size();
+	for (size_t i = 0; i < size; ++i)
 	{
+		auto& face = mFaces[i];
+
 		// 面頂点取得
-		DirectX::XMVECTOR vertex[3] = {};
-		vertex[0] = DirectX::XMLoadFloat3(&it.vertex[0]); // a
-		vertex[1] = DirectX::XMLoadFloat3(&it.vertex[1]); // b 
-		vertex[2] = DirectX::XMLoadFloat3(&it.vertex[2]); // c
+		vertex[0] = face.vertex[0];
+		vertex[1] = face.vertex[1];
+		vertex[2] = face.vertex[2];
 
 		// 3辺算出
-		DirectX::XMVECTOR ab = DirectX::XMVectorSubtract(vertex[1], vertex[0]);
-		DirectX::XMVECTOR bc = DirectX::XMVectorSubtract(vertex[2], vertex[1]);
-		DirectX::XMVECTOR ca = DirectX::XMVectorSubtract(vertex[0], vertex[2]);
+		// line = vertex - vertex;
+		line[0].x = vertex[1].x - vertex[0].x;
+		line[0].y = vertex[1].y - vertex[0].y;
+		line[0].z = vertex[1].z - vertex[0].z;
+
+		line[1].x = vertex[2].x - vertex[1].x;
+		line[1].y = vertex[2].y - vertex[1].y;
+		line[1].z = vertex[2].z - vertex[1].z;
+
+		line[2].x = vertex[0].x - vertex[2].x;
+		line[2].y = vertex[0].y - vertex[2].y;
+		line[2].z = vertex[0].z - vertex[2].z;
 
 		// 外積による法線算出
-		DirectX::XMVECTOR nor;
-		nor = DirectX::XMVector3Cross(ab, bc);
-		nor = DirectX::XMVector3Normalize(nor);
+		// normal = line[0].Cross(line[1]);
+		normal.x = line[0].y * line[1].z - line[0].z * line[1].y;
+		normal.y = line[0].z * line[1].x - line[0].x * line[1].z;
+		normal.z = line[0].x * line[1].y - line[0].y * line[1].x;
+		normal.Normalize(); // 正規化
 
-		// 内積の結果がプラスならば裏向き
-		DirectX::XMVECTOR dot = DirectX::XMVector3Dot(nor, dir);
-		if (DirectX::XMVectorGetX(dot) > 0) continue;
+		// 法線をレイ方向に射影(内積)
+		// dot = -normal.Dot(velocity);
+		float dot = -normal.x * velocity.x + -normal.y * velocity.y + -normal.z * velocity.z;
+		if (dot <= 0) continue;
+
+
+		// ポリゴンの1頂点からレイの開始地点のベクトル
+		v0.x = vertex[0].x - pos.x;
+		v0.y = vertex[0].y - pos.y;
+		v0.z = vertex[0].z - pos.z;
+
+		// ↑のベクトルとポリゴンの法線の内積(射影を出す)
+		// float dot2 = -normal.Dot(v0);
+		float dot2 = -normal.x * v0.x + -normal.y * v0.y + -normal.z * v0.z;
+
+		// レイの長さ
+		float len = dot2 / dot;
+		if (len < 0 || len > minDist) continue;
 
 		// 交点算出
-		DirectX::XMVECTOR v0 = DirectX::XMVectorSubtract(vertex[0], start); // ポリゴンの1頂点からレイの開始地点のベクトル
-		DirectX::XMVECTOR d1 = DirectX::XMVector3Dot(v0, nor);				// ↑のベクトルとポリゴンの法線の内積(射影を出す)
-		DirectX::XMVECTOR t = DirectX::XMVectorDivide(d1, dot);				//  ↑のベクトルと法線の割合をだす
-		float ft = 0.0f;
-		DirectX::XMStoreFloat(&ft, t);
-		if (ft < 0.0f || ft > neart) continue;
+		cp.x = pos.x + velocity.x * len;
+		cp.y = pos.y + velocity.y * len;
+		cp.z = pos.z + velocity.z * len;
 
-		// 交点
-		DirectX::XMVECTOR cp = DirectX::XMVectorAdd(start, DirectX::XMVectorMultiply(dir, t));
 
 		// 内点判定
 		// 1つ目
-		DirectX::XMVECTOR tempV = DirectX::XMVectorSubtract(vertex[0], cp); //pa
-		DirectX::XMVECTOR tempN = DirectX::XMVector3Cross(tempV, ab);
-		if (DirectX::XMVectorGetX(DirectX::XMVector3Dot(tempN, nor)) < 0) continue; // 内積の結果マイナスなら外側
+		work.x = vertex[0].x - cp.x;
+		work.y = vertex[0].y - cp.y;
+		work.z = vertex[0].z - cp.z;
+		interior.x = work.y * line[0].z - work.z * line[0].y;
+		interior.y = work.z * line[0].x - work.x * line[0].z;
+		interior.z = work.x * line[0].y - work.y * line[0].x;
+
+		float d = normal.x * interior.x + normal.y * interior.y + normal.z * interior.z;
+		if (d < 0) continue; // 内積の結果マイナスなら外側
 
 		// 2つ目
-		tempV = DirectX::XMVectorSubtract(vertex[1], cp); //pb
-		tempN = DirectX::XMVector3Cross(tempV, bc);
-		if (DirectX::XMVectorGetX(DirectX::XMVector3Dot(tempN, nor)) < 0) continue; // 内積の結果マイナスなら外側
+		work.x = vertex[1].x - cp.x;
+		work.y = vertex[1].y - cp.y;
+		work.z = vertex[1].z - cp.z;
+		interior.x = work.y * line[1].z - work.z * line[1].y;
+		interior.y = work.z * line[1].x - work.x * line[1].z;
+		interior.z = work.x * line[1].y - work.y * line[1].x;
+
+		d = normal.x * interior.x + normal.y * interior.y + normal.z * interior.z;
+		if (d < 0) continue; // 内積の結果マイナスなら外側
 
 		// 3つ目
-		tempV = DirectX::XMVectorSubtract(vertex[2], cp); //pc
-		tempN = DirectX::XMVector3Cross(tempV, ca);
-		if (DirectX::XMVectorGetX(DirectX::XMVector3Dot(tempN, nor)) < 0) continue; // 内積の結果マイナスなら外側
+		work.x = vertex[2].x - cp.x;
+		work.y = vertex[2].y - cp.y;
+		work.z = vertex[2].z - cp.z;
+		interior.x = work.y * line[2].z - work.z * line[2].y;
+		interior.y = work.z * line[2].x - work.x * line[2].z;
+		interior.z = work.x * line[2].y - work.y * line[2].x;
+
+		d = normal.x * interior.x + normal.y * interior.y + normal.z * interior.z;
+		if (d < 0) continue; // 内積の結果マイナスなら外側
+
+		// nan チェック
+		//if (isnan(DirectX::XMVectorGetX(cp))) continue;
+		//if (isnan(DirectX::XMVectorGetY(cp))) continue;
+		//if (isnan(DirectX::XMVectorGetZ(cp))) continue;
 
 		// 情報保存
-		position = cp;
-		normal = nor;
-		neart = ft;
-		ret = it.materialIndex;
-	}
-	if (ret != -1)
-	{
-		// 当たった
-		DirectX::XMStoreFloat3(outPos, position);
-		DirectX::XMStoreFloat3(outNormal, normal);
+		*outPos = cp;		 // 交点
+		*outNormal = normal; // 法線
+		minDist = len;		 // 最短距離更新
+		ret = i;			 // i番目のポリゴンにヒット
 	}
 
-	// 最も近いヒット位置までの距離
-	*outLen = neart;
 	return ret;
-
-
 }
 
 /* memo 

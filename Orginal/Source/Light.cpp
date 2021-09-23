@@ -20,3 +20,12 @@ void Light::SetConstBuffer(int cbSlot)
 {
 	mCB.Set(cbSlot);
 }
+
+void Light::SetLightDir(const Vector4& lightDir)
+{
+	// ê≥ãKâª
+	Vector3 normalize(lightDir.x, lightDir.y, lightDir.z);
+	normalize.Normalize();
+
+	mLightDir = Vector4(normalize.x, normalize.y, normalize.z, lightDir.w);
+}

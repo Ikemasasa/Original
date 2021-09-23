@@ -1,9 +1,9 @@
 #pragma once
 
-#include <DirectXMath.h>
 #include <memory>
 
 #include "lib/Vector.h"
+#include "lib/Matrix.h"
 
 class SkinnedMesh;
 class Shader;
@@ -12,7 +12,7 @@ class Object
 {
 private:
 	std::shared_ptr<SkinnedMesh> mMesh = nullptr;
-	DirectX::XMFLOAT4X4 mWorld = { 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 };
+	Matrix mWorld = { 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 };
 	int mID = -1;
 
 protected:
@@ -26,15 +26,11 @@ public:
 	~Object() = default;
 
 	void UpdateWorld();
-	void Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir);
-	void Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir);
+	void Render(const Matrix& view, const Matrix& proj, const Vector4& lightDir);
+	void Render(const Shader* shader, const Matrix& view, const Matrix& proj, const Vector4& lightDir);
 
 	// レイピック
-	int RayPickSRT(
-		const Vector3& sp,
-		const Vector3& velocity,
-		Vector3* outPos,
-		Vector3* outNormal);
+	int RayPickSRT(const Vector3& pos, const Vector3& velocity, Vector3* outPos, Vector3* outNormal);
 
 	//ゲッター
 	Vector3 GetPos() const { return mPos; }

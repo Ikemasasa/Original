@@ -52,37 +52,25 @@ void Character::UpdateWorld()
 		mMesh->Skinning();
 	}
 
-	{
-		// 現フレームのワールド行列を計算
-		DirectX::XMMATRIX S, R, T;
-		S = DirectX::XMMatrixScaling(mScale.x, mScale.y, mScale.z);				 // スケール
-		R = DirectX::XMMatrixRotationRollPitchYaw(mAngle.x, mAngle.y, mAngle.z); // 回転
-		T = DirectX::XMMatrixTranslation(mPos.x, mPos.y, mPos.z);				 // 移動
-		DirectX::XMMATRIX world = S * R * T;
-
-		// 現フレームのワールド行列を代入
-		DirectX::XMStoreFloat4x4(&mWorld, world);
-	}
-
+	// 現フレームのワールド行列を計算
+	mWorld.SRT(mScale, mAngle, mPos);
 }
 
-void Character::Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir)
+void Character::Render(const Matrix& view, const Matrix& proj, const Vector4& lightDir)
 {
 	if (mExist)
 	{
-		DirectX::XMFLOAT4X4 wvp;
-		DirectX::XMStoreFloat4x4(&wvp, DirectX::XMLoadFloat4x4(&mWorld) * DirectX::XMLoadFloat4x4(&view) * DirectX::XMLoadFloat4x4(&projection));
+		Matrix wvp = mWorld * view * proj;
 		mMesh->Render(wvp, mWorld, lightDir, GameManager::elapsedTime);
 		//mHit->Render(wvp, mWorld, lightDir, DirectX::XMFLOAT4(0.8f, 0.2f, 0.2f, 0.2f));
 	}
 }
 
-void Character::Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir)
+void Character::Render(const Shader* shader, const Matrix& view, const Matrix& proj, const Vector4& lightDir)
 {
 	if (mExist)
 	{
-		DirectX::XMFLOAT4X4 wvp;
-		DirectX::XMStoreFloat4x4(&wvp, DirectX::XMLoadFloat4x4(&mWorld) * DirectX::XMLoadFloat4x4(&view) * DirectX::XMLoadFloat4x4(&projection));
+		Matrix wvp = mWorld * view * proj;
 		mMesh->Render(shader, wvp, mWorld, lightDir, GameManager::elapsedTime);
 	}
 }

@@ -80,7 +80,7 @@ void EffectManager::Update()
 	}
 }
 
-void EffectManager::Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj)
+void EffectManager::Render(const Matrix& view, const Matrix& proj)
 {
 	// ビュー プロジェクション行列更新
 	Effekseer::Matrix44 viewEfk;

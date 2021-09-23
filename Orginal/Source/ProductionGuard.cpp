@@ -1,5 +1,7 @@
 #include "ProductionGuard.h"
 
+#include "lib/Matrix.h"
+
 #include "BattleCharacter.h"
 #include "BattleCharacterManager.h"
 #include "BattleState.h"
@@ -35,8 +37,8 @@ void ProductionGuard::Update(const BattleCharacterManager* bcm)
 
 	case WAIT:
 		// ガードの文字をセット
-		DirectX::XMFLOAT4X4 view = Singleton<CameraManager>().GetInstance().GetView();
-		DirectX::XMFLOAT4X4 proj = Singleton<CameraManager>().GetInstance().GetProj();
+		Matrix view = Singleton<CameraManager>().GetInstance().GetView();
+		Matrix proj = Singleton<CameraManager>().GetInstance().GetProj();
 		Vector3 pos = mMoveChara->GetPos();
 		pos.y += (mMoveChara->GetLocalAABB().max.y - mMoveChara->GetLocalAABB().min.y) / 2.0f;
 		Vector2 scrPos = pos.WorldToScreen(view, proj);

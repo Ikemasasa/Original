@@ -1,51 +1,38 @@
 #pragma once
 #include <memory>
 
-#include "lib/Sprite.h"
 #include "lib/RenderTarget.h"
+#include "lib/Shader.h"
+#include "lib/Sprite.h"
 
+#include "Bloom.h"
 #include "CameraBase.h"
-#include "Light.h"
+#include "DeferredRenderer.h"
+#include "GBuffer.h"
 #include "ShadowMap.h"
+#include "Light.h"
 
 class SceneBase
 {
 protected:
-	enum GBuffer {COLOR, POS, NORMAL, NUM};
-	static const int SHADOWMAP_TEXTURE_SLOT = 14;
+
 	static Light mLight;
 
 	std::unique_ptr<Sprite> mRamp;
-	ShadowMap mShadowMap;
 	std::unique_ptr<Shader> mPostEffect;
-	RenderTarget mSceneTarget;
-
-	// GBuffer関連
-	std::unique_ptr<Shader> mGBufferShader;
-	RenderTarget mGBufferColor;
-	RenderTarget mGBufferPosition;
-	RenderTarget mGBufferNormal;
+	std::unique_ptr<ShadowMap> mShadowMap;
+	std::unique_ptr<RenderTarget> mSceneTarget;
+	std::unique_ptr<Bloom> mBloom;
 
 	// ディファード
-	std::unique_ptr<Shader> mDeferredDirLightShader;
-
-	ConstantBuffer mCBForDeferred;
-	struct CBForDeferredPerFrame
-	{
-		Vector4 eyePos;		//カメラ座標
-	};
+	std::unique_ptr<DeferredRenderer> mDeferredRenderer;
 
 	// ロード終了フラグ
 	bool mIsLoadFinished = false;
 
 protected: // 関数
-	void CreatePostEffectShader();
-
-	// Gbuffer関連
-	void InitializeGBuffer();
-	void ActivateGBuffer(UINT startSlot = 0);
-	void DeactivateGBuffer();
-	void SetGBufferTexture(UINT startSlot = 0);
+	void InitializeBaseAll();
+	void CreateBaseAll();
 
 public:
 	SceneBase() = default;

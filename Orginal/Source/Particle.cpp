@@ -156,7 +156,7 @@ void Particle::Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4
 
 		mVertices[num].pos = data.pos;
 		mVertices[num].scale = data.scale;
-		mVertices[num].color = data.color;
+		mVertices[num].color = Vector4(data.color, 1.0f);
 		mVertices[num].param.x = data.rotate;	  // 回転
 		mVertices[num].param.y = data.animeTimer; // アニメタイマー
 		mVertices[num].param.z = (float)mSpriteNum.x;	  // 連番画像の横の数

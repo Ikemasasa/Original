@@ -262,15 +262,15 @@ void ShaderManager::ReleaseAll()
     mComputeShaders.clear();
 }
 
-void ShaderManager::ReleaseVertexShader(ID3D11VertexShader* vertexShader, ID3D11InputLayout* inputLayout)
+void ShaderManager::ReleaseVertexShader(ID3D11VertexShader** vertexShader, ID3D11InputLayout** inputLayout)
 {
-    if (!vertexShader)return;
-    if (!inputLayout)return;
+    if (!*vertexShader)return;
+    if (!*inputLayout)return;
 
     for (auto it = mVertexShaders.begin(); it != mVertexShaders.end();)
     {
-        if (it->vs != vertexShader) { ++it; continue; }
-        if (it->layout != inputLayout) { ++it; continue; }
+        if (it->vs != *vertexShader) { ++it; continue; }
+        if (it->layout != *inputLayout) { ++it; continue; }
 
         it->Release();
         if (it->refNum <= 0)
@@ -279,17 +279,19 @@ void ShaderManager::ReleaseVertexShader(ID3D11VertexShader* vertexShader, ID3D11
             mVertexShaders.erase(it);
         }
 
+        *vertexShader = nullptr;
+        *inputLayout = nullptr;
         break;
     }
 }
 
-void ShaderManager::ReleasePixelShader(ID3D11PixelShader* pShader)
+void ShaderManager::ReleasePixelShader(ID3D11PixelShader** pShader)
 {
-    if (!pShader)return;
+    if (!*pShader)return;
 
     for (auto it = mPixelShaders.begin(); it != mPixelShaders.end();)
     {
-        if (it->shader != pShader) { ++it; continue; }
+        if (it->shader != *pShader) { ++it; continue; }
 
         it->Release();
         if (it->refNum <= 0)
@@ -297,18 +299,20 @@ void ShaderManager::ReleasePixelShader(ID3D11PixelShader* pShader)
             // ƒŠƒXƒg‚©‚çÁ‚·
             mPixelShaders.erase(it);
         }
+
+        *pShader = nullptr;
         break;
     }
 
 }
 
-void ShaderManager::ReleaseGeometryShader(ID3D11GeometryShader* pShader)
+void ShaderManager::ReleaseGeometryShader(ID3D11GeometryShader** pShader)
 {
-    if (!pShader)return;
+    if (!*pShader)return;
 
     for (auto it = mGeometryShaders.begin(); it != mGeometryShaders.end();)
     {
-        if (it->shader != pShader) { ++it; continue; }
+        if (it->shader != *pShader) { ++it; continue; }
 
         it->Release();
         if (it->refNum <= 0)
@@ -317,17 +321,18 @@ void ShaderManager::ReleaseGeometryShader(ID3D11GeometryShader* pShader)
             mGeometryShaders.erase(it);
         }
 
+        *pShader = nullptr;
         break;
     }
 }
 
-void ShaderManager::ReleaseComputeShader(ID3D11ComputeShader* pShader)
+void ShaderManager::ReleaseComputeShader(ID3D11ComputeShader** pShader)
 {
     if (!pShader)return;
 
     for (auto it = mComputeShaders.begin(); it != mComputeShaders.end();)
     {
-        if (it->shader != pShader) { ++it; continue; }
+        if (it->shader != *pShader) { ++it; continue; }
 
         it->Release();
         if (it->refNum <= 0)
@@ -336,6 +341,7 @@ void ShaderManager::ReleaseComputeShader(ID3D11ComputeShader* pShader)
             mComputeShaders.erase(it);
         }
 
+        *pShader = nullptr;
         break;
     }
 }

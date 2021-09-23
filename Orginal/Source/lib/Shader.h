@@ -10,7 +10,7 @@ class Shader
 
 public:
 	Shader() = default;
-	~Shader() = default;
+	virtual ~Shader() = default;
 
 	bool Load(LPCWSTR filename, LPCSTR VSFunc, LPCSTR PSFunc, D3D11_INPUT_ELEMENT_DESC* layout = nullptr, UINT numElements = 0);
 	bool Load2D(LPCWSTR filename, LPCSTR VSFunc, LPCSTR PSFunc);

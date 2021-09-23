@@ -9,10 +9,12 @@
 #include "DropItemShower.h"
 #include "SceneBattle.h"
 
+
 class Enemy;
 class Player;
 class PlayerManager;
 class TurnManager;
+class Matrix;
 
 // ターン進行の部分を後々別にしたい
 
@@ -50,8 +52,9 @@ public:
 
 	void Initialize();
 	void Update(const TurnManager* turnManager);
-	void Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir);
-	void Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, const DirectX::XMFLOAT4& lightDir);
+	void Render(const Matrix& view, const Matrix& proj, const Vector4& lightDir);
+	void Render(const Shader* shader, const Matrix& view, const Matrix& projection, const Vector4& lightDir);
+	void RenderUI();
 
 	// その他関数
 	void OrganizeCharacter();				 // 体力が0になったキャラをmAliveObjIDsから消す

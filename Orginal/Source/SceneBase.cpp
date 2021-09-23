@@ -7,76 +7,22 @@
 // staticmenba
 Light SceneBase::mLight;
 
-void SceneBase::CreatePostEffectShader()
+void SceneBase::InitializeBaseAll()
 {
-	mPostEffect = std::make_unique<Shader>();
+	mRamp->Set(Define::RAMP_TEXTURE_SLOT);
 	mPostEffect->Load2D(L"Shaders/PostEffect.fx", "VSMain", "PSMain");
+	mShadowMap->Initialize();
+	mSceneTarget->Initialize(Define::SCREEN_WIDTH, Define::SCREEN_HEIGHT);
+	mBloom->Initialize();
+	mDeferredRenderer->Initialize(Vector2(Define::SCREEN_WIDTH, Define::SCREEN_HEIGHT));
 }
 
-void SceneBase::InitializeGBuffer()
+void SceneBase::CreateBaseAll()
 {
-	// シェーダ作成
-	mGBufferShader = std::make_unique<Shader>();
-	mGBufferShader->Load(L"Shaders/GBuffer.fx", "VSMain", "PSMain");
-	
-	// レンダーターゲット作成
-	float width = Define::SCREEN_WIDTH;
-	float height = Define::SCREEN_HEIGHT;
-
-	mGBufferColor.Initialize(width, height);
-	mGBufferPosition.Initialize(width, height);
-	mGBufferNormal.Initialize(width, height);
-
-	// 定数バッファ作成
-	mCBForDeferred.Create(sizeof(CBForDeferredPerFrame));
-
-	// 使うであろう DirLightシェーダ作成
-	mDeferredDirLightShader = std::make_unique<Shader>();
-	mDeferredDirLightShader->Load2D(L"Shaders/DeferredDirLight.fx", "VSMain", "PSMain");
-}
-
-void SceneBase::ActivateGBuffer(UINT startSlot)
-{
-	ID3D11DeviceContext* context = FRAMEWORK.GetContext();
-
-	// deactivateした後にまたactivateをするとき、
-	// 入力と出力におなじbufferが入るからそのエラー対策
-	ID3D11ShaderResourceView* dummy[GBuffer::NUM] = {};
-	context->PSSetShaderResources(startSlot, GBuffer::NUM, dummy);
-
-	ID3D11RenderTargetView* rtv[GBuffer::NUM]
-	{
-		mGBufferColor.GetRTV(),
-		mGBufferPosition.GetRTV(),
-		mGBufferNormal.GetRTV()
-	};
-	
-	// レンダーターゲットクリア
-	float clearColor[4] = { 0,0,0,0 };
-	for (int i = 0; i < GBuffer::NUM; ++i)
-	{
-		context->ClearRenderTargetView(rtv[i], clearColor);
-	}
-
-
-	// レンダーターゲット設定
-	context->OMSetRenderTargets(GBuffer::NUM, rtv, FRAMEWORK.GetDepthStencilView());
-}
-
-void SceneBase::DeactivateGBuffer()
-{
-	// ターゲットを戻す
-	FRAMEWORK.SetRenderTarget();
-}
-
-void SceneBase::SetGBufferTexture(UINT startSlot)
-{
-	// GBufferをシェーダに渡す
-	ID3D11ShaderResourceView* srv[GBuffer::NUM]
-	{
-		mGBufferColor.GetSRV(),
-		mGBufferPosition.GetSRV(),
-		mGBufferNormal.GetSRV()
-	};
-	FRAMEWORK.GetContext()->PSSetShaderResources(startSlot, GBuffer::NUM, srv);
+	mRamp = std::make_unique<Sprite>(L"Data/Image/Ramp.png");
+	mPostEffect = std::make_unique<Shader>();
+	mShadowMap = std::make_unique<ShadowMap>();
+	mSceneTarget = std::make_unique<RenderTarget>();
+	mBloom = std::make_unique<Bloom>();
+	mDeferredRenderer = std::make_unique<DeferredRenderer>();
 }

@@ -58,7 +58,7 @@ public:
 	void Initialize(int fontSize = 32, int fontWeight = 32);
 	void Release();
 
-	bool RenderSet(wchar_t word, const Vector2& pos, const Vector2& center = Vector2::ZERO, const Vector4& color = Vector4::ONE);
+	bool RenderSet(const wchar_t word, const Vector2& pos, const Vector2& center = Vector2::ZERO, const Vector4& color = Vector4::ONE);
 	bool RenderSet(const wchar_t* str, const Vector2& pos, const Vector2& centerRate = Vector2::ZERO, const Vector4& color = Vector4::ONE);
 	bool RenderSetValue(const int value, const Vector2& pos, const Vector2& centerRate = Vector2::ZERO, const Vector4& color = Vector4::ONE);
 	bool RenderSetValue(const float value, const Vector2& pos, const Vector2& centerRate = Vector2::ZERO, const Vector4& color = Vector4::ONE);

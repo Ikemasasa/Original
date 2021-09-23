@@ -18,7 +18,7 @@ protected:
 	};
 	struct Face
 	{
-		DirectX::XMFLOAT3 vertex[3];
+		Vector3 vertex[3];
 		int materialIndex = 1;
 	};
 	struct Cbuffer
@@ -58,12 +58,7 @@ public:
 		const DirectX::XMFLOAT4& color    // çﬁéøêF
 		);
 
-	int RayCast(
-		const DirectX::XMFLOAT3& sp,
-		const DirectX::XMFLOAT3& ep,
-		DirectX::XMFLOAT3* outPos,
-		DirectX::XMFLOAT3* outNormal,
-		float* outLen);
+	int RayCast(const Vector3& pos, const Vector3& velocity, Vector3* outPos, Vector3* outNormal);
 };
 
 class GeometricCube : public GeometricPrimitive

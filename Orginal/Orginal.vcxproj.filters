@@ -303,9 +303,6 @@
     <ClInclude Include="Source\lib\SkinnedMesh.h">
       <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
-    <ClInclude Include="Source\DeferredDirLight.h">
-      <Filter>01_Header</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Light.h">
       <Filter>01_Header</Filter>
     </ClInclude>
@@ -458,6 +455,18 @@
     </ClInclude>
     <ClInclude Include="Source\SceneLoad.h">
       <Filter>01_Header\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\lib\Matrix.h">
+      <Filter>00_lib\01_LibHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GBuffer.h">
+      <Filter>01_Header\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DeferredRenderer.h">
+      <Filter>01_Header\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Bloom.h">
+      <Filter>01_Header\Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -806,6 +815,18 @@
     <ClCompile Include="Source\SceneLoad.cpp">
       <Filter>02_Source\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Source\lib\Matrix.cpp">
+      <Filter>00_lib\02_LibSource</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GBuffer.cpp">
+      <Filter>02_Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DeferredRenderer.cpp">
+      <Filter>02_Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Bloom.cpp">
+      <Filter>02_Source\Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="テキスト1.txt">
@@ -857,6 +878,18 @@
     </None>
     <None Include="Shaders\PointSprite.fx">
       <Filter>00_lib\00_Shader</Filter>
+    </None>
+    <None Include="Shaders\DeferredPointLight.fx">
+      <Filter>00_lib\00_Shader\Deferred</Filter>
+    </None>
+    <None Include="Shaders\FXAA.hlsl">
+      <Filter>00_lib\00_Shader</Filter>
+    </None>
+    <None Include="Shaders\Bloom.fx">
+      <Filter>00_lib\00_Shader</Filter>
+    </None>
+    <None Include="Shaders\DeferredSpotLight.fx">
+      <Filter>00_lib\00_Shader\Deferred</Filter>
     </None>
   </ItemGroup>
 </Project>

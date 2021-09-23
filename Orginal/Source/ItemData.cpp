@@ -153,7 +153,7 @@ const EquipmentData::Param EquipmentData::GetParam(const size_t id)
 		ret.def		 = std::stoi(chunks[index++]);
 		ret.spd		 = std::stoi(chunks[index++]);
 		
-		for (int i = index; i < chunks.size(); ++i)
+		for (size_t i = index; i < chunks.size(); ++i)
 		{
 			bool equipable = false;
 			if (chunks[i] == "o") equipable = true;

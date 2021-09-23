@@ -17,7 +17,7 @@ CameraBase::CameraBase()
 
     constexpr float	fov = DirectX::XMConvertToRadians(45.0f);
     float	aspect = Define::SCREEN_WIDTH / Define::SCREEN_HEIGHT;
-    SetPerspectiveMatrix(fov, aspect, 0.1f, 1000.0f);
+    SetPerspectiveMatrix(fov, aspect, 1.0f, 1000.0f);
     UpdateView();
 }
 
@@ -40,10 +40,8 @@ void CameraBase::Initialize(const Character* target)
 
 void CameraBase::UpdateView()
 {
-    DirectX::XMVECTOR p = DirectX::XMVectorSet(mPos.x, mPos.y, mPos.z, 0.0f);
-    DirectX::XMVECTOR t = DirectX::XMVectorSet(mTarget.x, mTarget.y, mTarget.z, 0.0f);
-    DirectX::XMVECTOR up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-    DirectX::XMStoreFloat4x4(&mView, DirectX::XMMatrixLookAtLH(p, t, up));
+    // ビュー行列更新
+    mView.LookAtLH(mPos, mTarget);
 
     mFrontVector = Vector3(mView._13, mView._23, mView._33);
     mRightVector = Vector3(mView._11, mView._21, mView._31);
@@ -51,14 +49,12 @@ void CameraBase::UpdateView()
 
 
 
-DirectX::XMFLOAT4X4& CameraBase::SetOrthographicMatrix(float w, float h, float znear, float zfar)
+void CameraBase::SetOrthoMatrix(float w, float h, float znear, float zfar)
 {
-    DirectX::XMStoreFloat4x4(&mProjection, DirectX::XMMatrixOrthographicLH(w, h, znear, zfar));
-    return mProjection;
+    mProjection.Ortho(w, h, znear, zfar);
 }
 
-DirectX::XMFLOAT4X4& CameraBase::SetPerspectiveMatrix(float fov, float aspect, float znear, float zfar)
+void CameraBase::SetPerspectiveMatrix(float fov, float aspect, float znear, float zfar)
 {
-    DirectX::XMStoreFloat4x4(&mProjection, DirectX::XMMatrixPerspectiveFovLH(fov, aspect, znear, zfar));
-    return mProjection;
+    mProjection.PerspectiveFov(fov, aspect, znear, zfar);
 }

@@ -15,18 +15,20 @@ class RenderTarget
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mDSV = nullptr;
 
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mSRV = nullptr;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mDSResourceView = nullptr;
 
-	Vector2 mSize;
+	UINT mTextureSlot = -1;
 public:
 	RenderTarget() = default;
 	~RenderTarget() = default;
 
 	void Initialize(float width = 0, float height = 0, DXGI_FORMAT format = DXGI_FORMAT_R16G16B16A16_FLOAT);
-	void Activate(UINT textureSlot = 0);
-	void Deactivate(UINT textureSlot = 0);
+	void Activate();
+	void Deactivate();
 	void SetTexture(UINT slot);
 
 	void CreateDSV(float width, float height, DXGI_FORMAT format);
+	void CreateDSResourceView();
 
 	void Render(Shader* shader) const;
 

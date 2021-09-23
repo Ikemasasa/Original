@@ -33,8 +33,8 @@ public:
 
 	void Initialize();
 	void Update(const bool isTalking);
-	void Render(const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj, const DirectX::XMFLOAT4& lightDir);
-	void Render(const Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& proj, const DirectX::XMFLOAT4& lightDir);
+	void Render(const Matrix& view, const Matrix& projection, const Vector4& lightDir);
+	void Render(const Shader* shader, const Matrix& view, const Matrix& projection, const Vector4& lightDir);
 
 	int GetNum() const { return mEnemies.size(); }
 	Enemy* GetEnemy(int objID);
