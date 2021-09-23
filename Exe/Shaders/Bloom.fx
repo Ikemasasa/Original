@@ -22,7 +22,8 @@ float4 PSMain(PSInput input) : SV_Target0
     // ãPìxíäèo
     const float MIN_BRIGHTNESS = 0.80;
     color.rgb = color.rgb * step(MIN_BRIGHTNESS, color.rgb);
-    color.rgb *= 0.6; // Ç‹Ç‘ÇµÇ∑Ç¨ëŒçÙ
+    color.rgb = min(1.0, color.rgb); // 1à»è„Ç1Ç…
+    color.rgb *= 0.4;                // Ç‹Ç‘ÇµÇ∑Ç¨ëŒçÙ
 
     color.a = 1;
     return color;
