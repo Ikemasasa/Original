@@ -31,7 +31,7 @@ void ProductionGuard::Update(const BattleCharacterManager* bcm)
 			mTargetCharas.push_back(bcm->GetChara(targetID));
 		}
 
-		mMoveChara->SetMotion(SkinnedMesh::GUARD);
+		mMoveChara->SetMotion(Character::GUARD);
 		mMoveChara->GetStatus()->SetGuardFlag(true);
 		// break;
 

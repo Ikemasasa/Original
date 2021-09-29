@@ -10,6 +10,8 @@ class GeometricPrimitive;
 
 class Character
 {
+	static constexpr float DEFAULT_MOTION_BLEND_SPEED = 0.15f;
+
 public:
 	enum Type
 	{
@@ -19,6 +21,24 @@ public:
 		NPC,
 
 		MAX
+	};
+
+	enum MotionType
+	{
+		DEFAULT,
+		IDLE,
+		WALK,
+		RUN,
+		ATTACK,
+		GUARD,
+		DIE,
+		DAMAGE,
+		USE_ITEM,
+		UNIQUE1,
+		UNIQUE2,
+		UNIQUE3,
+
+		MOTION_MAX,
 	};
 
 private:
@@ -51,7 +71,7 @@ public:
 	void CorrectionAngle(const Vector3& dirN); // dirN方向に向く
 
 	// モーション追加
-	void AddMotion(const char* filename, SkinnedMesh::MotionType type) { mMesh->AddMotion(filename, type); }
+	void AddMotion(const char* filename, MotionType type) { mMesh->AddMotion(filename, type); }
 
 	//ゲッター
 	Vector3 GetPos() const { return mPos; }
@@ -78,8 +98,9 @@ public:
 	void SetExist(const bool e) { mExist = e; }
 
 
-	SkinnedMesh::MotionType GetMotion() const { return mMesh->GetMotion(); }
-	void SetMotion(SkinnedMesh::MotionType type, bool isLoop = true) { mMesh->SetMotion(type, isLoop); }
+	MotionType GetMotion() const { return (MotionType)mMesh->GetMotion(); }
+	void SetMotion(MotionType type, float blendSpeed = DEFAULT_MOTION_BLEND_SPEED) { mMesh->SetMotion(type, blendSpeed); }
+	void SetMotionOnce(MotionType type, MotionType nextType, float blendSpeed = DEFAULT_MOTION_BLEND_SPEED) { mMesh->SetMotionOnce(type, nextType, blendSpeed); }
 
 	void ChangeShader(Shader * shader) { mMesh->ChangeShader(shader); }
 	bool IsMotionFinished() const { return mMesh->IsMotionFinished(); }

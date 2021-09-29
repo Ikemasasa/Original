@@ -56,7 +56,7 @@ void PlayerManager::Update(const bool isTalking)
 	// 会話中ならモーションのみ更新
 	if (isTalking)
 	{
-		mMovePlayer->SetMotion(SkinnedMesh::IDLE);
+		mMovePlayer->SetMotion(Character::IDLE);
 		mMovePlayer->UpdateWorld();
 	}
 	else mMovePlayer->Update();

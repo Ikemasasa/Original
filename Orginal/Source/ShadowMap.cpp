@@ -29,7 +29,7 @@ void ShadowMap::Initialize()
 	mTarget = Vector3::ZERO;
 }
 
-void ShadowMap::Activate(const Vector4& lightDir)
+void ShadowMap::Activate(const Vector4& lightDir, const Vector3& lightPos)
 {
 	// レンダーターゲット有効化
 	mShadowMap.Activate();
@@ -49,10 +49,6 @@ void ShadowMap::Activate(const Vector4& lightDir)
 	{
 		DirectX::XMMATRIX proj = DirectX::XMMatrixOrthographicLH(200, 200, 0.1f, 1000.0f);
 
-		Vector3 lightPos(60.0f, 60.0f, 60.0f); // 適当
-		lightPos.x *= -lightDir.x;
-		//lightPos.y *= -lightDir.y;
-		lightPos.z *= -lightDir.z;
 		DirectX::XMVECTOR pos = DirectX::XMVectorSet(lightPos.x, lightPos.y, lightPos.z, 1.0f);
 		DirectX::XMVECTOR target = DirectX::XMVectorSet(mTarget.x, mTarget.z, mTarget.z, 1.0f);
 		DirectX::XMVECTOR up = DirectX::XMVectorSet(0.0f, 1.0f,	0.0f, 0.0f);

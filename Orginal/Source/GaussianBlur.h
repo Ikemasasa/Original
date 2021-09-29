@@ -39,7 +39,7 @@ public:
 
 	void Initialize(const Vector2& targetSize = Vector2::ZERO, DXGI_FORMAT format = DXGI_FORMAT_R16G16B16A16_FLOAT, float blurStlength = 100.0f, float offset = 1);
 	void Blur(const RenderTarget* orgSprite);
-	void Render(bool viewportOverwrite = false);
+	void Render();
 
 	void SetBlurStlength(float stlength);
 

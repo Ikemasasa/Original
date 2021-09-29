@@ -34,7 +34,7 @@ public:
 	~ShadowMap();
 
 	void Initialize();
-	void Activate(const Vector4& lightDir);
+	void Activate(const Vector4& lightDir, const Vector3& lightPos);
 	void Deactivate();
 	void SetTexture(UINT textureSlot);
 	Shader* GetShader()const { return mShader.get(); }

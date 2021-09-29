@@ -33,6 +33,8 @@ protected:
 protected: // ä÷êî
 	void InitializeBaseAll();
 	void CreateBaseAll();
+	void ReleaseBaseAll();
+	virtual void SetDeferredParam() {}
 
 public:
 	SceneBase() = default;

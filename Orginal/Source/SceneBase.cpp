@@ -26,3 +26,9 @@ void SceneBase::CreateBaseAll()
 	mBloom = std::make_unique<Bloom>();
 	mDeferredRenderer = std::make_unique<DeferredRenderer>();
 }
+
+void SceneBase::ReleaseBaseAll()
+{
+	mRamp->UnLoad();
+	mPostEffect->UnLoad();
+}

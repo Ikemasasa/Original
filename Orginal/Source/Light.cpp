@@ -21,11 +21,17 @@ void Light::SetConstBuffer(int cbSlot)
 	mCB.Set(cbSlot);
 }
 
-void Light::SetLightDir(const Vector4& lightDir)
+void Light::SetLightDir(Vector3& lightDir, const Vector3& lightPos)
 {
-	// 正規化
-	Vector3 normalize(lightDir.x, lightDir.y, lightDir.z);
-	normalize.Normalize();
+	// ライト方向正規化
+	lightDir.Normalize();
+	mLightDir = Vector4(lightDir, 1.0f);
 
-	mLightDir = Vector4(normalize.x, normalize.y, normalize.z, lightDir.w);
+	// ライトの方向と座標を合わせる
+	float xSign = (lightDir.x > 0) ? -1 : 1;
+	float ySign = (lightDir.y > 0) ? -1 : 1;
+	float zSign = (lightDir.z > 0) ? -1 : 1;
+	mLightPos.x = lightPos.x * xSign;
+	mLightPos.y = lightPos.y * ySign;
+	mLightPos.z = lightPos.z * zSign;
 }

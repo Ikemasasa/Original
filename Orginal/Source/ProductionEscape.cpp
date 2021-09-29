@@ -20,7 +20,7 @@ void ProductionEscape::Update(const BattleCharacterManager* bcm)
 			float vx = sinf(mMoveChara->GetAngle().y) * MOVE_SPEED;
 			float vz = cosf(mMoveChara->GetAngle().y) * MOVE_SPEED;
 			mMoveChara->SetVelocity(Vector3(-vx, 0.0f, -vz));
-			mMoveChara->SetMotion(SkinnedMesh::RUN);
+			mMoveChara->SetMotion(Character::RUN);
 			++mState;
 		}
 		// break;

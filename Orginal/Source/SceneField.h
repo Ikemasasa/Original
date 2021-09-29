@@ -14,6 +14,7 @@ class SceneField : public SceneBase
 	std::unique_ptr<Terrain>	      mTerrain		= nullptr;
 	std::unique_ptr<Skybox>			  mSkybox		= nullptr;
 
+	void SetDeferredParam() override;
 public:
 	SceneField();
 	~SceneField();

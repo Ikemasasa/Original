@@ -38,7 +38,7 @@ void Player::Initialize()
 	mScale = transform.scale;
 	mAngle = transform.angle;
 
-	SetMotion(SkinnedMesh::IDLE);
+	SetMotion(Character::IDLE);
 }
 
 void Player::Update()
@@ -77,11 +77,11 @@ void Player::Update()
 			mPos.y = CollisionTerrain::GetHeight(mPos, RAYPICK_DIST);
 		}
 
-		SetMotion(SkinnedMesh::RUN);
+		SetMotion(Character::RUN);
 	}
 	else
 	{
-		SetMotion(SkinnedMesh::IDLE);
+		SetMotion(Character::IDLE);
 	}
 
 	Character::UpdateWorld();

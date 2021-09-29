@@ -100,7 +100,7 @@ void ProductionAttack::StateInit()
 void ProductionAttack::StateMoveToTarget()
 {
 	// 走りモーションセット
-	mMoveChara->SetMotion(SkinnedMesh::RUN);
+	mMoveChara->SetMotion(Character::RUN);
 
 	// mOrgPos から mDestinationPos までを線形補完する
 	mLerpFactor = Math::Min(mLerpFactor + LERP_FACTOR_ADD, LERP_FACTOR_MAX);
@@ -111,7 +111,7 @@ void ProductionAttack::StateMoveToTarget()
 	if (mLerpFactor >= LERP_FACTOR_MAX)
 	{
 		// 攻撃モーションセット
-		mMoveChara->SetMotion(SkinnedMesh::ATTACK, false);
+		mMoveChara->SetMotionOnce(Character::ATTACK, Character::RUN);
 		++mState;
 	}
 }
@@ -144,7 +144,7 @@ void ProductionAttack::StateWaitAttack()
 void ProductionAttack::StateMoveToOrigin()
 {
 	// 走りモーションセット
-	mMoveChara->SetMotion(SkinnedMesh::RUN);
+	mMoveChara->SetMotion(Character::RUN);
 
 	// mDestinationPos から mOrgPos までを線形補完する
 	mLerpFactor = Math::Max(mLerpFactor - LERP_FACTOR_ADD, LERP_FACTOR_MIN);
@@ -155,7 +155,7 @@ void ProductionAttack::StateMoveToOrigin()
 	if (mLerpFactor <= LERP_FACTOR_MIN)
 	{
 		// 待機モーションセット、Angleを敵方向に戻す
-		mMoveChara->SetMotion(SkinnedMesh::IDLE);
+		mMoveChara->SetMotion(Character::IDLE);
 		mMoveChara->SetAngleY(mMoveChara->GetAngle().y + Define::PI); // 向きを反転
 		++mState;
 	}

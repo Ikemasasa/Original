@@ -6,6 +6,7 @@
 #include "Font.h"
 #include "Math.h"
 #include "ResourceManager.h"
+#include "ProcessMessage.h"
 
 using namespace fbxsdk;
 
@@ -42,13 +43,13 @@ void SkinnedMesh::LoadFBX(ID3D11Device* device, const char* filename)
 		FbxLongLong stop = take->mLocalTimeSpan.GetStop().Get();
 		FbxLongLong fps60 = FbxTime::GetOneFrameValue(FbxTime::eFrames60);
 		mStartFrame = (int)(start / fps60);
-		mMotion[DEFAULT].frameNum = (int)((stop - start) / fps60);
-		SetMotion(DEFAULT);
+		mMotion[T_POSE_INDEX].frameNum = (int)((stop - start) / fps60);
+		SetMotion(T_POSE_INDEX, 0.1f);
 	}
 	else
 	{
 		mStartFrame = 0;
-		mMotion[DEFAULT].frameNum = 0;
+		mMotion[T_POSE_INDEX].frameNum = 0;
 	}
 	
 	importer->Destroy();
@@ -394,7 +395,7 @@ void SkinnedMesh::LoadBone(FbxMesh* mesh)
 			}
 
 			// キーフレーム読み込み
-			LoadKeyFrames(DEFAULT, boneNo, cluster->GetLink());
+			LoadKeyFrames(T_POSE_INDEX, boneNo, cluster->GetLink());
 		}
 
 		int weightCount = cluster->GetControlPointIndicesCount();
@@ -485,7 +486,7 @@ void SkinnedMesh::OptimizeVertices()
 	mVertices = vertex;
 }
 
-void SkinnedMesh::LoadKeyFrames(MotionType type, int bone, FbxNode* boneNode)
+void SkinnedMesh::LoadKeyFrames(int type, int bone, FbxNode* boneNode)
 {
 	Motion& motion = mMotion[type];
 	motion.keyframe[bone] = new Matrix[motion.frameNum + 1];
@@ -512,40 +513,50 @@ void SkinnedMesh::LoadKeyFrames(MotionType type, int bone, FbxNode* boneNode)
 
 void SkinnedMesh::Skinning()
 {
-	Motion* motion = &mMotion[mMotionType];
-	if (motion == NULL) return;
+	float elapsed = 1.0f / 60.0f;
 
-	ID3D11DeviceContext* context = FRAMEWORK.GetContext();
+	// 現在のモーション取得
+	Motion* cur = &mMotion[mMotionType];
+	if (cur == NULL) return;
 
-	// 配列用変数
-	int f = (int)mFrame;
-	int nf = f + 1; // nextFrame
-	if (f == motion->frameNum - 1) // fが最後のフレームなら
+	// モーションブレンド
+	Matrix result[BONE_MAX];
+	if (mBlendFactor < 1.0f)
 	{
-		nf = 0;
+		// 前のモーション取得
+		Motion* old = &mMotion[mBeforeMotionType];
+		Matrix blend = {};
+
+		// ブレンドキーフレーム作成
+		for (int i = 0; i < mBoneNum; ++i)
+		{
+			// キーフレーム取得
+			Matrix* key1 = &old->keyframe[i][(int)mBeforeFrame];
+			Matrix* key2 = &cur->keyframe[i][(int)mFrame];
+
+			// 補正
+			Matrix::Interporate(&blend, *key1, *key2, mBlendFactor);
+			mBones[i].transform = blend;
+
+			// ボーンの行列適用
+			result[i] = mBones[i].offsetMatrix * blend;
+		}
+
+		// ブレンド率更新
+		mBlendFactor = Math::Clamp01(mBlendFactor + mBlendSpeed);
+	}
+	else
+	{
+		// 現在のモーションを代入する
+		for (int i = 0; i < mBoneNum; ++i)
+		{
+			mBones[i].transform = cur->keyframe[i][(int)mFrame];
+			result[i] = mBones[i].offsetMatrix * cur->keyframe[i][(int)mFrame];
+		}
 	}
 
-	Matrix keyMatrix[BONE_MAX];
-
-	auto MatrixInterporate = [](Matrix& out, const Matrix& A, const Matrix& B, float rate)
-	{
-		//	ボーン行列の補間
-		out = A * (1.0f - rate) + B * rate;
-	};
-
-	// 行列準備
-	for (int b = 0; b < mBoneNum; ++b)
-	{
-		// 行列補完
-		Matrix mat;
-		MatrixInterporate(mat, motion->keyframe[b][f], motion->keyframe[b][nf], mFrame - f);
-		mBones[b].transform = mat;
-
-		//キーフレーム
-		keyMatrix[b] = mBones[b].offsetMatrix * mat;
-	}
-
-	mSkinningShader->UpdateStructureBuffer(keyMatrix, 2);
+	// キーフレーム情報更新
+	mSkinningShader->UpdateStructureBuffer(result, 2);
 
 	CbufferForSkinning cb;
 	{
@@ -559,7 +570,7 @@ void SkinnedMesh::Skinning()
 	}
 	
 	mSkinningShader->Run(cb.groupNumX, cb.groupNumY, cb.groupNumZ);
-	Animate(1.0f / 60.0f);
+	Animate(elapsed);
 }
 
 void SkinnedMesh::LoadMeshAnim(FbxMesh* mesh)
@@ -573,7 +584,7 @@ void SkinnedMesh::LoadMeshAnim(FbxMesh* mesh)
 	mBones[boneNo].offsetMatrix.Identity();
 
 	// キーフレーム読み込み
-	LoadKeyFrames(DEFAULT, boneNo, node);
+	LoadKeyFrames(T_POSE_INDEX, boneNo, node);
 
 	// ウェイト設定
 	int num = mesh->GetPolygonVertexCount();
@@ -652,7 +663,7 @@ bool SkinnedMesh::LoadBIN(const char* filename)
 	fread(&motionNum, sizeof(size_t), 1, fp);
 	for (size_t i = 0; i < motionNum; ++i)
 	{
-		MotionType type;
+		int type;
 		fread(&type, sizeof(int), 1, fp);
 
 		auto& motion = mMotion[type];
@@ -1049,15 +1060,50 @@ void SkinnedMesh::ChangeShader(Shader* shader)
 	mShader.reset(shader);
 }
 
-void SkinnedMesh::SetMotion(MotionType type, bool isLoop)
+void SkinnedMesh::SetMotion(int type, float blendSpeed)
 {
+	// 同じモーションならreturn
 	if (mMotionType == type) return;
+
+	// 今のモーションがTPOSEじゃないなら(TPOSEからのブレンドはしない
+	if (mMotionType != T_POSE_INDEX)
+	{
+		// 今のモーション保存
+		mBeforeFrame = mFrame;
+		mBeforeMotionType = mMotionType;
+
+		// ブレンド関係
+		mBlendSpeed = blendSpeed;
+		mBlendFactor = 0.0f;
+	}
+
+	// モーション更新
 	mMotionType = type;
-	mIsLoop = isLoop;
+	mIsLoop = true;
 	mFrame = 0.0f;
 }
 
-void SkinnedMesh::AddMotion(const char* filename, MotionType type)
+void SkinnedMesh::SetMotionOnce(int onceType, int nextType, float blendSpeed)
+{
+	// 両方同じモーションならreturn
+	if (mMotionType == onceType && mNextType == nextType) return;
+
+	// 今のモーション保存
+	mBeforeFrame = mFrame;
+	mBeforeMotionType = mMotionType;
+
+	// モーション更新
+	mMotionType = onceType;
+	mNextType = nextType;
+	mIsLoop = false;
+	mFrame = 0.0f;
+
+	// ブレンド関係
+	mBlendSpeed = blendSpeed;
+	mBlendFactor = 0.0f;
+}
+
+void SkinnedMesh::AddMotion(const char* filename, int type)
 {
 	// すでにキーが登録されてたらreturn
 	if (mMotion.count(type) >= 1) return;
@@ -1111,18 +1157,11 @@ void SkinnedMesh::Animate(float elapsedTime)
 {
 	// モーション時間の更新
 	mFrame += elapsedTime * 60;
+	mBeforeFrame += elapsedTime * 60;
 	mMotionFinished = false;
 
 	auto& nowMotion = mMotion[mMotionType];
 	int f = static_cast<int>(mFrame);
-
-
-	// コリジョンチェック
-	if (nowMotion.colBeginFrame != nowMotion.colEndFrame)
-	{
-		if (f >= nowMotion.colBeginFrame) nowMotion.isCollisionEnable = true;
-		if (f <  nowMotion.colEndFrame) nowMotion.isCollisionEnable = false;
-	}
 
 	// ループチェック
 	if (f >= nowMotion.frameNum - 1)
@@ -1131,10 +1170,31 @@ void SkinnedMesh::Animate(float elapsedTime)
 
 		if (!mIsLoop)
 		{
-			SetMotion(IDLE, true);
+			SetMotion(mNextType, mBlendSpeed);
 			mMotionFinished = true;
 		}
 	}
+
+	// 前のモーション
+	if (mBlendFactor < 1.0f)
+	{
+		auto& oldMotion = mMotion[mBeforeMotionType];
+		int bf = static_cast<int>(mBeforeFrame);
+		if (bf >= oldMotion.frameNum - 1)
+		{
+			mBeforeFrame = 0;
+		}
+	}
+
+
+	// コリジョンチェック
+	//if (nowMotion.colBeginFrame != nowMotion.colEndFrame)
+	//{
+	//	if (f >= nowMotion.colBeginFrame) nowMotion.isCollisionEnable = true;
+	//	if (f <  nowMotion.colEndFrame) nowMotion.isCollisionEnable = false;
+	//}
+
+
 }
 
 

@@ -184,7 +184,7 @@ void SceneBattle::Render()
 
 	// シャドウマップ
 	const Shader* shader = mShadowMap->GetShader();
-	mShadowMap->Activate(lightDir);
+	mShadowMap->Activate(lightDir, mLight.GetLightPos());
 	mTerrain->Render(shader, view, proj, lightDir);
 	mBattleCharacterManager->Render(shader, view, proj, lightDir);
 	mShadowMap->Deactivate();

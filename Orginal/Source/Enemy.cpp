@@ -29,7 +29,7 @@ void Enemy::Initialize()
 	mScale = transform.scale;
 	mAngle = transform.angle;
 
-	SetMotion(SkinnedMesh::IDLE);
+	SetMotion(Character::IDLE);
 }
 
 void Enemy::Update(const Vector3& playerPos)
@@ -76,7 +76,7 @@ void Enemy::Move(const Vector3& playerPos)
 
 void Enemy::StateWait()
 {
-	SetMotion(SkinnedMesh::IDLE);
+	SetMotion(Character::IDLE);
 
 	if (mTimer >= WAIT_TO_WALK_SEC)
 	{
@@ -94,7 +94,7 @@ void Enemy::StateWait()
 
 void Enemy::StateWalk()
 {
-	SetMotion(SkinnedMesh::WALK);
+	SetMotion(Character::WALK);
 
 	if (mTimer >= WALK_TO_WAIT_SEC)
 	{
@@ -118,7 +118,7 @@ void Enemy::StateWalk()
 
 void Enemy::StateChase(const Vector3& playerPos)
 {
-	SetMotion(SkinnedMesh::RUN);
+	SetMotion(Character::RUN);
 
 	// チェイス終了かチェック
 	if (!IsChase(playerPos))

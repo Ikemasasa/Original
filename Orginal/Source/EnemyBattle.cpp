@@ -14,6 +14,6 @@ EnemyBattle::EnemyBattle(const Enemy* enemy) : BattleCharacter(enemy, StatusData
 
 void EnemyBattle::Initialize()
 {
-	SetMotion(SkinnedMesh::IDLE);
+	SetMotion(Character::IDLE);
 	SetAngle(Vector3(0.0f, Define::PI, 0.0f));
 }

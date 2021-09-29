@@ -47,7 +47,7 @@ void Character::UpdateWorld()
 {
 	// 各種更新の後に呼び出す
 	// モーションがあるならskinning
-	if (mMesh->GetMotion() != SkinnedMesh::DEFAULT)
+	if (mMesh->GetMotion() != Character::DEFAULT)
 	{
 		mMesh->Skinning();
 	}

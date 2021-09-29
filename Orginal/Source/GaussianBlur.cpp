@@ -71,23 +71,8 @@ void GaussianBlur::Blur(const RenderTarget* orgSprite)
 	if (dsv)dsv->Release();
 }
 
-void GaussianBlur::Render(bool viewportOverwrite)
+void GaussianBlur::Render()
 {
-	if (viewportOverwrite)
-	{
-		// 両ブラー適用後のVerticalBlurを描画する
-		// ビューポート設定
-
-		//D3D11_VIEWPORT viewport;
-		//viewport.Width = mSize.x;
-		//viewport.Height = mSize.y;
-		//viewport.MinDepth = 0.0f;
-		//viewport.MaxDepth = 1.0f;
-		//viewport.TopLeftX = 0;
-		//viewport.TopLeftY = 0;
-		//FRAMEWORK.GetContext()->RSSetViewports(1, &viewport);
-	}
-
 	mVerticalBlur.Render(nullptr);
 }
 

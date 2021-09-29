@@ -2,6 +2,7 @@
 
 #include "lib/Math.h"
 
+#include "Character.h"
 #include "CSVLoader.h"
 #include "DataBase.h"
 
@@ -70,14 +71,14 @@ MeshDataLoader::MeshData MeshDataLoader::LoadMesh(int charaID)
 	// ÉÅÉbÉVÉÖì«Ç›Ç±Ç›
 	{
 		if (filenames.empty()) return md;
-		if (motionIDs[0] != SkinnedMesh::DEFAULT) return md;
+		if (motionIDs[0] != Character::DEFAULT) return md;
 
 		std::shared_ptr<SkinnedMesh> mesh(std::make_shared<SkinnedMesh>(filenames[0].c_str()) );
 		size_t fileNum = filenames.size();
 		for (size_t i = 1; i < fileNum; ++i)
 		{
-			if (motionIDs[i] >= SkinnedMesh::MAX) break;
-			mesh->AddMotion(filenames[i].c_str(), (SkinnedMesh::MotionType)motionIDs[i]);
+			if (motionIDs[i] >= Character::MOTION_MAX) break;
+			mesh->AddMotion(filenames[i].c_str(), motionIDs[i]);
 		}
 
 		md.mesh = mesh;

@@ -33,7 +33,7 @@ void NPC::Initialize()
 	mTalkCount = TALK_COUNT_INIT;
 	mOldFlag = false;
 
-	SetMotion(SkinnedMesh::IDLE);
+	SetMotion(Character::IDLE);
 }
 
 void NPC::Update()

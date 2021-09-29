@@ -19,29 +19,11 @@
 
 class SkinnedMesh
 {
-public:
-	enum MotionType
-	{
-		DEFAULT,
-		IDLE,
-		WALK,
-		RUN,
-		ATTACK,
-		GUARD,
-		DIE,
-		DAMAGE,
-		USE_ITEM,
-		UNIQUE1,
-		UNIQUE2,
-		UNIQUE3,
-
-		MAX,
-	};
-
 private:
 	static const int STR_MAX = 128;
 	//static const int MOTION_MAX = 256;
 	static const int BONE_MAX = 256;
+	static const int T_POSE_INDEX = 0;
 
 	struct Cbuffer
 	{
@@ -107,11 +89,11 @@ private:
 		int frameNum = 0;
 		Matrix* keyframe[BONE_MAX] = {};
 
-		// 現在は球だけ
-		SPHERE collision;
-		int colBeginFrame = 0;
-		int colEndFrame = 0;
-		bool isCollisionEnable = false;
+		//// 現在は球だけ
+		//SPHERE collision;
+		//int colBeginFrame = 0;
+		//int colEndFrame = 0;
+		//bool isCollisionEnable = false;
 	};
 
 	struct BeforeMotion
@@ -157,10 +139,15 @@ private:
 	bool mIsLoop;
 	bool mMotionFinished;
 	float mFrame = 0;
-	MotionType mMotionType = DEFAULT; // 現在のモーション;
-	std::map<MotionType, Motion> mMotion; // モーションデータ
+	float mBeforeFrame = 0; // 前のモーションのフレーム
+	float mBlendFactor = 1.0f;
+	float mBlendSpeed = 0.1f;
+	int mMotionType = 0; // 現在のモーション
+	int mNextType = 0;	 // ループしないモーションの次のモーション
+	int mBeforeMotionType = 0; // 前のモーション
+	std::map<int, Motion> mMotion; // モーションデータ
 
-	void LoadKeyFrames(MotionType type, int bone, FbxNode* boneNode);
+	void LoadKeyFrames(int type, int bone, FbxNode* boneNode);
 	void LoadMeshAnim(FbxMesh* mesh); // ボーンがないメッシュアニメ―ション
 
 
@@ -182,9 +169,10 @@ public:
 	// モデルぴったりの直方体(ローカル)
 	AABB mAABB;
 
-	void SetMotion(MotionType type, bool isLoop = false);
-	MotionType GetMotion() const { return mMotionType; }
-	void AddMotion(const char* filename, MotionType type);
+	void SetMotion(int type, float blendSpeed);
+	void SetMotionOnce(int noLoopType, int nextType, float blendSpeed);
+	int GetMotion() const { return mMotionType; }
+	void AddMotion(const char* filename, int type);
 	void Animate(float elapsedTime);
 	void Skinning(); // ボーンによる変形
 

@@ -13,5 +13,5 @@ PlayerBattle::PlayerBattle(Player* player) : BattleCharacter(player, StatusData:
 
 void PlayerBattle::Initialize()
 {	
-	SetMotion(SkinnedMesh::IDLE);
+	SetMotion(Character::IDLE);
 }

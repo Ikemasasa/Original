@@ -45,7 +45,7 @@ void TurnManager::Update(const BattleCharacterManager* bcm)
 	if (!mProduction)
 	{
 		mIsTurnFinished = false;
-		GetMoveChara()->SetMotion(SkinnedMesh::IDLE);
+		GetMoveChara()->SetMotion(Character::IDLE);
 
 		// BattleCharaManager‚Ìupdate‚ÅƒRƒ}ƒ“ƒh‚ªŒˆ‚Ü‚Á‚½‚ç
 		if (GetMoveChara()->GetCommand()->IsBehaviourEnable())
