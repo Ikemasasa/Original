@@ -22,14 +22,6 @@ void NPCManager::Update()
 	for (auto& npc : mNPCs) npc->Update();
 }
 
-void NPCManager::Render(const Matrix& view, const Matrix& proj, const Vector4& lightDir)
-{
-	for (auto& npc : mNPCs)
-	{
-		npc->Render(view, proj, lightDir);
-	}
-}
-
 void NPCManager::Render(const Shader* shader, const Matrix& view, const Matrix& proj, const Vector4& lightDir)
 {
 	for (auto& npc : mNPCs) npc->Render(shader, view, proj, lightDir);

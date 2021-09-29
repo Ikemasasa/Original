@@ -511,10 +511,8 @@ void SkinnedMesh::LoadKeyFrames(int type, int bone, FbxNode* boneNode)
 	}
 }
 
-void SkinnedMesh::Skinning()
+void SkinnedMesh::Skinning(float elapsedTime)
 {
-	float elapsed = 1.0f / 60.0f;
-
 	// 現在のモーション取得
 	Motion* cur = &mMotion[mMotionType];
 	if (cur == NULL) return;
@@ -570,7 +568,7 @@ void SkinnedMesh::Skinning()
 	}
 	
 	mSkinningShader->Run(cb.groupNumX, cb.groupNumY, cb.groupNumZ);
-	Animate(elapsed);
+	Animate(elapsedTime);
 }
 
 void SkinnedMesh::LoadMeshAnim(FbxMesh* mesh)
@@ -746,14 +744,11 @@ SkinnedMesh::SkinnedMesh(const char* fbxFilename)
 	mAABB.min = Vector3( 0.0f, 0.0f, 0.0f );
 	mAABB.max = Vector3( 0.0f, 0.0f, 0.0f );
 
-	mShader = std::make_unique<Shader>();
-
 	Initialize(fbxFilename);
 }
 
 SkinnedMesh::~SkinnedMesh()
 {
-	mShader->UnLoad();
 	for (int i = 0; i < mMeshNum; ++i)
 	{
 		for (int k = 0; k < Material::KIND; ++k)
@@ -810,10 +805,6 @@ void SkinnedMesh::Initialize(const char* fbxFilename)
 		mVertexBuffer = mSkinningShader->GetRWBuffer();
 	}
 
-
-	mShader->Load(L"Shaders/SkinnedMesh.fx", "VSMain", "PSMain");
-
-
 	D3D11_SUBRESOURCE_DATA subresourceData;
 	D3D11_BUFFER_DESC bufferDesc;
 	ZeroMemory(&subresourceData, sizeof(subresourceData));
@@ -847,46 +838,7 @@ void SkinnedMesh::Initialize(const char* fbxFilename)
 	if (FAILED(hr)) return;
 }
 
-void SkinnedMesh::Render(const Matrix& wvp, const Matrix& world, const Vector4& lightDir, float elapsedTime, float alpha)
-{
-	const auto& context = FRAMEWORK.GetContext();
-	UINT stride = sizeof(Vertex);
-	UINT offset = 0;
-
-	mShader->Activate();
-
-	context->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), &stride, &offset);
-	context->IASetIndexBuffer(mIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-
-	int start = 0;
-	for (int m = 0; m < mMeshNum; ++m)
-	{
-		for (int i = 0; i < Material::KIND; ++i)
-		{
-			mMaterials[m].mtlSpr[i].sprite.Set(i);
-		}
-
-		Cbuffer cb;
-		cb.wvp = wvp;
-		cb.world = world;
-		cb.lightDir = lightDir;
-		cb.materialColor = mMaterialColors[m];
-		context->UpdateSubresource(mConstBuffer.Get(), 0, NULL, &cb, 0, 0);
-		context->VSSetConstantBuffers(0, 1, mConstBuffer.GetAddressOf());
-		context->PSSetConstantBuffers(0, 1, mConstBuffer.GetAddressOf());
-
-		// 描画
-		context->DrawIndexed(mMaterials[m].faceNum * 3, start, 0);
-		start += mMaterials[m].faceNum * 3;
-	}
-
-	// CSでVBを使ってるのでリセット
-	stride = 0;
-	ID3D11Buffer* dummyVB = nullptr;
-	context->IASetVertexBuffers(0, 1, &dummyVB, &stride, &offset);
-}
-
-void SkinnedMesh::Render(const Shader* shader, const Matrix& wvp, const Matrix& world, const Vector4& lightDir, float elapsedTime, float alpha)
+void SkinnedMesh::Render(const Shader* shader, const Matrix& wvp, const Matrix& world, const Vector4& lightDir)
 {
 	const auto& context = FRAMEWORK.GetContext();
 	UINT stride = sizeof(Vertex);
@@ -1050,14 +1002,6 @@ int SkinnedMesh::RayPick(const Vector3& pos, const Vector3& velocity, Vector3* o
 	}
 
 	return ret;
-}
-
-void SkinnedMesh::ChangeShader(Shader* shader)
-{
-	if (!shader) return;
-
-	mShader->UnLoad();
-	mShader.reset(shader);
 }
 
 void SkinnedMesh::SetMotion(int type, float blendSpeed)

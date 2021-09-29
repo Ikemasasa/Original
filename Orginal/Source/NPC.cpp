@@ -9,10 +9,7 @@
 
 NPC::NPC(int charaID) : Character(charaID, Character::NPC)
 {
-	// シェーダ書き換え
-	Shader* shader = new Shader;
-	shader->Load(L"Shaders/Character.fx", "VSMain", "PSMain");
-	ChangeShader(shader);
+
 }
 
 NPC::~NPC()

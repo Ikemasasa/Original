@@ -15,11 +15,6 @@
 
 Player::Player(int charaID) : Character(charaID, Character::PLAYER)
 {
-	// シェーダ書き換え
-	Shader* shader = new Shader;
-	shader->Load(L"Shaders/Character.fx", "VSMain", "PSMain");
-	ChangeShader(shader);
-
 	// とりあえずアイテムを何個か渡す
 	for (int i = 0; i < 2; ++i)
 	{

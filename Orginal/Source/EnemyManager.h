@@ -22,7 +22,7 @@ public:
 
 private:
 	std::list<std::unique_ptr<Enemy>> mEnemies;
-	Vector3 mPlayerPos;
+	Vector3 mPlayerPos = {};
 
 public:
 	EnemyManager();
@@ -33,7 +33,6 @@ public:
 
 	void Initialize();
 	void Update(const bool isTalking);
-	void Render(const Matrix& view, const Matrix& projection, const Vector4& lightDir);
 	void Render(const Shader* shader, const Matrix& view, const Matrix& projection, const Vector4& lightDir);
 
 	int GetNum() const { return mEnemies.size(); }

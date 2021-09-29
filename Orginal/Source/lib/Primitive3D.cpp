@@ -1,10 +1,11 @@
-#include "Framework.h"
-#include "GeometricPrimitive.h"
-#include "ResourceManager.h"
-#include <vector>
-#include "Math.h"
+#include "Primitive3D.h"
 
-GeometricPrimitive::GeometricPrimitive()
+#include "Framework.h"
+#include "Math.h"
+#include "ResourceManager.h"
+#include "Shader.h"
+
+Primitive3D::Primitive3D()
 {
 	mVertexBuffer = nullptr;
 	mIndexBuffer = nullptr;
@@ -15,21 +16,17 @@ GeometricPrimitive::GeometricPrimitive()
 	mIndices.clear();
 }
 
-GeometricPrimitive::~GeometricPrimitive()
+Primitive3D::~Primitive3D()
 {
-	mShader.UnLoad();
 	mVertices.clear();
 	mIndices.clear();
 }
 
-void GeometricPrimitive::Initialize()
+void Primitive3D::Initialize()
 {
 	auto device = FRAMEWORK.GetDevice();
 
 	HRESULT hr;
-	
-	mShader.Load(L"Shaders/GeometricPrimitive.fx", "VSMain", "PSMain");
-
 
 	hr = SetVertexBuffer(device);
 	if (FAILED(hr)) return;
@@ -48,7 +45,7 @@ void GeometricPrimitive::Initialize()
 	if (FAILED(hr)) return;
 }
 
-HRESULT GeometricPrimitive::CreateVertexBuffer(ID3D11Device* device)
+HRESULT Primitive3D::CreateVertexBuffer(ID3D11Device* device)
 {
 	D3D11_SUBRESOURCE_DATA subresourceData;
 	ZeroMemory(&subresourceData, sizeof(subresourceData));
@@ -66,7 +63,7 @@ HRESULT GeometricPrimitive::CreateVertexBuffer(ID3D11Device* device)
 	return hr;
 }
 
-HRESULT GeometricPrimitive::CreateIndexBuffer(ID3D11Device* device)
+HRESULT Primitive3D::CreateIndexBuffer(ID3D11Device* device)
 {
 	D3D11_SUBRESOURCE_DATA subresourceData;
 	ZeroMemory(&subresourceData, sizeof(subresourceData));
@@ -84,13 +81,13 @@ HRESULT GeometricPrimitive::CreateIndexBuffer(ID3D11Device* device)
 }
 
 
-void GeometricPrimitive::Render(const DirectX::XMFLOAT4X4& wvp, const DirectX::XMFLOAT4X4& world, const DirectX::XMFLOAT4& lightDirection, const DirectX::XMFLOAT4& color)
+void Primitive3D::Render(const Shader* shader, const Matrix& wvp, const Matrix& world, const Vector4& lightDir, const Vector4 color)
 {
 	auto context = FRAMEWORK.GetContext();
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
 
-	mShader.Activate();
+	shader->Activate();
 
 	context->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), &stride, &offset);
 	context->IASetIndexBuffer(mIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
@@ -99,8 +96,8 @@ void GeometricPrimitive::Render(const DirectX::XMFLOAT4X4& wvp, const DirectX::X
 	Cbuffer cb = {};
 	cb.wvp = wvp;
 	cb.world = world;
-	cb.lightDir = lightDirection;
-	cb.materialColor = color;
+	cb.lightDir = lightDir;
+	cb.color = color;
 	context->UpdateSubresource(mConstBuffer.Get(), 0, NULL, &cb, 0, 0);
 	context->VSSetConstantBuffers(0, 1, mConstBuffer.GetAddressOf());
 
@@ -110,7 +107,7 @@ void GeometricPrimitive::Render(const DirectX::XMFLOAT4X4& wvp, const DirectX::X
 
 }
 
-int GeometricPrimitive::RayCast(const Vector3& pos, const Vector3& velocity, Vector3* outPos, Vector3* outNormal)
+int Primitive3D::RayCast(const Vector3& pos, const Vector3& velocity, Vector3* outPos, Vector3* outNormal)
 {
 	int ret = -1; // ÉqÉbÉgÇµÇΩñ î‘çÜ
 	float minDist = FLT_MAX; // àÍî‘ãﬂÇ¢ÉqÉbÉgñ Ç‹Ç≈ÇÃãóó£
@@ -235,7 +232,7 @@ int GeometricPrimitive::RayCast(const Vector3& pos, const Vector3& velocity, Vec
 */
 
 // geometric_cube
-HRESULT GeometricCube::SetVertexBuffer(ID3D11Device* device)
+HRESULT Cube::SetVertexBuffer(ID3D11Device* device)
 {
 	//Vertex cubeVertices[] =
 	//{
@@ -322,7 +319,7 @@ HRESULT GeometricCube::SetVertexBuffer(ID3D11Device* device)
 	return CreateVertexBuffer(device);
 }
 
-HRESULT GeometricCube::SetIndexBuffer(ID3D11Device* device)
+HRESULT Cube::SetIndexBuffer(ID3D11Device* device)
 {
 	mIndices.clear();
 
@@ -357,7 +354,7 @@ HRESULT GeometricCube::SetIndexBuffer(ID3D11Device* device)
 
 
 // geometric_shpere
-HRESULT GeometricSphere::SetVertexBuffer(ID3D11Device* device)
+HRESULT Sphere::SetVertexBuffer(ID3D11Device* device)
 {
 	for (int v = 0; v <= V_MAX; ++v)
 	{
@@ -387,7 +384,7 @@ HRESULT GeometricSphere::SetVertexBuffer(ID3D11Device* device)
 	return CreateVertexBuffer(device);
 }
 
-HRESULT GeometricSphere::SetIndexBuffer(ID3D11Device* device)
+HRESULT Sphere::SetIndexBuffer(ID3D11Device* device)
 {
 	for (int v = 0; v < V_MAX; ++v)
 	{
@@ -421,7 +418,7 @@ HRESULT GeometricSphere::SetIndexBuffer(ID3D11Device* device)
 
 
 // geometric_cylinder
-HRESULT GeometricCylinder::SetVertexBuffer(ID3D11Device* device)
+HRESULT Cylinder::SetVertexBuffer(ID3D11Device* device)
 {
 	constexpr float LENGTH = 5.0f;
 	constexpr float RADIUS = 1.75f;
@@ -467,7 +464,7 @@ HRESULT GeometricCylinder::SetVertexBuffer(ID3D11Device* device)
 	return CreateVertexBuffer(device);
 }
 
-HRESULT GeometricCylinder::SetIndexBuffer(ID3D11Device* device)
+HRESULT Cylinder::SetIndexBuffer(ID3D11Device* device)
 {	
 	// è„ÇÃâ~
 	for (int u = 0; u < U_MAX - 2; ++u)
@@ -532,7 +529,7 @@ HRESULT GeometricCylinder::SetIndexBuffer(ID3D11Device* device)
 
 
 // geometric_capsule
-HRESULT GeometricCapsule::SetVertexBuffer(ID3D11Device* device)
+HRESULT Capsule::SetVertexBuffer(ID3D11Device* device)
 {
 	Vector3 sliceVector(1.0f, 1.0f, 1.0f);
 	sliceVector.Normalize();
@@ -667,7 +664,7 @@ HRESULT GeometricCapsule::SetVertexBuffer(ID3D11Device* device)
 	return CreateVertexBuffer(device);
 }
 
-HRESULT GeometricCapsule::SetIndexBuffer(ID3D11Device* device)
+HRESULT Capsule::SetIndexBuffer(ID3D11Device* device)
 {
 	// 1î‘è„ÇÃí∏ì_ÇÃé¸ÇË
 	for (UINT i = 0; i < U_MAX; i++)

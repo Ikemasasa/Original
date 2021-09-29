@@ -75,11 +75,6 @@ void PlayerManager::Update(const bool isTalking)
 	}
 }
 
-void PlayerManager::Render(const Matrix& view, const Matrix& proj, const Vector4& lightDir)
-{
-	mMovePlayer->Render(view, proj, lightDir);
-}
-
 void PlayerManager::Render(const Shader* shader, const Matrix& view, const Matrix& proj, const Vector4& lightDir)
 {
 	mMovePlayer->Render(shader, view, proj, lightDir);

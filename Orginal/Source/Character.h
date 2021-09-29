@@ -6,7 +6,7 @@
 #include "lib/SkinnedMesh.h"
 #include "lib/Vector.h"
 
-class GeometricPrimitive;
+class Primitive3D;
 
 class Character
 {
@@ -43,7 +43,7 @@ public:
 
 private:
 	std::shared_ptr<SkinnedMesh> mMesh = nullptr;
-	std::shared_ptr<GeometricPrimitive> mHit = nullptr;
+	std::shared_ptr<Primitive3D> mHit = nullptr;
 	Matrix mWorld = { 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 };
 	int mObjID = -1; // インスタンスに割り当てられるID(各Managerで0スタートで増えていく)
 	int mCharaID = -1; // キャラクターそのものに割り当てられているID(スタートは種類によって変わる、DataBase参照)
@@ -64,7 +64,6 @@ public:
 	virtual ~Character() = default;
 
 	void UpdateWorld();
-	void Render(const Matrix& view, const Matrix& proj, const Vector4& lightDir);
 	void Render(const Shader * shader, const Matrix& view, const Matrix& proj, const Vector4& lightDir);
 
 	void CorrectionAngle();	// mVelocity方向に向く
@@ -102,6 +101,5 @@ public:
 	void SetMotion(MotionType type, float blendSpeed = DEFAULT_MOTION_BLEND_SPEED) { mMesh->SetMotion(type, blendSpeed); }
 	void SetMotionOnce(MotionType type, MotionType nextType, float blendSpeed = DEFAULT_MOTION_BLEND_SPEED) { mMesh->SetMotionOnce(type, nextType, blendSpeed); }
 
-	void ChangeShader(Shader * shader) { mMesh->ChangeShader(shader); }
 	bool IsMotionFinished() const { return mMesh->IsMotionFinished(); }
 };

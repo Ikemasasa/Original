@@ -99,11 +99,6 @@ void BattleCharacterManager::Update(const TurnManager* turnManager)
 	mDropItemShower.Update();
 }
 
-void BattleCharacterManager::Render(const Matrix& view, const Matrix& proj, const Vector4& lightDir)
-{
-	for (auto& ba : mBCharacters) ba->Render(view, proj, lightDir);
-}
-
 void BattleCharacterManager::Render(const Shader* shader, const Matrix& view, const Matrix& projection, const Vector4& lightDir)
 {
 	for (auto& ba : mBCharacters) ba->Render(shader, view, projection, lightDir);

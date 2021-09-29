@@ -25,16 +25,10 @@ void Object::UpdateWorld()
 	mWorld.SRT(mScale, mAngle, mPos);
 }
 
-void Object::Render(const Matrix& view, const Matrix& proj, const Vector4& lightDir)
-{
-	Matrix wvp = mWorld * view * proj;
-	mMesh->Render(wvp, mWorld, lightDir, GameManager::elapsedTime);
-}
-
 void Object::Render(const Shader* shader, const Matrix& view, const Matrix& proj, const Vector4& lightDir)
 {
 	Matrix wvp = mWorld * view * proj;
-	mMesh->Render(shader, wvp, mWorld, lightDir, GameManager::elapsedTime);
+	mMesh->Render(shader, wvp, mWorld, lightDir);
 }
 
 int Object::RayPickSRT(const Vector3& pos, const Vector3& velocity, Vector3* outPos, Vector3* outNormal)

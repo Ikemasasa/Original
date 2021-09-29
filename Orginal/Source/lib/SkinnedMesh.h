@@ -89,11 +89,11 @@ private:
 		int frameNum = 0;
 		Matrix* keyframe[BONE_MAX] = {};
 
-		//// 現在は球だけ
-		//SPHERE collision;
-		//int colBeginFrame = 0;
-		//int colEndFrame = 0;
-		//bool isCollisionEnable = false;
+		// 現在は球だけ
+		SPHERE collision;
+		int colBeginFrame = 0;
+		int colEndFrame = 0;
+		bool isCollisionEnable = false;
 	};
 
 	struct BeforeMotion
@@ -107,7 +107,6 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer>		mIndexBuffer;
 	Microsoft::WRL::ComPtr<ID3D11Buffer>		mConstBuffer;
 	std::unique_ptr<ComputeShader> mSkinningShader;
-	std::unique_ptr<Shader> mShader;
 
 
 	char mFbxDir[STR_MAX];
@@ -125,14 +124,6 @@ private:
 	Vector4* mMaterialColors;
 	Weight* mWeights;
 
-	void Initialize(const char* fbxFilename);
-	void LoadFBX(ID3D11Device* device, const char* filename);
-	bool LoadBIN(const char* filename);
-	void Save(const char* filename/*バイナリファイル名*/);
-
-	void LoadBone(FbxMesh* mesh);
-	int FindBone(const char* name);
-	void OptimizeVertices();
 
 	// アニメーション関係
 	int mStartFrame;
@@ -146,6 +137,18 @@ private:
 	int mNextType = 0;	 // ループしないモーションの次のモーション
 	int mBeforeMotionType = 0; // 前のモーション
 	std::map<int, Motion> mMotion; // モーションデータ
+private:
+
+	void Initialize(const char* fbxFilename);
+	void LoadFBX(ID3D11Device* device, const char* filename);
+	bool LoadBIN(const char* filename);
+	void Save(const char* filename/*バイナリファイル名*/);
+
+	void LoadBone(FbxMesh* mesh);
+	int FindBone(const char* name);
+	void OptimizeVertices();
+
+	void Animate(float elapsedTime);
 
 	void LoadKeyFrames(int type, int bone, FbxNode* boneNode);
 	void LoadMeshAnim(FbxMesh* mesh); // ボーンがないメッシュアニメ―ション
@@ -155,16 +158,8 @@ public:
 	SkinnedMesh(const char* fbxFilename);
 	virtual ~SkinnedMesh();
 
-	void Render(const Matrix& wvp, const Matrix& world, const Vector4& lightDir, float elapsedTime, float alpha = 1.0f);
-	void Render(const Shader* shader, const Matrix& wvp, const Matrix& world, const Vector4& lightDir, float elapsedTime, float alpha = 1.0f);
-
-	int RayPick(
-		const Vector3& pos,
-		const Vector3& velocity,
-		Vector3* outPos,
-		Vector3* outNormal);
-
-	void ChangeShader(Shader* shader);
+	void Render(const Shader* shader, const Matrix& wvp, const Matrix& world, const Vector4& lightDir);
+	int RayPick(const Vector3& pos, const Vector3& velocity, Vector3* outPos, Vector3* outNormal);
 
 	// モデルぴったりの直方体(ローカル)
 	AABB mAABB;
@@ -173,8 +168,8 @@ public:
 	void SetMotionOnce(int noLoopType, int nextType, float blendSpeed);
 	int GetMotion() const { return mMotionType; }
 	void AddMotion(const char* filename, int type);
-	void Animate(float elapsedTime);
-	void Skinning(); // ボーンによる変形
+
+	void Skinning(float elapsedTime); // ボーンによる変形
 
 	bool IsMotionFinished() const { return mMotionFinished; }
 };

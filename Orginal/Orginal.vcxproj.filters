@@ -105,7 +105,7 @@
     <ClInclude Include="Source\lib\Framework.h">
       <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
-    <ClInclude Include="Source\lib\GeometricPrimitive.h">
+    <ClInclude Include="Source\lib\Primitive3D.h">
       <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
     <ClInclude Include="Source\lib\HighResolutionTimer.h">
@@ -476,7 +476,7 @@
     <ClCompile Include="Source\lib\Framework.cpp">
       <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
-    <ClCompile Include="Source\lib\GeometricPrimitive.cpp">
+    <ClCompile Include="Source\lib\Primitive3D.cpp">
       <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\ProcessMessage.cpp">

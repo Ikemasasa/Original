@@ -1,14 +1,15 @@
 #pragma once
 #include <d3d11.h>
-#include <directxmath.h>
 #include <vector>
 #include <wrl.h>
-#include "CollisionStructs.h"
-#include "ResourceManager.h"
-#include "Vector.h"
-#include "Shader.h"
 
-class GeometricPrimitive
+#include "CollisionStructs.h"
+#include "Matrix.h"
+#include "Vector.h"
+
+class Shader;
+
+class Primitive3D
 {
 protected:
 	struct Vertex
@@ -23,10 +24,10 @@ protected:
 	};
 	struct Cbuffer
 	{
-		DirectX::XMFLOAT4X4 wvp;
-		DirectX::XMFLOAT4X4 world;
-		DirectX::XMFLOAT4 lightDir;
-		DirectX::XMFLOAT4 materialColor;
+		Matrix wvp;
+		Matrix world;
+		Vector4 lightDir;
+		Vector4 color;
 	};
 
 
@@ -38,7 +39,6 @@ protected:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> mVertexBuffer;
 	Microsoft::WRL::ComPtr<ID3D11Buffer> mIndexBuffer;
 	Microsoft::WRL::ComPtr<ID3D11Buffer> mConstBuffer;
-	Shader mShader;
 
 	void Initialize();
 	virtual HRESULT SetVertexBuffer(ID3D11Device* device) = 0;
@@ -49,26 +49,20 @@ public:
 	// 当たり判定用(ローカル)
 	AABB mAABB;
 
-	GeometricPrimitive();
-	virtual ~GeometricPrimitive();
-	void Render(
-		const DirectX::XMFLOAT4X4& wvp, // ワールド・ビュー・プロジェクション合成行列
-		const DirectX::XMFLOAT4X4& world, // ワールド変換行列
-		const DirectX::XMFLOAT4& lightDirection,	 // ライト進行方向
-		const DirectX::XMFLOAT4& color    // 材質色
-		);
-
+	Primitive3D();
+	virtual ~Primitive3D();
+	void Render(const Shader* shader, const Matrix& wvp, const Matrix& world, const Vector4& lightDir, const Vector4 color);
 	int RayCast(const Vector3& pos, const Vector3& velocity, Vector3* outPos, Vector3* outNormal);
 };
 
-class GeometricCube : public GeometricPrimitive
+class Cube : public Primitive3D
 {
 	Vector3 mMin;
 	Vector3 mMax;
 
 public:
-	GeometricCube(const Vector3& min, const Vector3& max) : GeometricPrimitive() { mMin = min; mMax = max; Initialize();  };
-	~GeometricCube() = default;
+	Cube(const Vector3& min, const Vector3& max) : Primitive3D() { mMin = min; mMax = max; Initialize();  };
+	~Cube() = default;
 	HRESULT SetVertexBuffer(ID3D11Device* device) override;
 	HRESULT SetIndexBuffer(ID3D11Device* device) override;
 
@@ -76,33 +70,33 @@ public:
 	void SetMax(const Vector3& max) { mMax = max; }
 };
 
-class GeometricSphere : public GeometricPrimitive
+class Sphere : public Primitive3D
 {
 private:
 	static const int U_MAX = 30;
 	static const int V_MAX = 15;
 
 public:
-	GeometricSphere() : GeometricPrimitive() { Initialize(); };
-	~GeometricSphere() = default;
+	Sphere() : Primitive3D() { Initialize(); };
+	~Sphere() = default;
 	HRESULT SetVertexBuffer(ID3D11Device* device) override;
 	HRESULT SetIndexBuffer(ID3D11Device* device) override;
 };
 
-class GeometricCylinder : public GeometricPrimitive
+class Cylinder : public Primitive3D
 {
 private:
 	static const int U_MAX = 25;
 	static const int V_MAX = 2;
 
 public:
-	GeometricCylinder() : GeometricPrimitive() { Initialize(); }
-	~GeometricCylinder() = default;
+	Cylinder() : Primitive3D() { Initialize(); }
+	~Cylinder() = default;
 	HRESULT SetVertexBuffer(ID3D11Device* device) override;
 	HRESULT SetIndexBuffer(ID3D11Device* device) override;
 };
 
-class GeometricCapsule: public GeometricPrimitive
+class Capsule : public Primitive3D
 {
 private:
 	static const int U_MAX = 16;
@@ -112,7 +106,7 @@ private:
 	Vector3 mCenterBottom;
 	float mRadius;
 public:
-	GeometricCapsule(const Vector3& cTop, const Vector3& cBottom, const float radius) : GeometricPrimitive()
+	Capsule(const Vector3& cTop, const Vector3& cBottom, const float radius) : Primitive3D()
 	{ 
 		mCenterTop = cTop;
 		mCenterBottom = cBottom; 
@@ -120,7 +114,7 @@ public:
 
 		Initialize(); 
 	}
-	~GeometricCapsule() = default;
+	~Capsule() = default;
 	HRESULT SetVertexBuffer(ID3D11Device* device) override;
 	HRESULT SetIndexBuffer(ID3D11Device* device) override;
 };

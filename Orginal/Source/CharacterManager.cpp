@@ -51,13 +51,6 @@ void CharacterManager::Update()
 	mNPCTalk->Update();
 }
 
-void CharacterManager::Render(const Matrix& view, const Matrix& proj, const Vector4& lightDir)
-{
-	mPlayerManager->Render(view, proj, lightDir);
-	mEnemyManager->Render(view, proj, lightDir);
-	mNPCManager->Render(view, proj, lightDir);
-}
-
 void CharacterManager::Render(const Shader* shader, const Matrix& view, const Matrix& proj, const Vector4& lightDir)
 {
 	mPlayerManager->Render(shader, view, proj, lightDir);

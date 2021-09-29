@@ -239,7 +239,7 @@
     <ClInclude Include="Source\Fade.h" />
     <ClInclude Include="Source\lib\Blend.h" />
     <ClInclude Include="Source\lib\Framework.h" />
-    <ClInclude Include="Source\lib\GeometricPrimitive.h" />
+    <ClInclude Include="Source\lib\Primitive3D.h" />
     <ClInclude Include="Source\lib\HighResolutionTimer.h" />
     <ClInclude Include="Source\lib\Math.h" />
     <ClInclude Include="Source\lib\Misc.h" />
@@ -332,7 +332,7 @@
     <ClCompile Include="Source\lib\Blend.cpp" />
     <ClCompile Include="Source\lib\FontTexture.cpp" />
     <ClCompile Include="Source\lib\Framework.cpp" />
-    <ClCompile Include="Source\lib\GeometricPrimitive.cpp" />
+    <ClCompile Include="Source\lib\Primitive3D.cpp" />
     <ClCompile Include="Source\lib\HighResolutionTimer.cpp" />
     <ClCompile Include="Source\lib\Math.cpp" />
     <ClCompile Include="Source\lib\Matrix.cpp" />

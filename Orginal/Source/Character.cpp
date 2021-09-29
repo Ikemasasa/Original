@@ -1,6 +1,6 @@
 #include "Character.h"
 
-#include "lib/GeometricPrimitive.h"
+#include "lib/Primitive3D.h"
 
 #include "GameManager.h"
 #include "MeshManager.h"
@@ -24,7 +24,7 @@ Character::Character(int charaID, Type type)
 	mCapsuleParam.centerTop = cTop;
 	mCapsuleParam.centerBottom = cBottom;
 	mCapsuleParam.radius = radius;
-	mHit = std::make_shared<GeometricCapsule>(cTop, cBottom, mCapsuleParam.radius);
+	mHit = std::make_shared<Capsule>(cTop, cBottom, mCapsuleParam.radius);
 }
 
 Character::Character(const Character* org)
@@ -46,24 +46,12 @@ Character::Character(const Character* org)
 void Character::UpdateWorld()
 {
 	// 各種更新の後に呼び出す
-	// モーションがあるならskinning
-	if (mMesh->GetMotion() != Character::DEFAULT)
-	{
-		mMesh->Skinning();
-	}
+	
+	// スキニング
+	mMesh->Skinning(GameManager::elapsedTime);
 
 	// 現フレームのワールド行列を計算
 	mWorld.SRT(mScale, mAngle, mPos);
-}
-
-void Character::Render(const Matrix& view, const Matrix& proj, const Vector4& lightDir)
-{
-	if (mExist)
-	{
-		Matrix wvp = mWorld * view * proj;
-		mMesh->Render(wvp, mWorld, lightDir, GameManager::elapsedTime);
-		//mHit->Render(wvp, mWorld, lightDir, DirectX::XMFLOAT4(0.8f, 0.2f, 0.2f, 0.2f));
-	}
 }
 
 void Character::Render(const Shader* shader, const Matrix& view, const Matrix& proj, const Vector4& lightDir)
@@ -71,7 +59,7 @@ void Character::Render(const Shader* shader, const Matrix& view, const Matrix& p
 	if (mExist)
 	{
 		Matrix wvp = mWorld * view * proj;
-		mMesh->Render(shader, wvp, mWorld, lightDir, GameManager::elapsedTime);
+		mMesh->Render(shader, wvp, mWorld, lightDir);
 	}
 }
 

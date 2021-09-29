@@ -52,7 +52,6 @@ public:
 
 	void Initialize();
 	void Update(const TurnManager* turnManager);
-	void Render(const Matrix& view, const Matrix& proj, const Vector4& lightDir);
 	void Render(const Shader* shader, const Matrix& view, const Matrix& projection, const Vector4& lightDir);
 	void RenderUI();
 
