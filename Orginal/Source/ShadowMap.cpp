@@ -37,14 +37,6 @@ void ShadowMap::Activate(const Vector4& lightDir, const Vector3& lightPos)
 
 	ID3D11DeviceContext* context = FRAMEWORK.GetContext();
 
-	// ビューポート設定
-	D3D11_VIEWPORT vp = {
-		0,0,
-		SHADOWMAP_X,
-		SHADOWMAP_Y,
-		0,1 };
-	context->RSSetViewports(1, &vp);
-
 	// 定数バッファ
 	{
 		DirectX::XMMATRIX proj = DirectX::XMMatrixOrthographicLH(200, 200, 0.1f, 1000.0f);

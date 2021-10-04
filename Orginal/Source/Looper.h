@@ -13,7 +13,4 @@ public:
 	~Looper() = default;
 
 	int Run(HWND hwnd);
-	bool IsLoop() { return pm.Process(); }
-
-	void SetFramerate(float framerate) { pm.SetFramerate(framerate); }
 };

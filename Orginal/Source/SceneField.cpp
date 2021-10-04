@@ -44,7 +44,7 @@ void SceneField::Initialize()
 	// ライト設定
 	{
 		Vector3 lightDir(-1.0f, -0.4f, 1.0f);
-		Vector3 lightPos(60.0f, 60.0f , 60.0f);
+		Vector3 lightPos(-60.0f, 60.0f, 60.0f);
 		mLight.SetLightDir(lightDir, lightPos);
 
 		Vector4 lightColor(0.8f, 0.75f, 0.75f, 1);
@@ -158,7 +158,7 @@ void SceneField::SetDeferredParam()
 		const Enemy* enm = mCharaManager->GetEnemyManager()->GetEnemy(i);
 
 		// 座標、レンジ算出
-		const float ADJUST_DIV = 1.5f;
+		const float ADJUST_DIV = 1.2f;
 		const AABB aabb = enm->GetLocalAABB();
 		float range = (aabb.max.y - aabb.min.y) / ADJUST_DIV;
 		pointLight.pos = Vector4(enm->GetPos(), range);

@@ -21,6 +21,5 @@ INT WINAPI wWinMain(HINSTANCE instance, HINSTANCE prev_instance, LPWSTR cmd_line
 	window.Initialize(instance, cmd_show, Define::SCREEN_WIDTH, Define::SCREEN_HEIGHT);
 
 	Looper looper;
-	looper.SetFramerate(Define::FRAMERATE);
 	return looper.Run(window.GetHWND());
 }

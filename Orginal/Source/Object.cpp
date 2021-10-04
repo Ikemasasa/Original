@@ -8,6 +8,8 @@
 Object::Object(int id)
 {
 	mMesh = Singleton<MeshManager>().GetInstance().SearchLoad(id);
+	mMeshLow = Singleton<MeshManager>().GetInstance().SearchLoad(id + 1);
+	mMeshCol = Singleton<MeshManager>().GetInstance().SearchLoad(id + 2);
 	mID = id;
 }
 
@@ -31,7 +33,13 @@ void Object::Render(const Shader* shader, const Matrix& view, const Matrix& proj
 	mMesh->Render(shader, wvp, mWorld, lightDir);
 }
 
-int Object::RayPickSRT(const Vector3& pos, const Vector3& velocity, Vector3* outPos, Vector3* outNormal)
+void Object::RenderLow(const Shader* shader, const Matrix& view, const Matrix& proj, const Vector4& lightDir)
+{
+	Matrix wvp = mWorld * view * proj;
+	mMeshLow->Render(shader, wvp, mWorld, lightDir);
+}
+
+int Object::RayPickOrg(const Vector3& pos, const Vector3& velocity, Vector3* outPos, Vector3* outNormal)
 {
 	// ワールド行列の逆行列作成
 	Matrix worldInv = mWorld;
@@ -41,11 +49,32 @@ int Object::RayPickSRT(const Vector3& pos, const Vector3& velocity, Vector3* out
 	Vector3 posInv = Vector3::TransformCoord(pos, worldInv);
 	Vector3 velInv = Vector3::TransformCoord(velocity, worldInv);
 
-	int ret = mMesh->RayPick(posInv, velInv, outPos, outNormal);
+	int ret = mMeshLow->RayPick(posInv, velInv, outPos, outNormal);
 	if (ret != -1)
 	{
 		// 結果を現状に合わせる
-		*outPos    = Vector3::TransformCoord(*outPos, mWorld);
+		*outPos = Vector3::TransformCoord(*outPos, mWorld);
+		*outNormal = Vector3::TransformCoord(*outNormal, mWorld);
+	}
+
+	return ret;
+}
+
+int Object::RayPickCol(const Vector3& pos, const Vector3& velocity, Vector3* outPos, Vector3* outNormal)
+{
+	// ワールド行列の逆行列作成
+	Matrix worldInv = mWorld;
+	worldInv.Inverse();
+
+	// 座標を逆変換
+	Vector3 posInv = Vector3::TransformCoord(pos, worldInv);
+	Vector3 velInv = Vector3::TransformCoord(velocity, worldInv);
+
+	int ret = mMeshCol->RayPick(posInv, velInv, outPos, outNormal);
+	if (ret != -1)
+	{
+		// 結果を現状に合わせる
+		*outPos = Vector3::TransformCoord(*outPos, mWorld);
 		*outNormal = Vector3::TransformCoord(*outNormal, mWorld);
 	}
 

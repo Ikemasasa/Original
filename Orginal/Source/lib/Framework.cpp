@@ -110,7 +110,7 @@ HRESULT Framework::CreateRasterizerStates()
             ZeroMemory(&rd, sizeof(D3D11_RASTERIZER_DESC));
             rd.CullMode = D3D11_CULL_BACK;
             rd.FillMode = D3D11_FILL_SOLID;
-            rd.FrontCounterClockwise = false;
+            rd.FrontCounterClockwise = true;
             break;
 
         case RS_CULL_FRONT:

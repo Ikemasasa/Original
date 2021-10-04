@@ -27,8 +27,10 @@ int Looper::Run(HWND hwnd)
 	auto& sm = SceneManager::GetInstance();
 	sm.Initialize(std::make_unique<SceneTitle>());
 
-	while (IsLoop() && sm.IsLoop())
+	while (pm.IsLoop() && sm.IsLoop())
 	{
+		if (!pm.IsProcess()) continue;
+
 		GameManager::elapsedTime = pm.GetElapsedTime();
 		Input::Update();
 		sm.Update();

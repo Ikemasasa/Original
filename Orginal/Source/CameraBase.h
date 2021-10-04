@@ -15,8 +15,8 @@ protected:
 	Matrix mView	   = {};
 	Matrix mProjection = {};
 
-	Vector3 mFrontVector;
-	Vector3 mRightVector;
+	Vector3 mForward;
+	Vector3 mRight;
 
 	float mDistFromTargetY;
 
@@ -33,8 +33,8 @@ public:
 	Matrix GetViewMatrix() const { return mView; }				//	ビュー行列取得関数
 	Matrix GetProjectionMatrix() const { return mProjection; }	//	投影行列取得関数
 
-	Vector3 GetFrontVector() const { return mFrontVector; }
-	Vector3 GetRightVector() const { return mRightVector; }
+	Vector3 GetForward() const { return mForward; }
+	Vector3 GetRight() const { return mRight; }
 	Vector3 GetAngle() const  { return mAngle; }
 	Vector3 GetPos() const { return mPos; }
 };

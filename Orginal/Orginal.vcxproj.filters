@@ -105,12 +105,6 @@
     <ClInclude Include="Source\lib\Framework.h">
       <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
-    <ClInclude Include="Source\lib\Primitive3D.h">
-      <Filter>00_lib\01_LibHeader</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\lib\HighResolutionTimer.h">
-      <Filter>00_lib\01_LibHeader</Filter>
-    </ClInclude>
     <ClInclude Include="Source\lib\Misc.h">
       <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
@@ -247,9 +241,6 @@
       <Filter>01_Header\Common</Filter>
     </ClInclude>
     <ClInclude Include="Source\GaussianBlur.h">
-      <Filter>01_Header\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Primitive.h">
       <Filter>01_Header\Common</Filter>
     </ClInclude>
     <ClInclude Include="Source\FontValue.h">
@@ -468,15 +459,21 @@
     <ClInclude Include="Source\Bloom.h">
       <Filter>01_Header\Common</Filter>
     </ClInclude>
+    <ClInclude Include="Source\lib\HighResolutionTimer.h">
+      <Filter>00_lib\01_LibHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MotionCollision.h">
+      <Filter>01_Header\Common\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\lib\Primitive3D.h">
+      <Filter>00_lib\01_LibHeader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\lib\Blend.cpp">
       <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\Framework.cpp">
-      <Filter>00_lib\02_LibSource</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\lib\Primitive3D.cpp">
       <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\ProcessMessage.cpp">
@@ -519,9 +516,6 @@
       <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\Font.cpp">
-      <Filter>00_lib\02_LibSource</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\lib\HighResolutionTimer.cpp">
       <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
     <ClCompile Include="Source\Collision.cpp">
@@ -639,9 +633,6 @@
       <Filter>02_Source\Common</Filter>
     </ClCompile>
     <ClCompile Include="Source\Item.cpp">
-      <Filter>02_Source\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Primitive.cpp">
       <Filter>02_Source\Common</Filter>
     </ClCompile>
     <ClCompile Include="Source\CharacterHealth.cpp">
@@ -826,6 +817,15 @@
     </ClCompile>
     <ClCompile Include="Source\Bloom.cpp">
       <Filter>02_Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\lib\HighResolutionTimer.cpp">
+      <Filter>00_lib\02_LibSource</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MotionCollision.cpp">
+      <Filter>02_Source\Common\DataBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\lib\Primitive3D.cpp">
+      <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

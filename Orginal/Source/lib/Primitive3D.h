@@ -14,14 +14,10 @@ class Primitive3D
 protected:
 	struct Vertex
 	{
-		Vector3 position;
+		Vector3 pos;
 		Vector3 normal;
 	};
-	struct Face
-	{
-		Vector3 vertex[3];
-		int materialIndex = 1;
-	};
+
 	struct Cbuffer
 	{
 		Matrix wvp;
@@ -30,11 +26,17 @@ protected:
 		Vector4 color;
 	};
 
-
 	D3D_PRIMITIVE_TOPOLOGY mTopology;
 	std::vector<Vertex> mVertices;
 	std::vector<WORD> mIndices;
-	std::vector<Face> mFaces;
+	int mFaceNum;
+
+	// TransformèÓïÒ
+	Vector3 mPos;
+	Vector3 mScale;
+	Vector3 mRotate;
+	Matrix mWorld;
+
 	// Comptr
 	Microsoft::WRL::ComPtr<ID3D11Buffer> mVertexBuffer;
 	Microsoft::WRL::ComPtr<ID3D11Buffer> mIndexBuffer;
@@ -51,8 +53,18 @@ public:
 
 	Primitive3D();
 	virtual ~Primitive3D();
-	void Render(const Shader* shader, const Matrix& wvp, const Matrix& world, const Vector4& lightDir, const Vector4 color);
+	void Render(const Shader* shader, const Matrix& view, const Matrix& proj, const Vector4& lightDir, const Vector4 color);
 	int RayCast(const Vector3& pos, const Vector3& velocity, Vector3* outPos, Vector3* outNormal);
+
+	// Transformä÷åW
+	Vector3 GetPos() const { return mPos; }
+	Vector3 GetScale() const { return mScale; }
+	Vector3 GetRotate() const { return mRotate; }
+	void SetPos(const Vector3& v)	 { mPos = v; }
+	void SetScale(const Vector3& v)  { mScale = v; }
+	void SetRotate(const Vector3& v) { mRotate = v; }
+	void UpdateWorldMatrix() { mWorld.SRT(mScale, mRotate, mPos); }
+
 };
 
 class Cube : public Primitive3D

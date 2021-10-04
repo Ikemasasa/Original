@@ -38,7 +38,7 @@ void PlayerManager::Initialize()
 		mPlayers.back()->Initialize();
 	}
 
-	mMovePlayer = mPlayers.begin()->get(); // ˆê”ÔÅ‰‚Ì—v‘f
+	mMovePlayer = mPlayers.back().get(); // ˆê”ÔÅ‰‚Ì—v‘f
 }
 
 void PlayerManager::Update(const bool isTalking)

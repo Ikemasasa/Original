@@ -21,7 +21,6 @@ class SkinnedMesh
 {
 private:
 	static const int STR_MAX = 128;
-	//static const int MOTION_MAX = 256;
 	static const int BONE_MAX = 256;
 	static const int T_POSE_INDEX = 0;
 
@@ -75,6 +74,7 @@ private:
 		char name[STR_MAX] = {};
 		Matrix offsetMatrix = {};
 		Matrix transform = {};
+		Bone* parent;
 	};
 
 	struct Weight
@@ -88,19 +88,6 @@ private:
 	{
 		int frameNum = 0;
 		Matrix* keyframe[BONE_MAX] = {};
-
-		// 現在は球だけ
-		SPHERE collision;
-		int colBeginFrame = 0;
-		int colEndFrame = 0;
-		bool isCollisionEnable = false;
-	};
-
-	struct BeforeMotion
-	{
-		int frame = 0; // 変わったタイミングのふれーむ
-		Matrix keyframe[BONE_MAX][1] = {}; // 変わったタイミングのキーフレーム
-		float lerpFactor = 1.0f;
 	};
 
 	Microsoft::WRL::ComPtr<ID3D11Buffer>		mVertexBuffer;
@@ -115,7 +102,7 @@ private:
 	int mMeshNum = 0;
 	int mBoneNum = 0;
 	int mVerticesNum = 0;
-	int mFaceNum;
+	int mFaceNum = 0;
 	Bone mBones[BONE_MAX];
 	Vertex* mVertices;
 	VertexForSkinning* mVerticesSource;
@@ -128,6 +115,7 @@ private:
 	// アニメーション関係
 	int mStartFrame;
 	bool mIsLoop;
+	bool mIsStopLastFrame;
 	bool mMotionFinished;
 	float mFrame = 0;
 	float mBeforeFrame = 0; // 前のモーションのフレーム
@@ -144,8 +132,10 @@ private:
 	bool LoadBIN(const char* filename);
 	void Save(const char* filename/*バイナリファイル名*/);
 
+	void InitializeBone(FbxScene* scene);
 	void LoadBone(FbxMesh* mesh);
-	int FindBone(const char* name);
+	
+
 	void OptimizeVertices();
 
 	void Animate(float elapsedTime);
@@ -164,9 +154,16 @@ public:
 	// モデルぴったりの直方体(ローカル)
 	AABB mAABB;
 
+	int FindBone(const char* name);
+	Matrix* GetBoneMatrix(const char* name);
+	Matrix* GetBoneMatrix(int boneIndex);
+
+	int GetFrame() const { return (int)mFrame; }
+
+	int GetMotion() const { return mMotionType; }
 	void SetMotion(int type, float blendSpeed);
 	void SetMotionOnce(int noLoopType, int nextType, float blendSpeed);
-	int GetMotion() const { return mMotionType; }
+	void SetMotionStopLastFrame(int type, float blendSpeed);
 	void AddMotion(const char* filename, int type);
 
 	void Skinning(float elapsedTime); // ボーンによる変形

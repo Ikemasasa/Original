@@ -25,6 +25,7 @@ Character::Character(int charaID, Type type)
 	mCapsuleParam.centerBottom = cBottom;
 	mCapsuleParam.radius = radius;
 	mHit = std::make_shared<Capsule>(cTop, cBottom, mCapsuleParam.radius);
+	mCol = std::make_unique<Sphere>();
 }
 
 Character::Character(const Character* org)
@@ -52,6 +53,15 @@ void Character::UpdateWorld()
 
 	// 現フレームのワールド行列を計算
 	mWorld.SRT(mScale, mAngle, mPos);
+
+	// ボーンの当たり判定更新
+	if (GetMotion() == ATTACK && mBoneCollision.radius != 0.0f)
+	{
+		int frame = GetMotionFrame();
+		if (mBoneCollision.beginFrame <= frame) mBoneCollision.enable = true;
+		if (mBoneCollision.endFrame < frame)	mBoneCollision.enable = false;
+
+	}
 }
 
 void Character::Render(const Shader* shader, const Matrix& view, const Matrix& proj, const Vector4& lightDir)
@@ -60,6 +70,8 @@ void Character::Render(const Shader* shader, const Matrix& view, const Matrix& p
 	{
 		Matrix wvp = mWorld * view * proj;
 		mMesh->Render(shader, wvp, mWorld, lightDir);
+		if (mBoneCollision.enable) 
+			mCol->Render(shader, view, proj, lightDir, Vector4::ONE);
 	}
 }
 
@@ -160,4 +172,31 @@ CAPSULE Character::GetCapsule() const
 	c.centerBottom.z = c.centerBottom.z * scale.z + pos.z;
 	c.radius = c.radius * scale.z;
 	return c;
+}
+
+Matrix Character::GetBoneMatrix()
+{
+	Matrix* mat = mMesh->GetBoneMatrix(mBoneCollision.boneIndex);
+	return *mat * mWorld;
+}
+
+void Character::GetBoneCollisionParam(Matrix* mat, float* radius)
+{
+	*mat = GetBoneMatrix();
+	*radius = mBoneCollision.radius;
+
+	mCol->SetPos(Vector3(mat->_41, mat->_42, mat->_43));
+	mCol->UpdateWorldMatrix();
+}
+
+void Character::SetBoneCollision(const char* boneName, int beginF, int endF, float radius)
+{
+	int bIndex = mMesh->FindBone(boneName);
+	if (bIndex == -1) return;
+
+	mBoneCollision.boneIndex = bIndex;
+	mBoneCollision.beginFrame = beginF;
+	mBoneCollision.endFrame = endF;
+	mBoneCollision.radius = radius;
+	mBoneCollision.enable = false;
 }

@@ -11,6 +11,7 @@ MeshDataLoader::MeshData MeshDataLoader::LoadMesh(int charaID)
 	MeshData md;
 
 	const char* csvFilename = nullptr;
+	const char* csvColFilepath = nullptr;
 	const char* fbxFilepath = "Data/Mesh/";
 	{
 		// charaID‚©‚ç‚Ç‚Ìí—Ş(“G‚©ƒvƒŒƒCƒ„[‚©“™)‚ğ”»•Ê
@@ -24,6 +25,7 @@ MeshDataLoader::MeshData MeshDataLoader::LoadMesh(int charaID)
 		{
 			csvFilename = "Data/DataBase/PLMesh.csv";
 			fbxFilepath = "Data/Mesh/Players/";
+			csvColFilepath = "Data/DataBase/PLMeshCollide.csv";
 		}
 		else if (npc == check)
 		{
@@ -33,6 +35,8 @@ MeshDataLoader::MeshData MeshDataLoader::LoadMesh(int charaID)
 		else if (enm == check)
 		{
 			csvFilename = "Data/DataBase/EnmMesh.csv";
+			fbxFilepath = "Data/Mesh/Enemies/";
+			// csvColFilepath = "Data/DataBase/EnmMeshCollide.csv";
 		}
 		else if (ter == check)
 		{

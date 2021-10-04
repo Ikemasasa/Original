@@ -24,6 +24,13 @@ Primitive3D::~Primitive3D()
 
 void Primitive3D::Initialize()
 {
+	// ローカル情報初期化
+	mPos = Vector3::ZERO;
+	mScale = Vector3::ONE;
+	mRotate = Vector3::ZERO;
+	mWorld.Identity();
+
+	// dx11初期化
 	auto device = FRAMEWORK.GetDevice();
 
 	HRESULT hr;
@@ -34,6 +41,7 @@ void Primitive3D::Initialize()
 	hr = SetIndexBuffer(device);
 	if (FAILED(hr)) return;
 
+	mFaceNum = mVertices.size() / 3;
 
 	D3D11_BUFFER_DESC bufferDesc;
 	ZeroMemory(&bufferDesc, sizeof(bufferDesc));
@@ -53,7 +61,7 @@ HRESULT Primitive3D::CreateVertexBuffer(ID3D11Device* device)
 
 	D3D11_BUFFER_DESC bufferDesc;
 	ZeroMemory(&bufferDesc, sizeof(bufferDesc));
-	bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	bufferDesc.ByteWidth = sizeof(Vertex) * mVertices.size();
 	bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bufferDesc.CPUAccessFlags = 0;
@@ -81,7 +89,7 @@ HRESULT Primitive3D::CreateIndexBuffer(ID3D11Device* device)
 }
 
 
-void Primitive3D::Render(const Shader* shader, const Matrix& wvp, const Matrix& world, const Vector4& lightDir, const Vector4 color)
+void Primitive3D::Render(const Shader* shader, const Matrix& view, const Matrix& proj, const Vector4& lightDir, const Vector4 color)
 {
 	auto context = FRAMEWORK.GetContext();
 	UINT stride = sizeof(Vertex);
@@ -91,20 +99,16 @@ void Primitive3D::Render(const Shader* shader, const Matrix& wvp, const Matrix& 
 
 	context->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), &stride, &offset);
 	context->IASetIndexBuffer(mIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
-	context->IASetPrimitiveTopology(mTopology);
 	
 	Cbuffer cb = {};
-	cb.wvp = wvp;
-	cb.world = world;
+	cb.wvp = mWorld * view * proj;
+	cb.world = mWorld;
 	cb.lightDir = lightDir;
 	cb.color = color;
 	context->UpdateSubresource(mConstBuffer.Get(), 0, NULL, &cb, 0, 0);
 	context->VSSetConstantBuffers(0, 1, mConstBuffer.GetAddressOf());
 
 	context->DrawIndexed(mIndices.size(), 0, 0);
-
-	context->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
 }
 
 int Primitive3D::RayCast(const Vector3& pos, const Vector3& velocity, Vector3* outPos, Vector3* outNormal)
@@ -121,15 +125,23 @@ int Primitive3D::RayCast(const Vector3& pos, const Vector3& velocity, Vector3* o
 
 	Vector3 work;
 	Vector3 interior;
-	size_t size = mFaces.size();
-	for (size_t i = 0; i < size; ++i)
+	for (int i = 0; i < mFaceNum; ++i)
 	{
-		auto& face = mFaces[i];
-
 		// 面頂点取得
-		vertex[0] = face.vertex[0];
-		vertex[1] = face.vertex[1];
-		vertex[2] = face.vertex[2];
+		int index0 = mIndices[i * 3 + 0];
+		vertex[0].x = mVertices[index0].pos.x;
+		vertex[0].y = mVertices[index0].pos.y;
+		vertex[0].z = mVertices[index0].pos.z;
+
+		int index1 = mIndices[i * 3 + 1];
+		vertex[1].x = mVertices[index1].pos.x;
+		vertex[1].y = mVertices[index1].pos.y;
+		vertex[1].z = mVertices[index1].pos.z;
+
+		int index2 = mIndices[i * 3 + 2];
+		vertex[2].x = mVertices[index2].pos.x;
+		vertex[2].y = mVertices[index2].pos.y;
+		vertex[2].z = mVertices[index2].pos.z;
 
 		// 3辺算出
 		// line = vertex - vertex;
@@ -306,12 +318,12 @@ HRESULT Cube::SetVertexBuffer(ID3D11Device* device)
 	for (auto& v : cubeVertices)
 	{
 		mVertices.push_back(v);
-		mAABB.min.x = Math::Min(mAABB.min.x, v.position.x);
-		mAABB.min.y = Math::Min(mAABB.min.y, v.position.y);
-		mAABB.min.z = Math::Min(mAABB.min.z, v.position.z);
-		mAABB.max.x = Math::Max(mAABB.max.x, v.position.x);
-		mAABB.max.y = Math::Max(mAABB.max.y, v.position.y);
-		mAABB.max.z = Math::Max(mAABB.max.z, v.position.z);
+		mAABB.min.x = Math::Min(mAABB.min.x, v.pos.x);
+		mAABB.min.y = Math::Min(mAABB.min.y, v.pos.y);
+		mAABB.min.z = Math::Min(mAABB.min.z, v.pos.z);
+		mAABB.max.x = Math::Max(mAABB.max.x, v.pos.x);
+		mAABB.max.y = Math::Max(mAABB.max.y, v.pos.y);
+		mAABB.max.z = Math::Max(mAABB.max.z, v.pos.z);
 	}
 
 	mTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
@@ -333,20 +345,9 @@ HRESULT Cube::SetIndexBuffer(ID3D11Device* device)
 		20, 22, 21,   21, 22, 23,
 	};
 
-	Face f;
 	for (auto& i : cubeIndices)
 	{
 		mIndices.push_back(i);
-	}
-
-	// RayCast用
-	for (size_t i = 0; i < mIndices.size(); i += 3)
-	{
-		Face f;
-		f.vertex[0] = mVertices[mIndices[i]].position;
-		f.vertex[1] = mVertices[mIndices[i + 1]].position;
-		f.vertex[2] = mVertices[mIndices[i + 2]].position;
-		mFaces.push_back(f);
 	}
 
 	return CreateIndexBuffer(device);
@@ -366,16 +367,16 @@ HRESULT Sphere::SetVertexBuffer(ID3D11Device* device)
 			FLOAT Y = static_cast<FLOAT>(cos(theta));
 			FLOAT Z = static_cast<FLOAT>(sin(theta) * sin(phi));
 			Vertex temp = {};
-			temp.position = Vector3(X, Y, Z);
+			temp.pos = Vector3(X, Y, Z);
 			temp.normal = Vector3(X, Y, Z);
 			mVertices.push_back(temp);
 
-			mAABB.min.x = Math::Min(mAABB.min.x, temp.position.x);
-			mAABB.min.y = Math::Min(mAABB.min.y, temp.position.y);
-			mAABB.min.z = Math::Min(mAABB.min.z, temp.position.z);
-			mAABB.max.x = Math::Max(mAABB.max.x, temp.position.x);
-			mAABB.max.y = Math::Max(mAABB.max.y, temp.position.y);
-			mAABB.max.z = Math::Max(mAABB.max.z, temp.position.z);
+			mAABB.min.x = Math::Min(mAABB.min.x, temp.pos.x);
+			mAABB.min.y = Math::Min(mAABB.min.y, temp.pos.y);
+			mAABB.min.z = Math::Min(mAABB.min.z, temp.pos.z);
+			mAABB.max.x = Math::Max(mAABB.max.x, temp.pos.x);
+			mAABB.max.y = Math::Max(mAABB.max.y, temp.pos.y);
+			mAABB.max.z = Math::Max(mAABB.max.z, temp.pos.z);
 		}
 	}
 
@@ -403,16 +404,6 @@ HRESULT Sphere::SetIndexBuffer(ID3D11Device* device)
 		}
 	}
 
-	// RayCast用
-	for (size_t i = 0; i < mIndices.size() / 3; i += 3)
-	{
-		Face f;
-		f.vertex[0] = mVertices[mIndices[i]].position;
-		f.vertex[1] = mVertices[mIndices[i + 1]].position;
-		f.vertex[2] = mVertices[mIndices[i + 2]].position;
-		mFaces.push_back(f);
-	}
-
 	return CreateIndexBuffer(device);
 }
 
@@ -432,16 +423,16 @@ HRESULT Cylinder::SetVertexBuffer(ID3D11Device* device)
 		float dz = cosf(angle) * RADIUS;
 
 		Vertex temp = {};
-		temp.position = Vector3(dx, dy, dz);
-		temp.normal = temp.position;
+		temp.pos = Vector3(dx, dy, dz);
+		temp.normal = temp.pos;
 		mVertices.push_back(temp);
 
-		mAABB.min.x = Math::Min(mAABB.min.x, temp.position.x);
-		mAABB.min.y = Math::Min(mAABB.min.y, temp.position.y);
-		mAABB.min.z = Math::Min(mAABB.min.z, temp.position.z);
-		mAABB.max.x = Math::Max(mAABB.max.x, temp.position.x);
-		mAABB.max.y = Math::Max(mAABB.max.y, temp.position.y);
-		mAABB.max.z = Math::Max(mAABB.max.z, temp.position.z);
+		mAABB.min.x = Math::Min(mAABB.min.x, temp.pos.x);
+		mAABB.min.y = Math::Min(mAABB.min.y, temp.pos.y);
+		mAABB.min.z = Math::Min(mAABB.min.z, temp.pos.z);
+		mAABB.max.x = Math::Max(mAABB.max.x, temp.pos.x);
+		mAABB.max.y = Math::Max(mAABB.max.y, temp.pos.y);
+		mAABB.max.z = Math::Max(mAABB.max.z, temp.pos.z);
 	}
 
 	// 下側
@@ -454,8 +445,8 @@ HRESULT Cylinder::SetVertexBuffer(ID3D11Device* device)
 		
 
 		Vertex temp = {};
-		temp.position = Vector3(dx, dy, dz);
-		temp.normal = temp.position;
+		temp.pos = Vector3(dx, dy, dz);
+		temp.normal = temp.pos;
 		mVertices.push_back(temp);
 	}
 
@@ -514,16 +505,6 @@ HRESULT Cylinder::SetIndexBuffer(ID3D11Device* device)
 
 	}
 
-	// RayCast用
-	for (size_t i = 0; i < mIndices.size() / 3; i += 3)
-	{
-		Face f;
-		f.vertex[0] = mVertices[mIndices[i]].position;
-		f.vertex[1] = mVertices[mIndices[i + 1]].position;
-		f.vertex[2] = mVertices[mIndices[i + 2]].position;
-		mFaces.push_back(f);
-	}
-
 	return CreateIndexBuffer(device);
 }
 
@@ -559,7 +540,7 @@ HRESULT Capsule::SetVertexBuffer(ID3D11Device* device)
 		// 北半球
 
 		// 最初の点
-		temp.position = mCenterTop + uz;
+		temp.pos = mCenterTop + uz;
 		temp.normal = uz;
 		mVertices.emplace_back(temp);
 
@@ -575,7 +556,7 @@ HRESULT Capsule::SetVertexBuffer(ID3D11Device* device)
 			{
 				FLOAT u = (PI * 2.0f) * invSlices * j;
 				Vector3 v = vx * cosf(u) + vy * sinf(u) + vz;
-				temp.position = mCenterTop + v;
+				temp.pos = mCenterTop + v;
 				temp.normal = v;
 				mVertices.emplace_back(temp);
 			}
@@ -593,13 +574,13 @@ HRESULT Capsule::SetVertexBuffer(ID3D11Device* device)
 			{
 				FLOAT u = (PI * 2.0f) * invSlices * j;
 				Vector3 v = vx * cosf(u) + vy * sinf(u) + vz;
-				temp.position = mCenterBottom + v;
+				temp.pos = mCenterBottom + v;
 				temp.normal = v;
 				mVertices.emplace_back(temp);
 			}
 		}
 		// 最後の点
-		temp.position = mCenterBottom + -uz;
+		temp.pos = mCenterBottom + -uz;
 		temp.normal = -uz;
 		mVertices.emplace_back(temp);
 	}

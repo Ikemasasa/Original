@@ -12,6 +12,8 @@ class Object
 {
 private:
 	std::shared_ptr<SkinnedMesh> mMesh = nullptr;
+	std::shared_ptr<SkinnedMesh> mMeshLow = nullptr;
+	std::shared_ptr<SkinnedMesh> mMeshCol = nullptr;
 	Matrix mWorld = { 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 };
 	int mID = -1;
 
@@ -26,11 +28,12 @@ public:
 	~Object() = default;
 
 	void UpdateWorld();
-	void Render(const Matrix& view, const Matrix& proj, const Vector4& lightDir);
 	void Render(const Shader* shader, const Matrix& view, const Matrix& proj, const Vector4& lightDir);
+	void RenderLow(const Shader* shader, const Matrix& view, const Matrix& proj, const Vector4& lightDir);
 
 	// レイピック
-	int RayPickSRT(const Vector3& pos, const Vector3& velocity, Vector3* outPos, Vector3* outNormal);
+	int RayPickOrg(const Vector3& pos, const Vector3& velocity, Vector3* outPos, Vector3* outNormal);
+	int RayPickCol(const Vector3& pos, const Vector3& velocity, Vector3* outPos, Vector3* outNormal);
 
 	//ゲッター
 	Vector3 GetPos() const { return mPos; }
