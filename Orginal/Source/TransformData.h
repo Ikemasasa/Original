@@ -14,6 +14,7 @@ public:
 		Vector3 pos;
 		Vector3 scale;
 		Vector3 angle;
+		float diameter;
 	};
 
 public:

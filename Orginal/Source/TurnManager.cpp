@@ -57,6 +57,7 @@ void TurnManager::Update(const BattleCharacterManager* bcm)
 	else // ‰‰o’†
 	{
 		mProduction->Update(bcm);
+		mProduction->UpdateDeathMotion();
 
 		// ‰‰o‚ªI—¹‚µ‚½‚ç
 		if (mProduction->IsFinished())

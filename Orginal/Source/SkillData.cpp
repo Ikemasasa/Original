@@ -27,7 +27,7 @@ std::vector<SkillData::SkillParam> SkillData::GetAllSkill(const int charaID)
 		{
 			int index = 0;
 			SkillParam param;
-			param.skillName = ConvertString::ConvertToWstirng(chunks[index++]);
+			param.skillName = ConvertString::ConvertToWstring(chunks[index++]);
 			param.skillID	= std::stoi(chunks[index++]);
 			index += 2; // –¼‘O‚Æ‚«‚á‚çID‚ð–³Ž‹
 			param.useMP		= std::stoi(chunks[index++]);
@@ -38,7 +38,7 @@ std::vector<SkillData::SkillParam> SkillData::GetAllSkill(const int charaID)
 			param.rate		= (Rate)std::stoi(chunks[index++]);
 			param.atkValue  = std::stof(chunks[index++]);
 			param.defValue  = std::stof(chunks[index++]);
-			param.info		= ConvertString::ConvertToWstirng(chunks[index++]);
+			param.info		= ConvertString::ConvertToWstring(chunks[index++]);
 
 			ret.emplace_back(param);
 		}

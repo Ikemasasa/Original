@@ -60,6 +60,7 @@ private:
 	CAPSULE mCapsuleParam;
 
 protected:
+
 	Vector3 mPos = { 0,0,0 };
 	Vector3 mVelocity = { 0,0,0 };
 	Vector3 mScale = { 1, 1, 1 };
@@ -67,6 +68,7 @@ protected:
 	float mMass = 0;		//Ž¿—Ê
 	bool mExist = true;
 	Type mType = NONE;
+
 	BoneCollision mBoneCollision;
 
 public:
@@ -79,6 +81,7 @@ public:
 
 	void CorrectionAngle();	// mVelocity•ûŒü‚ÉŒü‚­
 	void CorrectionAngle(const Vector3& dirN); // dirN•ûŒü‚ÉŒü‚­
+	void SetCapsuleParam(float radius);
 
 	// ƒ‚[ƒVƒ‡ƒ“’Ç‰Á
 	void AddMotion(const char* filename, MotionType type) { mMesh->AddMotion(filename, type); }

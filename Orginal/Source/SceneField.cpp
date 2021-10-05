@@ -21,7 +21,7 @@
 #include "Singleton.h"
 #include "Terrain.h"
 
-
+Font font;
 
 SceneField::SceneField()
 {
@@ -44,7 +44,7 @@ void SceneField::Initialize()
 	// ライト設定
 	{
 		Vector3 lightDir(-1.0f, -0.4f, 1.0f);
-		Vector3 lightPos(-60.0f, 60.0f, 60.0f);
+		Vector3 lightPos(60.0f, 60.0f, 60.0f);
 		mLight.SetLightDir(lightDir, lightPos);
 
 		Vector4 lightColor(0.8f, 0.75f, 0.75f, 1);
@@ -81,6 +81,14 @@ void SceneField::Update()
 	mSkybox->SetEyePos(Singleton<CameraManager>().GetInstance().GetPos());
 
 	Singleton<EffectManager>().GetInstance().Update();
+
+	Vector3 p = mCharaManager->GetMovePlayer()->GetPos();
+	float pos[3] = { p.x, p.y, p.z };
+	for (int i = 0; i < 3; ++i)
+	{
+		std::wstring str = std::to_wstring(pos[i]);
+		font.RenderSet(str.c_str(), Vector2(0.0f, 32.0f * i));
+	}
 }
 
 void SceneField::Render()
@@ -119,6 +127,7 @@ void SceneField::Render()
 	// ブルーム作成、適用
 	mBloom->Execute(mSceneTarget.get());
 	mCharaManager->RenderUI();
+	font.Render();
 	mSceneTarget->Deactivate();
 
 	// バックバッファに結果を描画

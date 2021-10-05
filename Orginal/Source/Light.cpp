@@ -28,9 +28,9 @@ void Light::SetLightDir(Vector3& lightDir, const Vector3& lightPos)
 	mLightDir = Vector4(lightDir, 1.0f);
 
 	// ƒ‰ƒCƒg‚Ì•ûŒü‚ÆÀ•W‚ð‡‚í‚¹‚é
-	float xSign = (lightDir.x > 0) ?  1 :-1;
+	float xSign = (lightDir.x > 0) ? -1 : 1;
 	float ySign = (lightDir.y > 0) ? -1 : 1;
-	float zSign = (lightDir.z > 0) ?  1 :-1;
+	float zSign = (lightDir.z > 0) ? -1 : 1;
 	mLightPos.x = lightPos.x * xSign;
 	mLightPos.y = lightPos.y * ySign;
 	mLightPos.z = lightPos.z * zSign;

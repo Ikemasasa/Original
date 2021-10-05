@@ -196,6 +196,7 @@
     <ClInclude Include="Source\Item.h" />
     <ClInclude Include="Source\ItemData.h" />
     <ClInclude Include="Source\ItemSelect.h" />
+    <ClInclude Include="Source\KeyGuide.h" />
     <ClInclude Include="Source\lib\CollisionStructs.h" />
     <ClInclude Include="Source\lib\ComputeShader.h" />
     <ClInclude Include="Source\lib\ConstantBuffer.h" />

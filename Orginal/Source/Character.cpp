@@ -12,20 +12,6 @@ Character::Character(int charaID, Type type)
 	mMesh = Singleton<MeshManager>::GetInstance().SearchLoad(charaID);
 	mCharaID = charaID;
 	mType = type;
-
-	// カプセルのサイズ決定
-	const Vector3& min = mMesh->mAABB.min;
-	const Vector3& max = mMesh->mAABB.max;
-	float radius = (max.z - min.z);// 直径にしてる(そっちの方がぽいから)
-	float x = min.x + ((max.x - min.x) * 0.5f);
-	float z = min.z + ((max.z - min.z) * 0.5f);
-	Vector3 cTop(x, max.y - radius, z);
-	Vector3 cBottom(x, min.y + radius, z);
-	mCapsuleParam.centerTop = cTop;
-	mCapsuleParam.centerBottom = cBottom;
-	mCapsuleParam.radius = radius;
-	mHit = std::make_shared<Capsule>(cTop, cBottom, mCapsuleParam.radius);
-	mCol = std::make_unique<Sphere>();
 }
 
 Character::Character(const Character* org)
@@ -40,6 +26,8 @@ Character::Character(const Character* org)
 	mType = org->mType;
 
 	mCapsuleParam = org->mCapsuleParam;
+	mBoneCollision = org->mBoneCollision;
+	mCol = std::make_unique<Sphere>(mBoneCollision.radius);
 
 	UpdateWorld();
 }
@@ -60,7 +48,6 @@ void Character::UpdateWorld()
 		int frame = GetMotionFrame();
 		if (mBoneCollision.beginFrame <= frame) mBoneCollision.enable = true;
 		if (mBoneCollision.endFrame < frame)	mBoneCollision.enable = false;
-
 	}
 }
 
@@ -70,6 +57,10 @@ void Character::Render(const Shader* shader, const Matrix& view, const Matrix& p
 	{
 		Matrix wvp = mWorld * view * proj;
 		mMesh->Render(shader, wvp, mWorld, lightDir);
+		if (mHit)
+		{
+			mHit->RenderWire(shader, wvp, mWorld, lightDir, Vector4(0.8, 0.2, 0.2, 1));
+		}
 		if (mBoneCollision.enable) 
 			mCol->Render(shader, view, proj, lightDir, Vector4::ONE);
 	}
@@ -127,6 +118,16 @@ void Character::CorrectionAngle(const Vector3& dirN)
 		if (cross < 0) mAngle.y -= ANGLE_ADJUST;
 		else mAngle.y += ANGLE_ADJUST;
 	}
+}
+
+void Character::SetCapsuleParam(float radius)
+{
+	Vector3 cTop(0.0f, mMesh->mAABB.max.y - radius, 0.0f);
+	Vector3 cBottom(0.0f, mMesh->mAABB.min.y + radius, 0.0f);
+	mCapsuleParam.centerTop = cTop;
+	mCapsuleParam.centerBottom = cBottom;
+	mCapsuleParam.radius = radius;
+	mHit = std::make_shared<Capsule>(cTop, cBottom, mCapsuleParam.radius);
 }
 
 AABB Character::GetLocalAABB() const
@@ -198,5 +199,6 @@ void Character::SetBoneCollision(const char* boneName, int beginF, int endF, flo
 	mBoneCollision.beginFrame = beginF;
 	mBoneCollision.endFrame = endF;
 	mBoneCollision.radius = radius;
-	mBoneCollision.enable = false;
+	mBoneCollision.enable = true;
+	mCol = std::make_unique<Sphere>(mBoneCollision.radius);
 }

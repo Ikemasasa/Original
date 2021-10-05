@@ -24,6 +24,8 @@ void NPC::Initialize()
 	mScale = transform.scale;
 	mAngle = transform.angle;
 
+	SetCapsuleParam(transform.diameter / 2.0f);
+
 	// テキストデータ読み込み
 	NPCTextData::GetTextData(GetCharaID(), &mTextData, false);
 	

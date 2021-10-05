@@ -1,5 +1,6 @@
 #include "Primitive3D.h"
 
+#include "ConvertString.h"
 #include "Framework.h"
 #include "Math.h"
 #include "ResourceManager.h"
@@ -22,6 +23,13 @@ Primitive3D::~Primitive3D()
 	mIndices.clear();
 }
 
+
+
+void Primitive3D::CreateShader()
+{
+
+}
+
 void Primitive3D::Initialize()
 {
 	// ƒ[ƒJƒ‹î•ñ‰Šú‰»
@@ -42,6 +50,8 @@ void Primitive3D::Initialize()
 	if (FAILED(hr)) return;
 
 	mFaceNum = mVertices.size() / 3;
+
+	CreateShader();
 
 	D3D11_BUFFER_DESC bufferDesc;
 	ZeroMemory(&bufferDesc, sizeof(bufferDesc));
@@ -88,7 +98,6 @@ HRESULT Primitive3D::CreateIndexBuffer(ID3D11Device* device)
 	return hr;
 }
 
-
 void Primitive3D::Render(const Shader* shader, const Matrix& view, const Matrix& proj, const Vector4& lightDir, const Vector4 color)
 {
 	auto context = FRAMEWORK.GetContext();
@@ -109,6 +118,31 @@ void Primitive3D::Render(const Shader* shader, const Matrix& view, const Matrix&
 	context->VSSetConstantBuffers(0, 1, mConstBuffer.GetAddressOf());
 
 	context->DrawIndexed(mIndices.size(), 0, 0);
+}
+
+void Primitive3D::RenderWire(const Shader* shader, const Matrix& wvp, const Matrix& world, const Vector4& lightDir, const Vector4 color)
+{
+	auto context = FRAMEWORK.GetContext();
+	UINT stride = sizeof(Vertex);
+	UINT offset = 0;
+
+	context->RSSetState(FRAMEWORK.GetRasterizer(Framework::RS_WIRE));
+
+	shader->Activate();
+	context->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), &stride, &offset);
+	context->IASetIndexBuffer(mIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
+
+	Cbuffer cb = {};
+	cb.wvp = wvp;
+	cb.world = world;
+	cb.lightDir = lightDir;
+	cb.color = color;
+	context->UpdateSubresource(mConstBuffer.Get(), 0, NULL, &cb, 0, 0);
+	context->VSSetConstantBuffers(0, 1, mConstBuffer.GetAddressOf());
+
+	context->DrawIndexed(mIndices.size(), 0, 0);
+
+	context->RSSetState(FRAMEWORK.GetRasterizer(Framework::RS_CULL_BACK));
 }
 
 int Primitive3D::RayCast(const Vector3& pos, const Vector3& velocity, Vector3* outPos, Vector3* outNormal)
@@ -357,51 +391,111 @@ HRESULT Cube::SetIndexBuffer(ID3D11Device* device)
 // geometric_shpere
 HRESULT Sphere::SetVertexBuffer(ID3D11Device* device)
 {
-	for (int v = 0; v <= V_MAX; ++v)
-	{
-		for (int u = 0; u < U_MAX; ++u)
-		{
-			double theta = DirectX::XMConvertToRadians(180.0f * v / V_MAX);
-			double phi = DirectX::XMConvertToRadians(360.0f * u / U_MAX);
-			FLOAT X = static_cast<FLOAT>(sin(theta) * cos(phi));
-			FLOAT Y = static_cast<FLOAT>(cos(theta));
-			FLOAT Z = static_cast<FLOAT>(sin(theta) * sin(phi));
-			Vertex temp = {};
-			temp.pos = Vector3(X, Y, Z);
-			temp.normal = Vector3(X, Y, Z);
-			mVertices.push_back(temp);
+	int verticesNum = mStacks * mSlices * 2 + mSlices * mStacks * 2;
 
-			mAABB.min.x = Math::Min(mAABB.min.x, temp.pos.x);
-			mAABB.min.y = Math::Min(mAABB.min.y, temp.pos.y);
-			mAABB.min.z = Math::Min(mAABB.min.z, temp.pos.z);
-			mAABB.max.x = Math::Max(mAABB.max.x, temp.pos.x);
-			mAABB.max.y = Math::Max(mAABB.max.y, temp.pos.y);
-			mAABB.max.z = Math::Max(mAABB.max.z, temp.pos.z);
+	{
+		mVertices.resize(verticesNum);
+		mVertices[0].pos = Vector3(0.0f, mRadius, 0.0f);
+		mVertices[0].normal = mVertices[0].pos;
+
+		const float PI = 3.14156f;
+		float phiStep = PI / mStacks;
+		float thetaStep = 2.0f * PI / mSlices;
+		int index = 0;
+		for (int i = 1; i <= mStacks - 1; ++i) 
+		{
+			float phi = i * phiStep;
+			float y = mRadius * cosf(phi);
+			float r = mRadius * sinf(phi);
+
+			for (int k = 0; k <= mSlices; ++k)
+			{
+				float theta = k * thetaStep;
+				float thetaSin = sinf(theta);
+				float thetaCos = cosf(theta);
+
+				mVertices[index].pos.x = mRadius * r * thetaCos;
+				mVertices[index].pos.y = mRadius * y;
+				mVertices[index].pos.z = mRadius * r * thetaSin;
+				mVertices[index].normal = mVertices[index].pos;
+				++index;
+			}
 		}
+		mVertices[verticesNum - 1].pos = Vector3(0.0f, -mRadius, 0.0f);
+		mVertices[verticesNum - 1].normal = mVertices[verticesNum - 1].pos;
 	}
 
-	mTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+	//int verticesNum = mStacks * mSlices * 2 + mSlices * mStacks * 2;
+	//mVertices.resize(verticesNum);
+
+	//const float PI = 3.14156f;
+	//float phiStep = PI / mStacks;
+	//float thetaStep = PI / mSlices;
+
+	//int index = 0;
+	//for (int i = 0; i < mStacks; ++i)
+	//{
+	//	float phi = i * phiStep;
+	//	float y = mRadius * cosf(phi);
+	//	float r = mRadius * sinf(phi);
+
+	//	for (int k = 0; k < mSlices; ++k)
+	//	{
+	//		float theta = k * thetaStep;
+	//		mVertices[index].pos.x = r * sinf(theta);
+	//		mVertices[index].pos.y = y;
+	//		mVertices[index].pos.z = r * cosf(theta);
+	//		mVertices[index].normal.x = mVertices[index].pos.x;
+	//		mVertices[index].normal.y = mVertices[index].pos.y;
+	//		mVertices[index].normal.z = mVertices[index].pos.z;
+	//		++index;
+
+	//		theta += thetaStep;
+	//		mVertices[index].pos.x = r * sinf(theta);
+	//		mVertices[index].pos.y = y;
+	//		mVertices[index].pos.z = r * cosf(theta);
+	//		mVertices[index].normal.x = mVertices[index].pos.x;
+	//		mVertices[index].normal.y = mVertices[index].pos.y;
+	//		mVertices[index].normal.z = mVertices[index].pos.z;
+	//		++index;
+	//	}
+	//}
+	mTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
 	return CreateVertexBuffer(device);
 }
 
 HRESULT Sphere::SetIndexBuffer(ID3D11Device* device)
 {
-	for (int v = 0; v < V_MAX; ++v)
+	for (int i = 1; i <= mSlices; i++) 
 	{
-		for (int u = 0; u <= U_MAX; ++u)
+		mIndices.emplace_back(0);
+		mIndices.emplace_back(i + 1);
+		mIndices.emplace_back(i);
+	}
+
+	int baseIndex = 1;
+	int ringVertexCount = mSlices + 1;
+	for (int i = 0; i < mStacks - 2; i++) 
+	{
+		for (int j = 0; j < mSlices; j++) 
 		{
-			if (u == U_MAX)
-			{
-				mIndices.push_back(v * U_MAX);
-				mIndices.push_back((v + 1) * U_MAX);
-			}
-			else
-			{
-				mIndices.push_back((v * U_MAX) + u);
-				mIndices.push_back(*mIndices.rbegin() + U_MAX);
-			}
+			mIndices.emplace_back(baseIndex + i * ringVertexCount + j);
+			mIndices.emplace_back(baseIndex + i * ringVertexCount + j + 1);
+			mIndices.emplace_back(baseIndex + (i + 1) * ringVertexCount + j);
+
+			mIndices.emplace_back(baseIndex + (i + 1) * ringVertexCount + j);
+			mIndices.emplace_back(baseIndex + i * ringVertexCount + j + 1);
+			mIndices.emplace_back(baseIndex + (i + 1) * ringVertexCount + j + 1);
 		}
+	}
+
+	int southPoleIndex = mVertices.size() - 1;
+	baseIndex = southPoleIndex - ringVertexCount;
+	for (int i = 0; i < mSlices; i++) {
+		mIndices.emplace_back(southPoleIndex);
+		mIndices.emplace_back(baseIndex + i);
+		mIndices.emplace_back(baseIndex + i + 1);
 	}
 
 	return CreateIndexBuffer(device);

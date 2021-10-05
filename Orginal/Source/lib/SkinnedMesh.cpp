@@ -289,7 +289,7 @@ void SkinnedMesh::LoadFBX(ID3D11Device* device, const char* filename)
 					// ‘Š‘ÎƒpƒXì¬
 					std::string work = fbxDir; // AA/BB/
 					work += imgName;		   // AA/BB/*.png
-					std::wstring relative = ConvertString::ConvertToWstirng(work);
+					std::wstring relative = ConvertString::ConvertToWstring(work);
 
 					// “Ç‚Ýž‚Ý
 					spr->sprite.Load(relative.c_str());

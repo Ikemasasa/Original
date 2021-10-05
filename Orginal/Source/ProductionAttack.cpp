@@ -1,9 +1,11 @@
 #include "ProductionAttack.h"
 
+#include "lib/Audio.h"
 #include "lib/SkinnedMesh.h"
 
 #include "BattleCharacter.h"
 #include "BattleCharacterManager.h"
+#include "Collision.h"
 #include "DamageCalculator.h"
 #include "Define.h"
 #include "EffectManager.h"
@@ -62,7 +64,6 @@ void ProductionAttack::Update(const BattleCharacterManager* bcm)
 
 	// ダメージ演出(ダメージ量が表示される)のupdate
 	mProductionValue.Update();
-
 }
 
 void ProductionAttack::Render()
@@ -118,23 +119,50 @@ void ProductionAttack::StateMoveToTarget()
 
 void ProductionAttack::StateWaitAttack()
 {
-	// モーションが終わったら
-	if (mMoveChara->IsMotionFinished())
+	// コリジョン
+	if (mMoveChara->IsBoneColEnable())
 	{
+		Matrix bm = {};
+		float radius = 0.0f;
+		mMoveChara->GetBoneCollisionParam(&bm, &radius);
+		SPHERE sphere = { Vector3(bm._41, bm._42, bm._43), radius };
 		for (size_t i = 0; i < mTargetCharas.size(); ++i)
 		{
-			if (mTargetCharas[i]->GetStatus()->IsDead())
-			{
-				// Existをfalseにして、エフェクトを再生する
-				mTargetCharas[i]->SetExist(false); // 見えなくする
-				Vector3 effectPos(mTargetCharas[i]->GetPos().x, mTargetCharas[i]->GetPos().y + mTargetCharas[i]->GetLocalAABB().max.y * 0.5f, mTargetCharas[i]->GetPos().z);
-				Singleton<EffectManager>().GetInstance().Play(TurnManager::DEATH_EFFECT_SLOT, effectPos);// えっふぇくと
-			}
+			BattleCharacter* target = mTargetCharas[i];
 
-			Vector3 damagePos(mTargetCharas[i]->GetPos().x, mTargetCharas[i]->GetAABB().max.y, mTargetCharas[i]->GetPos().z);
-			mProductionValue.Add(mAmounts[i], damagePos, DAMAGE_RGB);
+			// すでに当たっているかチェック
+			bool ishit = false;
+			for (auto& hit : mHitChara) if (hit == target) ishit = true;
+			if (ishit) continue;
+
+			if (Collision::ColSphereCapsule(sphere, target->GetCapsule()))
+			{
+				mHitChara.emplace_back(target);
+				Audio::SoundPlay((int)Sound::ATTACK_HIT);
+
+				// ガード中じゃないならダメージモーション
+				if (target->GetStatus()->IsDead())
+				{
+					target->SetMotionStopLastFrame(Character::DIE);
+				}
+				else
+				{
+					if (!target->GetStatus()->GetGuardFlag())
+					{
+						target->SetMotionOnce(Character::DAMAGE, Character::IDLE);
+					}
+				}
+
+				Vector3 p = target->GetPos();
+				Vector3 damagePos(p.x, mTargetCharas[i]->GetAABB().max.y, p.z);
+				mProductionValue.Add(mAmounts[i], damagePos, DAMAGE_RGB);
+			}
 		}
-		
+	}
+
+	// モーションが終わったら
+	if (mMoveChara->IsMotionFinished())
+	{		
 		// 元居た方向に向く
 		mMoveChara->SetAngleY(mMoveChara->GetAngle().y + Define::PI); // 向きを反転
 		++mState;

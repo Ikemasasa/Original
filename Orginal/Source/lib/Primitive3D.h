@@ -1,5 +1,6 @@
 #pragma once
 #include <d3d11.h>
+#include <memory>
 #include <vector>
 #include <wrl.h>
 
@@ -41,7 +42,9 @@ protected:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> mVertexBuffer;
 	Microsoft::WRL::ComPtr<ID3D11Buffer> mIndexBuffer;
 	Microsoft::WRL::ComPtr<ID3D11Buffer> mConstBuffer;
+	std::unique_ptr<Shader> mShader;
 
+	void CreateShader();
 	void Initialize();
 	virtual HRESULT SetVertexBuffer(ID3D11Device* device) = 0;
 	virtual HRESULT SetIndexBuffer(ID3D11Device* device) = 0;
@@ -54,6 +57,7 @@ public:
 	Primitive3D();
 	virtual ~Primitive3D();
 	void Render(const Shader* shader, const Matrix& view, const Matrix& proj, const Vector4& lightDir, const Vector4 color);
+	void RenderWire(const Shader* shader, const Matrix& wvp, const Matrix& world, const Vector4& lightDir, const Vector4 color);
 	int RayCast(const Vector3& pos, const Vector3& velocity, Vector3* outPos, Vector3* outNormal);
 
 	// TransformŠÖŒW
@@ -64,6 +68,7 @@ public:
 	void SetScale(const Vector3& v)  { mScale = v; }
 	void SetRotate(const Vector3& v) { mRotate = v; }
 	void UpdateWorldMatrix() { mWorld.SRT(mScale, mRotate, mPos); }
+
 
 };
 
@@ -87,9 +92,12 @@ class Sphere : public Primitive3D
 private:
 	static const int U_MAX = 30;
 	static const int V_MAX = 15;
+	float mRadius;
+	int mSlices;
+	int mStacks;
 
 public:
-	Sphere() : Primitive3D() { Initialize(); };
+	Sphere(float radius, int slices = 16, int stacks = 16) : Primitive3D(), mRadius(radius), mSlices(slices), mStacks(stacks){ Initialize(); };
 	~Sphere() = default;
 	HRESULT SetVertexBuffer(ID3D11Device* device) override;
 	HRESULT SetIndexBuffer(ID3D11Device* device) override;

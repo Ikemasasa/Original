@@ -45,11 +45,8 @@ void CharacterManager::Update()
 	mNPCManager->Update();
 
 	// “–‚½‚è”»’è
-	if (mPlayerManager->GetMovePlayer()->IsBoneColEnable())
-	{
-		//CollideNPC();
-		CollideEnemy();
-	}
+	CollideNPC();
+	CollideEnemy();
 
 
 	// ‰ï˜bî•ñXV
@@ -89,17 +86,11 @@ void CharacterManager::CollideNPC()
 void CharacterManager::CollideEnemy()
 {
 	Player* player = mPlayerManager->GetMovePlayer();
-	Matrix bm = {};
-	float radius = 0.0f;
-	player->GetBoneCollisionParam(&bm, &radius);
-	Vector3 center = Vector3(bm._41, bm._42, bm._43);
-	SPHERE sphere = { Vector3(bm._41, bm._42, bm._43), radius };
-
+	CAPSULE plCapsule = player->GetCapsule();
 	for (int i = 0; i < mEnemyManager->GetNum(); ++i)
 	{
 		Enemy* enemy = mEnemyManager->GetEnemy(i);
-		
-		if (Collision::ColSphereCapsule(sphere, enemy->GetCapsule()))
+		if (Collision::ColCapsules(enemy->GetCapsule(), plCapsule))
 		{
 			// –³“GŽžŠÔ‚¶‚á‚È‚¯‚ê‚Î
 			if (!mPlayerManager->IsInvincible())
@@ -119,32 +110,6 @@ void CharacterManager::CollideEnemy()
 			}
 		}
 	}
-
-	//Player* player = mPlayerManager->GetMovePlayer();
-	//CAPSULE plCapsule = player->GetCapsule();
-	//for (int i = 0; i < mEnemyManager->GetNum(); ++i)
-	//{
-	//	Enemy* enemy = mEnemyManager->GetEnemy(i);
-	//	if (Collision::ColCapsules(enemy->GetCapsule(), plCapsule))
-	//	{
-	//		// –³“GŽžŠÔ‚¶‚á‚È‚¯‚ê‚Î
-	//		if (!mPlayerManager->IsInvincible())
-	//		{
-	//			// –ß‚Á‚Ä‚«‚½Žž—p‚É–³“G‚ðon‚É‚·‚é
-	//			mPlayerManager->EnableInvincible();
-
-	//			Fade::GetInstance().SetSceneImage(Fade::SPEED_SLOW);
-	//			SceneManager::GetInstance().SetStackScene(std::make_unique<SceneBattle>(mPlayerManager.get(), mEnemyManager->GetEnemy(i)));
-	//			break;
-	//		}
-	//		else
-	//		{
-	//			// –³“GŽžŠÔ’†‚È‚ç‰Ÿ‚µ‡‚¢‚ÌŒvŽZ‚ð‚·‚é
-	//			if (enemy->GetEnmType() == StatusData::EnemyType::BOSS) CollideObject(player, enemy);
-	//			else 													Collide(player, enemy);
-	//		}
-	//	}
-	//}
 }
 
 void CharacterManager::TalkCheck()

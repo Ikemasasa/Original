@@ -5,6 +5,7 @@
 #include "CollisionTerrain.h"
 #include "Define.h"
 #include "GameManager.h"
+#include "MotionCollision.h"
 #include "Player.h"
 #include "TransformData.h"
 
@@ -23,6 +24,12 @@ void Enemy::Initialize()
 	mPos = transform.pos;
 	mScale = transform.scale;
 	mAngle = transform.angle;
+
+	SetCapsuleParam(transform.diameter / 2.0f);
+
+	MotionCollision::ColData colData = MotionCollision::GetEnmMotionCollision(GetCharaID());
+	SetBoneCollision(colData.boneName.c_str(), colData.beginFrame, colData.endFrame, colData.radius);
+
 
 	SetMotion(Character::IDLE);
 }

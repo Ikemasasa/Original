@@ -468,6 +468,9 @@
     <ClInclude Include="Source\lib\Primitive3D.h">
       <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
+    <ClInclude Include="Source\KeyGuide.h">
+      <Filter>02_Source\Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\lib\Blend.cpp">

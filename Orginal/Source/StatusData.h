@@ -84,6 +84,7 @@ public:
 	void SetDebuffAtkRate(const float rate, const int turn);
 	void SetDebuffDefRate(const float rate, const int turn);
 	void SetGuardFlag(const bool flag) { guardFlag = flag; }
+	bool GetGuardFlag() { return guardFlag; }
 	void AdvanceBuffTurn();
 	void ResetBuff();
 

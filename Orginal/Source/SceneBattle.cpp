@@ -237,6 +237,7 @@ void SceneBattle::Render()
 	Singleton<EffectManager>().GetInstance().Render(view, proj);
 	mTurnManager->Render();
 	mBattleCharacterManager->RenderUI();
+	mSelectOptions->Render(Vector2(OPTIONS_X, OPTIONS_Y));
 	mSceneTarget->Deactivate();
 
 	// バックバッファに結果を描画

@@ -38,7 +38,7 @@ class ResourceManager
     static bool HDR_ReadPixels(FILE* fp, float* buf, int width, int height);
     static bool LoadHDRTexture(ID3D11Device* device, const wchar_t* filename, ID3D11ShaderResourceView** outSRV, D3D11_TEXTURE2D_DESC* outDesc);
 public:
-    static ShaderManager mShaderManager;
+    static ShaderManager ShaderManager;
 
 public:
     static void Release();

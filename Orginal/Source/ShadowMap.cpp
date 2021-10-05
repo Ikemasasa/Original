@@ -26,6 +26,7 @@ void ShadowMap::Initialize()
 
 	mGaussianBlur.Initialize(Vector2(SHADOWMAP_X, SHADOWMAP_Y), DXGI_FORMAT_R16G16_FLOAT, BLUR_STRENGTH);
 
+	mShadowProj.Ortho(200, 200, 0.1f, 1000.0f);
 	mTarget = Vector3::ZERO;
 }
 
@@ -39,16 +40,12 @@ void ShadowMap::Activate(const Vector4& lightDir, const Vector3& lightPos)
 
 	// 定数バッファ
 	{
-		DirectX::XMMATRIX proj = DirectX::XMMatrixOrthographicLH(200, 200, 0.1f, 1000.0f);
-
-		DirectX::XMVECTOR pos = DirectX::XMVectorSet(lightPos.x, lightPos.y, lightPos.z, 1.0f);
-		DirectX::XMVECTOR target = DirectX::XMVectorSet(mTarget.x, mTarget.z, mTarget.z, 1.0f);
-		DirectX::XMVECTOR up = DirectX::XMVectorSet(0.0f, 1.0f,	0.0f, 0.0f);
-		DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(pos, target, up);
+		Matrix view;
+		view.LookAtLH(lightPos, mTarget, Vector3(0, 1, 0));
 
 		// 光から見た平行投影の距離が描画される
 		CBShadow cb;
-		DirectX::XMStoreFloat4x4(&cb.shadowVP, view * proj);
+		cb.shadowVP = view * mShadowProj;
 		mConstBuffer.Update(&cb);
 
 		// セット

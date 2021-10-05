@@ -31,7 +31,7 @@ void Window::Create(HINSTANCE instance, int cmd_show, float width, float height)
 {
 	RECT rc = { 0, 0, static_cast<LONG>(width), static_cast<LONG>(height) };
 	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
-	std::wstring windowname = ConvertString::ConvertToWstirng(mWindowName);
+	std::wstring windowname = ConvertString::ConvertToWstring(mWindowName);
 	hwnd = CreateWindow(className, windowname.c_str(), WS_OVERLAPPEDWINDOW ^ WS_MAXIMIZEBOX ^ WS_THICKFRAME | WS_VISIBLE, CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, instance, NULL);
 	ShowWindow(hwnd, cmd_show);
 }

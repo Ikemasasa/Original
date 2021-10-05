@@ -34,6 +34,8 @@ void Player::Initialize()
 	mScale = transform.scale;
 	mAngle = transform.angle;
 
+	SetCapsuleParam(transform.diameter / 2.0f);
+
 	MotionCollision::ColData colData = MotionCollision::GetPLMotionCollision(GetCharaID());
 	SetBoneCollision(colData.boneName.c_str(), colData.beginFrame, colData.endFrame, colData.radius);
 
@@ -49,55 +51,39 @@ void Player::Update()
 	cFrontVector.Normalize();
 	cRightVector.Normalize();
 
-	static bool attack = false;
-
-	if (!attack)
+	float axisX = Input::GetAxisX();
+	float axisY = Input::GetAxisY();
+	if (axisX != 0 || axisY != 0)
 	{
-		float axisX = Input::GetAxisX();
-		float axisY = Input::GetAxisY();
-		if (axisX != 0 || axisY != 0)
+		// 慣性をなくすため、上のは代入にしてある
+		mVelocity = cFrontVector * axisY;
+		mVelocity += cRightVector * axisX;
+		mVelocity *= MOVE_SPEED;
+		// 向き補正
+		CorrectionAngle();
+		// 座標補正
 		{
-			// 慣性をなくすため、上のは代入にしてある
-			mVelocity = cFrontVector * axisY;
-			mVelocity += cRightVector * axisX;
-			mVelocity *= MOVE_SPEED;
-			// 向き補正
-			CorrectionAngle();
-			// 座標補正
+			// 移動方向
+			Vector3 outVelocity;
+			if (CollisionTerrain::MoveCheck(mPos + Vector3(0, RAYPICK_DIST, 0), mVelocity, GetCapsule().radius, &outVelocity))
 			{
-				// 移動方向
-				Vector3 outVelocity;
-				if (CollisionTerrain::MoveCheck(mPos + Vector3(0, RAYPICK_DIST, 0), mVelocity, GetCapsule().radius, &outVelocity))
-				{
-					mVelocity = outVelocity;
-				}
-				//mPos += mVelocity;
-				mPos.x += mVelocity.x;
-				mPos.z += mVelocity.z;
-
-				// 下方向の補正
-				float y = CollisionTerrain::GetHeight(mPos, RAYPICK_DIST);
-				mPos.y = Math::Lerp(mPos.y, y, POS_Y_ADJUST_FACTOR);
+				mVelocity = outVelocity;
 			}
+			//mPos += mVelocity;
+			mPos.x += mVelocity.x;
+			mPos.z += mVelocity.z;
 
-			SetMotion(Character::RUN);
+			// 下方向の補正
+			float y = CollisionTerrain::GetHeight(mPos, RAYPICK_DIST);
+			mPos.y = Math::Lerp(mPos.y, y, POS_Y_ADJUST_FACTOR);
 		}
-		else
-		{
-			SetMotion(Character::IDLE);
-		}
-		
-		if (Input::GetButtonTrigger(0, Input::A))
-		{
-			SetMotionOnce(ATTACK, IDLE);
-			attack = true;
-		}
+
+		SetMotion(Character::RUN);
 	}
 	else
 	{
-		if (IsMotionFinished()) attack = false;
+		SetMotion(Character::IDLE);
 	}
-
 
 	Character::UpdateWorld();
 }
