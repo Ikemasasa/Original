@@ -4,6 +4,7 @@
 #include "lib/Input.h"
 
 #include "Define.h"
+#include "KeyGuide.h"
 #include "Player.h"
 #include "PlayerManager.h"
 #include "StatusData.h"
@@ -35,6 +36,10 @@ void MenuCharacterSelect::Update()
 	if (Input::GetButtonTrigger(0, Input::BUTTON::LB)) mSelectIndex = (mSelectIndex + (max - 1)) % max;
 
 	if (mOldSelectIndex != mSelectIndex) Audio::SoundPlay((int)Sound::CURSOR_MOVE);
+
+	// キーガイド
+	KeyGuide::Key key[] = { KeyGuide::RB, KeyGuide::LB };
+	KeyGuide::Instance().Add(key, 2, L"キャラクター選択");
 }
 
 void MenuCharacterSelect::Render(Vector2 leftBottom)

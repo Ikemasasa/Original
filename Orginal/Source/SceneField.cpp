@@ -14,6 +14,7 @@
 #include "Enemy.h"
 #include "EffectManager.h"
 #include "GameManager.h"
+#include "KeyGuide.h"
 #include "Light.h"
 #include "Player.h"
 #include "SceneManager.h"
@@ -82,13 +83,8 @@ void SceneField::Update()
 
 	Singleton<EffectManager>().GetInstance().Update();
 
-	Vector3 p = mCharaManager->GetMovePlayer()->GetPos();
-	float pos[3] = { p.x, p.y, p.z };
-	for (int i = 0; i < 3; ++i)
-	{
-		std::wstring str = std::to_wstring(pos[i]);
-		font.RenderSet(str.c_str(), Vector2(0.0f, 32.0f * i));
-	}
+	KeyGuide::Key key[] = { KeyGuide::Y };
+	KeyGuide::Instance().Add(key, ARRAYSIZE(key), L"ƒƒjƒ…[");
 }
 
 void SceneField::Render()

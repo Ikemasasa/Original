@@ -7,6 +7,7 @@
 
 #include "Item.h"
 #include "ItemData.h"
+#include "KeyGuide.h"
 #include "Player.h"
 #include "PlayerManager.h"
 #include "StatusData.h"
@@ -48,8 +49,10 @@ MenuBase::Select MenuItem::Update(PlayerManager* plm)
 		}
 
 		// 前の画面に戻る
-		if (Input::GetButtonTrigger(0, Input::BUTTON::B))
-			return Select::BACK;
+		if (Input::GetButtonTrigger(0, Input::BUTTON::B)) return Select::BACK;
+
+		KeyGuide::Instance().Add(KeyGuide::A, L"決定");
+		KeyGuide::Instance().Add(KeyGuide::B, L"戻る");
 	}
 	else
 	{
@@ -66,6 +69,9 @@ MenuBase::Select MenuItem::Update(PlayerManager* plm)
 		{
 			mItemIndex = -1; // アイテム未選択状態に戻す
 		}
+
+		// キーガイド
+		KeyGuide::Instance().Add(KeyGuide::B, L"戻る");
 	}
 
 	return MenuBase::NONE;

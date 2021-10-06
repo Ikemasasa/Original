@@ -7,11 +7,10 @@
 
 #include "Fade.h"
 #include "GameManager.h"
+#include "KeyGuide.h"
 #include "SceneManager.h"
 #include "SceneTitle.h"
-#include "SceneField.h"
 #include "Singleton.h"
-#include "TimeStamp.h"
 
 int Looper::Run(HWND hwnd)
 {
@@ -40,6 +39,7 @@ int Looper::Run(HWND hwnd)
 		f.Clear();
 		sm.Render();
 		Fade::GetInstance().Render();
+		KeyGuide::Instance().Render(true);
 
 		f.ScreenFlip();
 	}

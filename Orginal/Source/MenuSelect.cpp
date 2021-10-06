@@ -7,6 +7,7 @@
 #include "CharacterHealth.h"
 #include "Define.h"
 #include "Fade.h"
+#include "KeyGuide.h"
 #include "Player.h"
 #include "PlayerManager.h"
 #include "SceneManager.h"
@@ -37,6 +38,14 @@ MenuSelect::Select MenuSelect::Update(PlayerManager* plm)
 {
     BeginAnimation();
 
+    // キーガイド
+    KeyGuide::Instance().Add(KeyGuide::A, L"決定");
+    KeyGuide::Instance().Add(KeyGuide::B, L"戻る");
+    KeyGuide::Key move[] = { KeyGuide::UP, KeyGuide::DOWN };
+    KeyGuide::Instance().Add(move, 2, L"カーソル移動");
+
+
+
     // CharacterHealth作成
     std::vector<Status> statusArray;
     for (size_t i = 0; i < plm->GetNum(); ++i)
@@ -65,9 +74,9 @@ MenuSelect::Select MenuSelect::Update(PlayerManager* plm)
             Audio::SoundStop((int)Sound::CANCEL);
             Audio::SoundPlay((int)Sound::MENU_CLOSE);
             SceneManager::GetInstance().PopCurrentScene();
+
         }
     }
-
     return NONE;
 }
 

@@ -3,6 +3,7 @@
 #include "lib/Input.h"
 
 #include "Define.h"
+#include "KeyGuide.h"
 #include "Player.h"
 #include "PlayerManager.h"
 #include "StatusData.h"
@@ -17,17 +18,8 @@ void MenuEquipment::Initialize(const PlayerManager* plm)
 	mCharacterSelect.Initialize(plm);
 	mEquipmentSelect.Initialize();
 
-	// フォントに追加
+	// フォント初期化
 	mFont.Initialize();
-	//for (int i = 0; i < playerNum; ++i)
-	//{
-	//	Status status = StatusData::GetPLStatus(plm->GetPlayer(i)->GetCharaID());
-	//	mNameFont.Add(status.GetName().c_str());
-	//}
-
-	//mFont.Initialize();
-	//mFont.Add(L"武器：");
-	//mFont.Add(L"防具：");
 }
 
 MenuBase::Select MenuEquipment::Update(PlayerManager* plm)
@@ -56,6 +48,12 @@ MenuBase::Select MenuEquipment::Update(PlayerManager* plm)
 		{
 			mIsDecideType = true;
 		}
+
+		// キーガイド
+		KeyGuide::Instance().Add(KeyGuide::A, L"決定");
+		KeyGuide::Instance().Add(KeyGuide::B, L"戻る");
+		KeyGuide::Key key[] = { KeyGuide::UP, KeyGuide::DOWN };
+		KeyGuide::Instance().Add(key, 2, L"カーソル移動");
 	}
 	else
 	{
@@ -113,6 +111,8 @@ MenuBase::Select MenuEquipment::Update(PlayerManager* plm)
 			mIsDecideType = false;
 			mEquipmentSelect.ClearData();
 		}
+
+		KeyGuide::Instance().Add(KeyGuide::B, L"戻る");
 	}
 
 	// フォントレンダーに追加

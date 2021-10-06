@@ -5,6 +5,7 @@
 
 #include "DataBase.h"
 #include "Define.h"
+#include "KeyGuide.h"
 #include "PlayerManager.h"
 #include "Singleton.h"
 #include "StatusData.h"
@@ -160,6 +161,12 @@ void CharacterHealth::Render(bool isSelectRender, bool isFontClear)
 	{
 		Vector2 selectPos(mBoardLeftTop.x, mBoardLeftTop.y + mHealthBoard->GetSize().y * mSelectIndex);
 		mSelect->Render(selectPos, Vector2::ONE, Vector2::ZERO, mSelect->GetSize());
+
+		// キーガイド
+		KeyGuide::Instance().Add(KeyGuide::A, L"決定");
+
+		KeyGuide::Key key[] = {KeyGuide::UP, KeyGuide::DOWN };
+		KeyGuide::Instance().Add(key, 2, L"キャラクター選択");
 	}
 
 	// フォントクリアしない = updateを1回しかしない、なのでこう

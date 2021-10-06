@@ -3,6 +3,7 @@
 #include "lib/Input.h"
 
 #include "Define.h"
+#include "KeyGuide.h"
 #include "Player.h"
 #include "PlayerManager.h"
 #include "StatusData.h"
@@ -20,6 +21,10 @@ MenuBase::Select MenuStatus::Update(PlayerManager* plm)
     // 前の画面に戻す
     if (Input::GetButtonTrigger(0, Input::BUTTON::B)) return BACK;
 
+    // キーガイド
+    KeyGuide::Instance().Add(KeyGuide::B, L"戻る");
+
+    // キャラ選択
     mCharacterSelect.Update();
 
     const int playerIndex = mCharacterSelect.GetIndex();

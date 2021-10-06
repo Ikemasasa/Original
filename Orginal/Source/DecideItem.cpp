@@ -7,6 +7,7 @@
 #include "DecideTargetChara.h"
 #include "Define.h"
 #include "Item.h"
+#include "KeyGuide.h"
 
 void DecideItem::Initialize(const BattleCharacterManager* bcm)
 {
@@ -52,6 +53,9 @@ void DecideItem::Update(const BattleCharacterManager* bcm, CommandBase* cmdBase)
 		cmdBase->SetItemParam(nullptr);
 		mIsBackState = true;
 	}
+
+	KeyGuide::Instance().Add(KeyGuide::A, L"Œˆ’è");
+	KeyGuide::Instance().Add(KeyGuide::B, L"–ß‚é");
 }
 
 void DecideItem::Render()

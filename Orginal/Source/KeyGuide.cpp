@@ -1,5 +1,9 @@
 #include "KeyGuide.h"
 
+#include <algorithm>
+
+#include "lib/Math.h"
+
 KeyGuide::KeyGuide()
 {
 	mKeyIcons = std::make_unique<Sprite>(L"Data/Image/keyguide/key_icons.png");
@@ -7,19 +11,41 @@ KeyGuide::KeyGuide()
 	mFont.Initialize();
 }
 
-void KeyGuide::Add(Key* key, int keyNum, std::wstring description)
+
+std::list<KeyGuide::Guide>::iterator KeyGuide::GetInsertIterator(Key key)
 {
-	std::vector<Key> keys;
-	for (int i = 0; i < keyNum; ++i)
+	// enum のkey順に並べるため
+	auto it = mKeyGuides.begin();
+	for (; it != mKeyGuides.end(); ++it)
 	{
-		keys.emplace_back(key[i]);
+		if (it->keys[0] > key) break;
 	}
 
-	Guide guide;
-	guide.keys = keys;
-	guide.description = L":" + description;
-	mKeyGuides.emplace_back(guide);
+	return it;
 }
+
+void KeyGuide::Add(Key key, std::wstring description)
+{
+	Guide guide;
+	guide.keys.emplace_back(key);
+	guide.description = L":" + description;
+	mKeyGuides.insert(GetInsertIterator(guide.keys[0]), guide);
+}
+
+void KeyGuide::Add(Key* key, int keyNum, std::wstring description)
+{
+	Guide guide;
+	for (int i = 0; i < keyNum; ++i)
+	{
+		guide.keys.emplace_back(key[i]);
+	}
+	std::sort(guide.keys.begin(), guide.keys.end());
+	guide.description = L":" + description;
+
+	
+	mKeyGuides.insert(GetInsertIterator(guide.keys[0]), guide);
+}
+
 
 void KeyGuide::Render(bool isClear)
 {
@@ -28,43 +54,44 @@ void KeyGuide::Render(bool isClear)
 	float totalX = 0.0f;
 	for (auto& guide : mKeyGuides)
 	{
-		totalX += mFont.GetWidth(guide.description.c_str()) + guide.keys.size()* ICON_SCALE_SIZE;
+		totalX += mFont.GetWidth(guide.description.c_str()) + guide.keys.size() * ICON_SCALE_SIZE + ICON_SCALE_SIZE;
 	}
 
 	// ボード描画
-	mKeyGuideBoard->Render(Vector2(Define::SCREEN_WIDTH - totalX, BOARD_LEFTTOP_Y), Vector2::ONE, Vector2::ZERO, mKeyGuideBoard->GetSize());
+	mKeyGuideBoard->Render(Vector2(mMoveX - GUIDE_LEFTTOP_X, BOARD_LEFTTOP_Y), Vector2::ONE, Vector2::ZERO, mKeyGuideBoard->GetSize());
 
 
 	// フォントセット
-	float offsetX = GUIDE_LEFTTOP_X;
-	for (size_t i = 0; i < mKeyGuides.size(); ++i)
+	const float POS_Y = BOARD_LEFTTOP_Y + GUIDE_LEFTTOP_Y;
+	float offsetX = mMoveX;
+	for (auto& guide : mKeyGuides)
 	{
-		auto& guide = mKeyGuides[i];
-
 		int keyNum = (int)guide.keys.size();
 		float totalKeySize = keyNum * ICON_SCALE_SIZE;
 
 		// キー描画
 		for (size_t k = 0; k < guide.keys.size(); ++k)
 		{
-			offsetX += k * ICON_SCALE_SIZE;
 
-			Vector2 pos(offsetX, GUIDE_LEFTTOP_Y);
+			Vector2 pos(offsetX, POS_Y);
 			Vector2 scale(ICON_SCALE, ICON_SCALE);
 			Vector2 tex(guide.keys[k] * ICON_SIZE, 0.0f);
 			Vector2 size(ICON_SIZE, ICON_SIZE);
 			mKeyIcons->Render(pos, scale, tex, size);
+
+			offsetX += ICON_SCALE_SIZE;
 		}
-		offsetX += ICON_SCALE_SIZE;
 
 		// フォントセット
-		mFont.RenderSet(guide.description.c_str(), Vector2(offsetX, GUIDE_LEFTTOP_Y));
-		offsetX += mFont.GetWidth(guide.description.c_str()) + totalKeySize;
+		mFont.RenderSet(guide.description.c_str(), Vector2(offsetX, POS_Y), Vector2::ZERO, Define::FONT_COLOR);
+		offsetX += mFont.GetWidth(guide.description.c_str()) + ICON_SCALE_SIZE;
 	}
 
 	// フォント描画
 	mFont.Render();
 
+	// mMoveX更新
+	mMoveX = Math::Lerp(mMoveX, Define::SCREEN_WIDTH - totalX , LERP_FACTOR);
 
 	if (isClear) mKeyGuides.clear();
 }

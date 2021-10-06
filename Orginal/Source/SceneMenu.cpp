@@ -3,6 +3,7 @@
 #include "lib/Input.h"
 
 #include "Fade.h"
+#include "KeyGuide.h"
 #include "PlayerManager.h"
 #include "SceneManager.h"
 
@@ -18,6 +19,7 @@ SceneMenu::~SceneMenu()
 void SceneMenu::Initialize()
 {
 	mMenuManager.Initialize(mPlayerManager);
+	KeyGuide::Instance().ResetMoveX();
 }
 
 void SceneMenu::Update()
