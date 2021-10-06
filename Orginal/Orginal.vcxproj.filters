@@ -469,7 +469,7 @@
       <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
     <ClInclude Include="Source\KeyGuide.h">
-      <Filter>02_Source\Common</Filter>
+      <Filter>01_Header\Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -829,6 +829,9 @@
     </ClCompile>
     <ClCompile Include="Source\lib\Primitive3D.cpp">
       <Filter>00_lib\02_LibSource</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\KeyGuide.cpp">
+      <Filter>02_Source\Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

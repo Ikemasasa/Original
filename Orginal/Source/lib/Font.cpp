@@ -102,6 +102,28 @@ bool Font::RenderSetValue(const float value, const Vector2& pos, const Vector2& 
 	return true;
 }
 
+void Font::Render(const wchar_t* str, const Vector2& pos, const Vector2& centerRate, const Vector4& color)
+{
+	Add(str);
+
+	const Vector2 scale(Vector2::ONE);
+	const Vector2 texPos(Vector2::ZERO);
+	const float angle = 0.0f;
+
+	Vector2 center = {};
+	if (centerRate.x != 0.0f) center.x = GetWidth(str) * centerRate.x;
+
+	Vector2 p = pos;
+	int len = wcslen(str);
+	for (int i = 0; i < len; ++i)
+	{
+		const FontData& fd = mFonts[str[i]];
+		p.x += fd.leftTop.x;
+		p.y = pos.y + fd.leftTop.y;
+		Renderer2D::GetInstance().Render(fd.tex.GetSRV(), p, scale, texPos, fd.size, center, angle, color);
+	}
+}
+
 void Font::Render(bool isRenderClear)
 {
 	Vector2 pos;

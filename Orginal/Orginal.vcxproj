@@ -326,6 +326,7 @@
     <ClCompile Include="Source\Item.cpp" />
     <ClCompile Include="Source\ItemData.cpp" />
     <ClCompile Include="Source\ItemSelect.cpp" />
+    <ClCompile Include="Source\KeyGuide.cpp" />
     <ClCompile Include="Source\lib\ComputeShader.cpp" />
     <ClCompile Include="Source\lib\ConstantBuffer.cpp" />
     <ClCompile Include="Source\lib\ConvertString.cpp" />
