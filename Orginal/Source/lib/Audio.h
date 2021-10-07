@@ -26,6 +26,7 @@ enum class Sound
     DEBUFF,
     BOMB,
     ATTACK_HIT,
+    ENEMY_HIT,
     NUM
 };
 

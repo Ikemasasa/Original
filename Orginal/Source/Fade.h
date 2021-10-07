@@ -4,6 +4,7 @@
 #include "lib/ConstantBuffer.h"
 #include "lib/Shader.h"
 
+#include "Define.h"
 
 class Sprite;
 
@@ -39,7 +40,7 @@ private:
 	
 	// ウェーブ用
 	static const int WAVENUM = 3;
-	static constexpr float ADD_SINFACTOR = 1.5f * 0.1745f; // 1度(radian
+	static constexpr float ADD_SINFACTOR = 17.5f * (Define::PI / 180.0f); // radianにしてる
 	bool mIsWave = false;
 	float mSinFactor = 0.0f;
 	ConstantBuffer mWaveCB;

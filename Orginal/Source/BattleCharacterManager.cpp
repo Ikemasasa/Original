@@ -13,7 +13,6 @@
 #include "EffectManager.h"
 #include "Enemy.h"
 #include "EnemyBattle.h"
-#include "Fade.h"
 #include "PlayerBattle.h"
 #include "PlayerManager.h"
 #include "SceneBattle.h"

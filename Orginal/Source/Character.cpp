@@ -18,7 +18,6 @@ Character::Character(const Character* org)
 {
 	// ƒ‚ƒfƒ‹‚¾‚¯ˆê‚ÉŽg‚¤
 	mMesh = org->mMesh;
-	mHit = org->mHit;
 
 	mScale = org->mScale;
 	mMass = org->mMass;
@@ -27,7 +26,7 @@ Character::Character(const Character* org)
 
 	mCapsuleParam = org->mCapsuleParam;
 	mBoneCollision = org->mBoneCollision;
-	mCol = std::make_unique<Sphere>(mBoneCollision.radius);
+	//mCol = std::make_unique<Sphere>(mBoneCollision.radius);
 
 	UpdateWorld();
 }
@@ -57,12 +56,6 @@ void Character::Render(const Shader* shader, const Matrix& view, const Matrix& p
 	{
 		Matrix wvp = mWorld * view * proj;
 		mMesh->Render(shader, wvp, mWorld, lightDir);
-		if (mHit)
-		{
-			mHit->RenderWire(shader, wvp, mWorld, lightDir, Vector4(0.8, 0.2, 0.2, 1));
-		}
-		if (mBoneCollision.enable) 
-			mCol->Render(shader, view, proj, lightDir, Vector4::ONE);
 	}
 }
 
@@ -127,7 +120,6 @@ void Character::SetCapsuleParam(float radius)
 	mCapsuleParam.centerTop = cTop;
 	mCapsuleParam.centerBottom = cBottom;
 	mCapsuleParam.radius = radius;
-	mHit = std::make_shared<Capsule>(cTop, cBottom, mCapsuleParam.radius);
 }
 
 AABB Character::GetLocalAABB() const
@@ -185,9 +177,6 @@ void Character::GetBoneCollisionParam(Matrix* mat, float* radius)
 {
 	*mat = GetBoneMatrix();
 	*radius = mBoneCollision.radius;
-
-	mCol->SetPos(Vector3(mat->_41, mat->_42, mat->_43));
-	mCol->UpdateWorldMatrix();
 }
 
 void Character::SetBoneCollision(const char* boneName, int beginF, int endF, float radius)
@@ -200,5 +189,4 @@ void Character::SetBoneCollision(const char* boneName, int beginF, int endF, flo
 	mBoneCollision.endFrame = endF;
 	mBoneCollision.radius = radius;
 	mBoneCollision.enable = true;
-	mCol = std::make_unique<Sphere>(mBoneCollision.radius);
 }

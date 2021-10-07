@@ -2,7 +2,6 @@
 
 #include <thread>
 
-#include "lib/Audio.h"
 #include "lib/Sprite.h"
 
 #include "Define.h"

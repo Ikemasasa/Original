@@ -2,9 +2,7 @@
 
 #include "lib/Input.h"
 
-#include "Fade.h"
 #include "KeyGuide.h"
-#include "PlayerManager.h"
 #include "SceneManager.h"
 
 SceneMenu::SceneMenu(PlayerManager* plm)

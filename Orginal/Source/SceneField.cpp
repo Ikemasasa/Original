@@ -85,6 +85,7 @@ void SceneField::Update()
 			PlayerManager* pm = mCharaManager->GetPlayerManager();
 			Enemy* enm = mCharaManager->IsHitEnemy();
 			SceneManager::GetInstance().SetStackScene(std::make_unique<SceneBattle>(pm, enm));
+			Audio::SoundPlay((int)Sound::ENEMY_HIT);
 
 			mCharaManager->ResetHitEnemy();
 			mTransBattleScene = false;

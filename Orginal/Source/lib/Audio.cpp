@@ -49,6 +49,7 @@ void Audio::Initialize()
 	LoadSound((int)Sound::DEBUFF, L"Data/Audio/Sound/debuff.wav");
 	LoadSound((int)Sound::BOMB, L"Data/Audio/Sound/bomb.wav");
 	LoadSound((int)Sound::ATTACK_HIT, L"Data/Audio/Sound/attack_hit.wav");
+	LoadSound((int)Sound::ENEMY_HIT, L"Data/Audio/Sound/enemy_hit.wav");
 }
 
 void Audio::Update()

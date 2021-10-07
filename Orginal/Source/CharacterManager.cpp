@@ -7,7 +7,6 @@
 #include "CollisionTerrain.h"
 #include "Enemy.h"
 #include "EnemyManager.h"
-#include "Fade.h"
 #include "NPC.h"
 #include "NPCManager.h"
 #include "Player.h"

@@ -69,7 +69,7 @@ float4 ColorGrading(float4 color)
 	color = (color - gray) * saturation + gray;
 
 	// カラー補正
-	color.rgb *= float3(0.9, 1.015, 1.1);
+	color.rgb *= float3(0.9, 1.05, 1.07);
 
 	return color;
 }

@@ -52,8 +52,8 @@ public:
 
 private:
 	std::shared_ptr<SkinnedMesh> mMesh = nullptr;
-	std::shared_ptr<Primitive3D> mHit = nullptr;
-	std::unique_ptr<Primitive3D> mCol = nullptr;
+	//std::shared_ptr<Primitive3D> mHit = nullptr;
+	//std::unique_ptr<Primitive3D> mCol = nullptr;
 	Matrix mWorld = { 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 };
 	int mObjID = -1; // インスタンスに割り当てられるID(各Managerで0スタートで増えていく)
 	int mCharaID = -1; // キャラクターそのものに割り当てられているID(スタートは種類によって変わる、DataBase参照)
