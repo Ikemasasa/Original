@@ -23,6 +23,8 @@ private:
 	std::unique_ptr<NPCManager> mNPCManager;
 	std::unique_ptr<NPCTalk> mNPCTalk;
 
+	Enemy* mHitEnemy = nullptr;
+
 	void Collide(Character* a, Character* b);
 	void CollideObject(Character* move, Character* object); 
 public:
@@ -31,7 +33,6 @@ public:
 
 	void Initialize();
 	void Update();
-	void Render(const Matrix& view, const Matrix& proj, const Vector4& lightDir);
 	void Render(const Shader* shader, const Matrix& view, const Matrix& proj, const Vector4& lightDir);
 	void RenderUI();
 
@@ -39,6 +40,10 @@ public:
 	void CollideEnemy();
 	void TalkCheck();
 
+	Enemy* IsHitEnemy() const { return mHitEnemy; }
+	void ResetHitEnemy() { mHitEnemy = nullptr; }
+
 	Player* GetMovePlayer() const { return mPlayerManager->GetMovePlayer(); }
+	PlayerManager* GetPlayerManager() const { return mPlayerManager.get(); }
 	EnemyManager* GetEnemyManager() const { return mEnemyManager.get(); }
 };

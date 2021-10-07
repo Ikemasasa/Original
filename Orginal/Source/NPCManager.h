@@ -24,7 +24,7 @@ private:
 
 	std::vector<std::unique_ptr<NPC>> mNPCs;
 	std::unique_ptr<Sprite> mTalkIcon;
-	Vector3 mPlayerPos;
+	Vector3 mPlayerPos = {};
 
 public:
 	NPCManager() = default;
@@ -32,7 +32,6 @@ public:
 
 	void Initialize();
 	void Update();
-	void Render(const Matrix& view, const Matrix& projection, const Vector4& lightDir);
 	void Render(const Shader* shader, const Matrix& view, const Matrix& projection, const Vector4& lightDir);
 	void RenderUI();
 	void Release();

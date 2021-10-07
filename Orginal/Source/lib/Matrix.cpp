@@ -90,10 +90,15 @@ void Matrix::Interporate(Matrix& target, float rate)
 	*this = A;
 }
 
+void Matrix::Interporate(Matrix* result, const Matrix& mat1, const Matrix& mat2, float rate)
+{
+	*result = mat1 * (1.0f - rate) + mat2 * rate;
+}
+
 void Matrix::LookAtLH(const Vector3& pos, const Vector3& target, const Vector3& up)
 {
 	Vector3 xAxis, yAxis, zAxis;
-	zAxis = target - pos;
+	zAxis = pos - target;
 	zAxis.Normalize();
 	xAxis = Vector3::Cross(up, zAxis);
 	xAxis.Normalize();
@@ -128,12 +133,12 @@ void Matrix::PerspectiveFov(float fovY, float aspect, float znear, float zfar)
 
 	_31 = (right + left) / (right - left);
 	_32 = (top + bottom) / (top - bottom);
-	_33 = (zfar + znear) / (zfar - znear);
-	_34 = 1;
+	_33 = -(zfar + znear) / (zfar - znear);
+	_34 = -1;
 
 	_41 = 0;
 	_42 = 0;
-	_43 = -(zfar * znear / (zfar - znear));
+	_43 = -2 * zfar * znear / (zfar - znear);
 	_44 = 0;
 }
 

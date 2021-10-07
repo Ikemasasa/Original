@@ -6,6 +6,7 @@
 #include "lib/Sprite.h"
 
 #include "Define.h"
+#include "KeyGuide.h"
 
 void SkillSelect::Initialize(const int charaID, const Vector2& leftTop)
 {
@@ -52,6 +53,16 @@ void SkillSelect::Update()
 		Vector2 pos(mBoardPos.x + SKILLINFO_POS_X, mBoardPos.y + SKILLINFO_POS_Y);
 		Vector2 center(Vector2::ZERO);
 		mFont.RenderSet(mParams[mSkillIndex].info.c_str(), pos, center);
+
+		//キーガイド
+		KeyGuide::Instance().Add(KeyGuide::A, L"決定");
+		KeyGuide::Instance().Add(KeyGuide::B, L"戻る");
+		if (num >= 2)
+		{
+			KeyGuide::Key key[] = { KeyGuide::UP, KeyGuide::DOWN };
+			KeyGuide::Instance().Add(key, 2, L"カーソル移動");
+		}
+
 	}
 	else
 	{
@@ -59,6 +70,8 @@ void SkillSelect::Update()
 		Vector2 pos(mBoardPos.x + SKILLINFO_POS_X, mBoardPos.y + SKILLINFO_POS_Y);
 		Vector2 center(Vector2::ZERO);
 		mFont.RenderSet(L"スキルはありません", pos, center);
+
+		KeyGuide::Instance().Add(KeyGuide::B, L"戻る");
 	}
 }
 

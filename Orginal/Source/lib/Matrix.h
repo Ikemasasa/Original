@@ -28,6 +28,7 @@ public:
 	void Identity();
 	void Inverse();
 	void Interporate(Matrix& target, float rate);
+	static void Interporate(Matrix* result, const Matrix& mat1, const Matrix& mat2, float rate);
 
 	// カメラ系
 	void LookAtLH(const Vector3& pos, const Vector3& target, const Vector3& up = Vector3(0, 1, 0)); // ビュー行列作成

@@ -4,7 +4,6 @@
 #include "lib/Input.h"
 #include "lib/Sprite.h"
 
-#include "Fade.h"
 #include "MenuEquipment.h"
 #include "MenuItem.h"
 #include "MenuStatus.h"

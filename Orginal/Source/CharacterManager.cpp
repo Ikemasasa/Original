@@ -7,7 +7,6 @@
 #include "CollisionTerrain.h"
 #include "Enemy.h"
 #include "EnemyManager.h"
-#include "Fade.h"
 #include "NPC.h"
 #include "NPCManager.h"
 #include "Player.h"
@@ -15,6 +14,8 @@
 #include "SceneManager.h"
 #include "SceneBattle.h"
 #include "Terrain.h"
+
+#include "lib/Font.h"
 
 CharacterManager::CharacterManager()
 {
@@ -49,13 +50,6 @@ void CharacterManager::Update()
 	// 会話情報更新
 	TalkCheck();
 	mNPCTalk->Update();
-}
-
-void CharacterManager::Render(const Matrix& view, const Matrix& proj, const Vector4& lightDir)
-{
-	mPlayerManager->Render(view, proj, lightDir);
-	mEnemyManager->Render(view, proj, lightDir);
-	mNPCManager->Render(view, proj, lightDir);
 }
 
 void CharacterManager::Render(const Shader* shader, const Matrix& view, const Matrix& proj, const Vector4& lightDir)
@@ -101,9 +95,7 @@ void CharacterManager::CollideEnemy()
 			{
 				// 戻ってきた時用に無敵をonにする
 				mPlayerManager->EnableInvincible();
-
-				Fade::GetInstance().SetSceneImage(Fade::SPEED_SLOW);
-				SceneManager::GetInstance().SetStackScene(std::make_unique<SceneBattle>(mPlayerManager.get(), mEnemyManager->GetEnemy(i)));
+				mHitEnemy = enemy;
 				break;
 			}
 			else

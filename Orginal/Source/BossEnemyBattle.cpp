@@ -16,6 +16,6 @@ BossEnemyBattle::~BossEnemyBattle()
 
 void BossEnemyBattle::Initialize()
 {
-	SetMotion(SkinnedMesh::IDLE);
+	SetMotion(Character::IDLE);
 	SetAngle(Vector3(0.0f, Define::PI, 0.0f));
 }

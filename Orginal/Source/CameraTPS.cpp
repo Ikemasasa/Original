@@ -14,22 +14,29 @@ CameraTPS::CameraTPS() : CameraBase()
 void CameraTPS::Update(const Character* target)
 {
 	mDistFromTargetY += Input::GetAxisRY() * 0.1f;
-	mAngle.y		 += Input::GetAxisRX() * DirectX::XMConvertToRadians(1.25f);
+	mAngle.y		 -= Input::GetAxisRX() * DirectX::XMConvertToRadians(1.25f);
 	mDistFromTargetY = Math::Clamp(mDistFromTargetY, 1.5f, 7.5f);
 
 	Vector3 p = target->GetPos();
 
 	const float DISTANCE = 15.0f;
 	const float ADJUST_TARGET = 2.5f;
-	mPos.x = p.x + sinf(mAngle.y) * DISTANCE;
-	mPos.y = p.y + mDistFromTargetY;
-	mPos.z = p.z + cosf(mAngle.y) * DISTANCE;
-	mTarget = Vector3(p.x, p.y + ADJUST_TARGET, p.z);
+	Vector3 pos;
+	pos.x = p.x + sinf(mAngle.y) * DISTANCE;
+	pos.y = p.y + mDistFromTargetY;
+	pos.z = p.z + cosf(mAngle.y) * DISTANCE;
+	mPos = Vector3::Lerp(mPos, pos, LERP_FACTOR);
+
+	Vector3 t;
+	t.x = p.x;
+	t.y = p.y + ADJUST_TARGET;
+	t.z = p.z;
+	mTarget = Vector3::Lerp(mTarget, t, LERP_FACTOR);
 
 
 	Vector3 dist = mPos - mTarget;
 	Vector3 hit, normal;
-	if (CollisionTerrain::RayPick(mTarget, dist, &hit, &normal) != -1)
+	if (CollisionTerrain::RayPickOrg(mTarget, dist, &hit, &normal) != -1)
 	{
 		dist = hit - mTarget;
 		float lenSq = dist.LengthSq();

@@ -9,6 +9,7 @@
 #include "CameraManager.h"
 #include "CommandBase.h"
 #include "Item.h"
+#include "KeyGuide.h"
 #include "Singleton.h"
 
 
@@ -61,6 +62,16 @@ void DecideTargetChara::Update(const BattleCharacterManager* bcm, CommandBase* c
 	{
 		mIsBackState = true;
 	}
+
+	// キーガイド
+	KeyGuide::Instance().Add(KeyGuide::A, L"決定");
+	KeyGuide::Instance().Add(KeyGuide::B, L"戻る");
+	if (num >= 2)
+	{
+		KeyGuide::Key key[] = { KeyGuide::LEFT, KeyGuide::RIGHT };
+		KeyGuide::Instance().Add(key, 2, L"カーソル移動");
+	}
+
 }
 
 void DecideTargetChara::Render()

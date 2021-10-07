@@ -5,16 +5,12 @@
 #include "CollisionTerrain.h"
 #include "Define.h"
 #include "GameManager.h"
+#include "MotionCollision.h"
 #include "Player.h"
 #include "TransformData.h"
 
 Enemy::Enemy(int charaID) : Character(charaID, Character::ENEMY)
 {
-	// シェーダ書き換え
-	Shader* shader = new Shader;
-	shader->Load(L"Shaders/Character.fx", "VSMain", "PSMain");
-	ChangeShader(shader);
-
 	mMass = MASS;
 }
 
@@ -29,7 +25,13 @@ void Enemy::Initialize()
 	mScale = transform.scale;
 	mAngle = transform.angle;
 
-	SetMotion(SkinnedMesh::IDLE);
+	SetCapsuleParam(transform.diameter / 2.0f);
+
+	MotionCollision::ColData colData = MotionCollision::GetEnmMotionCollision(GetCharaID());
+	SetBoneCollision(colData.boneName.c_str(), colData.beginFrame, colData.endFrame, colData.radius);
+
+
+	SetMotion(Character::IDLE);
 }
 
 void Enemy::Update(const Vector3& playerPos)
@@ -76,7 +78,7 @@ void Enemy::Move(const Vector3& playerPos)
 
 void Enemy::StateWait()
 {
-	SetMotion(SkinnedMesh::IDLE);
+	SetMotion(Character::IDLE);
 
 	if (mTimer >= WAIT_TO_WALK_SEC)
 	{
@@ -94,7 +96,7 @@ void Enemy::StateWait()
 
 void Enemy::StateWalk()
 {
-	SetMotion(SkinnedMesh::WALK);
+	SetMotion(Character::WALK);
 
 	if (mTimer >= WALK_TO_WAIT_SEC)
 	{
@@ -118,7 +120,7 @@ void Enemy::StateWalk()
 
 void Enemy::StateChase(const Vector3& playerPos)
 {
-	SetMotion(SkinnedMesh::RUN);
+	SetMotion(Character::RUN);
 
 	// チェイス終了かチェック
 	if (!IsChase(playerPos))

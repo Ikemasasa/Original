@@ -135,7 +135,7 @@ void StatusData::LoadPLStatus()
 		{
 			int index = 0;
 			Status status;
-			status.name = ConvertString::ConvertToWstirng(chunks[index++]);
+			status.name = ConvertString::ConvertToWstring(chunks[index++]);
 			status.id = std::stoi(chunks[index++]);
 			status.hp = std::stoi(chunks[index++]);
 			status.maxHP = status.hp;
@@ -172,7 +172,7 @@ Status StatusData::GetEnmStatus(size_t id)
 	if (chunks.size() > 0)
 	{
 		int index = 0;
-		ret.name = ConvertString::ConvertToWstirng(chunks[index++]);
+		ret.name = ConvertString::ConvertToWstring(chunks[index++]);
 		ret.id = std::stoi(chunks[index++]);
 		index += 1; // エネミータイプを無視する
 		ret.hp = std::stoi(chunks[index++]);

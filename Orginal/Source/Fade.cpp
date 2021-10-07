@@ -16,15 +16,24 @@ bool Fade::Set(float fadeSpeed)
     return true;
 }
 
-bool Fade::SetSceneImage(float fadeSpeed)
+bool Fade::SetSceneImage(float fadeSpeed, bool isWave)
 {
     if (mType != NONE) return false;
     if (fadeSpeed <= 0.0f) return false;
     
+    if (!mWaveShader && isWave)
+    {
+        // 初回のみ読み込み
+        mWaveShader = std::make_unique<Shader>();
+        mWaveShader->Load2D(L"Shaders/Renderer2D.fx", "VSMain", "PSWave");
+        mWaveCB.Create(sizeof(CBForWave));
+    }
+
     // フェード画像は後で作る
     mSpeed = -fadeSpeed;
     mType = FADE_IN;
     mAlpha = 1.0f;
+    mIsWave = isWave;
 
     return true;
     
@@ -61,6 +70,9 @@ void Fade::UpdateFadeIn()
         mSpeed = 0.0f;
         mFade.reset();
         mType = NONE;
+
+        mIsWave = false;
+        mSinFactor = 0.0f;
     }
 }
 
@@ -74,5 +86,31 @@ void Fade::Render()
         mFade = std::make_unique<Sprite>(filename);
     }
 
-    if (mFade) mFade->Render(Vector2(0.0f, 0.0f), Vector2::ONE, Vector2::ZERO, Vector2(Define::SCREEN_WIDTH, Define::SCREEN_HEIGHT), Vector2::ZERO, 0.0f, Vector4(1.0f, 1.0f, 1.0f, mAlpha));
+    if (mFade)
+    {
+        if (mIsWave)
+        {
+            CBForWave cb;
+            cb.sinFactor = mSinFactor;
+            cb.WaveNum = WAVENUM;
+            mWaveCB.Update(&cb);
+            mWaveCB.Set(0);
+            mFade->Render(mWaveShader.get(), Vector2(0.0f, 0.0f), Vector2::ONE, Vector2::ZERO, mFade->GetSize(), Vector2::ZERO, 0.0f, Vector4(1.0f, 1.0f, 1.0f, mAlpha));
+
+            mSinFactor += ADD_SINFACTOR;
+        }
+        else
+        {
+            mFade->Render(Vector2(0.0f, 0.0f), Vector2::ONE, Vector2::ZERO, Vector2(Define::SCREEN_WIDTH, Define::SCREEN_HEIGHT), Vector2::ZERO, 0.0f, Vector4(1.0f, 1.0f, 1.0f, mAlpha));
+        }
+    }
+}
+
+bool Fade::CheckFadeState(Fade::FadeType type, float alpha)
+{
+    bool ret = false;
+    if (type == FADE_OUT) ret = (mAlpha <= alpha);
+    if (type == FADE_IN) ret = (mAlpha >= alpha);
+
+    return ret;
 }

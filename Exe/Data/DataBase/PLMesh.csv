@@ -3,10 +3,14 @@
 エリカ,10000,3,Erika/run.fbx
 エリカ,10000,4,Erika/attack.fbx
 エリカ,10000,5,Erika/guard.fbx
+エリカ,10000,6,Erika/death.fbx
+エリカ,10000,7,Erika/damage.fbx
 エリカ,10000,8,Erika/use_item.fbx
 パラディン,10001,0,Paladin/00_paladin.fbx
 パラディン,10001,1,Paladin/idle.fbx
 パラディン,10001,3,Paladin/run.fbx
 パラディン,10001,4,Paladin/attack.fbx
 パラディン,10001,5,Paladin/guard.fbx
+パラディン,10001,6,Paladin/death.fbx
+パラディン,10001,7,Paladin/damage.fbx
 パラディン,10001,8,Paladin/use_item.fbx

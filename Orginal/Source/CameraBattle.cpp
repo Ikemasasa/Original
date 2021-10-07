@@ -4,6 +4,7 @@
 #include "BattleState.h"
 #include "Character.h"
 #include "Define.h"
+#include "Fade.h"
 #include "GameManager.h"
 
 CameraBattle::CameraBattle() : CameraBase()
@@ -48,6 +49,8 @@ void CameraBattle::Update(const Character* target)
 	{
 	case BattleState::State::BEGIN:
 		mPos = Vector3::Lerp(mBeginPos, mEndPos, mLerpFactor);
+
+		if (!Fade::GetInstance().CheckFadeState(Fade::FADE_OUT, LERP_START_FADE_ALPHA))break;
 
 		if (mLerpFactor < 1.0f)
 		{

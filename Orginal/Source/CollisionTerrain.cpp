@@ -12,11 +12,23 @@ float CollisionTerrain::GetHeight(const Vector3& pos, const float dist)
     const Vector3 vel(0, -1, 0);
     for (auto& t : mTerrains)
     {
-        int n = t->RayPickSRT(pos + Vector3(0, dist, 0), vel, &outPos, &outNormal);
+        int n = t->RayPickCol(pos + Vector3(0, dist, 0), vel, &outPos, &outNormal);
         if (n != -1) return outPos.y;
     }
 
     return pos.y;
+}
+
+int CollisionTerrain::RayPickOrg(const Vector3& sp, const Vector3& velocity, Vector3* outPos, Vector3* outNormal)
+{
+    int materialIndex = -1;
+    for (auto& t : mTerrains)
+    {
+        materialIndex = t->RayPickOrg(sp, velocity, outPos, outNormal);
+        if (materialIndex != -1) return materialIndex;
+    }
+
+    return materialIndex;
 }
 
 int CollisionTerrain::RayPick(const Vector3& sp, const Vector3& velocity, Vector3* outPos, Vector3* outNormal)
@@ -24,7 +36,7 @@ int CollisionTerrain::RayPick(const Vector3& sp, const Vector3& velocity, Vector
     int materialIndex = -1;
     for (auto& t : mTerrains)
     {
-        materialIndex = t->RayPickSRT(sp, velocity, outPos, outNormal);
+        materialIndex = t->RayPickCol(sp, velocity, outPos, outNormal);
         if (materialIndex != -1) return materialIndex;
     }
 

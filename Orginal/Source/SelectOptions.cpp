@@ -5,6 +5,7 @@
 #include "lib/Sprite.h"
 
 #include "Define.h"
+#include "KeyGuide.h"
 
 void SelectOptions::Initialize()
 {
@@ -26,6 +27,12 @@ void SelectOptions::Update()
 	if (Input::GetButtonTrigger(0, Input::BUTTON::UP))   mOptionIndex = (mOptionIndex + (max - 1)) % max;
 
 	if (old != mOptionIndex) Audio::SoundPlay((int)Sound::CURSOR_MOVE);
+
+	// キーガイド
+	KeyGuide::Key key[] = { KeyGuide::UP, KeyGuide::DOWN };
+	KeyGuide::Instance().Add(key, 2, L"カーソル移動");
+	KeyGuide::Instance().Add(KeyGuide::A, L"決定");
+	KeyGuide::Instance().Add(KeyGuide::B, L"戻る");
 }
 
 void SelectOptions::Render(const Vector2& leftTop, bool isStrsClear)

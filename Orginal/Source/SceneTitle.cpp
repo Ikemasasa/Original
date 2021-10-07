@@ -5,6 +5,7 @@
 
 #include "Define.h"
 #include "Fade.h"
+#include "KeyGuide.h"
 #include "SceneField.h"
 #include "SceneLoad.h"
 #include "SceneManager.h"
@@ -81,8 +82,6 @@ void SceneTitle::Update()
 			}
 		}
 	}
-
-
 }
 
 void SceneTitle::Render()
@@ -123,6 +122,4 @@ void SceneTitle::Render()
 void SceneTitle::Release()
 {
 	mFont.Release();
-
-	// AUDIO.MusicStop((int)Music::TITLE);
 }

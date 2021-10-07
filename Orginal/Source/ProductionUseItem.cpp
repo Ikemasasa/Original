@@ -55,7 +55,7 @@ void ProductionUseItem::Render()
 void ProductionUseItem::StateInit()
 {
 	// アイテム使用モーションセット
-	mMoveChara->SetMotion(SkinnedMesh::USE_ITEM, false);
+	mMoveChara->SetMotionOnce(Character::USE_ITEM, Character::IDLE);
 
 	// 使用アイテム取得
 	const UseItemData::Param* param = mMoveChara->GetCommand()->GetItemParam();

@@ -22,6 +22,7 @@ TransformData::Transform TransformData::GetPLTransform(const int charaID)
 		if (id == charaID)
 		{
 			int index = 2; // –¼‘O‚ÆcharaID‚ð–³Ž‹
+			ret.diameter = std::stof(chunks[index++]);
 			ret.pos.x   = std::stof(chunks[index++]);
 			ret.pos.y   = std::stof(chunks[index++]);
 			ret.pos.z   = std::stof(chunks[index++]);
@@ -59,6 +60,7 @@ TransformData::Transform TransformData::GetEnmTransform(const int charaID)
 		if (id == charaID)
 		{
 			int index = 2;// –¼‘O‚ÆcharaID‚ð–³Ž‹
+			ret.diameter = std::stof(chunks[index++]);
 			ret.pos.x = std::stof(chunks[index++]);
 			ret.pos.y = std::stof(chunks[index++]);
 			ret.pos.z = std::stof(chunks[index++]);
@@ -96,6 +98,7 @@ TransformData::Transform TransformData::GetNPCTransform(const int charaID)
 		if (id == charaID)
 		{
 			int index = 2;// –¼‘O‚ÆcharaID‚ð–³Ž‹
+			ret.diameter = std::stof(chunks[index++]);
 			ret.pos.x = std::stof(chunks[index++]);
 			ret.pos.y = std::stof(chunks[index++]);
 			ret.pos.z = std::stof(chunks[index++]);

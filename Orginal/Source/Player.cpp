@@ -12,14 +12,10 @@
 #include "ItemData.h"
 #include "StatusData.h"
 #include "TransformData.h"
+#include "MotionCollision.h"
 
 Player::Player(int charaID) : Character(charaID, Character::PLAYER)
 {
-	// シェーダ書き換え
-	Shader* shader = new Shader;
-	shader->Load(L"Shaders/Character.fx", "VSMain", "PSMain");
-	ChangeShader(shader);
-
 	// とりあえずアイテムを何個か渡す
 	for (int i = 0; i < 2; ++i)
 	{
@@ -27,6 +23,8 @@ Player::Player(int charaID) : Character(charaID, Character::PLAYER)
 		mInventory.Add(ItemData::MAGIC_PORTION);
 		mInventory.Add(ItemData::BOMB);
 	}
+
+	mInventory.Add(ItemData::SUBDUE_PROOF);
 
 	mMass = MASS;
 }
@@ -38,7 +36,12 @@ void Player::Initialize()
 	mScale = transform.scale;
 	mAngle = transform.angle;
 
-	SetMotion(SkinnedMesh::IDLE);
+	SetCapsuleParam(transform.diameter / 2.0f);
+
+	MotionCollision::ColData colData = MotionCollision::GetPLMotionCollision(GetCharaID());
+	SetBoneCollision(colData.boneName.c_str(), colData.beginFrame, colData.endFrame, colData.radius);
+
+	SetMotion(Character::IDLE);
 }
 
 void Player::Update()
@@ -46,7 +49,7 @@ void Player::Update()
 	// カメラのベクトル取得
 	auto& cameraManager = Singleton<CameraManager>().GetInstance();
 	Vector3 cFrontVector(cameraManager.GetFrontVector().x, 0.0f, cameraManager.GetFrontVector().z); // カメラの正面のベクトル(XZ)
-	Vector3 cRightVector(cameraManager.GetRightVector().x, cameraManager.GetRightVector().y, cameraManager.GetRightVector().z); // カメラの右側のベクトル(XZ)
+	Vector3 cRightVector(cameraManager.GetRightVector().x, 0.0f, cameraManager.GetRightVector().z); // カメラの右側のベクトル(XZ)
 	cFrontVector.Normalize();
 	cRightVector.Normalize();
 
@@ -55,33 +58,33 @@ void Player::Update()
 	if (axisX != 0 || axisY != 0)
 	{
 		// 慣性をなくすため、上のは代入にしてある
-		mVelocity  = cFrontVector * axisY;
+		mVelocity = cFrontVector * axisY;
 		mVelocity += cRightVector * axisX;
 		mVelocity *= MOVE_SPEED;
 		// 向き補正
 		CorrectionAngle();
 		// 座標補正
 		{
-			const float RAYPICK_DIST = 0.5f;
-
 			// 移動方向
 			Vector3 outVelocity;
 			if (CollisionTerrain::MoveCheck(mPos + Vector3(0, RAYPICK_DIST, 0), mVelocity, GetCapsule().radius, &outVelocity))
 			{
 				mVelocity = outVelocity;
 			}
-			mPos += mVelocity;
+			//mPos += mVelocity;
+			mPos.x += mVelocity.x;
+			mPos.z += mVelocity.z;
 
-
-			// 下方向
-			mPos.y = CollisionTerrain::GetHeight(mPos, RAYPICK_DIST);
+			// 下方向の補正
+			float y = CollisionTerrain::GetHeight(mPos, RAYPICK_DIST);
+			mPos.y = Math::Lerp(mPos.y, y, POS_Y_ADJUST_FACTOR);
 		}
 
-		SetMotion(SkinnedMesh::RUN);
+		SetMotion(Character::RUN);
 	}
 	else
 	{
-		SetMotion(SkinnedMesh::IDLE);
+		SetMotion(Character::IDLE);
 	}
 
 	Character::UpdateWorld();

@@ -7,6 +7,8 @@ float4 PSMain(PSInput input) : SV_Target0
 	float3 N = GBufferNormal.Sample(Sampler, input.tex).xyz;
 	float3 E = normalize(EyePos.xyz - P);
 
+	N = normalize(N);
+
 	float3 Kd = tex.rgb;
 	float3 Ks = float3(1, 1, 1);
 	float3 SL = AddSpotLight(P, N, E, Kd, Ks);

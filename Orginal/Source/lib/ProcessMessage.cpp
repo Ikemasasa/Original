@@ -1,7 +1,17 @@
 #include "ProcessMessage.h"
 #include "Window.h"
 
-HighResolutionTimer ProcessMessage::timer;
+HighResolutionTimer ProcessMessage::mTimer;
+
+ProcessMessage::ProcessMessage()
+{
+	mTimer.Initialize();
+}
+
+ProcessMessage::~ProcessMessage()
+{
+
+}
 
 LRESULT ProcessMessage::HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -24,13 +34,10 @@ LRESULT ProcessMessage::HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM
 		if (wparam == VK_ESCAPE) PostMessage(hwnd, WM_CLOSE, 0, 0);
 		break;
 	case WM_ENTERSIZEMOVE:
-		// WM_EXITSIZEMOVE is sent when the user grabs the resize bars.
-		timer.Stop();
+		mTimer.Stop();
 		break;
 	case WM_EXITSIZEMOVE:
-		// WM_EXITSIZEMOVE is sent when the user releases the resize bars.
-		// Here we reset everything based on the new window dimensions.
-		timer.Start();
+		mTimer.Start();
 		break;
 	default:
 		return DefWindowProc(hwnd, msg, wparam, lparam);
@@ -38,18 +45,47 @@ LRESULT ProcessMessage::HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM
 	return 0;
 }
 
-bool ProcessMessage::Process()
+bool ProcessMessage::IsProcess()
 {
-	while (!timer.Tick()) // Tickするまでループ（フレーム制限）
+	if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 	{
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-			if (msg.message == WM_QUIT) return false;
-		}
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+		return false;
 	}
 
-	CalculateFrameStats(Window::GetInstance().GetHWND());
+	if (!mTimer.Tick()) return false;
+
+	CalcFrame(Window::GetInstance().GetHWND());
 	return true;
+}
+
+bool ProcessMessage::IsLoop()
+{
+	return msg.message != WM_QUIT;
+}
+
+void ProcessMessage::CalcFrame(HWND hwnd)
+{
+	static int frames = 0;
+	static float time_tlapsed = 0.0f;
+
+	frames++;
+
+	// Compute averages over one second period.
+	if ((mTimer.TimeStamp() - time_tlapsed) >= 1.0f)
+	{
+		mFps = frames;
+
+#ifdef _DEBUG
+		float mspf = 1000.0f / mFps;
+		std::ostringstream outs;
+		outs.precision(7);
+		outs << Window::GetInstance().GetWindowName().c_str() << "  |  FPS : " << mFps << " / " << "Frame Time : " << mspf << " (ms)";
+		SetWindowTextA(Window::GetInstance().GetHWND(), outs.str().c_str());
+#endif
+		// Reset for next average.
+		frames = 0;
+		time_tlapsed += 1.0f;
+	}
 }

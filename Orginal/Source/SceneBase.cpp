@@ -13,6 +13,7 @@ void SceneBase::InitializeBaseAll()
 	mPostEffect->Load2D(L"Shaders/PostEffect.fx", "VSMain", "PSMain");
 	mShadowMap->Initialize();
 	mSceneTarget->Initialize(Define::SCREEN_WIDTH, Define::SCREEN_HEIGHT);
+	mPostEffectTarget->Initialize(Define::SCREEN_WIDTH, Define::SCREEN_HEIGHT);
 	mBloom->Initialize();
 	mDeferredRenderer->Initialize(Vector2(Define::SCREEN_WIDTH, Define::SCREEN_HEIGHT));
 }
@@ -23,6 +24,13 @@ void SceneBase::CreateBaseAll()
 	mPostEffect = std::make_unique<Shader>();
 	mShadowMap = std::make_unique<ShadowMap>();
 	mSceneTarget = std::make_unique<RenderTarget>();
+	mPostEffectTarget = std::make_unique<RenderTarget>();
 	mBloom = std::make_unique<Bloom>();
 	mDeferredRenderer = std::make_unique<DeferredRenderer>();
+}
+
+void SceneBase::ReleaseBaseAll()
+{
+	mRamp->UnLoad();
+	mPostEffect->UnLoad();
 }

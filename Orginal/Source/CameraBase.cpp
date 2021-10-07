@@ -11,8 +11,8 @@ CameraBase::CameraBase()
     mPos = Vector3(0, 5, 15);
     mAngle = Vector3::ZERO;
 
-    mFrontVector = Vector3::ZERO;
-    mRightVector = Vector3::ZERO;
+    mForward = Vector3::ZERO;
+    mRight = Vector3::ZERO;
     mDistFromTargetY = 0.0f;
 
     constexpr float	fov = DirectX::XMConvertToRadians(45.0f);
@@ -32,8 +32,8 @@ void CameraBase::Initialize(const Character* target)
 
     mAngle.y = target->GetAngle().y - Define::PI;
 
-    mFrontVector = Vector3::ZERO;
-    mRightVector = Vector3::ZERO;
+    mForward = Vector3::ZERO;
+    mRight = Vector3::ZERO;
     mDistFromTargetY = 6.5f;
     UpdateView();
 }
@@ -43,8 +43,8 @@ void CameraBase::UpdateView()
     // ビュー行列更新
     mView.LookAtLH(mPos, mTarget);
 
-    mFrontVector = Vector3(mView._13, mView._23, mView._33);
-    mRightVector = Vector3(mView._11, mView._21, mView._31);
+    mForward = -Vector3(mView._13, mView._23, mView._33);
+    mRight = Vector3(mView._11, mView._21, mView._31);
 }
 
 

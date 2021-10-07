@@ -5,6 +5,8 @@
 
 class CameraTPS : public CameraBase
 {
+	static constexpr float LERP_FACTOR = 0.25f;
+
 public:
 	CameraTPS();
 	~CameraTPS() = default;

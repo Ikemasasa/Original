@@ -60,7 +60,6 @@ class Particle
 
 	Microsoft::WRL::ComPtr<ID3D11Buffer> mVertexBuffer;
 	ConstantBuffer mConstBuffer;
-
 	
 	std::unique_ptr<Sprite> mSprite;
 	TVector2<int> mSpriteNum;  // ÉRÉ}ÇÃêî

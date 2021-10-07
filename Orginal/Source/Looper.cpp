@@ -7,11 +7,10 @@
 
 #include "Fade.h"
 #include "GameManager.h"
+#include "KeyGuide.h"
 #include "SceneManager.h"
 #include "SceneTitle.h"
-#include "SceneField.h"
 #include "Singleton.h"
-#include "TimeStamp.h"
 
 int Looper::Run(HWND hwnd)
 {
@@ -27,8 +26,10 @@ int Looper::Run(HWND hwnd)
 	auto& sm = SceneManager::GetInstance();
 	sm.Initialize(std::make_unique<SceneTitle>());
 
-	while (IsLoop() && sm.IsLoop())
+	while (pm.IsLoop() && sm.IsLoop())
 	{
+		if (!pm.IsProcess()) continue;
+
 		GameManager::elapsedTime = pm.GetElapsedTime();
 		Input::Update();
 		sm.Update();
@@ -38,6 +39,7 @@ int Looper::Run(HWND hwnd)
 		f.Clear();
 		sm.Render();
 		Fade::GetInstance().Render();
+		KeyGuide::Instance().Render(true);
 
 		f.ScreenFlip();
 	}

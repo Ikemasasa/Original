@@ -28,6 +28,7 @@ void TurnManager::Initialize(const std::vector<std::shared_ptr<BattleCharacter>>
 	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/explosion.efk"    , ITEM_DAMAGE_EFFECT_SLOT);
 	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/buff.efk"		    , BUFF_EFFECT_SLOT);
 	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/debuff.efk"		, DEBUFF_EFFECT_SLOT);
+	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/damage.efk"		, DAMAGE_EFFECT_SLOT);
 
 	mIsBeginnig = true;
 }
@@ -45,7 +46,7 @@ void TurnManager::Update(const BattleCharacterManager* bcm)
 	if (!mProduction)
 	{
 		mIsTurnFinished = false;
-		GetMoveChara()->SetMotion(SkinnedMesh::IDLE);
+		GetMoveChara()->SetMotion(Character::IDLE);
 
 		// BattleCharaManagerのupdateでコマンドが決まったら
 		if (GetMoveChara()->GetCommand()->IsBehaviourEnable())
@@ -57,6 +58,7 @@ void TurnManager::Update(const BattleCharacterManager* bcm)
 	else // 演出中
 	{
 		mProduction->Update(bcm);
+		mProduction->UpdateDeathMotion();
 
 		// 演出が終了したら
 		if (mProduction->IsFinished())

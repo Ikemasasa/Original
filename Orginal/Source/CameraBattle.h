@@ -9,6 +9,8 @@ class Character;
 
 class CameraBattle : public CameraBase
 {
+	static constexpr float LERP_START_FADE_ALPHA = 0.6f;
+
 	float mTimer = 0;
 
 	Vector3 mBeginPos;

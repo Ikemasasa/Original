@@ -9,10 +9,7 @@
 
 NPC::NPC(int charaID) : Character(charaID, Character::NPC)
 {
-	// シェーダ書き換え
-	Shader* shader = new Shader;
-	shader->Load(L"Shaders/Character.fx", "VSMain", "PSMain");
-	ChangeShader(shader);
+
 }
 
 NPC::~NPC()
@@ -27,13 +24,15 @@ void NPC::Initialize()
 	mScale = transform.scale;
 	mAngle = transform.angle;
 
+	SetCapsuleParam(transform.diameter / 2.0f);
+
 	// テキストデータ読み込み
 	NPCTextData::GetTextData(GetCharaID(), &mTextData, false);
 	
 	mTalkCount = TALK_COUNT_INIT;
 	mOldFlag = false;
 
-	SetMotion(SkinnedMesh::IDLE);
+	SetMotion(Character::IDLE);
 }
 
 void NPC::Update()

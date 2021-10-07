@@ -38,7 +38,7 @@ void PlayerManager::Initialize()
 		mPlayers.back()->Initialize();
 	}
 
-	mMovePlayer = mPlayers.begin()->get(); // 一番最初の要素
+	mMovePlayer = mPlayers.front().get(); // 一番最初の要素
 }
 
 void PlayerManager::Update(const bool isTalking)
@@ -56,7 +56,7 @@ void PlayerManager::Update(const bool isTalking)
 	// 会話中ならモーションのみ更新
 	if (isTalking)
 	{
-		mMovePlayer->SetMotion(SkinnedMesh::IDLE);
+		mMovePlayer->SetMotion(Character::IDLE);
 		mMovePlayer->UpdateWorld();
 	}
 	else mMovePlayer->Update();
@@ -73,11 +73,6 @@ void PlayerManager::Update(const bool isTalking)
 			mInvincibleTimer = 0.0f;
 		}
 	}
-}
-
-void PlayerManager::Render(const Matrix& view, const Matrix& proj, const Vector4& lightDir)
-{
-	mMovePlayer->Render(view, proj, lightDir);
 }
 
 void PlayerManager::Render(const Shader* shader, const Matrix& view, const Matrix& proj, const Vector4& lightDir)

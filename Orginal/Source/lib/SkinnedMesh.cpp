@@ -29,33 +29,36 @@ void SkinnedMesh::LoadFBX(ID3D11Device* device, const char* filename)
 	importer->Initialize(filename);
 	FbxScene* scene = FbxScene::Create(manager, "");
 	importer->Import(scene);
-	
 	//// モーション情報取得
 	//FbxArray<FbxString*> names;
 	//scene->FillAnimStackNameArray(names);
-	int animStackCount = importer->GetAnimStackCount();
-	if (animStackCount > 0)
-	{
-		// モーションが存在するとき
-		FbxTakeInfo* take = importer->GetTakeInfo(0);
-		FbxLongLong start = take->mLocalTimeSpan.GetStart().Get();
-		FbxLongLong stop = take->mLocalTimeSpan.GetStop().Get();
-		FbxLongLong fps60 = FbxTime::GetOneFrameValue(FbxTime::eFrames60);
-		mStartFrame = (int)(start / fps60);
-		mMotion[DEFAULT].frameNum = (int)((stop - start) / fps60);
-		SetMotion(DEFAULT);
-	}
-	else
-	{
-		mStartFrame = 0;
-		mMotion[DEFAULT].frameNum = 0;
-	}
-	
+	//int animStackCount = importer->GetAnimStackCount();
+	//if (animStackCount > 0)
+	//{
+	//	// モーションが存在するとき
+	//	//FbxTakeInfo* take = importer->GetTakeInfo(0);
+	//	//FbxLongLong start = take->mLocalTimeSpan.GetStart().Get();
+	//	//FbxLongLong stop = take->mLocalTimeSpan.GetStop().Get();
+	//	//FbxLongLong fps60 = FbxTime::GetOneFrameValue(FbxTime::eFrames60);
+	//	//mStartFrame = (int)(start / fps60);
+	//	//mMotion[T_POSE_INDEX].frameNum = (int)((stop - start) / fps60);
+	//	//SetMotion(T_POSE_INDEX, 0.1f);
+	//}
+	//else
+	//{
+	//	mStartFrame = 0;
+	//	mMotion[T_POSE_INDEX].frameNum = 0;
+	//}
+	mMotion[T_POSE_INDEX].frameNum = 1;
+
 	importer->Destroy();
+
+
+	//FbxAxisSystem axis = scene->GetGlobalSettings().GetAxisSystem();
 
 	// モデルを3角形に分割
 	fbxsdk::FbxGeometryConverter geometryConverter(manager);
-	//geometryConverter.SplitMeshesPerMaterial(scene, true);
+	geometryConverter.SplitMeshesPerMaterial(scene, true);
 	geometryConverter.Triangulate(scene, true);
 
 	// メッシュ数取得
@@ -91,12 +94,21 @@ void SkinnedMesh::LoadFBX(ID3D11Device* device, const char* filename)
 		int* index = mesh->GetPolygonVertices();
 		FbxVector4* source = mesh->GetControlPoints();
 
-		FbxAMatrix globalTrans = mesh->GetNode()->EvaluateGlobalTransform();
-		// 全頂点変換
-		for (int v = 0; v < mesh->GetControlPointsCount(); ++v)
-		{
-			source[v] = globalTrans.MultT(source[v]);
-		}
+		//FbxVector4 T = mesh->GetNode()->GetGeometricTranslation(FbxNode::eSourcePivot);
+		//FbxVector4 R = mesh->GetNode()->GetGeometricRotation(FbxNode::eSourcePivot);
+		//FbxVector4 S = mesh->GetNode()->GetGeometricScaling(FbxNode::eSourcePivot);
+		//FbxAMatrix TRS = FbxAMatrix(T, R, S);
+		//	全頂点変換
+		//for (int v = 0; v < mesh->GetControlPointsCount(); v++) {
+		//	source[v] = TRS.MultT(source[v]);
+		//}
+
+		//FbxAMatrix globalTrans = mesh->GetNode()->EvaluateGlobalTransform();
+		//1 全頂点変換
+		//for (int v = 0; v < mesh->GetControlPointsCount(); ++v)
+		//{
+		//	source[v] = globalTrans.MultT(source[v]);
+		//}
 
 		// 頂点座標読み込み
 		for (int v = 0; v < num; ++v)
@@ -277,7 +289,7 @@ void SkinnedMesh::LoadFBX(ID3D11Device* device, const char* filename)
 					// 相対パス作成
 					std::string work = fbxDir; // AA/BB/
 					work += imgName;		   // AA/BB/*.png
-					std::wstring relative = ConvertString::ConvertToWstirng(work);
+					std::wstring relative = ConvertString::ConvertToWstring(work);
 
 					// 読み込み
 					spr->sprite.Load(relative.c_str());
@@ -335,7 +347,102 @@ void SkinnedMesh::LoadFBX(ID3D11Device* device, const char* filename)
 	scene->Destroy();
 	manager->Destroy();
 
-	Save(mBinFile);
+	//Save(mBinFile);
+}
+
+void SkinnedMesh::InitializeBone(FbxScene* scene)
+{
+	// ボーン数取得
+	mBoneNum = scene->GetSrcObjectCount<FbxSkeleton>();
+
+	// ボーン初期設定
+	for (int bone = 0; bone < mBoneNum; ++bone)
+	{
+		FbxSkeleton* skel = scene->GetSrcObject<FbxSkeleton>(bone);
+		FbxNode* node = skel->GetNode();
+
+		// ボーン名取得
+		const char* name = node->GetName();
+		strcpy_s(mBones[bone].name, STR_MAX, name);
+
+		// 親設定
+		mBones[bone].parent = nullptr;
+
+		FbxNode* parent = node->GetParent();
+		if (parent)
+		{
+			const char* parentName = parent->GetName();
+			if (parentName)
+			{
+				int parentNo = FindBone(parentName);
+				if (parentNo != -1)
+				{
+					mBones[bone].parent = &mBones[parentNo];
+				}
+			}
+		}
+	}
+
+	// ボーンのオフセット行列作成
+	int meshNum = scene->GetSrcObjectCount<FbxMesh>();
+	auto& motion = mMotion[T_POSE_INDEX];
+	for (int m = 0; m < meshNum; ++m)
+	{
+		FbxMesh* mesh = scene->GetSrcObject<FbxMesh>(m);
+		FbxSkin* skin = static_cast<FbxSkin*>(mesh->GetDeformer(0, FbxDeformer::eSkin));
+		if (!skin) continue;
+
+		// skinのボーン数取得
+		int nBone = skin->GetClusterCount();
+
+		for (int bone = 0; bone < nBone; ++bone)
+		{
+			//	ボーン情報取得
+			FbxCluster* cluster = skin->GetCluster(bone);
+			FbxAMatrix trans;
+			cluster->GetTransformMatrix(trans);
+
+			//	ボーン検索
+			const char* name = cluster->GetLink()->GetName();
+			int bone_no = FindBone(name);
+			if (bone_no < 0) continue;
+
+			//	オフセット行列作成
+			FbxAMatrix LinkMatrix;
+			cluster->GetTransformLinkMatrix(LinkMatrix);
+
+			FbxAMatrix Offset = LinkMatrix.Inverse() * trans;
+			FbxDouble* OffsetM = (FbxDouble*)Offset;
+			//	オフセット行列保存
+			for (int i = 0; i < 16; i++) {
+				mBones[bone_no].offsetMatrix.m[i] = (float)OffsetM[i];
+			}
+
+			// TPOSE
+			if (!motion.keyframe[bone_no])
+			{
+				//motion.keyframe[bone_no] = new Matrix[motion.frameNum];
+				//FbxNode* node = cluster->GetLink();
+
+				LoadKeyFrames(T_POSE_INDEX, bone_no, cluster->GetLink());
+
+				//double time = mStartFrame * (1.0 / 60);
+				//FbxTime t;
+				//t.SetSecondDouble(time);
+
+				//// t秒の姿勢行列をGet
+				//FbxMatrix m = node->EvaluateGlobalTransform(t);
+
+				//FbxDouble* mat = (FbxDouble*)m;
+				//for (int i = 0; i < 16; ++i)
+				//{
+				//	mMotion[T_POSE_INDEX].keyframe[bone_no][0].m[i] = (float)mat[i];
+				//}
+			}
+		}
+
+
+	}
 }
 
 void SkinnedMesh::LoadBone(FbxMesh* mesh)
@@ -345,10 +452,7 @@ void SkinnedMesh::LoadBone(FbxMesh* mesh)
 
 	// スキン情報の有無
 	int skinCount = mesh->GetDeformerCount(FbxDeformer::eSkin);
-	if (skinCount <= 0)
-	{
-		return;
-	}
+	if (skinCount <= 0) return;
 
 	FbxSkin* skin = static_cast<FbxSkin*>(mesh->GetDeformer(0, FbxDeformer::eSkin));
 
@@ -360,43 +464,62 @@ void SkinnedMesh::LoadBone(FbxMesh* mesh)
 	{
 		// ボーン情報取得
 		FbxCluster* cluster = skin->GetCluster(bone);
-		FbxAMatrix trans;
-		cluster->GetTransformMatrix(trans);
 
 		// ボーン名
-		const char* boneName = cluster->GetLink()->GetName();
+		FbxNode* node = cluster->GetLink();
+		const char* boneName = node->GetName();
 
 		// ボーン検索
-		bool isNewBone = false;
+		bool isNewBorn = false;
 		int boneNo = FindBone(boneName);
 		if (boneNo < 0)
 		{
 			boneNo = mBoneNum;
 			++mBoneNum;
-			isNewBone = true;
+			isNewBorn = true;
 		}
 
-		if (isNewBone)
+		if (isNewBorn)
 		{
+			// ボーン名を設定
 			strcpy_s(mBones[boneNo].name, STR_MAX, boneName);
 
-			// オフセット行列作成
-			FbxAMatrix linkMatrix;
-			cluster->GetTransformLinkMatrix(linkMatrix);
+			// 親を設定
+			mBones[boneNo].parent = nullptr;
 
-			FbxAMatrix offset = linkMatrix.Inverse() * trans;
-			FbxDouble* offsetM = (FbxDouble*)offset;
-
-			// オフセット行列保存
-			for (int i = 0; i < 16; ++i)
+			FbxNode* parent = node->GetParent();
+			if (parent)
 			{
-				mBones[boneNo].offsetMatrix.m[i] = (float)offsetM[i];
+				const char* parentName = parent->GetName();
+				if (parentName)
+				{
+					int parentNo = FindBone(parentName);
+					if (parentNo != -1)
+					{
+						mBones[boneNo].parent = &mBones[parentNo];
+					}
+				}
 			}
 
-			// キーフレーム読み込み
-			LoadKeyFrames(DEFAULT, boneNo, cluster->GetLink());
-		}
+			//	オフセット行列作成
+			FbxAMatrix trans;
+			cluster->GetTransformMatrix(trans);
+			
+			FbxAMatrix LinkMatrix;
+			cluster->GetTransformLinkMatrix(LinkMatrix);
+			
+			FbxAMatrix Offset = LinkMatrix.Inverse() * trans;
+			FbxDouble* OffsetM = (FbxDouble*)Offset;
+			for (int i = 0; i < 16; i++) {
+				mBones[boneNo].offsetMatrix.m[i] = (float)OffsetM[i];
+			}
 
+			LoadKeyFrames(T_POSE_INDEX, boneNo, node);
+		}
+		if (boneNo < 0) continue;
+
+
+		// ウェイト読み込み
 		int weightCount = cluster->GetControlPointIndicesCount();
 		int* weightIndex = cluster->GetControlPointIndices();
 		double* weight = cluster->GetControlPointWeights();
@@ -421,6 +544,8 @@ void SkinnedMesh::LoadBone(FbxMesh* mesh)
 				mWeights[v + mVerticesNum].count++;
 			}
 		}
+
+		//LoadKeyFrames(T_POSE_INDEX, boneNo, cluster->GetLink());
 	}
 }
 
@@ -485,7 +610,7 @@ void SkinnedMesh::OptimizeVertices()
 	mVertices = vertex;
 }
 
-void SkinnedMesh::LoadKeyFrames(MotionType type, int bone, FbxNode* boneNode)
+void SkinnedMesh::LoadKeyFrames(int type, int bone, FbxNode* boneNode)
 {
 	Motion& motion = mMotion[type];
 	motion.keyframe[bone] = new Matrix[motion.frameNum + 1];
@@ -510,42 +635,56 @@ void SkinnedMesh::LoadKeyFrames(MotionType type, int bone, FbxNode* boneNode)
 	}
 }
 
-void SkinnedMesh::Skinning()
+void SkinnedMesh::Skinning(float elapsedTime)
 {
-	Motion* motion = &mMotion[mMotionType];
-	if (motion == NULL) return;
+	// 現在のモーション取得
+	Motion* cur = &mMotion[mMotionType];
+	if (cur == NULL) return;
 
-	ID3D11DeviceContext* context = FRAMEWORK.GetContext();
-
-	// 配列用変数
-	int f = (int)mFrame;
-	int nf = f + 1; // nextFrame
-	if (f == motion->frameNum - 1) // fが最後のフレームなら
+	// モーションブレンド
+	Matrix result[BONE_MAX];
+	if (mBlendFactor < 1.0f)
 	{
-		nf = 0;
+		// 前のモーション取得
+		Motion* old = &mMotion[mBeforeMotionType];
+		Matrix blend = {};
+
+		// ブレンドキーフレーム作成
+		for (int i = 0; i < mBoneNum; ++i)
+		{
+			// キーフレーム取得
+			Matrix* key1 = &old->keyframe[i][(int)mBeforeFrame];
+			Matrix* key2 = &cur->keyframe[i][(int)mFrame];
+
+			// ブレンド
+			Matrix::Interporate(&blend, *key1, *key2, mBlendFactor);
+			mBones[i].transform = blend;
+
+			// ボーンの行列適用
+			result[i] = mBones[i].offsetMatrix * blend;
+		}
+
+		// ブレンド率更新
+		mBlendFactor = Math::Clamp01(mBlendFactor + mBlendSpeed);
+	}
+	else
+	{
+		// 現在のモーションを代入する
+		for (int i = 0; i < mBoneNum; ++i)
+		{
+			int f = (int)mFrame;
+
+			Matrix mat;
+			Matrix::Interporate(&mat, cur->keyframe[i][f], cur->keyframe[i][(f + 1) % (cur->frameNum + 1)], mFrame - f);
+			result[i] = mBones[i].offsetMatrix * mat;
+
+
+			mBones[i].transform = mat;
+		}
 	}
 
-	Matrix keyMatrix[BONE_MAX];
-
-	auto MatrixInterporate = [](Matrix& out, const Matrix& A, const Matrix& B, float rate)
-	{
-		//	ボーン行列の補間
-		out = A * (1.0f - rate) + B * rate;
-	};
-
-	// 行列準備
-	for (int b = 0; b < mBoneNum; ++b)
-	{
-		// 行列補完
-		Matrix mat;
-		MatrixInterporate(mat, motion->keyframe[b][f], motion->keyframe[b][nf], mFrame - f);
-		mBones[b].transform = mat;
-
-		//キーフレーム
-		keyMatrix[b] = mBones[b].offsetMatrix * mat;
-	}
-
-	mSkinningShader->UpdateStructureBuffer(keyMatrix, 2);
+	// キーフレーム情報更新
+	mSkinningShader->UpdateStructureBuffer(result, 2);
 
 	CbufferForSkinning cb;
 	{
@@ -559,7 +698,7 @@ void SkinnedMesh::Skinning()
 	}
 	
 	mSkinningShader->Run(cb.groupNumX, cb.groupNumY, cb.groupNumZ);
-	Animate(1.0f / 60.0f);
+	Animate(elapsedTime);
 }
 
 void SkinnedMesh::LoadMeshAnim(FbxMesh* mesh)
@@ -573,7 +712,7 @@ void SkinnedMesh::LoadMeshAnim(FbxMesh* mesh)
 	mBones[boneNo].offsetMatrix.Identity();
 
 	// キーフレーム読み込み
-	LoadKeyFrames(DEFAULT, boneNo, node);
+	LoadKeyFrames(T_POSE_INDEX, boneNo, node);
 
 	// ウェイト設定
 	int num = mesh->GetPolygonVertexCount();
@@ -633,7 +772,17 @@ bool SkinnedMesh::LoadBIN(const char* filename)
 
 	// ボーン
 	fread(&mBoneNum, sizeof(int), 1, fp);
-	fread(mBones, sizeof(Bone), mBoneNum, fp);
+	for (int i = 0; i < mBoneNum; ++i)
+	{
+		auto& bone = mBones[i];
+		fread(bone.name, sizeof(bone.name), 1, fp);
+		fread(&bone.offsetMatrix, sizeof(Matrix), 1, fp);
+
+		int parentNo = -1;
+		fread(&parentNo, sizeof(int), 1, fp);
+		if (parentNo < 0) bone.parent = nullptr;
+		else			  bone.parent = &mBones[parentNo];
+	}
 
 	// ウェイト
 	mWeights = new Weight[mVerticesNum];
@@ -652,7 +801,7 @@ bool SkinnedMesh::LoadBIN(const char* filename)
 	fread(&motionNum, sizeof(size_t), 1, fp);
 	for (size_t i = 0; i < motionNum; ++i)
 	{
-		MotionType type;
+		int type;
 		fread(&type, sizeof(int), 1, fp);
 
 		auto& motion = mMotion[type];
@@ -705,7 +854,17 @@ void SkinnedMesh::Save(const char* filename)
 
 	// ボーン
 	fwrite(&mBoneNum, sizeof(int), 1, fp);
-	fwrite(mBones, sizeof(Bone), mBoneNum, fp);
+	for (int i = 0; i < mBoneNum; ++i)
+	{
+		auto& bone = mBones[i];
+		fwrite(bone.name, sizeof(bone.name), 1, fp);
+		fwrite(&bone.offsetMatrix, sizeof(Matrix), 1, fp);
+		
+		// 親のボーン番号
+		int parentNo = -1;
+		if (bone.parent) parentNo = FindBone(bone.parent->name);
+		fwrite(&parentNo, sizeof(int), 1, fp);
+	}
 
 	// ウェイト保存
 	fwrite(mWeights, sizeof(Weight), mVerticesNum, fp);
@@ -724,10 +883,8 @@ void SkinnedMesh::Save(const char* filename)
 			fwrite(motion.second.keyframe[i], sizeof(Matrix), motion.second.frameNum + 1, fp);
 	}
 
-
 	fclose(fp);
 }
-
 
 SkinnedMesh::SkinnedMesh(const char* fbxFilename)
 {
@@ -735,14 +892,11 @@ SkinnedMesh::SkinnedMesh(const char* fbxFilename)
 	mAABB.min = Vector3( 0.0f, 0.0f, 0.0f );
 	mAABB.max = Vector3( 0.0f, 0.0f, 0.0f );
 
-	mShader = std::make_unique<Shader>();
-
 	Initialize(fbxFilename);
 }
 
 SkinnedMesh::~SkinnedMesh()
 {
-	mShader->UnLoad();
 	for (int i = 0; i < mMeshNum; ++i)
 	{
 		for (int k = 0; k < Material::KIND; ++k)
@@ -799,10 +953,6 @@ void SkinnedMesh::Initialize(const char* fbxFilename)
 		mVertexBuffer = mSkinningShader->GetRWBuffer();
 	}
 
-
-	mShader->Load(L"Shaders/SkinnedMesh.fx", "VSMain", "PSMain");
-
-
 	D3D11_SUBRESOURCE_DATA subresourceData;
 	D3D11_BUFFER_DESC bufferDesc;
 	ZeroMemory(&subresourceData, sizeof(subresourceData));
@@ -836,46 +986,7 @@ void SkinnedMesh::Initialize(const char* fbxFilename)
 	if (FAILED(hr)) return;
 }
 
-void SkinnedMesh::Render(const Matrix& wvp, const Matrix& world, const Vector4& lightDir, float elapsedTime, float alpha)
-{
-	const auto& context = FRAMEWORK.GetContext();
-	UINT stride = sizeof(Vertex);
-	UINT offset = 0;
-
-	mShader->Activate();
-
-	context->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), &stride, &offset);
-	context->IASetIndexBuffer(mIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-
-	int start = 0;
-	for (int m = 0; m < mMeshNum; ++m)
-	{
-		for (int i = 0; i < Material::KIND; ++i)
-		{
-			mMaterials[m].mtlSpr[i].sprite.Set(i);
-		}
-
-		Cbuffer cb;
-		cb.wvp = wvp;
-		cb.world = world;
-		cb.lightDir = lightDir;
-		cb.materialColor = mMaterialColors[m];
-		context->UpdateSubresource(mConstBuffer.Get(), 0, NULL, &cb, 0, 0);
-		context->VSSetConstantBuffers(0, 1, mConstBuffer.GetAddressOf());
-		context->PSSetConstantBuffers(0, 1, mConstBuffer.GetAddressOf());
-
-		// 描画
-		context->DrawIndexed(mMaterials[m].faceNum * 3, start, 0);
-		start += mMaterials[m].faceNum * 3;
-	}
-
-	// CSでVBを使ってるのでリセット
-	stride = 0;
-	ID3D11Buffer* dummyVB = nullptr;
-	context->IASetVertexBuffers(0, 1, &dummyVB, &stride, &offset);
-}
-
-void SkinnedMesh::Render(const Shader* shader, const Matrix& wvp, const Matrix& world, const Vector4& lightDir, float elapsedTime, float alpha)
+void SkinnedMesh::Render(const Shader* shader, const Matrix& wvp, const Matrix& world, const Vector4& lightDir)
 {
 	const auto& context = FRAMEWORK.GetContext();
 	UINT stride = sizeof(Vertex);
@@ -1041,23 +1152,86 @@ int SkinnedMesh::RayPick(const Vector3& pos, const Vector3& velocity, Vector3* o
 	return ret;
 }
 
-void SkinnedMesh::ChangeShader(Shader* shader)
+Matrix* SkinnedMesh::GetBoneMatrix(const char* name)
 {
-	if (!shader) return;
+	// ボーンNo取得
+	int b = FindBone(name);
+	if (b == -1) return nullptr;
 
-	mShader->UnLoad();
-	mShader.reset(shader);
+	return &mBones[b].transform;
 }
 
-void SkinnedMesh::SetMotion(MotionType type, bool isLoop)
+Matrix* SkinnedMesh::GetBoneMatrix(int boneIndex)
 {
+	return &mBones[boneIndex].transform;;
+}
+
+void SkinnedMesh::SetMotion(int type, float blendSpeed)
+{
+	// 同じモーションならreturn
 	if (mMotionType == type) return;
+
+	// 今のモーションがTPOSEじゃないなら(TPOSEからのブレンドはしない
+	if (mMotionType != T_POSE_INDEX)
+	{
+		// 今のモーション保存
+		mBeforeFrame = mFrame;
+		mBeforeMotionType = mMotionType;
+
+		// ブレンド関係
+		mBlendSpeed = blendSpeed;
+		mBlendFactor = 0.0f;
+	}
+
+	// モーション更新
 	mMotionType = type;
-	mIsLoop = isLoop;
+	mIsLoop = true;
+	mIsStopLastFrame = false;
 	mFrame = 0.0f;
 }
 
-void SkinnedMesh::AddMotion(const char* filename, MotionType type)
+void SkinnedMesh::SetMotionOnce(int onceType, int nextType, float blendSpeed)
+{
+	// 両方同じモーションならreturn
+	if (mMotionType == onceType && mNextType == nextType) return;
+
+	// 今のモーション保存
+	mBeforeFrame = mFrame;
+	mBeforeMotionType = mMotionType;
+
+	// モーション更新
+	mMotionType = onceType;
+	mNextType = nextType;
+	mIsLoop = false;
+	mIsStopLastFrame = false;
+	mFrame = 0.0f;
+
+	// ブレンド関係
+	mBlendSpeed = blendSpeed;
+	mBlendFactor = 0.0f;
+}
+
+void SkinnedMesh::SetMotionStopLastFrame(int type, float blendSpeed)
+{
+	// 両方同じモーションならreturn
+	if (mMotionType == type) return;
+
+	// 今のモーション保存
+	mBeforeFrame = mFrame;
+	mBeforeMotionType = mMotionType;
+
+	// モーション更新
+	mMotionType = type;
+	mIsLoop = false;
+	mIsStopLastFrame = true;
+	mFrame = 0.0f;
+
+	// ブレンド関係
+	mBlendSpeed = blendSpeed;
+	mBlendFactor = 0.0f;
+}
+
+void SkinnedMesh::AddMotion(const char* filename, int type)
 {
 	// すでにキーが登録されてたらreturn
 	if (mMotion.count(type) >= 1) return;
@@ -1116,23 +1290,23 @@ void SkinnedMesh::Animate(float elapsedTime)
 	auto& nowMotion = mMotion[mMotionType];
 	int f = static_cast<int>(mFrame);
 
-
-	// コリジョンチェック
-	if (nowMotion.colBeginFrame != nowMotion.colEndFrame)
-	{
-		if (f >= nowMotion.colBeginFrame) nowMotion.isCollisionEnable = true;
-		if (f <  nowMotion.colEndFrame) nowMotion.isCollisionEnable = false;
-	}
-
 	// ループチェック
 	if (f >= nowMotion.frameNum - 1)
 	{
-		mFrame = 0;
-
-		if (!mIsLoop)
+		if (mIsStopLastFrame)
 		{
-			SetMotion(IDLE, true);
+			mFrame -= elapsedTime * 60;
 			mMotionFinished = true;
+		}
+		else
+		{
+			if (!mIsLoop)
+			{
+				SetMotion(mNextType, mBlendSpeed);
+				mMotionFinished = true;
+			}
+
+			mFrame = 0;
 		}
 	}
 }

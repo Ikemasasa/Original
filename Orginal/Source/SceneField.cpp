@@ -13,7 +13,9 @@
 #include "Define.h"
 #include "Enemy.h"
 #include "EffectManager.h"
+#include "Fade.h"
 #include "GameManager.h"
+#include "KeyGuide.h"
 #include "Light.h"
 #include "Player.h"
 #include "SceneManager.h"
@@ -41,10 +43,11 @@ void SceneField::Initialize()
 
 	// ライト設定
 	{
-		Vector4 lightDir(-1.0f, -0.4f, 1.0f, 1.0f);
-		mLight.SetLightDir(lightDir);
+		Vector3 lightDir(-1.0f, -0.4f, 1.0f);
+		Vector3 lightPos(60.0f, 60.0f, 60.0f);
+		mLight.SetLightDir(lightDir, lightPos);
 
-		Vector4 lightColor(0.8f, 0.8f, 0.8f, 1);
+		Vector4 lightColor(0.8f, 0.75f, 0.75f, 1);
 		mLight.SetLightColor(lightColor);
 
 		mLight.CreateConstBuffer();
@@ -72,12 +75,45 @@ void SceneField::Initialize()
 
 void SceneField::Update()
 {
-	mCharaManager->Update();
-	Singleton<CameraManager>().GetInstance().Update(mCharaManager->GetMovePlayer());
+	if (mTransBattleScene)
+	{
+		static float timer = 0.0f;
+		if (timer >= TRANS_BATTLE_SCENE_TIME)
+		{
+			// シーン移行
+			Fade::GetInstance().SetSceneImage(Fade::SPEED_VERY_SLOW, true);
+			PlayerManager* pm = mCharaManager->GetPlayerManager();
+			Enemy* enm = mCharaManager->IsHitEnemy();
+			SceneManager::GetInstance().SetStackScene(std::make_unique<SceneBattle>(pm, enm));
+			Audio::SoundPlay((int)Sound::ENEMY_HIT);
 
-	mSkybox->SetEyePos(Singleton<CameraManager>().GetInstance().GetPos());
+			mCharaManager->ResetHitEnemy();
+			mTransBattleScene = false;
+			timer = 0.0f;
+		}
+		else
+		{
+			timer += GameManager::elapsedTime;
+		}
+	}
+	else
+	{
+		mCharaManager->Update();
+		Singleton<CameraManager>().GetInstance().Update(mCharaManager->GetMovePlayer());
 
-	Singleton<EffectManager>().GetInstance().Update();
+		mSkybox->SetEyePos(Singleton<CameraManager>().GetInstance().GetPos());
+
+		Singleton<EffectManager>().GetInstance().Update();
+
+		// 敵と当たったかチェック
+		if (mCharaManager->IsHitEnemy())
+		{
+			mTransBattleScene = true;
+		}
+
+		// キーガイド
+		KeyGuide::Instance().Add(KeyGuide::Y, L"メニュー");
+	}
 }
 
 void SceneField::Render()
@@ -88,7 +124,7 @@ void SceneField::Render()
 
 	// シャドウマップに書き込み
 	const Shader* shader = mShadowMap->GetShader();
-	mShadowMap->Activate(lightDir);
+	mShadowMap->Activate(lightDir, mLight.GetLightPos());
 	mTerrain->Render(shader, view, proj, lightDir);
 	mCharaManager->Render(shader, view, proj, lightDir);
 	mShadowMap->Deactivate();
@@ -106,13 +142,46 @@ void SceneField::Render()
 	mSkybox->SetEnvTexture(Define::ENVIRONMENT_TEXTURE_SLOT);
 	mShadowMap->SetTexture(Define::SHADOWMAP_TEXTURE_SLOT);
 	
+	// ディファードのパラメータ用意(後々外部から入力したい
+	SetDeferredParam();
+
+	// ディファードレンダリング
+	//// シーンターゲットに書き込み
+	mPostEffectTarget->Activate();
+	mDeferredRenderer->Render();
+	// ブルーム作成、適用
+	mBloom->Execute(mPostEffectTarget.get());
+	mPostEffectTarget->Deactivate();
+
+	// シーンターゲットに書き込み
+	mSceneTarget->Activate();
+	mPostEffectTarget->Render(mPostEffect.get());
+	mCharaManager->RenderUI();
+	mSceneTarget->Deactivate();
+
+	// バックバッファに書き込み
+	mSceneTarget->Render(nullptr);
+}
+
+void SceneField::Release()
+{
+	ReleaseBaseAll();
+
+	Singleton<CameraManager>().GetInstance().Pop();
+
+	DataBase::Release();
+	mSkybox->Release();
+}
+
+void SceneField::SetDeferredParam()
+{
 	// ディファードのライト用意(後々外部から入力したい
 	//// ライトクリア
 	mDeferredRenderer->ClearLight();
 	//// DirLight
 	std::vector<DeferredRenderer::DirLight> dirLights;
 	DeferredRenderer::DirLight dirLight;
-	dirLight.dir = lightDir;
+	dirLight.dir = mLight.GetLightDir();
 	dirLight.color = mLight.GetLightColor();
 	dirLights.push_back(dirLight);
 	mDeferredRenderer->SetDirLight(dirLights);
@@ -127,7 +196,7 @@ void SceneField::Render()
 		const Enemy* enm = mCharaManager->GetEnemyManager()->GetEnemy(i);
 
 		// 座標、レンジ算出
-		const float ADJUST_DIV = 1.5f;
+		const float ADJUST_DIV = 1.2f;
 		const AABB aabb = enm->GetLocalAABB();
 		float range = (aabb.max.y - aabb.min.y) / ADJUST_DIV;
 		pointLight.pos = Vector4(enm->GetPos(), range);
@@ -136,28 +205,7 @@ void SceneField::Render()
 	}
 	mDeferredRenderer->SetPointLight(pointLights);
 
+	// 定数バッファ更新
 	Vector4 eyePos = Vector4(Singleton<CameraManager>().GetInstance().GetPos(), 1.0f);
 	mDeferredRenderer->SetCBPerFrame(eyePos);
-
-	// ディファードレンダリング
-	//// シーンターゲットに書き込み
-	mSceneTarget->Activate();
-	mDeferredRenderer->Render();
-	// ブルーム作成、適用
-	mBloom->Execute(mSceneTarget.get());
-	mCharaManager->RenderUI();
-	mSceneTarget->Deactivate();
-
-	// バックバッファに結果を描画
-	mSceneTarget->Render(mPostEffect.get());
-}
-
-void SceneField::Release()
-{
-	Singleton<CameraManager>().GetInstance().Pop();
-
-	DataBase::Release();
-	mSkybox->Release();
-	mRamp->UnLoad();
-	mPostEffect->UnLoad();
 }

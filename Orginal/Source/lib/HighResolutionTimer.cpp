@@ -1,60 +1,30 @@
 #include "HighResolutionTimer.h"
 
-HighResolutionTimer::HighResolutionTimer() : mFrameRate(60.0f), mSecondsPerCount(0.0), mDeltaTime(-1.0), mStopTime(0), mPausedTime(0), mStopped(false)
+void HighResolutionTimer::Initialize()
 {
-	QueryPerformanceFrequency(reinterpret_cast<LARGE_INTEGER*>(&mTimeFreq));
-	mSecondsPerCount = 1.0 / static_cast<double>(mTimeFreq);
-	mFrame = (LONGLONG)(mTimeFreq / mFrameRate);
+	mElapsedTime = 0.0f;
+	mPausedTime = 0;
+	mIsStopped = false;
+	
+	// 周波数
+	LONGLONG countsPerSec;
+	QueryPerformanceFrequency(reinterpret_cast<LARGE_INTEGER*>(&countsPerSec));
+	mSecondsPerCount = 1.0 / static_cast<double>(countsPerSec);
+	mOneFrameTime = (LONGLONG)(countsPerSec / 60);
 
-	QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&mThisTime));
-	mBaseTime = mThisTime;
-	mLastTime = mThisTime;
+	// 事前準備
+	QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&mTickTime[0]));
+	mBaseTime = mTickTime[0];
+	mTickTime[1] = mTickTime[0];
 }
 
-float HighResolutionTimer::TimeStamp() const
+void HighResolutionTimer::Stop()
 {
-	// If we are stopped, do not count the time that has passed since we stopped.
-	// Moreover, if we previously already had a pause, the distance 
-	// stop_time - base_time includes paused time, which we do not want to count.
-	// To correct this, we can subtract the paused time from mStopTime:  
-	//
-	//                     |<--paused_time-->|
-	// ----*---------------*-----------------*------------*------------*------> time
-	//  base_time       stop_time        start_time     stop_time    this_time
-
-	if (mStopped)
+	if (!mIsStopped)
 	{
-		return static_cast<float>(((mStopTime - mPausedTime) - mBaseTime) * mSecondsPerCount);
+		QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&mStopTime));
+		mIsStopped = true;
 	}
-
-	// The distance this_time - mBaseTime includes paused time,
-	// which we do not want to count.  To correct this, we can subtract 
-	// the paused time from this_time:  
-	//
-	//  (this_time - paused_time) - base_time 
-	//
-	//                     |<--paused_time-->|
-	// ----*---------------*-----------------*------------*------> time
-	//  base_time       stop_time        start_time     this_time
-	else
-	{
-		return static_cast<float>(((mThisTime - mPausedTime) - mBaseTime) * mSecondsPerCount);
-	}
-}
-
-float HighResolutionTimer::TimeInterval() const
-{
-	return static_cast<float>(mDeltaTime);
-}
-
-void HighResolutionTimer::Reset()
-{
-	QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&mThisTime));
-	mBaseTime = mThisTime;
-	mLastTime = mThisTime;
-
-	mStopTime = 0;
-	mStopped = false;
 }
 
 void HighResolutionTimer::Start()
@@ -62,68 +32,49 @@ void HighResolutionTimer::Start()
 	LONGLONG startTime;
 	QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&startTime));
 
-	// Accumulate the time elapsed between stop and start pairs.
-	//
-	//                     |<-------d------->|
-	// ----*---------------*-----------------*------------> time
-	//  base_time       stop_time        start_time     
-	if (mStopped)
+	if (mIsStopped)
 	{
 		mPausedTime += (startTime - mStopTime);
-		mLastTime = startTime;
+		mTickTime[1] = startTime;
 		mStopTime = 0;
-		mStopped = false;
+		mIsStopped = false;
 	}
 }
 
-void HighResolutionTimer::Stop()
+float HighResolutionTimer::TimeStamp() const
 {
-	if (!mStopped)
-	{
-		QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&mStopTime));
-		mStopped = true;
-	}
+	float ret = 0.0f;
+	if (mIsStopped) ret = static_cast<float>(((mStopTime - mPausedTime) - mBaseTime) * mSecondsPerCount);
+	else			ret = static_cast<float>(((mTickTime[0] - mPausedTime) - mBaseTime) * mSecondsPerCount);
+
+	return ret;
 }
 
 bool HighResolutionTimer::Tick()
 {
-	if (mStopped)
+	if (mIsStopped)
 	{
-		mDeltaTime = 0.0;
-		return true;
+		mElapsedTime = 0.0f;
+		return false;
 	}
 
-	QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&mThisTime));
+	// 現在の時間取得
+	QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&mTickTime[0]));
 
 	// フレーム制限
-	if (mThisTime < mLastTime + mFrame) return false;
+	if (mTickTime[0] < mTickTime[1] + mOneFrameTime) return false;
 
-	// Time difference between this frame and the previous.
-	mDeltaTime = (mThisTime - mLastTime) * mSecondsPerCount;
+	// 経過時間算出
+	mElapsedTime = (mTickTime[0] - mTickTime[1]) * mSecondsPerCount;
+	if (mElapsedTime < 0.0f) mElapsedTime = 0.0f;
 
-	// 経過時間
-	LONGLONG dTime = mThisTime - mLastTime;
-
-	// Prepare for next frame.
-	mLastTime = mThisTime;
-
-	if (dTime > 40000) mLastTime = mThisTime;
-
-	// Force nonnegative.  The DXSDK's CDXUTTimer mentions that if the 
-	// processor goes into a power save mode or we get shuffled to another
-	// processor, then mDeltaTime can be negative.
-	if (mDeltaTime < 0.0)
-	{
-		mDeltaTime = 0.0;
-	}
+	// 次のフレームに備える
+	mTickTime[1] = mTickTime[0];
 
 	return true;
 }
 
-void HighResolutionTimer::SetFrameRate(float frameRate)
+float HighResolutionTimer::GetElapsedTime()
 {
-	mFrameRate = frameRate;
-	QueryPerformanceFrequency(reinterpret_cast<LARGE_INTEGER*>(&mTimeFreq));
-	mSecondsPerCount = 1.0 / static_cast<double>(mTimeFreq);
-	mFrame = (LONGLONG)(mTimeFreq / mFrameRate);
+	return static_cast<float>(mElapsedTime);
 }

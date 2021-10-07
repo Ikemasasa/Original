@@ -22,6 +22,7 @@ protected:
 	std::unique_ptr<Shader> mPostEffect;
 	std::unique_ptr<ShadowMap> mShadowMap;
 	std::unique_ptr<RenderTarget> mSceneTarget;
+	std::unique_ptr<RenderTarget> mPostEffectTarget;
 	std::unique_ptr<Bloom> mBloom;
 
 	// ディファード
@@ -33,6 +34,8 @@ protected:
 protected: // 関数
 	void InitializeBaseAll();
 	void CreateBaseAll();
+	void ReleaseBaseAll();
+	virtual void SetDeferredParam() {}
 
 public:
 	SceneBase() = default;

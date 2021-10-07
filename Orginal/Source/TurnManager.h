@@ -18,6 +18,7 @@ public:
 	static const int ITEM_DAMAGE_EFFECT_SLOT = 13;
 	static const int BUFF_EFFECT_SLOT = 14;
 	static const int DEBUFF_EFFECT_SLOT = 15;
+	static const int DAMAGE_EFFECT_SLOT = 16;
 
 private:
 	std::queue<BattleCharacter*> mOrder;

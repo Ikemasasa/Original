@@ -62,6 +62,7 @@ public:
 	bool RenderSet(const wchar_t* str, const Vector2& pos, const Vector2& centerRate = Vector2::ZERO, const Vector4& color = Vector4::ONE);
 	bool RenderSetValue(const int value, const Vector2& pos, const Vector2& centerRate = Vector2::ZERO, const Vector4& color = Vector4::ONE);
 	bool RenderSetValue(const float value, const Vector2& pos, const Vector2& centerRate = Vector2::ZERO, const Vector4& color = Vector4::ONE);
+	void Render(const wchar_t* str, const Vector2& pos, const Vector2& centerRate = Vector2::ZERO, const Vector4& color = Vector4::ONE);
 	void Render(bool isRenderClear = true);
 
 

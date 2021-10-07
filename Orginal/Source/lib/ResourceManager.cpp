@@ -12,13 +12,13 @@ using namespace std;
 
 // staticƒƒ“ƒo
 std::list<ResourceManager::ResourceShaderResourceViews> ResourceManager::mSRVs;
-ShaderManager ResourceManager::mShaderManager;
+ShaderManager ResourceManager::ShaderManager;
 
 void ResourceManager::Release()
 {
     for (auto& srv : mSRVs) srv.Release(true);
     mSRVs.clear();
-    mShaderManager.ReleaseAll();
+    ShaderManager.ReleaseAll();
 }
 
 HRESULT ResourceManager::LoadShaderResource(ID3D11Device * device, const wchar_t * filename, ID3D11ShaderResourceView ** outSRV, D3D11_TEXTURE2D_DESC* outDesc)

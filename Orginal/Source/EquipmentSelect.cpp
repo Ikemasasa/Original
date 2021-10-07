@@ -6,6 +6,7 @@
 #include "lib/Sprite.h"
 
 #include "Define.h"
+#include "KeyGuide.h"
 
 void EquipmentSelect::Initialize()
 {
@@ -41,6 +42,9 @@ int EquipmentSelect::Update(const std::vector<EquipmentInventory::Data>& equipme
 	{
 		return mSelectIndex;
 	}
+
+	KeyGuide::Instance().Add(KeyGuide::DPAD, L"ƒJ[ƒ\ƒ‹ˆÚ“®");
+	KeyGuide::Instance().Add(KeyGuide::A, L"Œˆ’è");
 
 	return -1;
 }

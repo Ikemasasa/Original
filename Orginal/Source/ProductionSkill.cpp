@@ -28,7 +28,7 @@ void ProductionSkill::Update(const BattleCharacterManager* bcm)
 
 		StateInit();
 
-		mMoveChara->SetMotion(SkinnedMesh::USE_ITEM, false);
+		mMoveChara->SetMotionOnce(Character::USE_ITEM, Character::IDLE);
 
 		// エフェクト決定
 		switch (mMoveChara->GetCommand()->GetSkillParam()->type)

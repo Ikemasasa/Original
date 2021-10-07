@@ -46,3 +46,8 @@ void Sprite::Render(const Vector2& pos, const Vector2& scale, const Vector2& tex
 {
 	Renderer2D::GetInstance().Render(mSRV, pos, scale, texPos, size, center, angle, color);
 }
+
+void Sprite::Render(Shader* shader, const Vector2& pos, const Vector2& scale, const Vector2& texPos, const Vector2& size, const Vector2& center, const float angle, const Vector4 color)
+{
+	Renderer2D::GetInstance().Render(mSRV, shader, pos, scale, texPos, size, center, angle, color);
+}

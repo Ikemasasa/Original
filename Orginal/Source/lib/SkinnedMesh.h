@@ -19,29 +19,10 @@
 
 class SkinnedMesh
 {
-public:
-	enum MotionType
-	{
-		DEFAULT,
-		IDLE,
-		WALK,
-		RUN,
-		ATTACK,
-		GUARD,
-		DIE,
-		DAMAGE,
-		USE_ITEM,
-		UNIQUE1,
-		UNIQUE2,
-		UNIQUE3,
-
-		MAX,
-	};
-
 private:
 	static const int STR_MAX = 128;
-	//static const int MOTION_MAX = 256;
 	static const int BONE_MAX = 256;
+	static const int T_POSE_INDEX = 0;
 
 	struct Cbuffer
 	{
@@ -93,6 +74,7 @@ private:
 		char name[STR_MAX] = {};
 		Matrix offsetMatrix = {};
 		Matrix transform = {};
+		Bone* parent;
 	};
 
 	struct Weight
@@ -106,26 +88,12 @@ private:
 	{
 		int frameNum = 0;
 		Matrix* keyframe[BONE_MAX] = {};
-
-		// 現在は球だけ
-		SPHERE collision;
-		int colBeginFrame = 0;
-		int colEndFrame = 0;
-		bool isCollisionEnable = false;
-	};
-
-	struct BeforeMotion
-	{
-		int frame = 0; // 変わったタイミングのふれーむ
-		Matrix keyframe[BONE_MAX][1] = {}; // 変わったタイミングのキーフレーム
-		float lerpFactor = 1.0f;
 	};
 
 	Microsoft::WRL::ComPtr<ID3D11Buffer>		mVertexBuffer;
 	Microsoft::WRL::ComPtr<ID3D11Buffer>		mIndexBuffer;
 	Microsoft::WRL::ComPtr<ID3D11Buffer>		mConstBuffer;
 	std::unique_ptr<ComputeShader> mSkinningShader;
-	std::unique_ptr<Shader> mShader;
 
 
 	char mFbxDir[STR_MAX];
@@ -134,7 +102,7 @@ private:
 	int mMeshNum = 0;
 	int mBoneNum = 0;
 	int mVerticesNum = 0;
-	int mFaceNum;
+	int mFaceNum = 0;
 	Bone mBones[BONE_MAX];
 	Vertex* mVertices;
 	VertexForSkinning* mVerticesSource;
@@ -143,24 +111,36 @@ private:
 	Vector4* mMaterialColors;
 	Weight* mWeights;
 
+
+	// アニメーション関係
+	int mStartFrame;
+	bool mIsLoop;
+	bool mIsStopLastFrame;
+	bool mMotionFinished;
+	float mFrame = 0;
+	float mBeforeFrame = 0; // 前のモーションのフレーム
+	float mBlendFactor = 1.0f;
+	float mBlendSpeed = 0.1f;
+	int mMotionType = 0; // 現在のモーション
+	int mNextType = 0;	 // ループしないモーションの次のモーション
+	int mBeforeMotionType = 0; // 前のモーション
+	std::map<int, Motion> mMotion; // モーションデータ
+private:
+
 	void Initialize(const char* fbxFilename);
 	void LoadFBX(ID3D11Device* device, const char* filename);
 	bool LoadBIN(const char* filename);
 	void Save(const char* filename/*バイナリファイル名*/);
 
+	void InitializeBone(FbxScene* scene);
 	void LoadBone(FbxMesh* mesh);
-	int FindBone(const char* name);
+	
+
 	void OptimizeVertices();
 
-	// アニメーション関係
-	int mStartFrame;
-	bool mIsLoop;
-	bool mMotionFinished;
-	float mFrame = 0;
-	MotionType mMotionType = DEFAULT; // 現在のモーション;
-	std::map<MotionType, Motion> mMotion; // モーションデータ
+	void Animate(float elapsedTime);
 
-	void LoadKeyFrames(MotionType type, int bone, FbxNode* boneNode);
+	void LoadKeyFrames(int type, int bone, FbxNode* boneNode);
 	void LoadMeshAnim(FbxMesh* mesh); // ボーンがないメッシュアニメ―ション
 
 
@@ -168,25 +148,25 @@ public:
 	SkinnedMesh(const char* fbxFilename);
 	virtual ~SkinnedMesh();
 
-	void Render(const Matrix& wvp, const Matrix& world, const Vector4& lightDir, float elapsedTime, float alpha = 1.0f);
-	void Render(const Shader* shader, const Matrix& wvp, const Matrix& world, const Vector4& lightDir, float elapsedTime, float alpha = 1.0f);
-
-	int RayPick(
-		const Vector3& pos,
-		const Vector3& velocity,
-		Vector3* outPos,
-		Vector3* outNormal);
-
-	void ChangeShader(Shader* shader);
+	void Render(const Shader* shader, const Matrix& wvp, const Matrix& world, const Vector4& lightDir);
+	int RayPick(const Vector3& pos, const Vector3& velocity, Vector3* outPos, Vector3* outNormal);
 
 	// モデルぴったりの直方体(ローカル)
 	AABB mAABB;
 
-	void SetMotion(MotionType type, bool isLoop = false);
-	MotionType GetMotion() const { return mMotionType; }
-	void AddMotion(const char* filename, MotionType type);
-	void Animate(float elapsedTime);
-	void Skinning(); // ボーンによる変形
+	int FindBone(const char* name);
+	Matrix* GetBoneMatrix(const char* name);
+	Matrix* GetBoneMatrix(int boneIndex);
+
+	int GetFrame() const { return (int)mFrame; }
+
+	int GetMotion() const { return mMotionType; }
+	void SetMotion(int type, float blendSpeed);
+	void SetMotionOnce(int noLoopType, int nextType, float blendSpeed);
+	void SetMotionStopLastFrame(int type, float blendSpeed);
+	void AddMotion(const char* filename, int type);
+
+	void Skinning(float elapsedTime); // ボーンによる変形
 
 	bool IsMotionFinished() const { return mMotionFinished; }
 };

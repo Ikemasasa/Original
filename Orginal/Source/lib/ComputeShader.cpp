@@ -5,12 +5,12 @@
 
 ComputeShader::ComputeShader(LPCWSTR filename, LPCSTR func, LPCSTR shaderModel)
 {
-	ResourceManager::mShaderManager.LoadComputeShader(filename, func, &mCS, shaderModel);
+	ResourceManager::ShaderManager.LoadComputeShader(filename, func, &mCS, shaderModel);
 }
 
 ComputeShader::~ComputeShader()
 {
-	ResourceManager::mShaderManager.ReleaseComputeShader(&mCS);
+	ResourceManager::ShaderManager.ReleaseComputeShader(&mCS);
 }
 
 bool ComputeShader::CreateConstantBuffer(UINT elementSize)

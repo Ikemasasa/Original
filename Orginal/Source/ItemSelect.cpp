@@ -7,6 +7,7 @@
 #include "lib/Sprite.h"
 
 #include "Define.h"
+#include "KeyGuide.h"
 #include "Item.h"
 
 void ItemSelect::Initialize()
@@ -43,6 +44,8 @@ void ItemSelect::Update(const Item* inventory)
 	}
 	if (mSelectIndex < 0) mSelectIndex = Math::Min((INDEX_MAX) / HORIZONTAL_NUM * HORIZONTAL_NUM + (mSelectIndex + HORIZONTAL_NUM), INDEX_MAX);
 
+	// キーガイド
+	KeyGuide::Instance().Add(KeyGuide::DPAD, L"カーソル移動");
 
 	// アイテム情報更新
 	UpdateInfo();

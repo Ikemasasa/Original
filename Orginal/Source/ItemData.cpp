@@ -56,11 +56,11 @@ void ItemData::LoadItemData()
 		{
 			int index = 0;
 			BaseData base;
-			base.name = ConvertString::ConvertToWstirng(chunks[index++]);
+			base.name = ConvertString::ConvertToWstring(chunks[index++]);
 			base.id = std::stoi(chunks[index++]);
 			base.type = (ItemType)std::stoi(chunks[index++]);
-			base.icon = std::make_shared<Sprite>(ConvertString::ConvertToWstirng(iconPath + chunks[index++]).c_str());
-			base.info = ConvertString::ConvertToWstirng(chunks[index++]);
+			base.icon = std::make_shared<Sprite>(ConvertString::ConvertToWstring(iconPath + chunks[index++]).c_str());
+			base.info = ConvertString::ConvertToWstring(chunks[index++]);
 
 			mItems.emplace_back(base);
 		}

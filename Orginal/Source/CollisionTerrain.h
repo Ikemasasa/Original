@@ -11,6 +11,7 @@ class CollisionTerrain
 	static std::vector<Terrain*> mTerrains;
 
 public:
+	static int RayPickOrg(const Vector3& sp, const Vector3& velocity, Vector3* outPos, Vector3* outNormal);
 	static int RayPick(const Vector3& sp, const Vector3& velocity, Vector3* outPos, Vector3* outNormal);
 	
 	static float GetHeight(const Vector3& pos, const float dist);

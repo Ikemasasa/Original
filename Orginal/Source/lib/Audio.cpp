@@ -48,6 +48,8 @@ void Audio::Initialize()
 	LoadSound((int)Sound::BUFF, L"Data/Audio/Sound/buff.wav");
 	LoadSound((int)Sound::DEBUFF, L"Data/Audio/Sound/debuff.wav");
 	LoadSound((int)Sound::BOMB, L"Data/Audio/Sound/bomb.wav");
+	LoadSound((int)Sound::ATTACK_HIT, L"Data/Audio/Sound/attack_hit.wav");
+	LoadSound((int)Sound::ENEMY_HIT, L"Data/Audio/Sound/enemy_hit.wav");
 }
 
 void Audio::Update()
@@ -83,7 +85,7 @@ void Audio::MusicStopAll()
 	for (int i = 0; i < MUSIC_INST_NUM; ++i)
 	{
 		if (!mMusicInst[i]) return;
-		mMusicInst[i]->Stop();
+		mMusicInst[i]->Stop(false);
 	}
 }
 

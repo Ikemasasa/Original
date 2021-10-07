@@ -2,6 +2,7 @@
 
 #include "lib/Math.h"
 
+#include "Character.h"
 #include "CSVLoader.h"
 #include "DataBase.h"
 
@@ -10,6 +11,7 @@ MeshDataLoader::MeshData MeshDataLoader::LoadMesh(int charaID)
 	MeshData md;
 
 	const char* csvFilename = nullptr;
+	const char* csvColFilepath = nullptr;
 	const char* fbxFilepath = "Data/Mesh/";
 	{
 		// charaIDからどの種類(敵かプレイヤーか等)を判別
@@ -23,6 +25,7 @@ MeshDataLoader::MeshData MeshDataLoader::LoadMesh(int charaID)
 		{
 			csvFilename = "Data/DataBase/PLMesh.csv";
 			fbxFilepath = "Data/Mesh/Players/";
+			csvColFilepath = "Data/DataBase/PLMeshCollide.csv";
 		}
 		else if (npc == check)
 		{
@@ -32,6 +35,8 @@ MeshDataLoader::MeshData MeshDataLoader::LoadMesh(int charaID)
 		else if (enm == check)
 		{
 			csvFilename = "Data/DataBase/EnmMesh.csv";
+			fbxFilepath = "Data/Mesh/Enemies/";
+			// csvColFilepath = "Data/DataBase/EnmMeshCollide.csv";
 		}
 		else if (ter == check)
 		{
@@ -70,14 +75,14 @@ MeshDataLoader::MeshData MeshDataLoader::LoadMesh(int charaID)
 	// メッシュ読みこみ
 	{
 		if (filenames.empty()) return md;
-		if (motionIDs[0] != SkinnedMesh::DEFAULT) return md;
+		if (motionIDs[0] != Character::DEFAULT) return md;
 
 		std::shared_ptr<SkinnedMesh> mesh(std::make_shared<SkinnedMesh>(filenames[0].c_str()) );
 		size_t fileNum = filenames.size();
 		for (size_t i = 1; i < fileNum; ++i)
 		{
-			if (motionIDs[i] >= SkinnedMesh::MAX) break;
-			mesh->AddMotion(filenames[i].c_str(), (SkinnedMesh::MotionType)motionIDs[i]);
+			if (motionIDs[i] >= Character::MOTION_MAX) break;
+			mesh->AddMotion(filenames[i].c_str(), motionIDs[i]);
 		}
 
 		md.mesh = mesh;

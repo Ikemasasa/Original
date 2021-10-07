@@ -18,18 +18,12 @@ public:
 		Vector4 color;
 	};
 
-	struct PointLight
-	{
-		Vector4 pos; // xyz:座標, w:range
-		Vector4 color;
-	};
-
 private:
-	ConstantBuffer mCB;
-
+	Vector3 mLightPos;
 	Vector4 mLightDir;
 	Vector4 mLightColor;
 
+	ConstantBuffer mCB;
 	struct CBForLight
 	{
 		Vector4 lightDir;
@@ -42,10 +36,11 @@ public:
 	void UpdateConstBuffer();
 
 	// ゲッター
+	Vector3 GetLightPos() { return mLightPos; }
 	Vector4 GetLightDir() { return mLightDir; }
 	Vector4 GetLightColor() { return mLightColor; }
 
 	// セッター
-	void SetLightDir(const Vector4& lightDir);
+	void SetLightDir(Vector3& lightDir, const Vector3& lightPos);
 	void SetLightColor(const Vector4& lightColor) { mLightColor = lightColor; }
 };

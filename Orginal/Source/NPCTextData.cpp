@@ -28,7 +28,7 @@ void NPCTextData::GetTextData(const int charaID, std::vector<TextData>* outData,
 		{
 			int index = 0;
 			TextData data;
-			data.name = ConvertString::ConvertToWstirng(chunks[index++]);
+			data.name = ConvertString::ConvertToWstring(chunks[index++]);
 			index++; // キャラIDを飛ばす
 			data.times = std::stoi(chunks[index++]);
 			readLineNum = std::stoi(chunks[index++]);
@@ -39,7 +39,7 @@ void NPCTextData::GetTextData(const int charaID, std::vector<TextData>* outData,
 				for (int k = 1; k <= readLineNum; ++k)
 				{
 					// テキストデータ読み込み
-					data.texts.emplace_back(ConvertString::ConvertToWstirng(allLine[i + k]));
+					data.texts.emplace_back(ConvertString::ConvertToWstring(allLine[i + k]));
 				}
 				outData->emplace_back(data);
 			}

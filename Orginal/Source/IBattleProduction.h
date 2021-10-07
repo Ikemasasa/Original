@@ -16,14 +16,19 @@ protected:
 	BattleCharacter* mMoveChara = nullptr;	 // ID‚©‚çæ“¾‚µ‚½‚Ì‚ğ•Û‘¶‚·‚é‚æ‚¤
 	std::vector<int> mTargetCharaIDs;
 	std::vector<BattleCharacter*> mTargetCharas; // “¯ã
-
+	std::vector<BattleCharacter*> mHitChara; // ƒRƒŠƒWƒ‡ƒ“—p
+	std::vector<int> mAmounts;
 	ProductionValue mProductionValue;
 	bool mIsFinished = false;
+
+protected:
+
 public:
 	IBattleProduction() = default;
 	virtual ~IBattleProduction() = default;
 
 	void Begin(const int moveCharaID, const std::vector<int>& targetCharaIDs);
+	void UpdateDeathMotion();
 
 	virtual void Initialize() = 0;
 	virtual void Update(const BattleCharacterManager* bcm) = 0;

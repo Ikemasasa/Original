@@ -31,6 +31,6 @@ public:
 	Matrix GetProj() const { return mMainCamera.top().get()->GetProjectionMatrix(); }
 	Vector3 GetPos() const { return mMainCamera.top().get()->GetPos(); }
 	Vector3 GetAngle() const { return mMainCamera.top().get()->GetAngle(); }
-	Vector3 GetFrontVector() const { return mMainCamera.top().get()->GetFrontVector(); }
-	Vector3 GetRightVector() const { return mMainCamera.top().get()->GetRightVector(); }
+	Vector3 GetFrontVector() const { return mMainCamera.top().get()->GetForward(); }
+	Vector3 GetRightVector() const { return mMainCamera.top().get()->GetRight(); }
 };

@@ -12,6 +12,7 @@
 #include "DecideItem.h"
 #include "DecideSkill.h"
 #include "DecideTargetChara.h"
+#include "KeyGuide.h"
 
 DecideBehaviour::DecideBehaviour()
 {
@@ -63,6 +64,10 @@ void DecideBehaviour::Update(const BattleCharacterManager* bcm, CommandBase* cmd
 		else if (mCommandIndex.x == 1) mNextCommand = std::make_unique<DecideTargetChara>(Character::Type::ENEMY);
 		else if (mCommandIndex.x == 2) mNextCommand = std::make_unique<DecideSkill>();
 	}
+
+	// キーガイド
+	KeyGuide::Instance().Add(KeyGuide::DPAD, L"カーソル移動");
+	KeyGuide::Instance().Add(KeyGuide::A, L"決定");
 }
 
 void DecideBehaviour::Render()
