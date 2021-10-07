@@ -84,7 +84,7 @@ void Audio::MusicStopAll()
 	for (int i = 0; i < MUSIC_INST_NUM; ++i)
 	{
 		if (!mMusicInst[i]) return;
-		mMusicInst[i]->Stop();
+		mMusicInst[i]->Stop(false);
 	}
 }
 

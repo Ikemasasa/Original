@@ -122,6 +122,4 @@ void SceneTitle::Render()
 void SceneTitle::Release()
 {
 	mFont.Release();
-
-	// AUDIO.MusicStop((int)Music::TITLE);
 }

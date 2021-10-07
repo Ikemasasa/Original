@@ -229,19 +229,24 @@ void SceneBattle::Render()
 	mDeferredRenderer->SetCBPerFrame(eyePos);
 
 	// ディファードレンダリング
-	//// シーンターゲット
-	mSceneTarget->Activate();
+	//// ポストエフェクトターゲットに書き込み
+	mPostEffectTarget->Activate();
 	mDeferredRenderer->Render();
 	// ブルーム作成、適用
 	mBloom->Execute(mSceneTarget.get());
-	Singleton<EffectManager>().GetInstance().Render(view, proj);
+	mPostEffectTarget->Deactivate();
+
+	// シーンターゲットに書き込み
+	mSceneTarget->Activate();
+	mPostEffectTarget->Render(mPostEffect.get());
 	mTurnManager->Render();
 	mBattleCharacterManager->RenderUI();
 	mSelectOptions->Render(Vector2(OPTIONS_X, OPTIONS_Y));
+	Singleton<EffectManager>().GetInstance().Render(view, proj);
 	mSceneTarget->Deactivate();
 
 	// バックバッファに結果を描画
-	mSceneTarget->Render(mPostEffect.get());
+	mSceneTarget->Render(nullptr);
 }
 
 void SceneBattle::Release()

@@ -48,7 +48,6 @@ void CharacterManager::Update()
 	CollideNPC();
 	CollideEnemy();
 
-
 	// 会話情報更新
 	TalkCheck();
 	mNPCTalk->Update();
@@ -97,9 +96,7 @@ void CharacterManager::CollideEnemy()
 			{
 				// 戻ってきた時用に無敵をonにする
 				mPlayerManager->EnableInvincible();
-
-				Fade::GetInstance().SetSceneImage(Fade::SPEED_SLOW);
-				SceneManager::GetInstance().SetStackScene(std::make_unique<SceneBattle>(mPlayerManager.get(), mEnemyManager->GetEnemy(i)));
+				mHitEnemy = enemy;
 				break;
 			}
 			else

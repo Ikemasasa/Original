@@ -28,6 +28,7 @@ void TurnManager::Initialize(const std::vector<std::shared_ptr<BattleCharacter>>
 	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/explosion.efk"    , ITEM_DAMAGE_EFFECT_SLOT);
 	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/buff.efk"		    , BUFF_EFFECT_SLOT);
 	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/debuff.efk"		, DEBUFF_EFFECT_SLOT);
+	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/damage.efk"		, DAMAGE_EFFECT_SLOT);
 
 	mIsBeginnig = true;
 }

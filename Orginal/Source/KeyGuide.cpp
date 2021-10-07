@@ -14,7 +14,7 @@ KeyGuide::KeyGuide()
 
 std::list<KeyGuide::Guide>::iterator KeyGuide::GetInsertIterator(Key key)
 {
-	// enum ‚Ìkey‡‚É•À‚×‚é‚½‚ß
+	// enum ‚Ìkey‡‚É•À‚×‚é‚½‚ß(¸‡
 	auto it = mKeyGuides.begin();
 	for (; it != mKeyGuides.end(); ++it)
 	{

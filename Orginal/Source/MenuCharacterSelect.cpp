@@ -38,8 +38,12 @@ void MenuCharacterSelect::Update()
 	if (mOldSelectIndex != mSelectIndex) Audio::SoundPlay((int)Sound::CURSOR_MOVE);
 
 	// キーガイド
-	KeyGuide::Key key[] = { KeyGuide::RB, KeyGuide::LB };
-	KeyGuide::Instance().Add(key, 2, L"キャラクター選択");
+	if (max >= 2)
+	{
+		KeyGuide::Key key[] = { KeyGuide::RB, KeyGuide::LB };
+		KeyGuide::Instance().Add(key, 2, L"キャラクター選択");
+	}
+
 }
 
 void MenuCharacterSelect::Render(Vector2 leftBottom)

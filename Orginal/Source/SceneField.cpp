@@ -13,6 +13,7 @@
 #include "Define.h"
 #include "Enemy.h"
 #include "EffectManager.h"
+#include "Fade.h"
 #include "GameManager.h"
 #include "KeyGuide.h"
 #include "Light.h"
@@ -21,8 +22,6 @@
 #include "SceneBattle.h"
 #include "Singleton.h"
 #include "Terrain.h"
-
-Font font;
 
 SceneField::SceneField()
 {
@@ -76,15 +75,44 @@ void SceneField::Initialize()
 
 void SceneField::Update()
 {
-	mCharaManager->Update();
-	Singleton<CameraManager>().GetInstance().Update(mCharaManager->GetMovePlayer());
+	if (mTransBattleScene)
+	{
+		static float timer = 0.0f;
+		if (timer >= TRANS_BATTLE_SCENE_TIME)
+		{
+			// シーン移行
+			Fade::GetInstance().SetSceneImage(Fade::SPEED_VERY_SLOW, true);
+			PlayerManager* pm = mCharaManager->GetPlayerManager();
+			Enemy* enm = mCharaManager->IsHitEnemy();
+			SceneManager::GetInstance().SetStackScene(std::make_unique<SceneBattle>(pm, enm));
 
-	mSkybox->SetEyePos(Singleton<CameraManager>().GetInstance().GetPos());
+			mCharaManager->ResetHitEnemy();
+			mTransBattleScene = false;
+			timer = 0.0f;
+		}
+		else
+		{
+			timer += GameManager::elapsedTime;
+		}
+	}
+	else
+	{
+		mCharaManager->Update();
+		Singleton<CameraManager>().GetInstance().Update(mCharaManager->GetMovePlayer());
 
-	Singleton<EffectManager>().GetInstance().Update();
+		mSkybox->SetEyePos(Singleton<CameraManager>().GetInstance().GetPos());
 
-	KeyGuide::Key key[] = { KeyGuide::Y };
-	KeyGuide::Instance().Add(key, ARRAYSIZE(key), L"メニュー");
+		Singleton<EffectManager>().GetInstance().Update();
+
+		// 敵と当たったかチェック
+		if (mCharaManager->IsHitEnemy())
+		{
+			mTransBattleScene = true;
+		}
+
+		// キーガイド
+		KeyGuide::Instance().Add(KeyGuide::Y, L"メニュー");
+	}
 }
 
 void SceneField::Render()
@@ -118,16 +146,20 @@ void SceneField::Render()
 
 	// ディファードレンダリング
 	//// シーンターゲットに書き込み
-	mSceneTarget->Activate();
+	mPostEffectTarget->Activate();
 	mDeferredRenderer->Render();
 	// ブルーム作成、適用
-	mBloom->Execute(mSceneTarget.get());
+	mBloom->Execute(mPostEffectTarget.get());
+	mPostEffectTarget->Deactivate();
+
+	// シーンターゲットに書き込み
+	mSceneTarget->Activate();
+	mPostEffectTarget->Render(mPostEffect.get());
 	mCharaManager->RenderUI();
-	font.Render();
 	mSceneTarget->Deactivate();
 
-	// バックバッファに結果を描画
-	mSceneTarget->Render(mPostEffect.get());
+	// バックバッファに書き込み
+	mSceneTarget->Render(nullptr);
 }
 
 void SceneField::Release()

@@ -66,8 +66,12 @@ void DecideTargetChara::Update(const BattleCharacterManager* bcm, CommandBase* c
 	// キーガイド
 	KeyGuide::Instance().Add(KeyGuide::A, L"決定");
 	KeyGuide::Instance().Add(KeyGuide::B, L"戻る");
-	KeyGuide::Key key[] = { KeyGuide::LEFT, KeyGuide::RIGHT };
-	KeyGuide::Instance().Add(key, 2, L"カーソル移動");
+	if (num >= 2)
+	{
+		KeyGuide::Key key[] = { KeyGuide::LEFT, KeyGuide::RIGHT };
+		KeyGuide::Instance().Add(key, 2, L"カーソル移動");
+	}
+
 }
 
 void DecideTargetChara::Render()

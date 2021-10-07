@@ -14,6 +14,9 @@ class SceneField : public SceneBase
 	std::unique_ptr<Terrain>	      mTerrain		= nullptr;
 	std::unique_ptr<Skybox>			  mSkybox		= nullptr;
 
+	static constexpr float TRANS_BATTLE_SCENE_TIME = 0.5;
+	bool mTransBattleScene = false;
+
 	void SetDeferredParam() override;
 public:
 	SceneField();

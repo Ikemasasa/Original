@@ -135,10 +135,15 @@ void ProductionAttack::StateWaitAttack()
 			for (auto& hit : mHitChara) if (hit == target) ishit = true;
 			if (ishit) continue;
 
+			float dist = 0.0f;
 			if (Collision::ColSphereCapsule(sphere, target->GetCapsule()))
 			{
 				mHitChara.emplace_back(target);
 				Audio::SoundPlay((int)Sound::ATTACK_HIT);
+				
+				Vector3 efkPos = target->GetPos();
+				efkPos.y += (target->GetLocalAABB().max.y - target->GetLocalAABB().min.y) / 2.0f;
+				Singleton<EffectManager>().GetInstance().Play(TurnManager::DAMAGE_EFFECT_SLOT, efkPos);
 
 				// ガード中じゃないならダメージモーション
 				if (target->GetStatus()->IsDead())
