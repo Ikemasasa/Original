@@ -225,7 +225,7 @@ void SceneBattle::Render()
 	mDeferredRenderer->SetSpotLight(spotLights);
 
 
-	Vector4 eyePos = Vector4(Singleton<CameraManager>().GetInstance().GetPos(), 1.0f);
+	Vector3 eyePos = Singleton<CameraManager>().GetInstance().GetPos();
 	mDeferredRenderer->SetCBPerFrame(eyePos);
 
 	// ディファードレンダリング
