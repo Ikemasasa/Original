@@ -56,10 +56,10 @@ void DeferredRenderer::SetGBufferTexture(UINT startSlot)
 	mGBuffer->SetTexture(startSlot);
 }
 
-void DeferredRenderer::SetCBPerFrame(const Vector4& eyePos)
+void DeferredRenderer::SetCBPerFrame(const Vector3& eyePos)
 {
 	DeferredPerFrame cb;
-	cb.eyePos = eyePos;
+	cb.eyePos = Vector4(eyePos, 1.0f);
 	mCBPerFrame->Update(&cb);
 }
 
@@ -126,6 +126,8 @@ void DeferredRenderer::Render()
 	const Vector2 TEXPOS(Vector2::ZERO);
 	const Vector2 SIZE(mGBuffer->GetTargetSize());
 
+	mCBPerFrame->Set(0);
+
 	// dirlight
 	for (auto& dirLight : mDirLights)
 	{
@@ -190,4 +192,3 @@ void DeferredRenderer::Render()
 	// ƒAƒ‹ƒtƒ@‡¬‚É–ß‚·
 	Blend::Set(Blend::ALPHA);
 }
-

@@ -86,7 +86,7 @@ public:
 	/// 毎フレーム更新する定数バッファを更新する関数
 	/// </summary>
 	/// <param name="eyePos">カメラ座標</param>
-	void SetCBPerFrame(const Vector4& eyePos);
+	void SetCBPerFrame(const Vector3& eyePos);
 
 	void SetDirLight(std::vector<DirLight>& dirLights);
 	void SetPointLight(std::vector<PointLight>& pointLights);

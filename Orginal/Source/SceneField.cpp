@@ -206,6 +206,6 @@ void SceneField::SetDeferredParam()
 	mDeferredRenderer->SetPointLight(pointLights);
 
 	// 定数バッファ更新
-	Vector4 eyePos = Vector4(Singleton<CameraManager>().GetInstance().GetPos(), 1.0f);
+	Vector3 eyePos = Singleton<CameraManager>().GetInstance().GetPos();
 	mDeferredRenderer->SetCBPerFrame(eyePos);
 }
