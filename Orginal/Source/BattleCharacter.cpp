@@ -7,6 +7,7 @@
 BattleCharacter::BattleCharacter(const Character* chara, Status status) : Character(chara)
 {
 	mStatus = status;
+	mBoneCollision.enable = false;
 }
 
 void BattleCharacter::Update(const BattleCharacterManager* bcm)
