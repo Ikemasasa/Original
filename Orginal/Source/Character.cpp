@@ -48,6 +48,10 @@ void Character::UpdateWorld()
 		if (mBoneCollision.beginFrame <= frame) mBoneCollision.enable = true;
 		if (mBoneCollision.endFrame < frame)	mBoneCollision.enable = false;
 	}
+	else
+	{
+		mBoneCollision.enable = false;
+	}
 }
 
 void Character::Render(const Shader* shader, const Matrix& view, const Matrix& proj, const Vector4& lightDir)

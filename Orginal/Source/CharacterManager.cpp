@@ -7,6 +7,7 @@
 #include "CollisionTerrain.h"
 #include "Enemy.h"
 #include "EnemyManager.h"
+#include "KeyGuide.h"
 #include "NPC.h"
 #include "NPCManager.h"
 #include "Player.h"
@@ -124,12 +125,15 @@ void CharacterManager::TalkCheck()
 		Vector3 dist = npc->GetPos() - player->GetPos();
 		if (dist.LengthSq() <= pow(NPCManager::TALK_DIST, 2))
 		{
-			// 会話するかチェック
-			if (Input::GetButtonTrigger(0, Input::BUTTON::A))
+			// 向きチェック
+			float dot = Vector3::Dot(plFront, dist.GetNormalize());
+			if (dot >= NPCManager::TALK_DOT)
 			{
-				// 向きチェック
-				float dot = Vector3::Dot(plFront, dist.GetNormalize());
-				if (dot >= NPCManager::TALK_DOT)
+				// 会話のキーガイド表示
+				KeyGuide::Instance().Add(KeyGuide::A, L"話す");
+
+				// 会話するかチェック
+				if (Input::GetButtonTrigger(0, Input::BUTTON::A))
 				{
 					mNPCTalk->Set(npc, player->GetPos());
 				}

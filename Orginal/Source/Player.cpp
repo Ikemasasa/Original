@@ -24,8 +24,6 @@ Player::Player(int charaID) : Character(charaID, Character::PLAYER)
 		mInventory.Add(ItemData::BOMB);
 	}
 
-	mInventory.Add(ItemData::SUBDUE_PROOF);
-
 	mMass = MASS;
 }
 

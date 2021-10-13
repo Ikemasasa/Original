@@ -54,7 +54,7 @@ float4 PSWave(PSInput input) : SV_Target0
     float4 color = Diffuse.Sample(Sampler, tex) * input.color;
     
     // ñæÇÈÇ≥ï‚ê≥(îgÇÃÇµÇ∏ÇÒÇ≈ÇÈÇ∆Ç±ÇÎÇà√Ç≠Ç∑ÇÈÇΩÇﬂ
-    float bright = (wave + 1.0) * 0.5 * 0.9 + 0.9; // 0.9~1;
+    float bright = (wave + 1.0) * 0.5 * 0.6 + 0.4; // 0.4~1;
     color.rgb *= bright;
 
 
