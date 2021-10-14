@@ -232,6 +232,7 @@ void SceneBattle::Render()
 	//// ポストエフェクトターゲットに書き込み
 	mPostEffectTarget->Activate();
 	mDeferredRenderer->Render();
+	Singleton<EffectManager>().GetInstance().Render(view, proj);
 	// ブルーム作成、適用
 	mBloom->Execute(mSceneTarget.get());
 	mPostEffectTarget->Deactivate();
@@ -242,7 +243,6 @@ void SceneBattle::Render()
 	mTurnManager->Render();
 	mBattleCharacterManager->RenderUI();
 	mSelectOptions->Render(Vector2(OPTIONS_X, OPTIONS_Y));
-	Singleton<EffectManager>().GetInstance().Render(view, proj);
 	mSceneTarget->Deactivate();
 
 	// バックバッファに結果を描画
