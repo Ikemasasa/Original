@@ -181,4 +181,4 @@ $RECYCLE.BIN/
 
 # My Settings
 .vs/
-!Exe/*.exe
+!*.exe
