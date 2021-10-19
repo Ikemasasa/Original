@@ -182,3 +182,4 @@ $RECYCLE.BIN/
 # My Settings
 .vs/
 !*.exe
+!**/Mesh/**/*.obj
