@@ -16,6 +16,7 @@ public:
 	static const int DAMAGE_ITEM_ID_START	 = 45000;
 	static const int FIELD_USE_ITEM_ID_START = 50000;
 	static const int EQUIPMENT_ID_START		 = 60000;
+	static const int EVENT_ID_START			 = 70000;
 
 public:
 	static void Initialize();

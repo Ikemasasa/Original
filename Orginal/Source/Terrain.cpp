@@ -4,7 +4,7 @@
 
 Terrain::Terrain(int charaID) : Object(charaID)
 {
-	
+
 }
 
 void Terrain::Initialize()

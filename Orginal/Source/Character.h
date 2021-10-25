@@ -100,7 +100,7 @@ public:
 	CAPSULE GetCapsule() const;
 	Type	GetType() const { return mType; }
 	float	GetMass() const { return mMass; }
-
+	Matrix GetWorld() const { return mWorld; }
 
 	// セッター
 	void SetPos(const Vector3& p) { mPos = p; }
@@ -111,6 +111,7 @@ public:
 	void SetObjID(const int& i) { mObjID = i; }
 	void SetCharaID(const int& i) { mCharaID = i; }
 	void SetExist(const bool e) { mExist = e; }
+
 
 	// モーション関連
 	MotionType GetMotion() const { return (MotionType)mMesh->GetMotion(); }

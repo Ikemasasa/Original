@@ -41,17 +41,7 @@ void SceneField::Initialize()
 {
 	InitializeBaseAll();
 
-	// ÉâÉCÉgê›íË
-	{
-		Vector3 lightDir(-1.0f, -0.4f, 1.0f);
-		Vector3 lightPos(60.0f, 60.0f, 60.0f);
-		mLight.SetLightDir(lightDir, lightPos);
 
-		Vector4 lightColor(0.8f, 0.75f, 0.75f, 1);
-		mLight.SetLightColor(lightColor);
-
-		mLight.CreateConstBuffer();
-	}
 
 	mTerrain = std::make_unique<Terrain>(DataBase::TERRAIN_ID_START);
 	
