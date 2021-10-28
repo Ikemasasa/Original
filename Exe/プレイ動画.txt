@@ -1,3 +1,6 @@
 以下のリンクよりプレイ動画をダウンロードできます
-
 https://drive.google.com/drive/folders/1Jw-2aAl49wIzoiEVtGT9GNVCyX2ODHrU?usp=sharing
+
+
+またVisualStudioで実行する場合、GitLfsの問題で対象のファイルをうまくダウンロードできないので
+上記リンクにあるSourceフォルダをダウンロードし、OrginalフォルダにあるSourceフォルダと差し替えてください。
