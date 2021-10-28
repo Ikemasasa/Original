@@ -11,6 +11,8 @@ Object::Object(int id)
 	mMeshLow = Singleton<MeshManager>().GetInstance().SearchLoad(id + 1);
 	mMeshCol = Singleton<MeshManager>().GetInstance().SearchLoad(id + 2);
 	mID = id;
+
+	UpdateWorld();
 }
 
 Object::Object(const Object* obj)

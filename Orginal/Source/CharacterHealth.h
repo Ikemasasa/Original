@@ -46,19 +46,21 @@ private:
 	std::unique_ptr<Sprite> mBuffIcon;
 
 	Font mFont;
-	FontValue mFontValue;
 	Vector2 mBoardLeftTop;
 	std::vector<std::vector<BuffData>> mBuffData;
 	std::vector<std::vector<BuffData>> mDebuffData;
 	int mSelectIndex;
 	int mBoardNum;
+	int mActiveNo = -1;
+
+private:
 
 public:
 	CharacterHealth() = default;
 	~CharacterHealth() = default;
 
 	void Initialize(const Vector2& leftTop);
-	void Update(const std::vector<Status>& statusArray);
+	void Update(const std::vector<Status>& statusArray, int activeNo = -1);
 	void Render(bool isSelectRender = false, bool isFontClear = true);
 	void Release();
 

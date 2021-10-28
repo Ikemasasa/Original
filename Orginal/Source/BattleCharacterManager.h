@@ -20,9 +20,6 @@ class Matrix;
 
 class BattleCharacterManager
 {
-	static constexpr float HEALTH_BOARD_X = 900.0f;
-	static constexpr float HEALTH_BOARD_Y = 0.0f;
-
 	static const int BATTLECHARA_MAX = 12;
 	static const int BATTLECHARA_KIND = 2; // Player, Enemy‚Ì2‚Â 
 
@@ -41,7 +38,6 @@ private:
 	BattleCharacter* mMoveChara = nullptr;
 	int mPlayerNum;
 
-	CharacterHealth mCharacterHealth;
 	DropItemShower mDropItemShower;
 
 	void PlayerCreateAndRegister(Player* pl);

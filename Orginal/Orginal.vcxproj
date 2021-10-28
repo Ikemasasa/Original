@@ -155,6 +155,7 @@
     <ClInclude Include="Source\Bloom.h" />
     <ClInclude Include="Source\BossEnemy.h" />
     <ClInclude Include="Source\BossEnemyBattle.h" />
+    <ClInclude Include="Source\CameraTitle.h" />
     <ClInclude Include="Source\Character.h" />
     <ClInclude Include="Source\CharacterManager.h" />
     <ClInclude Include="Source\BattleCharacter.h" />
@@ -260,6 +261,7 @@
     <ClInclude Include="Source\ProductionValue.h" />
     <ClInclude Include="Source\SceneBase.h" />
     <ClInclude Include="Source\SceneBattle.h" />
+    <ClInclude Include="Source\SceneEvent.h" />
     <ClInclude Include="Source\SceneField.h" />
     <ClInclude Include="Source\SceneLoad.h" />
     <ClInclude Include="Source\SceneManager.h" />
@@ -281,6 +283,7 @@
     <ClCompile Include="Source\Bloom.cpp" />
     <ClCompile Include="Source\BossEnemy.cpp" />
     <ClCompile Include="Source\BossEnemyBattle.cpp" />
+    <ClCompile Include="Source\CameraTitle.cpp" />
     <ClCompile Include="Source\CharacterManager.cpp" />
     <ClCompile Include="Source\BattleCharacter.cpp" />
     <ClCompile Include="Source\BattleCharacterManager.cpp" />
@@ -382,6 +385,7 @@
     <ClCompile Include="Source\ProductionValue.cpp" />
     <ClCompile Include="Source\SceneBase.cpp" />
     <ClCompile Include="Source\SceneBattle.cpp" />
+    <ClCompile Include="Source\SceneEvent.cpp" />
     <ClCompile Include="Source\SceneField.cpp" />
     <ClCompile Include="Source\SceneLoad.cpp" />
     <ClCompile Include="Source\SceneManager.cpp" />

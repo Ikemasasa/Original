@@ -3,16 +3,30 @@
 #include "lib/Audio.h"
 #include "lib/Input.h"
 
+#include "CameraTitle.h"
 #include "Define.h"
 #include "Fade.h"
 #include "KeyGuide.h"
+#include "PlayerManager.h"
 #include "SceneField.h"
 #include "SceneLoad.h"
 #include "SceneManager.h"
+#include "TransformData.h"
+
+
 
 SceneTitle::SceneTitle()
 {
+	SceneBase::CreateBaseAll();
 
+	mBG = std::make_unique<Sprite>(L"Data/Image/title_bg.png");
+	mBoard = std::make_unique<Sprite>(L"Data/Image/Menu/str_board.png");
+	mBoardSelect = std::make_unique<Sprite>(L"Data/Image/Menu/str_select.png");
+
+	mCamera = std::make_unique<CameraTitle>();
+	mPlayer = std::make_unique<Character>(PlayerManager::ERIKA, Character::PLAYER);
+	mTerrain = std::make_unique<Terrain>(DataBase::TERRAIN_ID_START);
+	mSkybox = std::make_unique<Skybox>();
 }
 
 SceneTitle::~SceneTitle()
@@ -21,12 +35,37 @@ SceneTitle::~SceneTitle()
 
 void SceneTitle::Initialize()
 {
-	mBG = std::make_unique<Sprite>(L"Data/Image/title_bg.png");
-	mBoard = std::make_unique<Sprite>(L"Data/Image/Menu/str_board.png");
-	mBoardSelect = std::make_unique<Sprite>(L"Data/Image/Menu/str_select.png");
+	SceneBase::InitializeBaseAll();
 
+	// プレイヤーのトランスフォーム
+	TransformData::Transform transform = TransformData::GetPLTransform(mPlayer->GetCharaID());
+	mPlayer->SetPos(transform.pos);
+	mPlayer->SetScale(transform.scale);
+	mPlayer->SetAngle(transform.angle);
+	mPlayer->SetCapsuleParam(transform.diameter / 2.0f);
+	mPlayer->SetMotion(Character::IDLE);
+
+	// かめら
+	mCamera->Initialize(mPlayer.get());
+
+	// スカイボックス
+	mSkybox->Initialize(L"Data/Image/environment.hdr");
+
+	// フォント
 	mFont.Initialize();
 	mFontLogo.Initialize(FONT_LOGO_SIZE, FONT_LOGO_WEIGHT);
+
+	// ライト設定
+	{
+		Vector3 lightDir(-1.0f, -0.4f, 1.0f);
+		Vector3 lightPos(60.0f, 60.0f, 60.0f);
+		mLight.SetLightDir(lightDir, lightPos);
+
+		Vector4 lightColor(0.8f, 0.75f, 0.75f, 1);
+		mLight.SetLightColor(lightColor);
+
+		mLight.CreateConstBuffer();
+	}
 
 	mIsPressAButton = false;
 	mSelectIndex = 0;
@@ -82,12 +121,75 @@ void SceneTitle::Update()
 			}
 		}
 	}
+
+	mPlayer->UpdateWorld();
+
+	// カメラ
+	mCamera->Update(mPlayer.get());
+
+	mSkybox->SetEyePos(mCamera->GetPos());
 }
 
 void SceneTitle::Render()
 {
-	mBG->Render(Vector2::ZERO, Vector2::ONE, Vector2::ZERO, mBG->GetSize());
+	// mBG->Render(Vector2::ZERO, Vector2::ONE, Vector2::ZERO, mBG->GetSize());
 
+	Matrix view = mCamera->GetViewMatrix();
+	Matrix proj = mCamera->GetProjectionMatrix();
+	Vector4 lightDir = mLight.GetLightDir();
+
+
+	// シャドウマップに書き込み
+	const Shader* shader = mShadowMap->GetShader();
+	mShadowMap->Activate(lightDir, mLight.GetLightPos());
+	mTerrain->Render(shader, view, proj, lightDir);
+	mPlayer->Render(shader, view, proj, lightDir);
+	mShadowMap->Deactivate();
+
+	// GBufferに書き込み
+	shader = mDeferredRenderer->GetGBufferShader();
+	mDeferredRenderer->ActivateGBuffer();
+	mSkybox->Render(view, proj);
+	mTerrain->Render(shader, view, proj, lightDir);
+	mPlayer->Render(shader, view, proj, lightDir);
+	mDeferredRenderer->DeactivateGBuffer();
+
+	// テクスチャセット(GBuffer, 環境, 影
+	mDeferredRenderer->SetGBufferTexture();
+	mSkybox->SetEnvTexture(Define::ENVIRONMENT_TEXTURE_SLOT);
+	mShadowMap->SetTexture(Define::SHADOWMAP_TEXTURE_SLOT);
+
+	// ディファードのパラメータ用意(後々外部から入力したい
+	SetDeferredParam();
+
+	// ディファードレンダリング
+	//// シーンターゲットに書き込み
+	mPostEffectTarget->Activate();
+	mDeferredRenderer->Render();
+	// ブルーム作成、適用
+	mBloom->Execute(mPostEffectTarget.get());
+	mPostEffectTarget->Deactivate();
+
+
+	// シーンターゲットに書き込み
+	mSceneTarget->Activate();
+	mPostEffectTarget->Render(mPostEffect.get());
+	RenderBoard();
+	mFont.Render();
+	mFontLogo.Render();
+	mSceneTarget->Deactivate();
+
+	// バックバッファに書き込み
+	mSceneTarget->Render(nullptr);
+}
+
+void SceneTitle::Release()
+{
+	mFont.Release();
+}
+
+void SceneTitle::RenderBoard()
+{
 	if (mIsPressAButton)
 	{
 		const wchar_t* SelectStr[MAX] =
@@ -114,12 +216,19 @@ void SceneTitle::Render()
 			mFont.RenderSet(SelectStr[i], pos, center, Define::FONT_COLOR);
 		}
 	}
-
-	mFont.Render();
-	mFontLogo.Render();
 }
 
-void SceneTitle::Release()
+void SceneTitle::SetDeferredParam()
 {
-	mFont.Release();
+	//// ライトクリア
+	mDeferredRenderer->ClearLight();
+
+	//// DirLight
+	std::vector<DeferredRenderer::DirLight> dirLights;
+	DeferredRenderer::DirLight dirLight;
+	dirLight.dir = mLight.GetLightDir();
+	dirLight.color = mLight.GetLightColor();
+	dirLights.push_back(dirLight);
+	mDeferredRenderer->SetDirLight(dirLights);
+
 }

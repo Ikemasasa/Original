@@ -1,6 +1,7 @@
 #include "ProductionUseItem.h"
 
 #include "BattleCharacterManager.h"
+#include "CameraManager.h"
 #include "CommandBase.h"
 #include "DamageCalculator.h"
 #include "EffectManager.h"
@@ -124,6 +125,7 @@ void ProductionUseItem::StateUseItemWait()
 		{
 			Vector3 effectPos = mTargetCharas[i]->GetPos();
 			mEffectInstHandles.push_back(Singleton<EffectManager>().GetInstance().Play(mEffectSlot, effectPos, 0, 1.0f, 2.0f));
+			Singleton<CameraManager>().GetInstance().Shake(Define::DAMAGE_SHAKE_DURATION, Define::DAMAGE_SHAKE_STRENGTH);
 			Audio::SoundPlay((int)mSound);
 			++mState;
 		}

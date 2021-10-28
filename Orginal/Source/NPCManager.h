@@ -14,11 +14,11 @@ class Sprite;
 class NPCManager
 {
 public:
-	static constexpr float TALK_DIST = 4.0f;
-	static constexpr float TALK_DOT = 0.8f;
+	static constexpr float TALK_DIST = 8.0f;
+	static constexpr float TALK_DOT = 0.5f;
 
 private:
-	static constexpr float ICON_RENDER_DIST = 18.0f;
+	static constexpr float ICON_RENDER_DIST = TALK_DIST * 2.0f;
 	static constexpr float ICON_SCALE = 0.125f;
 
 

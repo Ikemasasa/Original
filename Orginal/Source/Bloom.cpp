@@ -7,8 +7,6 @@
 #include "lib/RenderTarget.h"
 #include "GaussianBlur.h"
 
-
-
 Bloom::Bloom() = default;
 Bloom::~Bloom() = default;
 

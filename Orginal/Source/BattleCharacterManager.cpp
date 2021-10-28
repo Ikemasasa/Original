@@ -34,8 +34,6 @@ BattleCharacterManager::BattleCharacterManager(PlayerManager* pm, Enemy* enemy)
 
 void BattleCharacterManager::Initialize()
 {
-	mCharacterHealth.Initialize(Vector2(HEALTH_BOARD_X, HEALTH_BOARD_Y));
-
 	for (auto& ba : mBCharacters) ba->Initialize();
 	// 座標設定
 	{
@@ -84,15 +82,6 @@ void BattleCharacterManager::Update(const TurnManager* turnManager)
 			if (mMoveChara == chara.get()) continue;
 			chara->UpdateWorld();
 		}
-
-		// healthboard更新
-		std::vector<Status> statusArray;
-		for (int i = 0; i < mPlayerNum; ++i)
-		{
-			// BCharactersは最初にプレイヤーがはいってるから 0~人数分で全員にアクセスできる
-			statusArray.push_back(*mBCharacters[i]->GetStatus());
-		}
-		mCharacterHealth.Update(statusArray);
 	}
 
 	mDropItemShower.Update();
@@ -109,7 +98,6 @@ void BattleCharacterManager::RenderUI()
 	if (!BattleState::GetInstance().CheckState(BattleState::State::RESULT))
 	{
 		mMoveChara->RenderCommand();    // MoveCharaのコマンドUIを表示
-		mCharacterHealth.Render(false); // キャラのHPを表示
 	}
 
 	mDropItemShower.Render();

@@ -63,6 +63,8 @@ public:
 	bool RenderSetValue(const int value, const Vector2& pos, const Vector2& centerRate = Vector2::ZERO, const Vector4& color = Vector4::ONE);
 	bool RenderSetValue(const float value, const Vector2& pos, const Vector2& centerRate = Vector2::ZERO, const Vector4& color = Vector4::ONE);
 	void Render(const wchar_t* str, const Vector2& pos, const Vector2& centerRate = Vector2::ZERO, const Vector4& color = Vector4::ONE);
+	void RenderValue(const int value, const Vector2& pos, const Vector2& centerRate = Vector2::ZERO, const Vector4& color = Vector4::ONE);
+	void RenderValue(const float value, const Vector2& pos, const Vector2& centerRate = Vector2::ZERO, const Vector4& color = Vector4::ONE);
 	void Render(bool isRenderClear = true);
 
 
@@ -71,6 +73,8 @@ public:
 	// ÉQÉbÉ^Å[
 	float GetWidth(const WCHAR* str);
 	float GetWidth(wchar_t word);
+	float GetWidthValue(const int value);
+	float GetWidthValue(const float value);
 	int GetFontSize() const { return mFontSize; }
 	size_t GetNum() const { return mFonts.size(); }
 	

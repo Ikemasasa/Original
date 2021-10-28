@@ -17,19 +17,23 @@ public:
 		ENEMY_SELECT,
 		PLAYER_ATTACK,
 		ENEMY_ATTACK,
+		ESCAPE,
 		RESULT,
 		MAX
 	};
 
 private:
 	State mState = State::BEGIN;
+	State mOldState = State::BEGIN;
 
 public:
 	BattleState() = default;
 	~BattleState() = default;
 
-	void SetState(State state) { mState = state; };
+	void SetState(State state) { mOldState = mState; mState = state; };
 	State GetState() const { return mState; }
+	State GetOldState() const { return mOldState; }
 	bool CheckState(State state) { return mState == state; }
+	bool CheckOldState(State state) { return mOldState == state; }
 
 };

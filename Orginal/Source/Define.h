@@ -22,9 +22,13 @@ struct Define final
 	static constexpr float PI = 3.1416f;
 	static constexpr float ROOT2 = 1.1414214f;
 
+	static constexpr float DAMAGE_SHAKE_DURATION = 0.2f;
+	static constexpr float DAMAGE_SHAKE_STRENGTH = 0.1f;
+
 	static const int ENVIRONMENT_TEXTURE_SLOT = 13;
 	static const int SHADOWMAP_TEXTURE_SLOT = 14;
 	static const int RAMP_TEXTURE_SLOT = 15;
+	
 
 	static const Vector4 FONT_COLOR;
 	static const Vector4 FONT_BUFF_COLOR;

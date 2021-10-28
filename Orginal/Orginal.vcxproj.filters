@@ -471,6 +471,12 @@
     <ClInclude Include="Source\KeyGuide.h">
       <Filter>01_Header\Common</Filter>
     </ClInclude>
+    <ClInclude Include="Source\SceneEvent.h">
+      <Filter>01_Header\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CameraTitle.h">
+      <Filter>01_Header\Common\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\lib\Blend.cpp">
@@ -832,6 +838,12 @@
     </ClCompile>
     <ClCompile Include="Source\KeyGuide.cpp">
       <Filter>02_Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SceneEvent.cpp">
+      <Filter>02_Source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CameraTitle.cpp">
+      <Filter>02_Source\Common\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

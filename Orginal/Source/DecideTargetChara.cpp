@@ -42,6 +42,17 @@ void DecideTargetChara::Update(const BattleCharacterManager* bcm, CommandBase* c
 	mTargetChara = bcm->GetChara(ids[mSelectIndex]); // Renderでつかうから ここで代入
 
 	// CharacterHealth更新
+	const CameraManager& camera = Singleton<CameraManager>().GetInstance();
+	Vector3 targetPos = mTargetChara->GetPos();
+	targetPos.y += mTargetChara->GetLocalAABB().max.y;
+	Vector2 screen = targetPos.WorldToScreen(camera.GetView(), camera.GetProj());
+
+	Vector2 size(mArrow->GetSize());
+	Vector2 scale(ARROW_SCALE, ARROW_SCALE);
+	Vector2 boardSize = mCharacterHealth.GetBoardSize();
+	Vector2 boardPos(screen.x - (boardSize.x / 2.0f), screen.y - boardSize.y - (size.y * scale.y));
+	mCharacterHealth.SetLeftTopPos(boardPos);
+
 	std::vector<Status> status;
 	status.push_back(*mTargetChara->GetStatus());
 	mCharacterHealth.Update(status);
@@ -88,16 +99,14 @@ void DecideTargetChara::Render()
 	Vector2 center(size.x / 2.0f, size.y);
 	mArrow->Render(screen, scale, texPos, size, center);
 
-	// CharacterHealthのボードの位置更新
-	Vector2 boardSize = mCharacterHealth.GetBoardSize();
-	Vector2 boardPos(screen.x - (boardSize.x / 2.0f), screen.y - boardSize.y - (size.y * scale.y));
-	mCharacterHealth.SetLeftTopPos(boardPos);
 	mCharacterHealth.Render();
 }
 
 void DecideTargetChara::SetBehaviourAttack(CommandBase* cmdBase)
 {
 	cmdBase->SetBehaviour(CommandBase::Behaviour::ATTACK);
+
+	if (mCharaType == Character::ENEMY) BattleState::GetInstance().SetState(BattleState::State::PLAYER_ATTACK);
 }
 
 void DecideTargetChara::SetBehaviourUseItem(CommandBase* cmdBase)

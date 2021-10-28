@@ -124,6 +124,52 @@ void Font::Render(const wchar_t* str, const Vector2& pos, const Vector2& centerR
 	}
 }
 
+void Font::RenderValue(const int value, const Vector2& pos, const Vector2& centerRate, const Vector4& color)
+{
+	std::wstring str = std::to_wstring(value);
+	Add(str.c_str());
+
+	const Vector2 scale(Vector2::ONE);
+	const Vector2 texPos(Vector2::ZERO);
+	const float angle = 0.0f;
+
+	Vector2 center = {};
+	if (centerRate.x != 0.0f) center.x = GetWidth(str.c_str()) * centerRate.x;
+
+	Vector2 p = pos;
+	int len = wcslen(str.c_str());
+	for (int i = 0; i < len; ++i)
+	{
+		const FontData& fd = mFonts[str[i]];
+		p.x += fd.leftTop.x;
+		p.y = pos.y + fd.leftTop.y;
+		Renderer2D::GetInstance().Render(fd.tex.GetSRV(), p, scale, texPos, fd.size, center, angle, color);
+	}
+}
+
+void Font::RenderValue(const float value, const Vector2& pos, const Vector2& centerRate, const Vector4& color)
+{
+	std::wstring str = std::to_wstring(value);
+	Add(str.c_str());
+
+	const Vector2 scale(Vector2::ONE);
+	const Vector2 texPos(Vector2::ZERO);
+	const float angle = 0.0f;
+
+	Vector2 center = {};
+	if (centerRate.x != 0.0f) center.x = GetWidth(str.c_str()) * centerRate.x;
+
+	Vector2 p = pos;
+	int len = wcslen(str.c_str());
+	for (int i = 0; i < len; ++i)
+	{
+		const FontData& fd = mFonts[str[i]];
+		p.x += fd.leftTop.x;
+		p.y = pos.y + fd.leftTop.y;
+		Renderer2D::GetInstance().Render(fd.tex.GetSRV(), p, scale, texPos, fd.size, center, angle, color);
+	}
+}
+
 void Font::Render(bool isRenderClear)
 {
 	Vector2 pos;
@@ -258,4 +304,34 @@ float Font::GetWidth(wchar_t word)
 {
 	Add(word);
 	return mFonts[word].width;
+}
+
+float Font::GetWidthValue(const int value)
+{
+	std::wstring str = std::to_wstring(value);
+	Add(str.c_str());
+
+	float ret = 0.0f;
+	int len = wcslen(str.c_str());
+	for (int i = 0; i < len; ++i)
+	{
+		ret += mFonts[str[i]].width;
+	}
+
+	return ret;
+}
+
+float Font::GetWidthValue(const float value)
+{
+	std::wstring str = std::to_wstring(value);
+	Add(str.c_str());
+
+	float ret = 0.0f;
+	int len = wcslen(str.c_str());
+	for (int i = 0; i < len; ++i)
+	{
+		ret += mFonts[str[i]].width;
+	}
+
+	return ret;
 }

@@ -41,6 +41,10 @@ void Character::UpdateWorld()
 	// 現フレームのワールド行列を計算
 	mWorld.SRT(mScale, mAngle, mPos);
 
+	// ターゲット座標更新
+	AABB aabb = GetAABB();
+	mTargetPos = Vector3(mPos.x, (aabb.max.y - aabb.min.y) * 0.75, mPos.z);
+
 	// ボーンの当たり判定更新
 	if (GetMotion() == ATTACK && mBoneCollision.radius != 0.0f)
 	{
