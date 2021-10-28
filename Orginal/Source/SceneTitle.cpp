@@ -223,6 +223,8 @@ void SceneTitle::SetDeferredParam()
 	//// ライトクリア
 	mDeferredRenderer->ClearLight();
 
+	mDeferredRenderer->SetCBPerFrame(mCamera->GetPos());
+
 	//// DirLight
 	std::vector<DeferredRenderer::DirLight> dirLights;
 	DeferredRenderer::DirLight dirLight;
