@@ -23,7 +23,7 @@ public:
 	virtual void Update(const BattleCharacterManager* bcm);
 	void RenderCommand() const;
 
-	CommandBase* GetCommand() { return mCommand.get(); }
+	CommandBase* GetCommand() const { return mCommand.get(); }
 	Status* GetStatus() { return &mStatus; }
 	Item* GetInventory() { return &mInventory; }
 };

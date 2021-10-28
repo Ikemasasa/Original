@@ -30,11 +30,28 @@ void TurnManager::Initialize(const std::vector<std::shared_ptr<BattleCharacter>>
 	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/debuff.efk"		, DEBUFF_EFFECT_SLOT);
 	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/damage.efk"		, DAMAGE_EFFECT_SLOT);
 
+	mCharacterHealth.Initialize(Vector2(HEALTH_BOARD_X, HEALTH_BOARD_Y));
+
 	mIsBeginnig = true;
 }
 
 void TurnManager::Update(const BattleCharacterManager* bcm)
 {
+	// ヘルス
+	std::vector<Status> statusArray;
+	int activeNo = -1;
+	for (int i = 0; i < bcm->GetBCharacters().size(); ++i)
+	{
+		BattleCharacter* bc = bcm->GetChara(i);
+		if (bc->GetType() != Character::PLAYER) break;
+
+		// BCharactersは最初にプレイヤーがはいってるから 0~人数分で全員にアクセスできる
+
+		if (bc == mOrder.front()) activeNo = i;
+		statusArray.push_back(*bc->GetStatus());
+	}
+	mCharacterHealth.Update(statusArray, activeNo);
+
 	// リザルトならreturn
 	if (BattleState::GetInstance().CheckState(BattleState::State::RESULT))
 	{
@@ -91,6 +108,8 @@ void TurnManager::Render()
 	{
 		mProduction->Render(); // 攻撃のダメージ(amount)とかを表示
 	}
+
+	mCharacterHealth.Render();
 }
 
 void TurnManager::SortOrder(const std::vector<std::shared_ptr<BattleCharacter>>& battleCharaArray)

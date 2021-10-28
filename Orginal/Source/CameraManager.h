@@ -8,6 +8,8 @@
 #include "Singleton.h"
 
 class Character;
+class BattleCharacter;
+class BattleCharacterManager;
 
 // singleton‚ğ’Ê‚·
 class CameraManager
@@ -24,6 +26,8 @@ public:
 
 	void Initialize(const Character* target);
 	void Update(const Character* target);
+	void Update(const BattleCharacter* target, const BattleCharacterManager* bcm);
+	void Shake(float duration, float strength);
 
 
 	// ƒQƒbƒ^[

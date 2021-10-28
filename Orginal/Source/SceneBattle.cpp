@@ -171,7 +171,7 @@ void SceneBattle::Update()
 		}
 	}
 
-	Singleton<CameraManager>().GetInstance().Update(mBattleCharacterManager->GetMoveChara()); 
+	Singleton<CameraManager>().GetInstance().Update(mBattleCharacterManager->GetMoveChara(), mBattleCharacterManager.get()); 
 	mSkybox->SetEyePos(Singleton<CameraManager>().GetInstance().GetPos());
 	Singleton<EffectManager>().GetInstance().Update();
 }

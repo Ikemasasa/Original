@@ -19,13 +19,13 @@ void CharacterHealth::Initialize(const Vector2& leftTop)
 	mBoardLeftTop = leftTop;
 
 	mFont.Initialize();
-	mFontValue.Initialize();
 }
 
-void CharacterHealth::Update(const std::vector<Status>& statusArray)
+void CharacterHealth::Update(const std::vector<Status>& statusArray, int activeNo)
 {
 	// プレートの必要数取得
 	mBoardNum = statusArray.size();
+	mActiveNo = activeNo;
 	
 	// バフデータ数更新
 	mBuffData.resize(mBoardNum);
@@ -35,17 +35,29 @@ void CharacterHealth::Update(const std::vector<Status>& statusArray)
 	if (Input::GetButtonTrigger(0, Input::BUTTON::DOWN)) mSelectIndex = (mSelectIndex + 1) % mBoardNum;
 
 	// 名前, HP, MPのフォントセット
+
 	for (int i = 0; i < mBoardNum; ++i)
 	{
+		float colorMul = 0.5f;
+		float subPosX = 0.0f;
+		if (mActiveNo == -1) { colorMul = 1.0f; subPosX = 0.0f; }
+		if (mActiveNo == i) { colorMul = 1.0f; subPosX = 30.0f; }
+
+
 		float boardY = i * mHealthBoard->GetSize().y;
 		float width = 0.0f;
 		Vector2 pos = {};
 		Vector2 center = {};
 
+		Vector4 color = Define::FONT_COLOR;
+		color.x *= colorMul;
+		color.y *= colorMul;
+		color.z *= colorMul;
+
 		// 名前
-		pos = Vector2(mBoardLeftTop.x + mHealthBoard->GetSize().x * 0.5f, mBoardLeftTop.y + NAME_OFFSET_Y + boardY);
+		pos = Vector2(mBoardLeftTop.x + mHealthBoard->GetSize().x * 0.5f - subPosX, mBoardLeftTop.y + NAME_OFFSET_Y + boardY);
 		center = Vector2(0.5f, 0.0f);
-		mFont.RenderSet(statusArray[i].GetName().c_str(), pos, center, Define::FONT_COLOR);
+		mFont.RenderSet(statusArray[i].GetName().c_str(), pos, center, color);
 
 		// バフアイコン
 		pos.x -= mFont.GetWidth(statusArray[i].GetName().c_str()) * 0.5f + (ICON_SCALESIZE + ARROW_SCALESIZE_X);
@@ -88,71 +100,83 @@ void CharacterHealth::Update(const std::vector<Status>& statusArray)
 		for (int k = 0; k < STATUS_NUM; ++k)
 		{
 			// 始めの座標設定
-			pos.x = mBoardLeftTop.x + STATUS_OFFSET_X;
+			pos.x = mBoardLeftTop.x + STATUS_OFFSET_X - subPosX;
 			pos.y = mBoardLeftTop.y + STATUS_OFFSET_Y + (STATUS_ADD_Y * k) + boardY;
 
 			// ステータス名
-			mFont.RenderSet(statusName[k], pos, Vector2::ZERO, Define::FONT_COLOR);
+			mFont.RenderSet(statusName[k], pos, Vector2::ZERO, color);
 
 			// 現在の値 (cur)
 			pos.x += CUR_OFFSET_X;
-			mFontValue.RenderSet(statusValue[k], pos, center, Define::FONT_COLOR);
+			mFont.RenderSetValue(statusValue[k], pos, center, color);
 
 			// 区切り (/)
-			pos.x += mFontValue.GetWidth(statusValue[k]) + DELIM_OFFSET_X;
-			mFont.RenderSet(L"/", pos, Vector2::ZERO, Define::FONT_COLOR);
+			pos.x += mFont.GetWidthValue(statusValue[k]) + DELIM_OFFSET_X;
+			mFont.RenderSet(L"/", pos, Vector2::ZERO, color);
 
 			// 最大の値 (max)
 			pos.x += mFont.GetWidth(L"/") + DELIM_OFFSET_X;
-			mFontValue.RenderSet(statusMax[k], pos, center, Define::FONT_COLOR);
+			mFont.RenderSetValue(statusMax[k], pos, center, color);
 		}
 	}
 }
 
 void CharacterHealth::Render(bool isSelectRender, bool isFontClear)
 {
+
 	for (int i = 0; i < mBoardNum; ++i)
 	{
-		Vector2 pos(mBoardLeftTop.x, mBoardLeftTop.y + mHealthBoard->GetSize().y * i);
+		float colorMul = 0.5f;
+		float subPosX = 0.0f;
+		if (mActiveNo == -1) { colorMul = 1.0f; subPosX = 0.0f; }
+		if (mActiveNo == i) { colorMul = 1.0f; subPosX = 30.0f; }
+
+		Vector2 pos(mBoardLeftTop.x - subPosX, mBoardLeftTop.y + mHealthBoard->GetSize().y * i);
 		Vector2 scale = Vector2::ONE;
 		Vector2 texPos = Vector2::ZERO;
 		Vector2 size = mHealthBoard->GetSize();
 		Vector2 center = Vector2::ZERO;
 
-		mHealthBoard->Render(pos, scale, texPos, size);
+		mHealthBoard->Render(pos, scale, texPos, size, center, 0.0f, Vector4(Vector3::ONE * colorMul, 1.0f));
 
 		// バフ表示
 		for (const auto& data : mBuffData[i])
 		{
 			// 矢印
+			pos = Vector2(data.pos.x - subPosX, data.pos.y);
 			scale  = Vector2(ARROW_SCALE, ARROW_SCALE);
 			size   = Vector2(ARROW_SIZE_X, ARROW_SIZE_Y);
 			texPos = Vector2(ARROW_TEXPOS_X, 0.0f);
-			mBuffIcon->Render(data.pos + Vector2(ICON_SCALESIZE, 0.0f), scale, texPos, size, center, 0.0f, Define::FONT_BUFF_COLOR);
+			Vector4 color = Define::FONT_BUFF_COLOR * colorMul;
+			color.w = 1.0f;
+			mBuffIcon->Render(pos + Vector2(ICON_SCALESIZE, 0.0f), scale, texPos, size, center, 0.0f, color);
 
 			// アイコン
 			scale  = Vector2(ICON_SCALE, ICON_SCALE);
 			size   = Vector2(ICON_SIZE, ICON_SIZE);
 			texPos = Vector2(data.buffIndex * ICON_SIZE, 0.0f);
-			mBuffIcon->Render(data.pos, scale, texPos, size);
+			mBuffIcon->Render(pos, scale, texPos, size, Vector2::ZERO, 0.0f, Vector4(Vector3::ONE * colorMul, 1.0f));
 		}
 
 		// デバフ表示
 		for (const auto& data : mDebuffData[i])
 		{
 			// 矢印
+			pos = Vector2(data.pos.x - subPosX, data.pos.y);
 			scale = Vector2(ARROW_SCALE, ARROW_SCALE);
 			size = Vector2(ARROW_SIZE_X, ARROW_SIZE_Y);
 			texPos = Vector2(ARROW_TEXPOS_X, 0.0f);
 			center = size / 2.0f;
 			float angle = Define::PI; // 上下反転させる
-			mBuffIcon->Render(data.pos + Vector2(ICON_SCALESIZE + ARROW_SCALESIZE_X / 2.0f, ARROW_SCALESIZE_Y / 2.0f), scale, texPos, size, center, angle, Define::FONT_DEBUFF_COLOR);
+			Vector4 color = Define::FONT_DEBUFF_COLOR * colorMul;
+			color.w = 1.0f;
+			mBuffIcon->Render(pos + Vector2(ICON_SCALESIZE + ARROW_SCALESIZE_X / 2.0f, ARROW_SCALESIZE_Y / 2.0f), scale, texPos, size, center, angle, color);
 
 			// アイコン
 			scale = Vector2(ICON_SCALE, ICON_SCALE);
 			size = Vector2(ICON_SIZE, ICON_SIZE);
 			texPos = Vector2(data.buffIndex * ICON_SIZE, 0.0f);
-			mBuffIcon->Render(data.pos, scale, texPos, size);
+			mBuffIcon->Render(pos, scale, texPos, size, Vector2::ZERO, 0.0f, Vector4(Vector3::ONE * colorMul, 1.0f));
 		}
 	}
 
@@ -177,13 +201,11 @@ void CharacterHealth::Render(bool isSelectRender, bool isFontClear)
 	}
 
 	mFont.Render(isFontClear);
-	mFontValue.Render(isFontClear);
 }
 
 void CharacterHealth::Release()
 {
 	mFont.Release();
-	mFontValue.Release();
 }
 
 Vector2 CharacterHealth::GetBoardSize() const

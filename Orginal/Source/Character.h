@@ -68,6 +68,7 @@ protected:
 	float mMass = 0;		//質量
 	bool mExist = true;
 	Type mType = NONE;
+	Vector3 mTargetPos = {};
 
 	BoneCollision mBoneCollision;
 
@@ -100,6 +101,12 @@ public:
 	CAPSULE GetCapsule() const;
 	Type	GetType() const { return mType; }
 	float	GetMass() const { return mMass; }
+	Vector3 GetFront() const { return -Vector3(mWorld._13, mWorld._23, mWorld._33); }
+	Vector3 GetFrontXZ() const { return -Vector3(mWorld._13, 0.0f, mWorld._33).GetNormalize(); }
+	Vector3 GetRight() const { return Vector3(mWorld._11, mWorld._21, mWorld._31); }
+	Vector3 GetRightXZ() const { return Vector3(mWorld._11, 0.0f, mWorld._31).GetNormalize(); }
+	Vector3 GetTargetPos() const { return mTargetPos; }
+	float GetHeight() const { return (mMesh->mAABB.max.y * mScale.y - mMesh->mAABB.min.y * mScale.y); }
 	Matrix GetWorld() const { return mWorld; }
 
 	// セッター

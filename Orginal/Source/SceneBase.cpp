@@ -9,7 +9,7 @@ Light SceneBase::mLight;
 
 void SceneBase::InitializeBaseAll()
 {
-	mRamp->Set(Define::RAMP_TEXTURE_SLOT);
+	//mRamp->Set(Define::RAMP_TEXTURE_SLOT);
 	mPostEffect->Load2D(L"Shaders/PostEffect.fx", "VSMain", "PSMain");
 	mShadowMap->Initialize();
 	mSceneTarget->Initialize(Define::SCREEN_WIDTH, Define::SCREEN_HEIGHT);
@@ -20,7 +20,7 @@ void SceneBase::InitializeBaseAll()
 
 void SceneBase::CreateBaseAll()
 {
-	mRamp = std::make_unique<Sprite>(L"Data/Image/Ramp.png");
+	//mRamp = std::make_unique<Sprite>(L"Data/Image/Ramp.png");
 	mPostEffect = std::make_unique<Shader>();
 	mShadowMap = std::make_unique<ShadowMap>();
 	mSceneTarget = std::make_unique<RenderTarget>();
@@ -31,6 +31,6 @@ void SceneBase::CreateBaseAll()
 
 void SceneBase::ReleaseBaseAll()
 {
-	mRamp->UnLoad();
+	//mRamp->UnLoad();
 	mPostEffect->UnLoad();
 }

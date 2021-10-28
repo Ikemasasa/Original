@@ -1,6 +1,7 @@
 #include "ProductionEscape.h"
 
 #include "BattleCharacterManager.h"
+#include "BattleState.h"
 #include "Fade.h"
 #include "SceneManager.h"
 
@@ -16,6 +17,7 @@ void ProductionEscape::Update(const BattleCharacterManager* bcm)
 	case INIT:		
 		if (Fade::GetInstance().Set(Fade::SPEED_SLOW))
 		{
+			BattleState::GetInstance().SetState(BattleState::State::ESCAPE);
 			mMoveChara = bcm->GetMoveChara();
 			float vx = sinf(mMoveChara->GetAngle().y) * MOVE_SPEED;
 			float vz = cosf(mMoveChara->GetAngle().y) * MOVE_SPEED;

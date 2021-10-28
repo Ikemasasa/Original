@@ -1,6 +1,7 @@
 #include "CameraBase.h"
 
 #include "lib/Framework.h"
+#include "lib/Random.h"
 
 #include "Player.h"
 #include "Define.h"
@@ -15,9 +16,11 @@ CameraBase::CameraBase()
     mRight = Vector3::ZERO;
     mDistFromTargetY = 0.0f;
 
-    constexpr float	fov = DirectX::XMConvertToRadians(45.0f);
-    float	aspect = Define::SCREEN_WIDTH / Define::SCREEN_HEIGHT;
-    SetPerspectiveMatrix(fov, aspect, 1.0f, 1000.0f);
+    mFov = DirectX::XMConvertToRadians(45.0f);
+    mAspect = Define::SCREEN_WIDTH / Define::SCREEN_HEIGHT;
+    mNear = 1.0f;
+    mFar = 1000.0f;
+    SetPerspectiveMatrix(mFov, mAspect, mNear, mFar);
     UpdateView();
 }
 
@@ -47,7 +50,34 @@ void CameraBase::UpdateView()
     mRight = Vector3(mView._11, mView._21, mView._31);
 }
 
+void CameraBase::UpdateShake(float elapsedTime)
+{
+    if (mIsShake)
+    {
+        Vector3 right = mRight;
+        Vector3 up = Vector3(mView._21, mView._22, mView._23);
 
+        Vector3 horizontal = right * Random::RandomRangef(-1.0f, 1.0f) * mShakeStrength;
+        Vector3 vertical = up * Random::RandomRangef(-1.0f, 1.0f) * mShakeStrength;
+        
+        mPos += horizontal + vertical;
+
+        // タイマー
+        mShakeElapsed += elapsedTime;
+        if (mShakeElapsed >= mShakeDuration)
+        {
+            mIsShake = false;
+        }
+    }
+}
+
+void CameraBase::Shake(float duration, float strength)
+{
+    mIsShake = true;
+    mShakeDuration = duration;
+    mShakeStrength = strength;
+    mShakeElapsed = 0.0f;
+}
 
 void CameraBase::SetOrthoMatrix(float w, float h, float znear, float zfar)
 {

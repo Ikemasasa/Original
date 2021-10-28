@@ -12,7 +12,7 @@ BattleCharacter::BattleCharacter(const Character* chara, Status status) : Charac
 
 void BattleCharacter::Update(const BattleCharacterManager* bcm)
 {
-	// 開始演出中じゃないならコマンド操作しない
+	// 開始演出中ならコマンド操作しない
 	if (BattleState::GetInstance().GetState() != BattleState::State::BEGIN)
 	{
 		mCommand->Update(bcm);

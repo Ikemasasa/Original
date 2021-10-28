@@ -5,6 +5,7 @@
 
 #include "BattleCharacter.h"
 #include "BattleCharacterManager.h"
+#include "CameraManager.h"
 #include "Collision.h"
 #include "DamageCalculator.h"
 #include "Define.h"
@@ -144,6 +145,7 @@ void ProductionAttack::StateWaitAttack()
 				Vector3 efkPos = target->GetPos();
 				efkPos.y += (target->GetLocalAABB().max.y - target->GetLocalAABB().min.y) / 2.0f;
 				Singleton<EffectManager>().GetInstance().Play(TurnManager::DAMAGE_EFFECT_SLOT, efkPos);
+				Singleton<CameraManager>().GetInstance().Shake(Define::DAMAGE_SHAKE_DURATION, Define::DAMAGE_SHAKE_STRENGTH);
 
 				// ガード中じゃないならダメージモーション
 				if (target->GetStatus()->IsDead())

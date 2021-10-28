@@ -41,8 +41,6 @@ void SceneField::Initialize()
 {
 	InitializeBaseAll();
 
-
-
 	mTerrain = std::make_unique<Terrain>(DataBase::TERRAIN_ID_START);
 	
 	DataBase::Initialize();
