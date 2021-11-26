@@ -2,9 +2,9 @@
 #include <memory>
 #include <DirectXMath.h>
 
-#include "lib/Audio.h"
 #include "lib/Vector.h"
 
+#include "Music.h"
 #include "SceneBase.h"
 
 class BattleCharacterManager;
@@ -40,8 +40,8 @@ private:
 
 
 	Result mResult;
-	Music mBattleMusic;
-	Music mResultMusic;
+	Music::Kind mBattleMusic;
+	Music::Kind mResultMusic;
 
 public:
 	SceneBattle(PlayerManager* plm, Enemy* enemy);

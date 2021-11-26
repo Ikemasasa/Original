@@ -37,9 +37,11 @@ void NPC::Initialize()
 
 void NPC::Update()
 {
+	// 下方向の座標補正
 	const float RAY_DIST = 1.0f;
 	mPos.y = CollisionTerrain::GetHeight(mPos, RAY_DIST);
 
+	// ボス討伐フラグと前回のフラグをチェック
 	if (mOldFlag != GameManager::bossSubdueFlag)
 	{
 		mTextData.clear();

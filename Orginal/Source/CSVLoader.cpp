@@ -16,6 +16,11 @@ void CSVLoader::Close()
 	mFile.close();
 }
 
+bool CSVLoader::IsEndFile()
+{
+	return mFile.eof();
+}
+
 void CSVLoader::GetAllLine(std::vector<std::string>* outAllLine)
 {
 	std::string line;
@@ -23,6 +28,11 @@ void CSVLoader::GetAllLine(std::vector<std::string>* outAllLine)
 	{
 		outAllLine->emplace_back(line);
 	}
+}
+
+void CSVLoader::GetNextLine(std::string* outLine)
+{
+	std::getline(mFile, *outLine);
 }
 
 void CSVLoader::GetChunks(const std::string& line, std::vector<std::string>* chunks, const char ignore)

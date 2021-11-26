@@ -5,7 +5,8 @@
 
 BossEnemy::BossEnemy(int charaID) : Enemy(charaID)
 {
-
+	// ¿—Êİ’è
+	mMass = MASS;
 }
 
 BossEnemy::~BossEnemy()

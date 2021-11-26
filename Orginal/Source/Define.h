@@ -12,7 +12,7 @@
 */
 
 
-
+// ‚È‚ñ‚©‚¢‚ë‚¢‚ë’è‹`‚·‚éƒNƒ‰ƒX
 struct Define final
 {
 	static constexpr float SCREEN_WIDTH = 1280.0f;

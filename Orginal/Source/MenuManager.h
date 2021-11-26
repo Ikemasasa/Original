@@ -8,22 +8,29 @@
 class Sprite;
 class PlayerManager;
 
+// メニュー画面のマネージャ
 class MenuManager
 {
-	std::unique_ptr<Sprite> mBG;
-	std::stack<std::unique_ptr<MenuBase>> mMenuStack;
-	std::unique_ptr<MenuBase> mNextMenu;
-
-	MenuBase::Select mNextState;
-
-	std::unique_ptr<MenuItem> mMenuItem;
+	// 変数
+	std::unique_ptr<Sprite> mBG;					  // 背景画像
+	std::stack<std::unique_ptr<MenuBase>> mMenuStack; // メニュー画面のスタック
+	MenuBase::Select mNextState;					  //次の画面の識別子
 
 
-public:
+public: // 関数
+
+	// コンストラクタ
 	MenuManager();
 
+	// 初期化
 	void Initialize(const PlayerManager* plm);
+	
+	// 更新
 	void Update(PlayerManager* plm);
+	
+	// 描画
 	void Render();
+	
+	// 描画
 	void Release();
 };

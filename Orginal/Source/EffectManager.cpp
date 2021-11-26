@@ -3,6 +3,7 @@
 #include "lib/Framework.h"
 
 #include "CameraBase.h"
+#include "EffectData.h"
 
 EffectManager::EffectManager()
 {
@@ -39,6 +40,15 @@ EffectManager::~EffectManager()
 {
 }
 
+void EffectManager::Initialize()
+{
+	// EffectDataÇ©ÇÁì«Ç›çûÇ›
+	for (int i = 0; i < EffectData::NUM; ++i)
+	{
+		EffectData::Param param = EffectData::GetParam((EffectData::Kind)i);
+		Create(param.filename.c_str());
+	}
+}
 
 int EffectManager::Create(const EFK_CHAR* efkPath)
 {
@@ -108,9 +118,25 @@ int EffectManager::Play(const int& slot, const Vector3& pos, int startFrame, flo
 		if (mInstHandles[i] != -1) continue;
 		
 		mInstHandles[i] = h;
+		++mInstNum;
 		break;
 	}
 
 	return h;
+}
+
+void EffectManager::Stop(const int instHandle)
+{
+	mManager->StopEffect(instHandle);
+}
+
+bool EffectManager::IsPlay(const int instHandle) const
+{
+	for (int i = 0; i < INST_MAX; ++i)
+	{
+		if (mInstHandles[i] == instHandle) return true;
+	}
+
+	return false;
 }
 

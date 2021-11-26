@@ -132,9 +132,6 @@
     <ClInclude Include="Source\CameraTPS.h">
       <Filter>01_Header\Common\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Source\CameraDebug.h">
-      <Filter>01_Header\Common\Camera</Filter>
-    </ClInclude>
     <ClInclude Include="Source\lib\Math.h">
       <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
@@ -243,9 +240,6 @@
     <ClInclude Include="Source\GaussianBlur.h">
       <Filter>01_Header\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Source\FontValue.h">
-      <Filter>01_Header\Common</Filter>
-    </ClInclude>
     <ClInclude Include="Source\lib\ResourceManager.h">
       <Filter>00_lib\01_LibHeader</Filter>
     </ClInclude>
@@ -284,9 +278,6 @@
     </ClInclude>
     <ClInclude Include="Source\Item.h">
       <Filter>01_Header\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\CharacterHealth.h">
-      <Filter>01_Header\Scene\Menu</Filter>
     </ClInclude>
     <ClInclude Include="Source\TurnManager.h">
       <Filter>01_Header\Scene\Battle</Filter>
@@ -477,6 +468,27 @@
     <ClInclude Include="Source\CameraTitle.h">
       <Filter>01_Header\Common\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="Source\EffectData.h">
+      <Filter>01_Header\Common\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Music.h">
+      <Filter>01_Header\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Sound.h">
+      <Filter>01_Header\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\HealthGauge.h">
+      <Filter>01_Header\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EventData.h">
+      <Filter>01_Header\Common\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\XMLLoader.h">
+      <Filter>01_Header\Common\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CameraEvent.h">
+      <Filter>01_Header\Common\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\lib\Blend.cpp">
@@ -504,9 +516,6 @@
       <Filter>02_Source\Common\Camera</Filter>
     </ClCompile>
     <ClCompile Include="Source\CameraTPS.cpp">
-      <Filter>02_Source\Common\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\CameraDebug.cpp">
       <Filter>02_Source\Common\Camera</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\Math.cpp">
@@ -608,9 +617,6 @@
     <ClCompile Include="Source\CameraManager.cpp">
       <Filter>02_Source\Common\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Source\FontValue.cpp">
-      <Filter>02_Source\Common</Filter>
-    </ClCompile>
     <ClCompile Include="Source\lib\ResourceManager.cpp">
       <Filter>00_lib\02_LibSource</Filter>
     </ClCompile>
@@ -643,9 +649,6 @@
     </ClCompile>
     <ClCompile Include="Source\Item.cpp">
       <Filter>02_Source\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\CharacterHealth.cpp">
-      <Filter>02_Source\Scene\Menu</Filter>
     </ClCompile>
     <ClCompile Include="Source\lib\SkinnedMesh.cpp">
       <Filter>00_lib\02_LibSource</Filter>
@@ -843,6 +846,27 @@
       <Filter>02_Source\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Source\CameraTitle.cpp">
+      <Filter>02_Source\Common\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EffectData.cpp">
+      <Filter>02_Source\Common\DataBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Music.cpp">
+      <Filter>02_Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Sound.cpp">
+      <Filter>02_Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\HealthGauge.cpp">
+      <Filter>02_Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EventData.cpp">
+      <Filter>02_Source\Common\DataBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\XMLLoader.cpp">
+      <Filter>02_Source\Common\DataBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CameraEvent.cpp">
       <Filter>02_Source\Common\Camera</Filter>
     </ClCompile>
   </ItemGroup>

@@ -13,6 +13,7 @@
 #include "Enemy.h"
 #include "Fade.h"
 #include "Light.h"
+#include "Music.h"
 #include "Player.h"
 #include "PlayerManager.h"
 #include "SelectOptions.h"
@@ -64,7 +65,6 @@ void SceneBattle::Initialize()
 {
 	InitializeBaseAll();
 
-	Singleton<CameraManager>().GetInstance().Push(std::make_shared<CameraBattle>());
 
 	mSkybox->Initialize(L"Data/Image/environment.hdr");
 	mTerrain->Initialize();
@@ -73,7 +73,21 @@ void SceneBattle::Initialize()
 
 	mSelectOptions->Initialize();
 
-	Audio::MusicPlay((int)mBattleMusic);
+
+	// カメラ初期化
+	Singleton<CameraManager>().GetInstance().Push(std::make_unique<CameraBattle>());
+
+	// targetYを算出（敵のposYの平均を求める
+	Vector3 target = {0,0,BattleCharacterManager::ENEMY_POS_Z};
+	const std::vector<int> ids = mBattleCharacterManager->GetAliveObjIDs(Character::Type::ENEMY);
+	for (const auto& id : ids)
+	{
+		target.y += mBattleCharacterManager->GetChara(id)->GetTargetPos().y;
+	}
+	target /= ids.size();
+	Singleton<CameraManager>().GetInstance().Initialize(target, CameraBattle::BEGIN_START_DISTANCE);
+
+	Music::Play(mBattleMusic);
 }
 
 void SceneBattle::Update()
@@ -161,8 +175,8 @@ void SceneBattle::Update()
 				}
 
 				// BGMをリザルトのやつにする
-				//Audio::MusicStop((int)mBattleMusic);
-				Audio::MusicPlay((int)mResultMusic);
+				Music::Play(mResultMusic);
+
 				break;
 
 			case PLAYER_LOSE:
@@ -180,11 +194,11 @@ void SceneBattle::Render()
 {
 	Matrix view = Singleton<CameraManager>().GetInstance().GetView();
 	Matrix proj = Singleton<CameraManager>().GetInstance().GetProj();
-	Vector4 lightDir = mLight.GetLightDir();
+	Vector4 lightDir = Vector4(mLight.GetLightDir(), 1.0f);
 
 	// シャドウマップ
 	const Shader* shader = mShadowMap->GetShader();
-	mShadowMap->Activate(lightDir, mLight.GetLightPos());
+	mShadowMap->Activate(Vector3::ZERO, mLight.GetLightDir());
 	mTerrain->Render(shader, view, proj, lightDir);
 	mBattleCharacterManager->Render(shader, view, proj, lightDir);
 	mShadowMap->Deactivate();
@@ -231,8 +245,8 @@ void SceneBattle::Render()
 	// ディファードレンダリング
 	//// ポストエフェクトターゲットに書き込み
 	mPostEffectTarget->Activate();
-	mDeferredRenderer->Render();
 	Singleton<EffectManager>().GetInstance().Render(view, proj);
+	mDeferredRenderer->Render();
 	// ブルーム作成、適用
 	mBloom->Execute(mSceneTarget.get());
 	mPostEffectTarget->Deactivate();
@@ -255,5 +269,5 @@ void SceneBattle::Release()
 	BattleState::DestroyInst();
 
 	// フィールドBGM再生
-	Audio::MusicPlay((int)Music::FIELD_REMAINS);
+	Music::Play(Music::FIELD_REMAINS);
 }

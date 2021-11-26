@@ -3,10 +3,14 @@
 
 class CameraBase;
 
+/*
+	バトルのState設定クラス(要改善
+	主にカメラ用
+*/
 class BattleState : public SingletonManual<BattleState>
 {
-public:
-	static constexpr float BEGIN_TIME = 1.0f;
+public:// 定数
+	static constexpr float BEGIN_TIME = 1.0f; // 開始演出の時間
 
 	enum class State
 	{
@@ -22,18 +26,22 @@ public:
 		MAX
 	};
 
-private:
-	State mState = State::BEGIN;
-	State mOldState = State::BEGIN;
+private: // 変数
+	State mState = State::BEGIN;	// 現在のステート
+	State mOldState = State::BEGIN; // 前回のステート
 
-public:
+public: // 関数
+
+	// コンストラクタ
 	BattleState() = default;
+
+	// デストラクタ
 	~BattleState() = default;
 
-	void SetState(State state) { mOldState = mState; mState = state; };
-	State GetState() const { return mState; }
-	State GetOldState() const { return mOldState; }
-	bool CheckState(State state) { return mState == state; }
-	bool CheckOldState(State state) { return mOldState == state; }
+	void SetState(State state) { mOldState = mState; mState = state; }; // ステートを設定
+	State GetState() const { return mState; }							// ステートを取得
+	State GetOldState() const { return mOldState; }						// 前回のステートを取得
+	bool CheckState(State state) { return mState == state; }			// 引数のステートと同じかチェック
+	bool CheckOldState(State state) { return mOldState == state; }		// 引数のステートと前回のステートが同じかチェック
 
 };

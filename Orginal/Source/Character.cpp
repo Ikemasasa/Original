@@ -42,8 +42,9 @@ void Character::UpdateWorld()
 	mWorld.SRT(mScale, mAngle, mPos);
 
 	// ターゲット座標更新
-	AABB aabb = GetAABB();
-	mTargetPos = Vector3(mPos.x, (aabb.max.y - aabb.min.y) * 0.75, mPos.z);
+	AABB aabb = GetLocalAABB();
+	mTargetPos = Vector3(mPos.x, mPos.y + GetHeight() * 0.75, mPos.z);
+	mTopPos = Vector3(mPos.x, mPos.y + GetHeight(), mPos.z);
 
 	// ボーンの当たり判定更新
 	if (GetMotion() == ATTACK && mBoneCollision.radius != 0.0f)

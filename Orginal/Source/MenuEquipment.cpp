@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "PlayerManager.h"
 #include "StatusData.h"
+#include "Sound.h"
 
 void MenuEquipment::Initialize(const PlayerManager* plm)
 {
@@ -24,6 +25,7 @@ void MenuEquipment::Initialize(const PlayerManager* plm)
 
 MenuBase::Select MenuEquipment::Update(PlayerManager* plm)
 {
+	// 
 	mCharacterSelect.Update();
 
 	// 選択中のキャラのステータス(装備参照用)取得
@@ -67,8 +69,8 @@ MenuBase::Select MenuEquipment::Update(PlayerManager* plm)
 		bool isEquip = true; // 装備中の装備を選んだ時外すよう
 		if (equipmentIndex != -1)
 		{
-			Audio::SoundStop((int)Sound::SELECT);
-			Audio::SoundPlay((int)Sound::EQUIP);
+			Sound::Stop(Sound::SELECT);
+			Sound::Play(Sound::EQUIP);
 
 			// すでに装備している人がいたら外す
 			const Character* equipChara = inventory[equipmentIndex].equipChara;

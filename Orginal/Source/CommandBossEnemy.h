@@ -3,10 +3,13 @@
 
 class BattleCharacterManager;
 
+// ボスのコマンド決定クラス
 class CommandBossEnemy : public CommandBase
 {
-	static constexpr float ATTACK_LOWHP_CHARA_PERCENT = 30.0f;
+	// 定数
+	static constexpr float ATTACK_LOWHP_CHARA_PERCENT = 30.0f; // 低HPのキャラを狙う確率
 
+private: // 変数
 	enum class State
 	{
 		TARGET_ONE,
@@ -14,15 +17,25 @@ class CommandBossEnemy : public CommandBase
 		
 		MAX
 	};
+	State mState = State::TARGET_ONE; // ターゲットの数
 
-	State mState = State::TARGET_ONE;
+
+private: // 関数
 
 	// lowHPのプレイヤーのCharaIDを返す
 	std::vector<int> SearchLowHPPlayer(const size_t num, const BattleCharacterManager* bcm);
+
+	// ランダムのプレイヤーIDを取得
 	std::vector<int> GetRandomPlayerObjIDs(const size_t num, const BattleCharacterManager* bcm);
-public:
+
+public: 
+	
+	// コンストラクタ
 	CommandBossEnemy();
+
+	//デストラクタ
 	~CommandBossEnemy();
 
+	// 更新
 	void Update(const BattleCharacterManager* bcm) override;
 };

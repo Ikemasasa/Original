@@ -12,6 +12,11 @@
 #include "SceneTitle.h"
 #include "Singleton.h"
 
+#include "Sound.h"
+#include "Music.h"
+
+#include "SceneEvent.h"
+
 int Looper::Run(HWND hwnd)
 {
 	auto& f = FRAMEWORK;
@@ -22,9 +27,11 @@ int Looper::Run(HWND hwnd)
 	Input::Initialize();
 
 	Audio::Initialize();
+	Music::Initialize();
+	Sound::Initialize();
 
 	auto& sm = SceneManager::GetInstance();
-	sm.Initialize(std::make_unique<SceneTitle>());
+	sm.Initialize(std::make_unique<SceneEvent>(EventData::GAME_BEGIN));
 
 	while (pm.IsLoop() && sm.IsLoop())
 	{

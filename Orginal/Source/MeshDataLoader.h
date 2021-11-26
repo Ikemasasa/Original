@@ -3,7 +3,7 @@
 
 #include "lib/SkinnedMesh.h"
 
-
+// メッシュを読み込むクラス
 class MeshDataLoader
 {
 public:

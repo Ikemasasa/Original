@@ -11,6 +11,7 @@
 
 Enemy::Enemy(int charaID) : Character(charaID, Character::ENEMY)
 {
+	// ¿—Êİ’è
 	mMass = MASS;
 }
 

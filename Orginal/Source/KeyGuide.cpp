@@ -6,11 +6,13 @@
 
 KeyGuide::KeyGuide()
 {
+	// ‰æ‘œ“Ç‚İ‚İ
 	mKeyIcons = std::make_unique<Sprite>(L"Data/Image/keyguide/key_icons.png");
 	mKeyGuideBoard = std::make_unique<Sprite>(L"Data/Image/keyguide/keyguide_board.png");
+
+	// ƒtƒHƒ“ƒg‰Šú‰»
 	mFont.Initialize();
 }
-
 
 std::list<KeyGuide::Guide>::iterator KeyGuide::GetInsertIterator(Key key)
 {
@@ -24,8 +26,25 @@ std::list<KeyGuide::Guide>::iterator KeyGuide::GetInsertIterator(Key key)
 	return it;
 }
 
+bool KeyGuide::ExistKey(Key key)
+{
+	for (const auto& guide : mKeyGuides)
+	{
+		if (guide.keys[0] == key)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void KeyGuide::Add(Key key, std::wstring description)
 {
+	// ‚·‚Å‚Ékey‚ª‚ ‚Á‚½‚çreturn 
+	if (ExistKey(key)) return;
+
+	// ’Ç‰Á
 	Guide guide;
 	guide.keys.emplace_back(key);
 	guide.description = L":" + description;
@@ -34,6 +53,10 @@ void KeyGuide::Add(Key key, std::wstring description)
 
 void KeyGuide::Add(Key* key, int keyNum, std::wstring description)
 {
+	// ‚·‚Å‚Ékey‚ª‚ ‚Á‚½‚çreturn 
+	if (ExistKey(key[0])) return;
+
+	// ’Ç‰Á
 	Guide guide;
 	for (int i = 0; i < keyNum; ++i)
 	{

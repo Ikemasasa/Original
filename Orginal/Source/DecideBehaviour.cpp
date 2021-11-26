@@ -124,7 +124,6 @@ void DecideBehaviour::Render()
 
 void DecideBehaviour::ResetParam()
 {
-	// ターン開始時中央をさしててほしいので 1
-	mCommandIndex.x = 1;
-	mCommandIndex.y = 1;
+	// 中央に戻しておく
+	mCommandIndex = { 1, 1 };
 }

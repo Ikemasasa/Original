@@ -6,6 +6,7 @@
 
 class Terrain;
 
+// コリジョン判定をするクラス
 class Collision final
 {
 private:

@@ -5,7 +5,10 @@
 
 #include "MeshDataLoader.h"
 
-// Singletonを通す
+/*
+	メッシュを管理するクラス
+	一応Singletonを通す
+*/
 class MeshManager
 {
 	static const int NAME_MAX = 128;

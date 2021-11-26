@@ -77,23 +77,31 @@ const UseItemData::Param UseItemData::GetParam(const size_t id)
 	// ベースデータ取得
 	const ItemData::BaseData* base = ItemData::GetBaseData(id);
 
+	// ファイル名、行数目設定
 	const char* filename = nullptr;
-	if (base->type == ItemData::HEAL)   filename = "Data/DataBase/HealItemData.csv"; 
-	if (base->type == ItemData::DAMAGE) filename = "Data/DataBase/DamageItemData.csv";
+	int lineIndex = 0;
+	if (base->type == ItemData::HEAL)
+	{
+		filename = "Data/DataBase/HealItemData.csv";
+		lineIndex = id - DataBase::HEAL_ITEM_ID_START + 1;
+	}
+	if (base->type == ItemData::DAMAGE) 
+	{
+		filename = "Data/DataBase/DamageItemData.csv";
+		lineIndex = id - DataBase::DAMAGE_ITEM_ID_START + 1;
+	}
 
+	// ファイルオープン
 	CSVLoader loader;
 	loader.Open(filename);
 
-	std::vector<std::string> allLine;
-	loader.GetAllLine(&allLine);
-
-
 	// 目的の行を取得
-	int lineIndex = 0;
-	if (base->type == ItemData::HEAL)   lineIndex = id - DataBase::HEAL_ITEM_ID_START;
-	if (base->type == ItemData::DAMAGE) lineIndex = id - DataBase::DAMAGE_ITEM_ID_START;
+	std::string line;
+	for (int i = 0; i < lineIndex; ++i) loader.GetNextLine(&line);
+
+	// コンマ区切りで分割
 	std::vector<std::string> chunks;
-	loader.GetChunks(allLine[lineIndex], &chunks);
+	loader.GetChunks(line, &chunks);
 	
 	Param ret = {};
 	if (chunks.size() > 0)
@@ -105,6 +113,8 @@ const UseItemData::Param UseItemData::GetParam(const size_t id)
 		ret.rate = (Rate)std::stoi(chunks[index++]);
 		ret.hpValue = std::stoi(chunks[index++]);
 		ret.mpValue = std::stoi(chunks[index++]);
+		ret.soundSlot = std::stoi(chunks[index++]);
+		ret.effectSlot = std::stoi(chunks[index++]);
 	}
 
 	return ret;

@@ -43,7 +43,6 @@ void DecideItem::Update(const BattleCharacterManager* bcm, CommandBase* cmdBase)
 			case UseItemData::Target::ENEMY: charaType = Character::ENEMY;  break;
 			}
 			mNextCommand = std::make_unique<DecideTargetChara>(charaType);
-
 		}
 	}
 
@@ -54,6 +53,7 @@ void DecideItem::Update(const BattleCharacterManager* bcm, CommandBase* cmdBase)
 		mIsBackState = true;
 	}
 
+	// キーガイド設定
 	KeyGuide::Instance().Add(KeyGuide::A, L"決定");
 	KeyGuide::Instance().Add(KeyGuide::B, L"戻る");
 }

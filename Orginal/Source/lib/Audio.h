@@ -1,35 +1,6 @@
 #pragma once
 #include "DirectXTK/Inc/Audio.h"
 
-enum class Music
-{
-    TITLE,
-    FIELD_REMAINS,
-    BATTLE,
-    BOSS_BATTLE,
-    RESULT,
-    BOSS_RESULT,
-    NUM
-};
-
-enum class Sound
-{
-    SELECT,
-    SELECT_LONG,
-    CANCEL,
-    CURSOR_MOVE,
-    MENU_OPEN,
-    MENU_CLOSE,
-    EQUIP,
-    HEAL,
-    BUFF,
-    DEBUFF,
-    BOMB,
-    ATTACK_HIT,
-    ENEMY_HIT,
-    NUM
-};
-
 class Audio
 {
 private:

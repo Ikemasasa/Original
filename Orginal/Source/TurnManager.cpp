@@ -19,38 +19,43 @@
 
 void TurnManager::Initialize(const std::vector<std::shared_ptr<BattleCharacter>>& battleCharaArray)
 {
+	// ターンの順番を決定
 	SortOrder(battleCharaArray);
 
-	// エフェクト読み込み
-	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/death.efk"		, DEATH_EFFECT_SLOT);
-	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/heal_potion.efk"  , HEAL_POTION_EFFECT_SLOT);
-	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/magic_potion.efk" , MAGIC_POTION_EFFECT_SLOT);
-	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/explosion.efk"    , ITEM_DAMAGE_EFFECT_SLOT);
-	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/buff.efk"		    , BUFF_EFFECT_SLOT);
-	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/debuff.efk"		, DEBUFF_EFFECT_SLOT);
-	Singleton<EffectManager>().GetInstance().Create(u"Data/Effect/damage.efk"		, DAMAGE_EFFECT_SLOT);
-
-	mCharacterHealth.Initialize(Vector2(HEALTH_BOARD_X, HEALTH_BOARD_Y));
-
-	mIsBeginnig = true;
+	// ヘルスゲージを作成
+	int playerNum = 0;
+	for (const auto& chara : battleCharaArray)
+	{
+		if (chara->GetType() == Character::PLAYER)
+		{
+			++playerNum;
+			mHealthGauges.resize(playerNum);
+			mHealthGauges.back().Initialize();
+		}
+	}
 }
 
 void TurnManager::Update(const BattleCharacterManager* bcm)
 {
-	// ヘルス
-	std::vector<Status> statusArray;
-	int activeNo = -1;
+	// ヘルスゲージ設定
 	for (int i = 0; i < bcm->GetBCharacters().size(); ++i)
 	{
+		// キャラ取得
 		BattleCharacter* bc = bcm->GetChara(i);
+		
+		// キャラが敵ならbreak (配列の先頭にプレイヤ―が入っているため
 		if (bc->GetType() != Character::PLAYER) break;
 
-		// BCharactersは最初にプレイヤーがはいってるから 0~人数分で全員にアクセスできる
-
-		if (bc == mOrder.front()) activeNo = i;
-		statusArray.push_back(*bc->GetStatus());
+		// ヘルスゲージのパラメータ設定
+		Vector2 pos(HEALTH_X, HEALTH_Y + i * mHealthGauges[i].GetHeight());
+		float color = 0.7f;
+		if (bc == mOrder.front())
+		{
+			color = 1.0f;
+			pos.x -= mHealthGauges[i].GetWidth() * 0.3f;
+		}
+		mHealthGauges[i].Set(*bc->GetStatus(), pos, HealthGauge::RIGHTTOP, color);
 	}
-	mCharacterHealth.Update(statusArray, activeNo);
 
 	// リザルトならreturn
 	if (BattleState::GetInstance().CheckState(BattleState::State::RESULT))
@@ -69,13 +74,14 @@ void TurnManager::Update(const BattleCharacterManager* bcm)
 		if (GetMoveChara()->GetCommand()->IsBehaviourEnable())
 		{
 			// 演出開始
-			BeginProduction();
+			BeginProduction(bcm);
 		}
 	}
 	else // 演出中
 	{
-		mProduction->Update(bcm);
-		mProduction->UpdateDeathMotion();
+		mProduction->Update();
+		mProduction->DeathProduction();
+		mProduction->ValueProduction();
 
 		// 演出が終了したら
 		if (mProduction->IsFinished())
@@ -109,7 +115,7 @@ void TurnManager::Render()
 		mProduction->Render(); // 攻撃のダメージ(amount)とかを表示
 	}
 
-	mCharacterHealth.Render();
+	for (auto& gauge : mHealthGauges) gauge.Render();
 }
 
 void TurnManager::SortOrder(const std::vector<std::shared_ptr<BattleCharacter>>& battleCharaArray)
@@ -161,7 +167,7 @@ void TurnManager::SortOrder(const std::vector<std::shared_ptr<BattleCharacter>>&
 	}
 }
 
-void TurnManager::BeginProduction()
+void TurnManager::BeginProduction(const BattleCharacterManager* bcm)
 {
 	CommandBase::Behaviour behaviour = GetMoveChara()->GetCommand()->GetBehaviour();
 	switch (behaviour)
@@ -175,9 +181,23 @@ void TurnManager::BeginProduction()
 
 	mProduction->Initialize();
 
-	int moveCharaID = GetMoveChara()->GetObjID();
+	//int moveCharaID = GetMoveChara()->GetObjID();
 	std::vector<int> targetCharaIDs = GetMoveChara()->GetCommand()->GetTargetObjIDs();
-	mProduction->Begin(moveCharaID, targetCharaIDs);
+	//mProduction->Begin(moveCharaID, targetCharaIDs);
+
+	// ターゲットキャラ配列作成
+	std::vector<BattleCharacter*> targetCharas;
+	for (const auto& targetID : targetCharaIDs)
+	{
+		for (const auto& target : bcm->GetBCharacters())
+		{
+			if (targetID == target->GetObjID())
+			{
+				targetCharas.push_back(target.get());
+			}
+		}
+	}
+	mProduction->Begin(GetMoveChara(), targetCharas);
 }
 
 void TurnManager::AdvanceOrder(const std::vector<std::shared_ptr<BattleCharacter>>& battleCharaArray)

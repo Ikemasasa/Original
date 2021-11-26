@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<event_000>
+  <!--ゲーム開始のイベント-->
+  <init>
+    <character id="10000" pos_x="44.7" pos_y="0" pos_z="-5.2" scale="0.02" angle_y="-1.5" />
+    <character id="10001" pos_x="46" pos_y="0" pos_z="-6.6" scale="0.02" angle_y="-1.5" />
+    <character id="15000" pos_x="17" pos_y="0" pos_z="-6" scale="0.02" angle_y="-1.5" />
+    <character id="20000" pos_x="-2" pos_y="0" pos_z="-8" scale="0.02" angle_y="1.5" />
+    <character id="20001" pos_x="-2" pos_y="0" pos_z="-4.1" scale="0.02" angle_y="1.5" />
+    <terrain id="30000" />
+    <camera pos_x="37" pos_y="7" pos_z="-5.9" target_x="45" target_y="2" target_z="-6" />
+  </init>
+  <main>
+    <data>
+      <frame>60</frame>
+      <update>
+        <character id="10000" pos_x="36" pos_y="0" pos_z="-5.2" motion="WALK" />
+        <character id="10001" pos_x="37.5" pos_y="0" pos_z="-6.6" motion="WALK" />
+        <camera pos_x="29" lerp_factor="0.3" mode="LERP" />
+      </update>
+      <text>10000:衝動で町を出たが、旅って案外やることないんだな
+10001:町出て5分で何言ってんだ
+10000:うるさい
+10001:・・・・・・・。
+15000:すみませーん！助けてくださーい！
+10001:ん？</text>
+    </data>
+    <data>
+      <frame>60</frame>
+      <update>
+        <character id="15000" pos_x="31" pos_y="0" pos_z="-6" motion="RUN" />
+        <camera pos_x="40" pos_y="6.5" pos_z="-1" target_x="35" target_y="3" target_z="-4" mode="FIX" />
+      </update>
+      <text />
+    </data>
+    <data>
+      <frame>1
+</frame>
+      <update>
+        <camera pos_x="41" pos_y="6" pos_z="0.25" target_x="37" target_y="2.5" target_z="-4" mode="FIX" />
+      </update>
+      <text>15000:いきなりすみません、実は敵に追われてまして・・・\n助けていただけないでしょうか？
+10000:あぁ、構わない\n敵はどこにいるんだ？
+15000:私の後ろに・・・
+</text>
+    </data>
+    <data>
+      <frame>60
+</frame>
+      <update>
+        <character id="15000" angle_y="1.5" />
+        <character id="20000" pos_x="25" motion="RUN" />
+        <character id="20001" pos_x="25" motion="RUN" />
+        <camera target_x="32" lerp_factor="0.2" mode="LERP" />
+      </update>
+      <text>10001:めちゃくちゃ追われてるじゃないか！
+10000:くそっ倒すしかないようだ、いくぞ！
+</text>
+    </data>
+    <begin_battle enemy_id="20000,20001" />
+  </main>
+</event_000>

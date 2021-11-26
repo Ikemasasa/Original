@@ -27,20 +27,18 @@ class ProductionAttack : public IBattleProduction
 	Vector3 mOrgPos;
 	Vector3 mDestinationPos;
 	float mLerpFactor = 0.0f;
-	float mWaitTimer = 0;
 
 private:
 	void StateInit();
 	void StateMoveToTarget();
 	void StateWaitAttack();
 	void StateMoveToOrigin();
-	void StateWait();
 
 public:
 	ProductionAttack() = default;
 	~ProductionAttack() = default;
 
 	void Initialize() override;
-	void Update(const BattleCharacterManager* bcm) override;
+	void Update() override;
 	void Render() override;
 };

@@ -4,7 +4,6 @@
 #include "lib/Sprite.h"
 #include "lib/Input.h"
 
-#include "CharacterHealth.h"
 #include "Define.h"
 #include "Fade.h"
 #include "KeyGuide.h"
@@ -12,15 +11,19 @@
 #include "PlayerManager.h"
 #include "SceneManager.h"
 #include "StatusData.h"
+#include "Sound.h"
 
 void MenuSelect::Initialize(const PlayerManager* plm)
 {
+    // 画像読み込み
     mStrBoard = std::make_unique<Sprite>(L"Data/Image/Menu/str_board.png");
     mStrSelect = std::make_unique<Sprite>(L"Data/Image/Menu/str_select.png");
 
-    mCharacterHealth = std::make_unique<CharacterHealth>();
-    mCharacterHealth->Initialize(Vector2(HEALTH_BOARD_POS_X, BOARD_POS_Y));
+    // ヘルスゲージクラス作成
+    mHealthGauge.resize(plm->GetNum());
+    for (auto& it : mHealthGauge) it.Initialize();
 
+    // フォントクラス初期化
     mFont.Initialize();
     
     // 開始演出登録
@@ -44,17 +47,20 @@ MenuSelect::Select MenuSelect::Update(PlayerManager* plm)
     KeyGuide::Key move[] = { KeyGuide::UP, KeyGuide::DOWN };
     KeyGuide::Instance().Add(move, 2, L"カーソル移動");
 
-
-
-    // CharacterHealth作成
-    std::vector<Status> statusArray;
+    // HealthGaugeステータス設定
     for (size_t i = 0; i < plm->GetNum(); ++i)
     {
+        // キャラクタIDを取得
         int charaID = plm->GetPlayer(i)->GetCharaID();
-        Status status = StatusData::GetPLStatus(charaID);
-        statusArray.push_back(status);
+
+        // 座標算出
+        float x = HEALTH_BOARD_POS_X;
+        float y = HEALTH_BOARD_POS_Y + mHealthGauge[i].GetHeight() * i;
+        Vector2 pos(x, y);
+
+        // 設定
+        mHealthGauge[i].Set(StatusData::GetPLStatus(charaID), pos, HealthGauge::LEFTTOP);
     }
-    mCharacterHealth->Update(statusArray);
 
     // selectIndex操作
     if (Input::GetButtonTrigger(0, Input::BUTTON::UP))   mSelectIndex = (mSelectIndex + SELECT_NUM - 1) % SELECT_NUM;
@@ -71,8 +77,8 @@ MenuSelect::Select MenuSelect::Update(PlayerManager* plm)
     {
         if (Fade::GetInstance().SetSceneImage(Fade::SPEED_FAST))
         {
-            Audio::SoundStop((int)Sound::CANCEL);
-            Audio::SoundPlay((int)Sound::MENU_CLOSE);
+            Sound::Stop(Sound::CANCEL);
+            Sound::Play(Sound::MENU_CLOSE);
             SceneManager::GetInstance().PopCurrentScene();
 
         }
@@ -105,7 +111,10 @@ void MenuSelect::Render()
         }
     }
 
-    mCharacterHealth->Render(false);
+    for (auto& gauge : mHealthGauge)
+    {
+        gauge.Render();
+    }
 
     mFont.Render();
 }

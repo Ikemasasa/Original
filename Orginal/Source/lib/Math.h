@@ -59,6 +59,11 @@ namespace Math
 		return (1.0f - t) * value1 + t * value2;
 	}
 
+	constexpr float ToRadian(const float& degree)
+	{
+		return degree * 0.01745f;
+	}
+
 	bool IsSharpAngle(const Vector3& p1, const Vector3& p2, const Vector3& p3);	// ∠p1p2p3 が鋭角(0～90度)か
 	bool IsParallel(const Vector3& v1, const Vector3& v2); // 二本のベクトルが平行か
 

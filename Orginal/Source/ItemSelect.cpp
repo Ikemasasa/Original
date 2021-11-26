@@ -1,6 +1,5 @@
 #include "ItemSelect.h"
 
-#include "lib/Audio.h"
 #include "lib/ConvertString.h"
 #include "lib/Input.h"
 #include "lib/Math.h"
@@ -9,21 +8,21 @@
 #include "Define.h"
 #include "KeyGuide.h"
 #include "Item.h"
+#include "Sound.h"
 
 void ItemSelect::Initialize()
 {
-	mSelectIndex = 0;
-
+	// 画像読み込み
 	mItemBoard = std::make_unique<Sprite>(L"Data/Image/Menu/item_board.png");
 	mSelectFrame = std::make_unique<Sprite>(L"Data/Image/Menu/item_board_select.png");
 	mInfoBoard = std::make_unique<Sprite>(L"Data/Image/Menu/item_info_board.png");
 }
 
-void ItemSelect::Update(const Item* inventory)
+void ItemSelect::Update(const ItemInventory* inventory)
 {
 	// SelectIndex操作
-	mInventory = inventory;
-	int inventorySize = mInventory->GetItemNum();
+	mInventoryRef = inventory;
+	int inventorySize = mInventoryRef->GetItemNum();
 	int oldSelectIndex = mSelectIndex;
 
 	// カーソル計算
@@ -51,12 +50,12 @@ void ItemSelect::Update(const Item* inventory)
 	UpdateInfo();
 
 	// サウンド
-	if (oldSelectIndex != mSelectIndex) Audio::SoundPlay((int)Sound::CURSOR_MOVE);
+	if (oldSelectIndex != mSelectIndex) Sound::Play(Sound::CURSOR_MOVE);
 }
 
 void ItemSelect::Render(const Vector2& boardOffset)
 {
-	if (mSelectIndex >= mInventory->GetItemNum()) mSelectIndex = mInventory->GetItemNum() - 1;
+	if (mSelectIndex >= mInventoryRef->GetItemNum()) mSelectIndex = mInventoryRef->GetItemNum() - 1;
 
 	// ボード描画
 	mItemBoard->Render(boardOffset, Vector2::ONE, Vector2::ZERO, mItemBoard->GetSize());
@@ -71,7 +70,7 @@ void ItemSelect::Render(const Vector2& boardOffset)
 		const Vector2 scale(ICON_SCALE, ICON_SCALE);
 		const Vector2 size(ICON_SIZE, ICON_SIZE);
 
-		int itemNum = mInventory->GetItemNum();
+		int itemNum = mInventoryRef->GetItemNum();
 		if (itemNum > 0)
 		{
 			for (int i = 0; i < itemNum; ++i)
@@ -79,7 +78,7 @@ void ItemSelect::Render(const Vector2& boardOffset)
 				float x = i % HORIZONTAL_NUM * ICON_SCALE_SIZE + offset.x;
 				float y = i / HORIZONTAL_NUM * ICON_SCALE_SIZE + offset.y;
 				Vector2 pos(x, y);
-				mInventory->GetItemParam(i)->icon->Render(pos, scale, Vector2::ZERO, size);
+				mInventoryRef->GetItemParam(i)->icon->Render(pos, scale, Vector2::ZERO, size);
 			}
 
 			// 選択のフレーム画像を描画
@@ -101,7 +100,7 @@ void ItemSelect::Render(const Vector2& boardOffset)
 		const Vector2 iconPos(infoBoardPos.x + INFO_ICON_OFFSET_X, infoBoardPos.y + INFO_ICON_OFFSET_Y);
 		const Vector2 iconScale(INFO_ICON_SCALE, INFO_ICON_SCALE);
 		const Vector2 iconSize(ICON_SIZE, ICON_SIZE);
-		const ItemData::BaseData* base = mInventory->GetItemParam(mSelectIndex);
+		const ItemData::BaseData* base = mInventoryRef->GetItemParam(mSelectIndex);
 		if (base) base->icon->Render(iconPos, iconScale, texPos, iconSize);
 
 		// 説明
@@ -117,7 +116,7 @@ void ItemSelect::UpdateInfo()
 	// 前回のアイテム情報を削除
 	mInfo.clear();
 
-	const ItemData::BaseData* base = mInventory->GetItemParam(mSelectIndex);
+	const ItemData::BaseData* base = mInventoryRef->GetItemParam(mSelectIndex);
 	if (!base)
 	{
 		mInfo.push_back(L"アイテムを持ってません");

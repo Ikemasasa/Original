@@ -9,30 +9,43 @@
 class Sprite;
 class Shader;
 
+// スカイボックスを描画するクラス
 class Skybox
 {
+	// 変数
 	struct CbSky
 	{
 		Vector4 cameraPos;
 		Matrix invView;
 		Matrix invProj;
 	};
+	ConstantBuffer mConstBuffer;	// 定数バッファ
 
-	std::unique_ptr<Sprite> mTexture;
-	std::unique_ptr<Shader> mShader;
-	ConstantBuffer mConstBuffer;
+	std::unique_ptr<Sprite> mTexture; // スカイボックスの画像
+	std::unique_ptr<Shader> mShader;  // スカイボックスシェーダ
+	Vector3 mEyePos = {};			  // カメラ座標
+	UINT mTextureSlot = -1;			  // パイプラインにセットするスロット
 
-	Vector3 mEyePos = {};
-	UINT mTextureSlot = -1;
+public:// 関数
 
-public:
+	// コンストラクタ
 	Skybox() = default;
+
+	// デストラクタ
 	~Skybox() = default;
 	
+	// 初期化
 	void Initialize(const wchar_t* filename);
-	void Release();
-	void SetEyePos(Vector3 eye);
-	void Render(const Matrix& view, const Matrix& proj);
 	
+	// 解放
+	void Release();
+
+	// 描画
+	void Render(const Matrix& view, const Matrix& proj);
+
+	// カメラ座標設定
+	void SetEyePos(Vector3 eye);
+
+	// 画像をパイプラインに設定
 	void SetEnvTexture(UINT slot);
 };

@@ -1,16 +1,19 @@
 #include "DecideSkill.h"
 
-#include "lib/Audio.h"
 #include "lib/Input.h"
 
 #include "BattleCharacterManager.h"
 #include "CommandBase.h"
 #include "DecideTargetChara.h"
 #include "SkillData.h"
+#include "Sound.h"
 
 void DecideSkill::Initialize(const BattleCharacterManager* bcm)
 {
+	// 現在コマンド選択中のキャラを取得
 	int charaID = bcm->GetMoveChara()->GetCharaID();
+
+	// スキル選択クラスに登録
 	mSkillSelect.Initialize(charaID, Vector2(BOARD_POS_X, BOARD_POS_Y));
 }
 
@@ -26,7 +29,7 @@ void DecideSkill::Update(const BattleCharacterManager* bcm, CommandBase* cb)
 		if (Input::GetButtonTrigger(0, Input::BUTTON::A))
 		{
 			// スキル情報取得
-			const SkillData::SkillParam* param = mSkillSelect.GetSelectSkill();
+			const SkillData::BaseData* param = mSkillSelect.GetSelectSkill();
 
 			if (bcm->GetMoveChara()->GetStatus()->GetMP() >= param->useMP)
 			{
@@ -44,8 +47,8 @@ void DecideSkill::Update(const BattleCharacterManager* bcm, CommandBase* cb)
 			}
 			else
 			{
-				Audio::SoundStop((int)Sound::SELECT);
-				Audio::SoundPlay((int)Sound::CANCEL);
+				Sound::Stop(Sound::SELECT);
+				Sound::Play(Sound::CANCEL);
 			}
 
 		}

@@ -1,19 +1,18 @@
 #include "SceneTitle.h"
 
-#include "lib/Audio.h"
 #include "lib/Input.h"
 
 #include "CameraTitle.h"
 #include "Define.h"
 #include "Fade.h"
 #include "KeyGuide.h"
+#include "Music.h"
 #include "PlayerManager.h"
 #include "SceneField.h"
 #include "SceneLoad.h"
 #include "SceneManager.h"
+#include "Sound.h"
 #include "TransformData.h"
-
-
 
 SceneTitle::SceneTitle()
 {
@@ -46,7 +45,7 @@ void SceneTitle::Initialize()
 	mPlayer->SetMotion(Character::IDLE);
 
 	// かめら
-	mCamera->Initialize(mPlayer.get());
+	mCamera->Initialize(mPlayer.get()->GetTargetPos());
 
 	// スカイボックス
 	mSkybox->Initialize(L"Data/Image/environment.hdr");
@@ -57,11 +56,10 @@ void SceneTitle::Initialize()
 
 	// ライト設定
 	{
-		Vector3 lightDir(-1.0f, -0.4f, 1.0f);
-		Vector3 lightPos(60.0f, 60.0f, 60.0f);
-		mLight.SetLightDir(lightDir, lightPos);
+		Vector3 lightDir(-1.0f, -0.8f, 1.0f);
+		mLight.SetLightDir(lightDir);
 
-		Vector4 lightColor(0.8f, 0.75f, 0.75f, 1);
+		Vector4 lightColor(0.8f, 0.75f, 0.75f, 1.0f);
 		mLight.SetLightColor(lightColor);
 
 		mLight.CreateConstBuffer();
@@ -70,7 +68,7 @@ void SceneTitle::Initialize()
 	mIsPressAButton = false;
 	mSelectIndex = 0;
 
-	Audio::MusicPlay((int)Music::TITLE);
+	Music::Play(Music::TITLE);
 }
 
 void SceneTitle::Update()
@@ -96,7 +94,7 @@ void SceneTitle::Update()
 		if (Input::GetButtonTrigger(0, Input::A))
 		{
 			mIsPressAButton = true;
-			Audio::SoundPlay((int)Sound::SELECT_LONG);
+			Sound::Play(Sound::SELECT_LONG);
 		}
 	}
 	else
@@ -105,12 +103,12 @@ void SceneTitle::Update()
 		int old = mSelectIndex;
 		if (Input::GetButtonTrigger(0, Input::UP))   mSelectIndex = (mSelectIndex + MAX - 1) % MAX;
 		if (Input::GetButtonTrigger(0, Input::DOWN)) mSelectIndex = (mSelectIndex + 1) % MAX;
-		if (old != mSelectIndex) Audio::SoundPlay((int)Sound::CURSOR_MOVE);
+		if (old != mSelectIndex) Sound::Play(Sound::CURSOR_MOVE);
 
 		if (Input::GetButtonTrigger(0, Input::A))
 		{
 			Fade::GetInstance().Set(Fade::SPEED_SLOW);
-			Audio::SoundPlay((int)Sound::SELECT);
+			Sound::Play(Sound::SELECT);
 		}
 		if (Fade::GetInstance().IsFadeOutEnd())
 		{
@@ -136,12 +134,12 @@ void SceneTitle::Render()
 
 	Matrix view = mCamera->GetViewMatrix();
 	Matrix proj = mCamera->GetProjectionMatrix();
-	Vector4 lightDir = mLight.GetLightDir();
+	Vector4 lightDir = Vector4(mLight.GetLightDir(), 1.0f);
 
 
 	// シャドウマップに書き込み
 	const Shader* shader = mShadowMap->GetShader();
-	mShadowMap->Activate(lightDir, mLight.GetLightPos());
+	mShadowMap->Activate(mPlayer->GetTargetPos(), mLight.GetLightDir());
 	mTerrain->Render(shader, view, proj, lightDir);
 	mPlayer->Render(shader, view, proj, lightDir);
 	mShadowMap->Deactivate();
@@ -228,7 +226,7 @@ void SceneTitle::SetDeferredParam()
 	//// DirLight
 	std::vector<DeferredRenderer::DirLight> dirLights;
 	DeferredRenderer::DirLight dirLight;
-	dirLight.dir = mLight.GetLightDir();
+	dirLight.dir = Vector4(mLight.GetLightDir(), 1.0f);
 	dirLight.color = mLight.GetLightColor();
 	dirLights.push_back(dirLight);
 	mDeferredRenderer->SetDirLight(dirLights);

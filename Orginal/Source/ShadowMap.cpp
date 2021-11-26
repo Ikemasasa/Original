@@ -30,27 +30,31 @@ void ShadowMap::Initialize()
 	mTarget = Vector3::ZERO;
 }
 
-void ShadowMap::Activate(const Vector4& lightDir, const Vector3& lightPos)
+void ShadowMap::Activate(const Vector3& target, const Vector3& dir, float maxDistance)
 {
+	// ターゲット設定
+	//mTarget = target;
+
+	// プロジェクション行列設定
+	mShadowProj.Ortho(maxDistance, maxDistance, 0.1f, 1000.0f);
+
+	// ライト座標算出
+	Vector3 lightPos = -dir * maxDistance;
+
+
+	// ビュー行列算出
+	Matrix view;
+	view.LookAtLH(lightPos, mTarget, Vector3(0, 1, 0));
+
+	// 定数バッファを更新
+	// 光から見た平行投影の距離が描画される
+	CBShadow cb;
+	cb.shadowVP = view * mShadowProj;
+	mConstBuffer.Update(&cb);
+	mConstBuffer.Set(5);
+
 	// レンダーターゲット有効化
 	mShadowMap.Activate();
-
-
-	ID3D11DeviceContext* context = FRAMEWORK.GetContext();
-
-	// 定数バッファ
-	{
-		Matrix view;
-		view.LookAtLH(lightPos, mTarget, Vector3(0, 1, 0));
-
-		// 光から見た平行投影の距離が描画される
-		CBShadow cb;
-		cb.shadowVP = view * mShadowProj;
-		mConstBuffer.Update(&cb);
-
-		// セット
-		mConstBuffer.Set(5);
-	}
 }
 
 void ShadowMap::Deactivate()

@@ -31,9 +31,11 @@ void NPCManager::RenderUI()
 {
 	for (auto& npc : mNPCs)
 	{
+		// プレイヤーとの距離をチェック
 		Vector3 dist = mPlayerPos - npc->GetPos();
 		if (dist.LengthSq() < (ICON_RENDER_DIST * ICON_RENDER_DIST))
 		{
+			// 距離によってアイコンのスケールを変更
 			float rate = Math::Clamp01(dist.LengthSq() / (ICON_RENDER_DIST * ICON_RENDER_DIST));
 			float scale = Math::Lerp(1.0f, 0.3f, rate) * ICON_SCALE;
 			const AABB& aabb = npc->GetAABB();

@@ -9,7 +9,6 @@ class Light
 {
 	// ライト最大数
 	static const int DIR_MAX = 4;
-	static const int POINT_MAX = 16;
 
 public:
 	struct DirLight
@@ -19,8 +18,7 @@ public:
 	};
 
 private:
-	Vector3 mLightPos;
-	Vector4 mLightDir;
+	Vector3 mLightDir;
 	Vector4 mLightColor;
 
 	ConstantBuffer mCB;
@@ -36,11 +34,10 @@ public:
 	void UpdateConstBuffer();
 
 	// ゲッター
-	Vector3 GetLightPos() { return mLightPos; }
-	Vector4 GetLightDir() { return mLightDir; }
+	Vector3 GetLightDir() { return mLightDir; }
 	Vector4 GetLightColor() { return mLightColor; }
 
 	// セッター
-	void SetLightDir(Vector3& lightDir, const Vector3& lightPos);
+	void SetLightDir(const Vector3& lightDir);
 	void SetLightColor(const Vector4& lightColor) { mLightColor = lightColor; }
 };

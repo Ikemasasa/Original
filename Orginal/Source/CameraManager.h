@@ -3,38 +3,61 @@
 #include <memory>
 
 #include "lib/Vector.h"
+#include "lib/Matrix.h"
 
 #include "CameraBase.h"
-#include "Singleton.h"
 
+// 前方宣言
 class Character;
 class BattleCharacter;
 class BattleCharacterManager;
 
-// singletonを通す
+
+/*
+	カメラマネージャー
+	カメラの情報を色々なところからとるために作った
+	なのでSingletonクラスを通すこと
+*/
 class CameraManager
 {
+	// 変数
+
 	// SceneManagerがstack使ってるからカメラも一応
-	std::stack<std::shared_ptr<CameraBase>> mMainCamera;
+	std::stack<std::unique_ptr<CameraBase>> mMainCamera;
 
-public:
-	CameraManager() = default;
-	~CameraManager() = default;
+public: // 関数
 
-	void Push(const std::shared_ptr<CameraBase>& camera) { mMainCamera.push(camera); };
+	// コンストラクタ
+	CameraManager();
+
+	// デストラクタ
+	~CameraManager();
+	
+	// カメラをマネージャに追加
+	void Push(std::unique_ptr<CameraBase> camera) { mMainCamera.emplace(camera.release()); };
+
+	// カメラをマネージャから削除
 	void Pop() { if(!mMainCamera.empty()) mMainCamera.pop(); }
 
-	void Initialize(const Character* target);
+	// 初期化関数
+	void Initialize(const Vector3& target, float distance = 5.0f);
+
+	// 更新関数
+	void Update(const Vector3& target);
 	void Update(const Character* target);
 	void Update(const BattleCharacter* target, const BattleCharacterManager* bcm);
+
+	// 揺らしのパラメータ設定関数
 	void Shake(float duration, float strength);
 
-
 	// ゲッター
-	Matrix GetView() const { return mMainCamera.top().get()->GetViewMatrix(); }
-	Matrix GetProj() const { return mMainCamera.top().get()->GetProjectionMatrix(); }
-	Vector3 GetPos() const { return mMainCamera.top().get()->GetPos(); }
-	Vector3 GetAngle() const { return mMainCamera.top().get()->GetAngle(); }
-	Vector3 GetFrontVector() const { return mMainCamera.top().get()->GetForward(); }
-	Vector3 GetRightVector() const { return mMainCamera.top().get()->GetRight(); }
+	Matrix GetView() const;		  // ビュー行列取得
+	Matrix GetProj() const;		  // プロジェクション行列取得	
+	Vector3 GetPos() const;		  // 座標取得
+	float GetZenithAngle() const;  // 天頂角(縦)取得
+	float GetAzimuthAngle() const; // 方位角(横)取得
+	Vector3 GetForward() const;	  // 前方ベクトル取得
+	Vector3 GetForwardXZ() const;  // XZ平面の前方ベクトル取得
+	Vector3 GetRight() const;      // 右方ベクトル取得
+	Vector3 GetRightXZ() const;    // XZ平面の右方ベクトル取得
 };

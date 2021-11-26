@@ -155,6 +155,7 @@
     <ClInclude Include="Source\Bloom.h" />
     <ClInclude Include="Source\BossEnemy.h" />
     <ClInclude Include="Source\BossEnemyBattle.h" />
+    <ClInclude Include="Source\CameraEvent.h" />
     <ClInclude Include="Source\CameraTitle.h" />
     <ClInclude Include="Source\Character.h" />
     <ClInclude Include="Source\CharacterManager.h" />
@@ -180,6 +181,7 @@
     <ClInclude Include="Source\DeferredRenderer.h" />
     <ClInclude Include="Source\DropData.h" />
     <ClInclude Include="Source\DropItemShower.h" />
+    <ClInclude Include="Source\EffectData.h" />
     <ClInclude Include="Source\EffectManager.h" />
     <ClInclude Include="Source\Enemy.h" />
     <ClInclude Include="Source\EnemyBattle.h" />
@@ -187,10 +189,11 @@
     <ClInclude Include="Source\Equipment.h" />
     <ClInclude Include="Source\EquipmentInventory.h" />
     <ClInclude Include="Source\EquipmentSelect.h" />
-    <ClInclude Include="Source\FontValue.h" />
+    <ClInclude Include="Source\EventData.h" />
     <ClInclude Include="Source\GameManager.h" />
     <ClInclude Include="Source\GaussianBlur.h" />
     <ClInclude Include="Source\GBuffer.h" />
+    <ClInclude Include="Source\HealthGauge.h" />
     <ClInclude Include="Source\IBattleProduction.h" />
     <ClInclude Include="Source\IDecideCommand.h" />
     <ClInclude Include="Source\IFieldUseItemEffect.h" />
@@ -219,7 +222,6 @@
     <ClInclude Include="Source\lib\Input.h" />
     <ClInclude Include="Source\Light.h" />
     <ClInclude Include="Source\MenuBase.h" />
-    <ClInclude Include="Source\CharacterHealth.h" />
     <ClInclude Include="Source\MenuCharacterSelect.h" />
     <ClInclude Include="Source\MenuEquipment.h" />
     <ClInclude Include="Source\MenuItem.h" />
@@ -229,6 +231,7 @@
     <ClInclude Include="Source\MeshManager.h" />
     <ClInclude Include="Source\MeshDataLoader.h" />
     <ClInclude Include="Source\MotionCollision.h" />
+    <ClInclude Include="Source\Music.h" />
     <ClInclude Include="Source\NPC.h" />
     <ClInclude Include="Source\NPCManager.h" />
     <ClInclude Include="Source\NPCTalk.h" />
@@ -237,7 +240,6 @@
     <ClInclude Include="Source\Particle.h" />
     <ClInclude Include="Source\ProductionAttack.h" />
     <ClInclude Include="Source\CameraBase.h" />
-    <ClInclude Include="Source\CameraDebug.h" />
     <ClInclude Include="Source\CameraTPS.h" />
     <ClInclude Include="Source\Define.h" />
     <ClInclude Include="Source\Fade.h" />
@@ -273,23 +275,25 @@
     <ClInclude Include="Source\Singleton.h" />
     <ClInclude Include="Source\SkillData.h" />
     <ClInclude Include="Source\SkillSelect.h" />
+    <ClInclude Include="Source\Sound.h" />
     <ClInclude Include="Source\StatusData.h" />
     <ClInclude Include="Source\Terrain.h" />
     <ClInclude Include="Source\TimeStamp.h" />
     <ClInclude Include="Source\TransformData.h" />
     <ClInclude Include="Source\TurnManager.h" />
+    <ClInclude Include="Source\XMLLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Bloom.cpp" />
     <ClCompile Include="Source\BossEnemy.cpp" />
     <ClCompile Include="Source\BossEnemyBattle.cpp" />
+    <ClCompile Include="Source\CameraEvent.cpp" />
     <ClCompile Include="Source\CameraTitle.cpp" />
     <ClCompile Include="Source\CharacterManager.cpp" />
     <ClCompile Include="Source\BattleCharacter.cpp" />
     <ClCompile Include="Source\BattleCharacterManager.cpp" />
     <ClCompile Include="Source\CameraBase.cpp" />
     <ClCompile Include="Source\CameraBattle.cpp" />
-    <ClCompile Include="Source\CameraDebug.cpp" />
     <ClCompile Include="Source\CameraManager.cpp" />
     <ClCompile Include="Source\CameraTPS.cpp" />
     <ClCompile Include="Source\Character.cpp" />
@@ -311,6 +315,7 @@
     <ClCompile Include="Source\Define.cpp" />
     <ClCompile Include="Source\DropData.cpp" />
     <ClCompile Include="Source\DropItemShower.cpp" />
+    <ClCompile Include="Source\EffectData.cpp" />
     <ClCompile Include="Source\EffectManager.cpp" />
     <ClCompile Include="Source\Enemy.cpp" />
     <ClCompile Include="Source\EnemyBattle.cpp" />
@@ -318,11 +323,12 @@
     <ClCompile Include="Source\Equipment.cpp" />
     <ClCompile Include="Source\EquipmentInventory.cpp" />
     <ClCompile Include="Source\EquipmentSelect.cpp" />
+    <ClCompile Include="Source\EventData.cpp" />
     <ClCompile Include="Source\Fade.cpp" />
-    <ClCompile Include="Source\FontValue.cpp" />
     <ClCompile Include="Source\GameManager.cpp" />
     <ClCompile Include="Source\GaussianBlur.cpp" />
     <ClCompile Include="Source\GBuffer.cpp" />
+    <ClCompile Include="Source\HealthGauge.cpp" />
     <ClCompile Include="Source\IBattleProduction.cpp" />
     <ClCompile Include="Source\IDecideCommand.cpp" />
     <ClCompile Include="Source\IFieldUseItemEffect.cpp" />
@@ -358,7 +364,6 @@
     <ClCompile Include="Source\Light.cpp" />
     <ClCompile Include="Source\Looper.cpp" />
     <ClCompile Include="Source\Main.cpp" />
-    <ClCompile Include="Source\CharacterHealth.cpp" />
     <ClCompile Include="Source\MenuCharacterSelect.cpp" />
     <ClCompile Include="Source\MenuEquipment.cpp" />
     <ClCompile Include="Source\MenuItem.cpp" />
@@ -368,6 +373,7 @@
     <ClCompile Include="Source\MeshManager.cpp" />
     <ClCompile Include="Source\MeshDataLoader.cpp" />
     <ClCompile Include="Source\MotionCollision.cpp" />
+    <ClCompile Include="Source\Music.cpp" />
     <ClCompile Include="Source\NPC.cpp" />
     <ClCompile Include="Source\NPCManager.cpp" />
     <ClCompile Include="Source\NPCTalk.cpp" />
@@ -397,11 +403,13 @@
     <ClCompile Include="Source\Singleton.cpp" />
     <ClCompile Include="Source\SkillData.cpp" />
     <ClCompile Include="Source\SkillSelect.cpp" />
+    <ClCompile Include="Source\Sound.cpp" />
     <ClCompile Include="Source\StatusData.cpp" />
     <ClCompile Include="Source\Terrain.cpp" />
     <ClCompile Include="Source\TimeStamp.cpp" />
     <ClCompile Include="Source\TransformData.cpp" />
     <ClCompile Include="Source\TurnManager.cpp" />
+    <ClCompile Include="Source\XMLLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Character.fx">

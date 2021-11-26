@@ -13,6 +13,7 @@
 
 class Sprite;
 
+// パーティクル再生クラス(制作中) 
 class Particle
 {
 	struct Vertex

@@ -1,6 +1,9 @@
 #pragma once
 #include <mutex>
 
+//--------------------------------------------
+// 継承型シングルトン
+//--------------------------------------------
 template<typename T>
 class SingletonManual
 {
@@ -32,8 +35,11 @@ public:
 template<typename T> T* SingletonManual<T>::mInstance;
 
 
+//--------------------------------------------
+// テンプレート型シングルトン
+// 解放の処理を生成したインスタンス全てにするから、SceneManagerとかには向いてないかも
+//--------------------------------------------
 
-	// 解放の処理を生成したインスタンス全てにするから、SceneManagerとかには向いてないかも
 class SingletonFinalizer
 {
 	using FinalizeFunc = void(*)(); // void(*)() に FinalizeFuncという名前を付けてる？(typedefに近いのかなぁ)

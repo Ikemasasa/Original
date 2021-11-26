@@ -1,15 +1,10 @@
 #pragma once
 #include <vector>
 
-#include "lib/Audio.h"
-
 #include "IBattleProduction.h"
-#include "SkillData.h"
 
 class ProductionSkill : public IBattleProduction
 {
-	static constexpr float WAIT_SEC = 1.0f;
-
 	enum State
 	{
 		INIT,
@@ -18,21 +13,18 @@ class ProductionSkill : public IBattleProduction
 		WAIT
 
 	};
+
 	int mState = INIT;
-	float mTimer = 0.0f;
-	std::vector<int> mEffectInstHandles;
-	int mEffectSlot;
-	Sound mSound;
 
 	void StateInit();
-
-	std::vector<float> CalcAmountValue(const SkillData::SkillParam* param);
+	void StateWaitMotion();
+	void StateWaitEffect();
 
 public:
 	ProductionSkill() = default;
 	~ProductionSkill() = default;
 
 	void Initialize() override;
-	void Update(const BattleCharacterManager* bcm) override;
+	void Update() override;
 	void Render() override;
 };

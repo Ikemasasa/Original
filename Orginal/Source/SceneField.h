@@ -1,8 +1,9 @@
 #pragma once
 #include "SceneBase.h"
+
 #include <DirectXMath.h>
-#include <vector>
 #include <memory>
+#include <vector>
 
 class CharacterManager;
 class Skybox;
@@ -13,6 +14,7 @@ class SceneField : public SceneBase
 	std::unique_ptr<CharacterManager> mCharaManager = nullptr;
 	std::unique_ptr<Terrain>	      mTerrain		= nullptr;
 	std::unique_ptr<Skybox>			  mSkybox		= nullptr;
+
 
 	static constexpr float TRANS_BATTLE_SCENE_TIME = 0.15f;
 	bool mTransBattleScene = false;

@@ -17,5 +17,5 @@ class ProductionEscape : public IBattleProduction
 
 public:
 	void Initialize() override;
-	void Update(const BattleCharacterManager* bcm) override;
+	void Update() override;
 };

@@ -18,8 +18,9 @@ void EquipmentInventory::Push(int id)
 {
 	// パラメーター取得
 	const EquipmentData::Param param = EquipmentData::GetParam(id);
-	if (param.base->type != ItemData::EQUIPMENT) return;
+	// if (param.base->type != ItemData::EQUIPMENT) return;
 
+	// インベントリに追加
 	Data data;
 	data.equipChara = nullptr;
 	data.equipmentID = param.base->id;
@@ -28,9 +29,10 @@ void EquipmentInventory::Push(int id)
 
 void EquipmentInventory::Remove(int id)
 {
-	// type取得
+	// パラメータを取得
 	const EquipmentData::Param param = EquipmentData::GetParam(id);
 
+	// 同一のIDを検索して見つけたら削除
 	for (auto it = mEquipmentsData[param.type].begin(); it != mEquipmentsData[param.type].end(); ++it)
 	{
 		if (it->equipmentID == id)
@@ -43,6 +45,7 @@ void EquipmentInventory::Remove(int id)
 
 void EquipmentInventory::UnSetChara(EquipmentData::Type type, const Character* chara)
 {
+	// type内の同一キャラを検索し、見つけたら外す
 	for (auto& equipment : mEquipmentsData[type])
 	{
 		if (equipment.equipChara == chara)

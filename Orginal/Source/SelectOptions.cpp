@@ -1,24 +1,27 @@
 #include "SelectOptions.h"
 
-#include "lib/Audio.h"
 #include "lib/Input.h"
 #include "lib/Sprite.h"
 
 #include "Define.h"
 #include "KeyGuide.h"
+#include "Sound.h"
 
 void SelectOptions::Initialize()
 {
+	// 画像読み込み
 	mOptionTitle = std::make_unique<Sprite>(L"Data/Image/Option/option_title.png");
 	mOption		 = std::make_unique<Sprite>(L"Data/Image/Option/option.png");
 	mOptionEnd	 = std::make_unique<Sprite>(L"Data/Image/Option/option_end.png");
 	mOptionSelect = std::make_unique<Sprite>(L"Data/Image/Option/option_select.png");
 
+	// フォント初期化
 	mFont.Initialize();
 }
 
 void SelectOptions::Update()
 {
+	// テキストが設定されていなければreturn 
 	if (mStrTitle.empty()) return;
 
 	int old = mOptionIndex;
@@ -26,7 +29,7 @@ void SelectOptions::Update()
 	if (Input::GetButtonTrigger(0, Input::BUTTON::DOWN)) mOptionIndex = (mOptionIndex + 1) % max;
 	if (Input::GetButtonTrigger(0, Input::BUTTON::UP))   mOptionIndex = (mOptionIndex + (max - 1)) % max;
 
-	if (old != mOptionIndex) Audio::SoundPlay((int)Sound::CURSOR_MOVE);
+	if (old != mOptionIndex) Sound::Play(Sound::CURSOR_MOVE);
 
 	// キーガイド
 	KeyGuide::Key key[] = { KeyGuide::UP, KeyGuide::DOWN };
@@ -37,6 +40,7 @@ void SelectOptions::Update()
 
 void SelectOptions::Render(const Vector2& leftTop, bool isStrsClear)
 {
+	// テキストが設定されていなければreturn 
 	if (mStrTitle.empty()) return;
 
 	Vector2 pos = {};

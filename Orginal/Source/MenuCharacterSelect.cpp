@@ -1,6 +1,5 @@
 #include "MenuCharacterSelect.h"
 
-#include "lib/Audio.h"
 #include "lib/Input.h"
 
 #include "Define.h"
@@ -8,13 +7,15 @@
 #include "Player.h"
 #include "PlayerManager.h"
 #include "StatusData.h"
+#include "Sound.h"
 
 void MenuCharacterSelect::Initialize(const PlayerManager* plm)
 {
+	// 画像読み込み
 	mBoard = std::make_unique<Sprite>(L"Data/Image/Menu/character_board.png");
+	
+	// フォントクラス初期化
 	mFont.Initialize();
-	mSelectIndex = 0;
-
 
 	// 名前の一文字目をセットする
 	for (size_t i = 0; i < plm->GetNum(); ++i)
@@ -29,13 +30,16 @@ void MenuCharacterSelect::Initialize(const PlayerManager* plm)
 
 void MenuCharacterSelect::Update()
 {
+	// 前回の選択場所を保存
 	mOldSelectIndex = mSelectIndex;
 
+	// 選択場所を更新
 	int max = mPlayerNameFirst.size();
 	if (Input::GetButtonTrigger(0, Input::BUTTON::RB)) mSelectIndex = (mSelectIndex + 1) % max;
 	if (Input::GetButtonTrigger(0, Input::BUTTON::LB)) mSelectIndex = (mSelectIndex + (max - 1)) % max;
 
-	if (mOldSelectIndex != mSelectIndex) Audio::SoundPlay((int)Sound::CURSOR_MOVE);
+	// 選択場所が変わっていたら効果音を鳴らす
+	if (mOldSelectIndex != mSelectIndex) Sound::Play(Sound::CURSOR_MOVE);
 
 	// キーガイド
 	if (max >= 2)

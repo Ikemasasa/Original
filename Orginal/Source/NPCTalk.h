@@ -10,8 +10,12 @@
 class NPC;
 class Sprite;
 
+/*
+	NPCと会話する際のテキスト表示とかをするクラス
+*/
 class NPCTalk
 {
+	// 定数
 	static const Vector3 NAME_RGB;
 	static const Vector3 TEXT_RGB;
 	static constexpr float NAME_OFFSET_Y = 5.0f;

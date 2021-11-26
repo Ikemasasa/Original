@@ -10,9 +10,13 @@
 
 void MenuStatus::Initialize(const PlayerManager* plm)
 {
+    // 画像読み込み
     mStatusPlate = std::make_unique<Sprite>(L"Data/Image/Menu/status_board.png");
+
+    // フォントクラス初期化
     mFont.Initialize();
-    mFontValue.Initialize();
+
+    // キャラクタ―選択クラス初期化
     mCharacterSelect.Initialize(plm);
 }
 
@@ -72,15 +76,15 @@ MenuBase::Select MenuStatus::Update(PlayerManager* plm)
 
             // 現在の値 (cur)
             pos.x += CUR_OFFSET_X;
-            mFontValue.RenderSet(curValue[statusIndex], pos, center, Define::FONT_COLOR);
+            mFont.RenderSetValue(curValue[statusIndex], pos, center, Define::FONT_COLOR);
 
             // 区切り (/)
-            pos.x += DELIM_OFFSET_X + mFontValue.GetWidth(curValue[statusIndex]);
-            mFont.RenderSet(L"/", pos, Vector2::ZERO, Define::FONT_COLOR);
+            pos.x += DELIM_OFFSET_X + mFont.GetWidthValue(curValue[statusIndex]);
+            mFont.RenderSet(L"/", pos, center, Define::FONT_COLOR);
 
             // 最大の値 (max)
             pos.x += mFont.GetWidth(L"/") + DELIM_OFFSET_X;
-            mFontValue.RenderSet(maxValue[statusIndex], pos, center, Define::FONT_COLOR);
+            mFont.RenderSetValue(maxValue[statusIndex], pos, center, Define::FONT_COLOR);
         }
         else
         {
@@ -91,7 +95,7 @@ MenuBase::Select MenuStatus::Update(PlayerManager* plm)
 
             // 現在の値 (cur)
             pos.x += CUR_OFFSET_X;
-            mFontValue.RenderSet(curValue[statusIndex], pos, center, Define::FONT_COLOR);
+            mFont.RenderSetValue(curValue[statusIndex], pos, center, Define::FONT_COLOR);
         }
     }
 
@@ -112,11 +116,9 @@ void MenuStatus::Render()
 
     // フォント描画
     mFont.Render();
-    mFontValue.Render();
 }
 
 void MenuStatus::Release()
 {
     mFont.Release();
-    mFontValue.Release();
 }

@@ -24,6 +24,7 @@ void Skybox::Initialize(const wchar_t* filename)
 
 void Skybox::Release()
 {
+	// シェーダ、テクスチャの解放
 	if(mShader) mShader->UnLoad();
 	if(mTexture) mTexture->UnLoad();
 }

@@ -1,6 +1,5 @@
 #include "ProductionAttack.h"
 
-#include "lib/Audio.h"
 #include "lib/SkinnedMesh.h"
 
 #include "BattleCharacter.h"
@@ -9,39 +8,32 @@
 #include "Collision.h"
 #include "DamageCalculator.h"
 #include "Define.h"
+#include "EffectData.h"
 #include "EffectManager.h"
 #include "GameManager.h"
 #include "Singleton.h"
 #include "StatusData.h"
-#include "TurnManager.h"
+#include "Sound.h"
 
 void ProductionAttack::Initialize()
 {
 	mProductionValue.Initialize();
-	mAmounts.clear();
 }
 
-void ProductionAttack::Update(const BattleCharacterManager* bcm)
+void ProductionAttack::Update()
 {
 	switch (mState)
 	{
 	case State::INIT: // 初期化 ダメージ計算
-	{
-		// moveChara, targetChara代入
-		mMoveChara = bcm->GetChara(mMoveCharaID);
-		for (size_t i = 0; i < mTargetCharaIDs.size(); ++i)
-		{
-			mTargetCharas.push_back(bcm->GetChara(mTargetCharaIDs[i]));
-		}
 
 		// ダメージ計算
 		for (size_t i = 0; i < mTargetCharas.size(); ++i)
 		{
 			int damage = DamageCalculator::CalcAttackDamage(mMoveChara->GetStatus(), mTargetCharas[i]->GetStatus());
 			mTargetCharas[i]->GetStatus()->SubHP(damage);
-			mAmounts.push_back(damage);
+			mHPAmounts.push_back(damage);
 		}
-	}
+
 		// 演出初期設定
 		StateInit();
 		//break;
@@ -62,9 +54,6 @@ void ProductionAttack::Update(const BattleCharacterManager* bcm)
 		StateWait();
 		break;
 	}
-
-	// ダメージ演出(ダメージ量が表示される)のupdate
-	mProductionValue.Update();
 }
 
 void ProductionAttack::Render()
@@ -120,51 +109,22 @@ void ProductionAttack::StateMoveToTarget()
 
 void ProductionAttack::StateWaitAttack()
 {
-	// コリジョン
+	// 攻撃キャラの当たり判定が有効なら
 	if (mMoveChara->IsBoneColEnable())
 	{
-		Matrix bm = {};
+		Matrix bone = {};
 		float radius = 0.0f;
-		mMoveChara->GetBoneCollisionParam(&bm, &radius);
-		SPHERE sphere = { Vector3(bm._41, bm._42, bm._43), radius };
-		for (size_t i = 0; i < mTargetCharas.size(); ++i)
-		{
-			BattleCharacter* target = mTargetCharas[i];
 
-			// すでに当たっているかチェック
-			bool ishit = false;
-			for (auto& hit : mHitChara) if (hit == target) ishit = true;
-			if (ishit) continue;
+		// パラメータ取得
+		mMoveChara->GetBoneCollisionParam(&bone, &radius);
 
-			float dist = 0.0f;
-			if (Collision::ColSphereCapsule(sphere, target->GetCapsule()))
-			{
-				mHitChara.emplace_back(target);
-				Audio::SoundPlay((int)Sound::ATTACK_HIT);
-				
-				Vector3 efkPos = target->GetPos();
-				efkPos.y += (target->GetLocalAABB().max.y - target->GetLocalAABB().min.y) / 2.0f;
-				Singleton<EffectManager>().GetInstance().Play(TurnManager::DAMAGE_EFFECT_SLOT, efkPos);
-				Singleton<CameraManager>().GetInstance().Shake(Define::DAMAGE_SHAKE_DURATION, Define::DAMAGE_SHAKE_STRENGTH);
+		// ヒット演出のパラメータ設定
+		Sound::Kind sound = Sound::ATTACK_HIT;
+		EffectData::Kind effect = EffectData::DAMAGE;
+		SPHERE sphere = { Vector3(bone._41, bone._42, bone._43), radius };
 
-				// ガード中じゃないならダメージモーション
-				if (target->GetStatus()->IsDead())
-				{
-					target->SetMotionStopLastFrame(Character::DIE);
-				}
-				else
-				{
-					if (!target->GetStatus()->GetGuardFlag())
-					{
-						target->SetMotionOnce(Character::DAMAGE, Character::IDLE);
-					}
-				}
-
-				Vector3 p = target->GetPos();
-				Vector3 damagePos(p.x, mTargetCharas[i]->GetAABB().max.y, p.z);
-				mProductionValue.Add(mAmounts[i], damagePos, DAMAGE_RGB);
-			}
-		}
+		// ヒット演出
+		IBattleProduction::HitProduction(sphere, effect, sound);
 	}
 
 	// モーションが終わったら
@@ -193,20 +153,5 @@ void ProductionAttack::StateMoveToOrigin()
 		mMoveChara->SetMotion(Character::IDLE);
 		mMoveChara->SetAngleY(mMoveChara->GetAngle().y + Define::PI); // 向きを反転
 		++mState;
-	}
-}
-
-
-
-void ProductionAttack::StateWait()
-{
-	mWaitTimer += GameManager::elapsedTime;
-
-	const float WAIT_SEC = 1.5f;
-	if (mWaitTimer >= WAIT_SEC)
-	{
-		mState = 0;
-		mWaitTimer = 0.0f;
-		mIsFinished = true;
 	}
 }

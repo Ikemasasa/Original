@@ -1,12 +1,12 @@
 #include "NPCTalk.h"
 
-#include "lib/Audio.h"
 #include "lib/Input.h"
 #include "lib/Math.h"
 #include "lib/Sprite.h"
 
 #include "Define.h"
 #include "NPC.h"
+#include "Sound.h"
 
 const Vector3 NPCTalk::NAME_RGB = { 1.0f, 0.85f, 0.2f };
 const Vector3 NPCTalk::TEXT_RGB = { 0.9f, 0.9f, 0.9f };
@@ -53,7 +53,7 @@ void NPCTalk::Update()
 		}
 		else
 		{
-			Audio::SoundPlay((int)Sound::SELECT);
+			Sound::Play(Sound::SELECT);
 			++mTextIndex;
 			mTimer = 0;
 			mTextDispNum = 1;

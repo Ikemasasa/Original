@@ -5,9 +5,10 @@
 
 class Player;
 
+
+// プレイヤーの戦闘用キャラクタークラス
 class PlayerBattle : public BattleCharacter
 {
-	static const Vector3 PLAYER_POS;
 
 public:
 	PlayerBattle(Player* player);

@@ -5,8 +5,6 @@
 
 class ProductionGuard : public IBattleProduction
 {
-	static constexpr float WAIT_SEC = 1.0f;
-
 	enum State
 	{
 		INIT,
@@ -15,14 +13,13 @@ class ProductionGuard : public IBattleProduction
 		END
 	};
 	State mState;
-	float mTimer;
-
 	Font mFont;
+
 public:
 	ProductionGuard() = default;
 	~ProductionGuard() = default;
 
 	void Initialize() override;
-	void Update(const BattleCharacterManager * bcm) override;
+	void Update() override;
 	void Render() override;
 };

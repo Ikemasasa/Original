@@ -229,8 +229,8 @@ bool Font::Add(const wchar_t* str)
 		fd.tex.Create(str[i], mFontName, mFontSize, mFontWeight, &gm, &tm);
 
 		// 左上座標取得
-		fd.leftTop.x = gm.gmptGlyphOrigin.x;
-		fd.leftTop.y = tm.tmAscent - gm.gmptGlyphOrigin.y;
+		fd.leftTop.x = (float)gm.gmptGlyphOrigin.x;
+		fd.leftTop.y = (float)tm.tmAscent - gm.gmptGlyphOrigin.y;
 
 		// サイズ取得
 		fd.size.x = static_cast<float>(gm.gmBlackBoxX);
@@ -258,8 +258,8 @@ bool Font::Add(wchar_t word)
 	fd.tex.Create(word, mFontName, mFontSize, mFontWeight, &gm, &tm);
 
 	// 左上座標取得
-	fd.leftTop.x = gm.gmptGlyphOrigin.x;
-	fd.leftTop.y = tm.tmAscent - gm.gmptGlyphOrigin.y;
+	fd.leftTop.x = (float)gm.gmptGlyphOrigin.x;
+	fd.leftTop.y = (float)(tm.tmAscent - gm.gmptGlyphOrigin.y);
 
 	// サイズ取得
 	fd.size.x = static_cast<float>(gm.gmBlackBoxX);

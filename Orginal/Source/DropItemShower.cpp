@@ -10,7 +10,10 @@
 
 DropItemShower::DropItemShower()
 {
+	// ‰æ‘œ‚ğ“Ç‚İ‚İ
 	mBoard = std::make_unique<Sprite>(L"Data/Image/Menu/str_board.png");
+
+	// ƒtƒHƒ“ƒg‰Šú‰»
 	mFont.Initialize();
 }
 

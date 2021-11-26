@@ -34,7 +34,6 @@ class SceneTitle : public SceneBase
 	std::unique_ptr<Character> mPlayer;
 	std::unique_ptr<Terrain> mTerrain;
 
-
 	int mSelectIndex = 0;
 	bool mIsPressAButton = false;
 	float mSinAngle = 0.0f;

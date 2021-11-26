@@ -1,6 +1,6 @@
 #include "Item.h"
 
-void Item::Add(const int itemID)
+void ItemInventory::Add(const int itemID)
 {
 	ItemData::BaseData param = *ItemData::GetBaseData(itemID);
 	if (param.type == ItemData::ItemType::EQUIPMENT) return; // 装備品は別インベントリ
@@ -19,7 +19,7 @@ void Item::Add(const int itemID)
 
 }
 
-void Item::Sub(const int itemID)
+void ItemInventory::Sub(const int itemID)
 {
 	for (auto it = mItems.begin(); it != mItems.end(); ++it)
 	{
@@ -31,7 +31,7 @@ void Item::Sub(const int itemID)
 	}
 }
 
-const ItemData::BaseData* Item::GetItemParam(const int index) const
+const ItemData::BaseData* ItemInventory::GetItemParam(const int index) const
 {
 	// リストがからならnull
 	if (mItems.empty()) return nullptr;

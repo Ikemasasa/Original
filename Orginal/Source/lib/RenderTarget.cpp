@@ -124,8 +124,8 @@ void RenderTarget::Activate()
 
 	// ビューポート設定
 	D3D11_VIEWPORT viewport;
-	viewport.Width = desc.Width;
-	viewport.Height = desc.Height;
+	viewport.Width = (FLOAT)desc.Width;
+	viewport.Height = (FLOAT)desc.Height;
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
 	viewport.TopLeftX = 0;

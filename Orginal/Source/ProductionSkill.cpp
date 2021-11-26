@@ -8,134 +8,141 @@
 #include "SkillData.h"
 #include "Singleton.h"
 #include "StatusData.h"
-#include "TurnManager.h"
+#include "DamageCalculator.h"
 
 void ProductionSkill::Initialize()
 {
+	mProductionValue.Initialize();
 }
 
-void ProductionSkill::Update(const BattleCharacterManager* bcm)
+void ProductionSkill::Update()
 {
 	switch (mState)
 	{
 	case INIT:
-		mMoveChara = bcm->GetChara(mMoveCharaID);
-		for (size_t i = 0; i < mTargetCharaIDs.size(); ++i)
-		{
-			mTargetCharas.push_back(bcm->GetChara(mTargetCharaIDs[i]));
-		}
-		mEffectInstHandles.resize(mTargetCharaIDs.size());
-
-		StateInit();
-
+		// モーション変更
 		mMoveChara->SetMotionOnce(Character::USE_ITEM, Character::IDLE);
-
-		// エフェクト決定
-		switch (mMoveChara->GetCommand()->GetSkillParam()->type)
-		{
-		case SkillData::Type::BUFF:   
-			mEffectSlot = TurnManager::BUFF_EFFECT_SLOT;
-			mSound = Sound::BUFF;
-			break;
-		case SkillData::Type::DEBUFF: 
-			mEffectSlot = TurnManager::DEBUFF_EFFECT_SLOT;
-			mSound = Sound::DEBUFF;
-			break;
-		}
+		
+		StateInit();
 		++mState;
 		//break;
 
 	case MOTION_WAIT:
-		if (mMoveChara->IsMotionFinished())
-		{
-			int index = 0;
-			for (auto target : mTargetCharas)
-			{
-				int handle = Singleton<EffectManager>().GetInstance().Play(mEffectSlot, target->GetPos());
-				mEffectInstHandles[index] = handle;
-				Audio::SoundPlay((int)mSound);
-				++index;
-			}
-
-			++mState;
-		}
+		StateWaitMotion();
 		break;
 
 	case EFFECT_WAIT:
-	{
-		bool isEffectFinished = true;
-		for (size_t i = 0; i < mEffectInstHandles.size(); ++i)
-		{
-			int handle = mEffectInstHandles[i];
-			if (Singleton<EffectManager>().GetInstance().IsPlay(handle))
-			{
-				isEffectFinished = false;
-			}
-		}
-
-		// エフェクトが終わったら
-		if (isEffectFinished)
-		{
-			++mState;
-		}
-	}
-
+		StateWaitEffect();
 		break;
 
 	case WAIT:
-		mTimer += GameManager::elapsedTime;
-		if (mTimer >= WAIT_SEC)
-		{
-			mIsFinished = true;
-			mTimer = 0.0f;
-		}
+		StateWait();
 		break;
 	}
 }
 
 void ProductionSkill::Render()
 {
+	mProductionValue.Render();
 }
 
 void ProductionSkill::StateInit()
 {
-	// 使用アイテム取得
-	const SkillData::SkillParam* param = mMoveChara->GetCommand()->GetSkillParam();
+	// 使用スキル情報取得
+	const SkillData::BaseData* baseParam = mMoveChara->GetCommand()->GetSkillParam();
+	
+	// 使用キャラのMPを減らす
+	mMoveChara->GetStatus()->SubMP(baseParam->useMP);
 
-	mMoveChara->GetStatus()->SubMP(param->useMP);
-
-	// バフセット
+	// スキル効果反映
 	for (auto& target : mTargetCharas)
 	{
-		int turn = param->turn;
-
-		// 自分に対してのバフデバフなら1ターン追加(バフターン経過のあれやそれで)
-		if (mMoveChara == target) turn += 1;
-
-		switch (param->type)
+		// バフ
+		if (baseParam->type == SkillData::BUFF)
 		{
-		case SkillData::Type::BUFF:
-			if (param->atkValue != 0.0f) target->GetStatus()->SetBuffAtkRate(param->atkValue, turn);
-			if (param->defValue != 0.0f) target->GetStatus()->SetBuffDefRate(param->defValue, turn);
-			break;
+			BuffSkillData::Param param = BuffSkillData::GetParam(baseParam->id);
+			if (target == mMoveChara) param.turn += 1; // 自分に対してのバフなら1ターン追加(バフターン経過のあれやそれで)
+			if (param.atkValue != 0.0f) target->GetStatus()->SetBuffAtkRate(param.atkValue, param.turn);
+			if (param.defValue != 0.0f) target->GetStatus()->SetBuffDefRate(param.defValue, param.turn);
+		}
 
-		case SkillData::Type::DEBUFF:
-			if (param->atkValue != 0.0f) target->GetStatus()->SetDebuffAtkRate(param->atkValue, turn);
-			if (param->defValue != 0.0f) target->GetStatus()->SetDebuffDefRate(param->defValue, turn);
-			break;
+		// デバフ
+		if (baseParam->type == SkillData::DEBUFF)
+		{
+			BuffSkillData::Param param = BuffSkillData::GetParam(baseParam->id);
+			if (target == mMoveChara) param.turn += 1; // 自分に対してのデバフなら1ターン追加(バフターン経過のあれやそれで)
+			if (param.atkValue != 0.0f) target->GetStatus()->SetDebuffAtkRate(param.atkValue, param.turn);
+			if (param.defValue != 0.0f) target->GetStatus()->SetDebuffDefRate(param.defValue, param.turn);
+		}
+
+		// 攻撃(現在は単体1ヒット対応
+		if (baseParam->type == SkillData::ATTACK)
+		{
+			AttackSkillData::Param param = AttackSkillData::GetParam(baseParam->id);
+			std::vector<int> amount = DamageCalculator::CalcSkillDamage(mMoveChara->GetStatus(), target->GetStatus(), param.skillRate, param.hitNum);
+			for (const auto& a : amount)
+			{
+				target->GetStatus()->SubHP(a);
+				mHPAmounts.push_back(a);
+			}
 		}
 	}
 }
 
-std::vector<float> ProductionSkill::CalcAmountValue(const SkillData::SkillParam* param)
+void ProductionSkill::StateWaitMotion()
 {
-	std::vector<float> ret;
-	for (auto& target : mTargetCharas)
+	// モーションが終わったら
+	if (mMoveChara->IsMotionFinished())
 	{
-		Status* status = target->GetStatus();
-		float rate = 1.0f + param->atkValue / status->GetStr();
-		ret.push_back(rate);
+		// 使用スキル情報を取得
+		const SkillData::BaseData* baseParam = mMoveChara->GetCommand()->GetSkillParam();
+
+		// エフェクト、サウンドのパラメータ取得
+		EffectData::Param efcParam = EffectData::GetParam((EffectData::Kind)baseParam->effectID);
+		Sound::Kind sound = (Sound::Kind)baseParam->soundID;
+
+		if (baseParam->type == SkillData::ATTACK)
+		{
+			IBattleProduction::AtkSkillProduction((EffectData::Kind)efcParam.slotID, sound);
+		}
+		if (baseParam->type == SkillData::BUFF || baseParam->type == SkillData::DEBUFF)
+		{
+			IBattleProduction::BuffProduction((EffectData::Kind)efcParam.slotID, sound);
+		}
+
+
+
+		++mState;
+	}
+}
+
+void ProductionSkill::StateWaitEffect()
+{
+	// 全てのエフェクトの再生が終了したかチェック
+	bool isPlay = false;
+	for (const auto& handle : mEffectInstHandles)
+	{
+		if (Singleton<EffectManager>().GetInstance().IsPlay(handle))
+		{
+			isPlay = true;
+			break;
+		}
 	}
 
-	return ret;
+	// エフェクトが終わったら
+	if (!isPlay)
+	{
+		// 攻撃スキルならヒットエフェクト
+		const SkillData::BaseData* base = mMoveChara->GetCommand()->GetSkillParam();
+		if (base->type == SkillData::ATTACK)
+		{
+			for (const auto& target : mTargetCharas)
+			{
+				SPHERE sphere = { target->GetTargetPos(), target->GetCapsule().radius };
+				IBattleProduction::HitProduction(sphere, EffectData::DAMAGE, Sound::ATTACK_HIT);
+			}
+		}
+
+		++mState;
+	}
 }

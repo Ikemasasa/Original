@@ -8,37 +8,24 @@
 
 CameraBase::CameraBase()
 {
-    mTarget = Vector3::ZERO;
-    mPos = Vector3(0, 5, 15);
-    mAngle = Vector3::ZERO;
 
-    mForward = Vector3::ZERO;
-    mRight = Vector3::ZERO;
-    mDistFromTargetY = 0.0f;
+}
 
+void CameraBase::Initialize(const Vector3& target, float distance)
+{
+    // 引数のパラメータからメンバを設定
+
+    // ビュー関係の設定
+    mTarget = target;
+    mPos = CalcPosFromAngle(distance);
+    UpdateView();
+
+    // プロジェクション関係の設定(数値は適当)
     mFov = DirectX::XMConvertToRadians(45.0f);
     mAspect = Define::SCREEN_WIDTH / Define::SCREEN_HEIGHT;
     mNear = 1.0f;
     mFar = 1000.0f;
     SetPerspectiveMatrix(mFov, mAspect, mNear, mFar);
-    UpdateView();
-}
-
-void CameraBase::Initialize(const Character* target)
-{
-    mTarget = target->GetPos();
-    
-    // targetの後ろに就くように
-    float angle = target->GetAngle().y;
-    Vector3 behind(-sinf(angle), 0.0f, -cosf(angle));
-    mPos = mTarget + behind;
-
-    mAngle.y = target->GetAngle().y - Define::PI;
-
-    mForward = Vector3::ZERO;
-    mRight = Vector3::ZERO;
-    mDistFromTargetY = 6.5f;
-    UpdateView();
 }
 
 void CameraBase::UpdateView()
@@ -69,6 +56,19 @@ void CameraBase::UpdateShake(float elapsedTime)
             mIsShake = false;
         }
     }
+}
+
+Vector3 CameraBase::CalcPosFromAngle(float distance)
+{
+    // x = sinf(theta) * cosf(phi) * r;
+    // y = cosf(theta) * r;
+    // z = sinf(theta) * sinf(phi) * r;
+
+    Vector3 ret = {};
+    ret.x = mTarget.x + sinf(mZenithAngle) * cosf(mAzimuthAngle) * distance;
+    ret.y = mTarget.y + cosf(mZenithAngle) * distance;
+    ret.z = mTarget.z + sinf(mZenithAngle) * sinf(mAzimuthAngle) * distance; 
+    return ret;
 }
 
 void CameraBase::Shake(float duration, float strength)

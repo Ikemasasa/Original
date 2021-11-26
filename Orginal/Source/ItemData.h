@@ -52,7 +52,7 @@ public:
 };
 
 //--------------------------------------------------------------
-// HealItemData
+// UseItemData
 //--------------------------------------------------------------
 class UseItemData
 {
@@ -69,6 +69,8 @@ public:
 		Rate rate;
 		int hpValue;
 		int mpValue;
+		int soundSlot;
+		int effectSlot;
 	};
 
 public:

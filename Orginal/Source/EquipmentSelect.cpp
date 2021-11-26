@@ -1,15 +1,16 @@
 #include "EquipmentSelect.h"
 
-#include "lib/Audio.h"
 #include "lib/Input.h"
 #include "lib/Math.h"
 #include "lib/Sprite.h"
 
 #include "Define.h"
 #include "KeyGuide.h"
+#include "Sound.h"
 
 void EquipmentSelect::Initialize()
 {
+	// 画像読み込み
 	mBoard = std::make_unique<Sprite>(L"Data/Image/Menu/item_board.png");
 	mSelectFrame = std::make_unique<Sprite>(L"Data/Image/Menu/item_board_select.png");
 	mInfoBoard = std::make_unique<Sprite>(L"Data/Image/Menu/item_info_board.png");
@@ -18,31 +19,36 @@ void EquipmentSelect::Initialize()
 
 int EquipmentSelect::Update(const std::vector<EquipmentInventory::Data>& equipmentsData)
 {
-	// SelectIndex操作
-	{
-		mEquipmentsData = equipmentsData;
-		int inventorySize = mEquipmentsData.size();
+	// 引数から装備品リストを更新
+	mEquipmentsData = equipmentsData;
 
-		int oldIndex = mSelectIndex;
-		if (Input::GetButtonTrigger(0, Input::BUTTON::RIGHT)) ++mSelectIndex;
-		if (Input::GetButtonTrigger(0, Input::BUTTON::LEFT))  --mSelectIndex;
-		if (mSelectIndex >= inventorySize) mSelectIndex -= inventorySize;
-		if (mSelectIndex < 0) mSelectIndex += inventorySize;
+	// 装備品の数を取得
+	int inventorySize = mEquipmentsData.size();
 
-		if (Input::GetButtonTrigger(0, Input::BUTTON::UP))    mSelectIndex -= HORIZONTAL_NUM;
-		if (Input::GetButtonTrigger(0, Input::BUTTON::DOWN))  mSelectIndex += HORIZONTAL_NUM;
-		if (mSelectIndex >= inventorySize) mSelectIndex -= inventorySize + 1;
-		if (mSelectIndex < 0) mSelectIndex += inventorySize + 1;
-		mSelectIndex = Math::Clamp(mSelectIndex, 0, inventorySize - 1); // 帳尻あわんかったからclampしてる
+	// 選択場所の操作
+	int oldIndex = mSelectIndex;
+	if (Input::GetButtonTrigger(0, Input::BUTTON::RIGHT)) ++mSelectIndex;
+	if (Input::GetButtonTrigger(0, Input::BUTTON::LEFT))  --mSelectIndex;
+	if (mSelectIndex >= inventorySize) mSelectIndex -= inventorySize;
+	if (mSelectIndex < 0) mSelectIndex += inventorySize;
 
-		if (oldIndex != mSelectIndex) Audio::SoundPlay((int)Sound::CURSOR_MOVE);
-	}
+	if (Input::GetButtonTrigger(0, Input::BUTTON::UP))    mSelectIndex -= HORIZONTAL_NUM;
+	if (Input::GetButtonTrigger(0, Input::BUTTON::DOWN))  mSelectIndex += HORIZONTAL_NUM;
+	if (mSelectIndex >= inventorySize) mSelectIndex -= inventorySize + 1;
+	if (mSelectIndex < 0) mSelectIndex += inventorySize + 1;
+	mSelectIndex = Math::Clamp(mSelectIndex, 0, inventorySize - 1); // 帳尻あわんかったからclampしてる
 
+	// 選択場所が変わったとき効果音を鳴らす
+	if (oldIndex != mSelectIndex) Sound::Play(Sound::CURSOR_MOVE);
+
+	
+	// 装備品を決定したら、決定したときの選択場所を返す
 	if (Input::GetButtonTrigger(0, Input::BUTTON::A))
 	{
 		return mSelectIndex;
 	}
 
+	// キーガイドを設定
 	KeyGuide::Instance().Add(KeyGuide::DPAD, L"カーソル移動");
 	KeyGuide::Instance().Add(KeyGuide::A, L"決定");
 
@@ -54,6 +60,7 @@ void EquipmentSelect::Render(const Vector2& boardPos)
 	// ボード描画
 	mBoard->Render(boardPos, Vector2::ONE, Vector2::ZERO, mBoard->GetSize());
 
+	// 装備品の数が0 ならreturn 
 	if (mEquipmentsData.empty()) return;
 
 	//アイコン描画

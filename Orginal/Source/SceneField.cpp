@@ -1,6 +1,5 @@
 #include "SceneField.h"
 
-#include "lib/Audio.h"
 #include "lib/Blend.h"
 #include "lib/Renderer2D.h"
 #include "lib/Skybox.h"
@@ -17,10 +16,12 @@
 #include "GameManager.h"
 #include "KeyGuide.h"
 #include "Light.h"
+#include "Music.h"
 #include "Player.h"
 #include "SceneManager.h"
 #include "SceneBattle.h"
 #include "Singleton.h"
+#include "Sound.h"
 #include "Terrain.h"
 
 SceneField::SceneField()
@@ -29,6 +30,8 @@ SceneField::SceneField()
 
 	mCharaManager = std::make_unique<CharacterManager>();
 	mSkybox = std::make_unique<Skybox>();
+
+	Singleton<EffectManager>().GetInstance().Initialize();
 }
 
 SceneField::~SceneField()
@@ -48,17 +51,16 @@ void SceneField::Initialize()
 	mTerrain->Initialize();
 	mCharaManager->Initialize();
 
-	Singleton<CameraManager>().GetInstance().Push(std::make_shared<CameraTPS>());
-	Singleton<CameraManager>().GetInstance().Initialize(mCharaManager->GetMovePlayer());
+	Singleton<CameraManager>().GetInstance().Push(std::make_unique<CameraTPS>());
+	Singleton<CameraManager>().GetInstance().Initialize(mCharaManager->GetMovePlayer()->GetTargetPos());
 
 	// フラグリセット
 	GameManager::bossSubdueFlag = false;
 
 	mIsLoadFinished = true;
 
-
 	// BGM 再生開始
-	Audio::MusicPlay((int)Music::FIELD_REMAINS);
+	Music::Play(Music::FIELD_REMAINS);
 }
 
 void SceneField::Update()
@@ -73,7 +75,7 @@ void SceneField::Update()
 			PlayerManager* pm = mCharaManager->GetPlayerManager();
 			Enemy* enm = mCharaManager->IsHitEnemy();
 			SceneManager::GetInstance().SetStackScene(std::make_unique<SceneBattle>(pm, enm));
-			Audio::SoundPlay((int)Sound::ENEMY_HIT);
+			Sound::Play(Sound::ENEMY_HIT);
 
 			mCharaManager->ResetHitEnemy();
 			mTransBattleScene = false;
@@ -87,7 +89,7 @@ void SceneField::Update()
 	else
 	{
 		mCharaManager->Update();
-		Singleton<CameraManager>().GetInstance().Update(mCharaManager->GetMovePlayer());
+		Singleton<CameraManager>().GetInstance().Update(mCharaManager->GetMovePlayer()->GetTargetPos());
 
 		mSkybox->SetEyePos(Singleton<CameraManager>().GetInstance().GetPos());
 
@@ -102,17 +104,19 @@ void SceneField::Update()
 		// キーガイド
 		KeyGuide::Instance().Add(KeyGuide::Y, L"メニュー");
 	}
+
+
 }
 
 void SceneField::Render()
 {
 	Matrix view = Singleton<CameraManager>().GetInstance().GetView();
 	Matrix proj = Singleton<CameraManager>().GetInstance().GetProj();
-	Vector4 lightDir = mLight.GetLightDir();
+	Vector4 lightDir = Vector4(mLight.GetLightDir(), 1.0f);
 
 	// シャドウマップに書き込み
 	const Shader* shader = mShadowMap->GetShader();
-	mShadowMap->Activate(lightDir, mLight.GetLightPos());
+	mShadowMap->Activate(mCharaManager->GetMovePlayer()->GetTargetPos(), mLight.GetLightDir());
 	mTerrain->Render(shader, view, proj, lightDir);
 	mCharaManager->Render(shader, view, proj, lightDir);
 	mShadowMap->Deactivate();
@@ -169,7 +173,7 @@ void SceneField::SetDeferredParam()
 	//// DirLight
 	std::vector<DeferredRenderer::DirLight> dirLights;
 	DeferredRenderer::DirLight dirLight;
-	dirLight.dir = mLight.GetLightDir();
+	dirLight.dir = Vector4(mLight.GetLightDir(), 1.0f);
 	dirLight.color = mLight.GetLightColor();
 	dirLights.push_back(dirLight);
 	mDeferredRenderer->SetDirLight(dirLights);

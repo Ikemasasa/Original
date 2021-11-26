@@ -9,7 +9,8 @@
 
 EnemyBattle::EnemyBattle(const Enemy* enemy) : BattleCharacter(enemy, StatusData::GetEnmStatus(enemy->GetCharaID()))
 {
-	mCommand = std::make_unique<CommandEnemy>();// 後でコマンドエネミーにする
+	// コマンド決定クラス作成
+	mCommand = std::make_unique<CommandEnemy>();
 }
 
 void EnemyBattle::Initialize()

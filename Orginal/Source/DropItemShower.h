@@ -7,8 +7,10 @@
 
 class Sprite;
 
+// ドロップアイテムを表示するクラス
 class DropItemShower
 {
+	// 定数
 	static constexpr float VELOCITY_Y = 0.5f;
 	static constexpr float ALPHA_ADD = 0.1f;
 
@@ -16,6 +18,7 @@ class DropItemShower
 
 	static constexpr float STR_OFFSET_Y = 5.0f;
 
+private: // 変数
 	struct Data
 	{
 		int itemID;
@@ -30,10 +33,15 @@ class DropItemShower
 	std::unique_ptr<Sprite> mBoard;
 	Font mFont;
 
-public:
+public: // 関数
+
+	// コンストラクタ
 	DropItemShower();
+	
+	// デストラクタ
 	~DropItemShower() = default;
 
+	// ドロップアイテムを追加(表示に登録)
 	void Add(const int dropItemID, const Vector3& dropCharaPos);
 
 	void Update();

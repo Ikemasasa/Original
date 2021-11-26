@@ -1,6 +1,5 @@
 #include "MenuItem.h"
 
-#include "lib/Audio.h"
 #include "lib/Input.h"
 #include "lib/Math.h"
 #include "lib/Sprite.h"
@@ -11,18 +10,30 @@
 #include "Player.h"
 #include "PlayerManager.h"
 #include "StatusData.h"
+#include "Sound.h"
 
 void MenuItem::Initialize(const PlayerManager* plm)
 {
-	mCharacterHealth.Initialize(Vector2(HEALTH_BOARD_X, HEALTH_BOARD_Y));
+	// ヘルスゲージ作成
+	mHealthGauge.resize(plm->GetNum());
+	for (auto& gauge : mHealthGauge) gauge.Initialize();
+
+	// キャラクター選択クラス初期化
 	mCharacterSelect.Initialize(plm);
+
+	// アイテム選択クラス初期化
 	mItemSelect.Initialize();
+
+	// 選択肢選択クラス初期化
 	mSelectOptions.Initialize();
+
+	// アイテムを未選択状態に設定
 	mItemIndex = -1;
 }
 
 MenuBase::Select MenuItem::Update(PlayerManager* plm)
 {
+	// アイテム未選択状態なら
 	if (mItemIndex == -1)
 	{
 		mCharacterSelect.Update(); // 誰のインベントリを参照するか決める
@@ -43,8 +54,8 @@ MenuBase::Select MenuItem::Update(PlayerManager* plm)
 			}
 			else
 			{
-				Audio::SoundStop((int)Sound::SELECT);
-				Audio::SoundPlay((int)Sound::CANCEL);
+				Sound::Stop(Sound::SELECT);
+				Sound::Play(Sound::CANCEL);
 			}
 		}
 
@@ -54,7 +65,9 @@ MenuBase::Select MenuItem::Update(PlayerManager* plm)
 		KeyGuide::Instance().Add(KeyGuide::A, L"決定");
 		KeyGuide::Instance().Add(KeyGuide::B, L"戻る");
 	}
-	else
+	
+	// アイテム選択状態なら
+	if (mItemIndex != -1)
 	{
 		// アイテム情報を取得
 		const ItemData::BaseData* baseData = mInventory->GetItemParam(mItemIndex);
@@ -86,8 +99,27 @@ void MenuItem::Render()
 	{
 		// アイテム情報取得
 		const ItemData::BaseData* baseData = mInventory->GetItemParam(mItemIndex);
+		UseItemData::Param param = UseItemData::GetParam(baseData->id);
 
-		if (baseData->type == ItemData::HEAL)	   mCharacterHealth.Render(true);
+		if (baseData->type == ItemData::HEAL)
+		{
+			for (size_t i = 0; i < mHealthGauge.size(); ++i)
+			{
+				bool isSelectRender = false;
+
+				// アイテムの範囲が全員, もしくは選択中のキャラクターのゲージなら選択画像を表示
+				if (param.range == UseItemData::Range::ALL ||
+					i == mCharacterSelect.GetIndex())
+				{
+					isSelectRender = true;
+				}
+
+				// ゲージを描画
+				mHealthGauge[i].Render(isSelectRender);
+
+
+			}
+		}
 		if (baseData->type == ItemData::FIELD_USE)
 		{
 			mSelectOptions.Render(Vector2(BOARD_OFFSET_X, BOARD_OFFSET_Y) + mItemSelect.GetCursorRightUpPos());
@@ -108,7 +140,6 @@ void MenuItem::UseFieldUseItem(const int itemID)
 	mSelectOptions.AddOption(L"いいえ");
 	mSelectOptions.Update();
 
-	// すでに使用中なら
 	if (mIsUseFieldItem)
 	{
 		// アイテム情報を取得
@@ -116,6 +147,7 @@ void MenuItem::UseFieldUseItem(const int itemID)
 		const FieldUseItemData::Param param = FieldUseItemData::GetParam(baseData->id);
 		param.effect->Execute();
 
+		// アイテムの処理が終了したら
 		if (param.effect->IsEffectFinished())
 		{
 			// アイテム減らす
@@ -141,30 +173,68 @@ void MenuItem::UseFieldUseItem(const int itemID)
 
 void MenuItem::UseHealItem(const PlayerManager* plm, const int itemID)
 {
-	// ステータス配列作成
-	int statusNum = plm->GetNum();
-	std::vector<Status> statusArray;
-	for (int i = 0; i < statusNum; ++i)
+	// HealthGaugeステータス設定
+	for (size_t i = 0; i < plm->GetNum(); ++i)
 	{
+		// キャラクタIDを取得
 		int charaID = plm->GetPlayer(i)->GetCharaID();
-		statusArray.push_back(StatusData::GetPLStatus(charaID));
+
+		// 座標算出
+		float x = HEALTH_BOARD_X;
+		float y = HEALTH_BOARD_Y + mHealthGauge[i].GetHeight() * i;
+		Vector2 pos(x, y);
+
+		// 設定
+		mHealthGauge[i].Set(StatusData::GetPLStatus(charaID), pos, HealthGauge::LEFTTOP);
 	}
-	mCharacterHealth.Update(statusArray);
+
+	// 回復アイテムの情報を取得
+	UseItemData::Param param = UseItemData::GetParam(itemID);
+
+	// 対象のキャラクター選択
+	if (param.range == UseItemData::SINGLE)
+	{
+		size_t max = plm->GetNum();
+		if (Input::GetButtonTrigger(0, Input::UP))   mSelectIndex = (mSelectIndex + (max - 1)) % max;
+		if (Input::GetButtonTrigger(0, Input::DOWN)) mSelectIndex = (mSelectIndex + 1) % max;
+	}
+	if (param.range == UseItemData::ALL)
+	{
+		// 全員選択なら-1
+		mSelectIndex = -1;
+	}
+
 
 	if (Input::GetButtonTrigger(0, Input::BUTTON::A))
 	{
-		// 回復アイテムの情報を取得
-		UseItemData::Param param = UseItemData::GetParam(itemID);
-
 		// ステータス取得
-		int charaindex = mCharacterHealth.GetSelectIndex();
-		int charaID = plm->GetPlayer(charaindex)->GetCharaID();
-		Status plStatus = StatusData::GetPLStatus(charaID);
+		std::vector<Status> targetStatus;
+
+		// mSelectIndexが -1 なら全員選択
+		if (mSelectIndex == -1)
+		{
+			for (size_t i = 0; i < plm->GetNum(); ++i)
+			{
+				Status status = StatusData::GetPLStatus(plm->GetPlayer(i)->GetCharaID());
+				targetStatus.emplace_back(status);
+			}
+		}
+		else
+		{ 
+			// mSelectIndexが-1じゃないなら単体
+			Status status = StatusData::GetPLStatus(plm->GetPlayer(mSelectIndex)->GetCharaID());
+			targetStatus.emplace_back(status);
+		}
 
 		// 回復アイテムが使えるかチェックする
 		bool useable = false;
-		if (!plStatus.IsFullHP() && param.hpValue > 0) useable = true; // HPがmaxじゃないかつhp回復
-		if (!plStatus.IsFullMP() && param.mpValue > 0) useable = true; // MPがmaxじゃないかつmp回復
+		for (const auto& status : targetStatus)
+		{
+			if (!status.IsFullHP() && param.hpValue > 0) useable = true; // HPがmaxじゃないかつhpv回復
+			if (!status.IsFullMP() && param.mpValue > 0) useable = true; // MPがmaxじゃないかつmp回復
+			if (useable) break; // 誰か1人でも使えたら使える
+		}
+
 		if (!useable) // 使えないならreturn
 		{
 			Audio::SoundStop((int)Sound::SELECT);
@@ -173,12 +243,15 @@ void MenuItem::UseHealItem(const PlayerManager* plm, const int itemID)
 		}
 
 		// 回復
-		plStatus.AddHP(param.hpValue);
-		plStatus.AddMP(param.mpValue);
-		Audio::SoundPlay((int)Sound::HEAL);
+		for (auto& status : targetStatus)
+		{
+			status.AddHP(param.hpValue);
+			status.AddMP(param.mpValue);
 
-		// ステータス更新
-		StatusData::SetPLStatus(charaID, plStatus);
+			// ステータス更新
+			StatusData::SetPLStatus(status.GetID(), status);
+		}
+		Audio::SoundPlay((int)Sound::HEAL);
 
 		// アイテム減らす
 		mInventory->Sub(param.base->id);

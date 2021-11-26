@@ -4,10 +4,9 @@
 
 void CameraTitle::Update(const Character* chara)
 {
-	// キャラの前、右のベクトル取得
-	Matrix world = chara->GetWorld();
-	Vector3 back = Vector3(world._13, 0.0f, world._33).GetNormalize();
-	Vector3 left = -Vector3(world._11, 0.0f, world._31).GetNormalize();
+	// キャラの後ろ、左のベクトル取得
+	Vector3 back = -chara->GetFrontXZ();
+	Vector3 left = -chara->GetRightXZ();
 
 	// キャラのサイズ
 	float diameter = chara->GetCapsule().radius * 2.0f;
@@ -16,7 +15,7 @@ void CameraTitle::Update(const Character* chara)
 	Vector3 charaPos = chara->GetPos();
 	mPos.x = charaPos.x + (back.x * diameter * 1.5f) + (left.x * diameter * 2.0f);
 	mPos.y = POS_Y;
-	mPos.z = charaPos.z + (back.z * diameter * 1.5f) + (left.z * diameter * 2.0f);;
+	mPos.z = charaPos.z + (back.z * diameter * 1.5f) + (left.z * diameter * 2.0f);
 
 	AABB aabb = chara->GetLocalAABB();
 	mTarget.x = charaPos.x + (left.x * diameter);

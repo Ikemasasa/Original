@@ -4,6 +4,7 @@
 
 bool Equipment::Equip(const Character* equipChara, int id)
 {
+	// 引数のIDからパラメータを取得
 	const EquipmentData::Param param = EquipmentData::GetParam(id);
 
 	// 装備できるかチェック
@@ -70,6 +71,7 @@ void Equipment::UnEquip(EquipmentData::Type type)
 
 const EquipmentData::Param* Equipment::GetParam(const EquipmentData::Type type) const
 {
+	// 同じIDのものを探して、戻り値に設定
 	const EquipmentData::Param* ret = nullptr;
 	for (auto& param : mEquipments)
 	{

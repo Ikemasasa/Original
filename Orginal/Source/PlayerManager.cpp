@@ -6,10 +6,11 @@
 
 #include "Fade.h"
 #include "GameManager.h"
+#include "ItemData.h"
 #include "Player.h"
 #include "SceneManager.h"
 #include "SceneMenu.h"
-#include "ItemData.h"
+#include "Sound.h"
 
 PlayerManager::PlayerManager()
 {
@@ -48,7 +49,7 @@ void PlayerManager::Update(const bool isTalking)
 	{
 		if (Fade::GetInstance().SetSceneImage(Fade::SPEED_FAST))
 		{
-			Audio::SoundPlay((int)Sound::MENU_OPEN);
+			Sound::Play(Sound::MENU_OPEN);
 			SceneManager::GetInstance().SetStackScene(std::make_unique<SceneMenu>(this));
 		}
 	}

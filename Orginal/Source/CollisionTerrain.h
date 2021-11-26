@@ -6,11 +6,16 @@
 
 class Terrain;
 
+/*
+	地形とのコリジョンをするクラス
+	RegisterTerrainで登録したものとだけする
+*/
 class CollisionTerrain
 {
-	static std::vector<Terrain*> mTerrains;
+	static std::vector<Terrain*> mTerrains;	// 登録した地形
 
 public:
+	// 
 	static int RayPickOrg(const Vector3& sp, const Vector3& velocity, Vector3* outPos, Vector3* outNormal);
 	static int RayPick(const Vector3& sp, const Vector3& velocity, Vector3* outPos, Vector3* outNormal);
 	
